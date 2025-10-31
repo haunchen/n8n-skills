@@ -43,8 +43,8 @@ jobs:
       - name: Update npm packages to latest
         run: npm update
 
-      - name: Compile TypeScript
-        run: npm run build
+      - name: Run full build
+        run: npm run build:full
 
       - name: Check n8n version changes
         id: check_version
@@ -78,13 +78,32 @@ jobs:
             echo "bump_type=$MANUAL_BUMP" >> $GITHUB_OUTPUT
             echo "Using manually specified version type: $MANUAL_BUMP"
           elif [ "$VERSION_CHANGED" == "true" ]; then
-            # n8n version upgraded, use minor
-            echo "bump_type=minor" >> $GITHUB_OUTPUT
-            echo "n8n version upgraded, using minor version"
+            # Analyze n8n version change to determine bump type
+            OLD_N8N="${{ steps.check_version.outputs.old_n8n_version }}"
+            NEW_N8N="${{ steps.check_version.outputs.new_n8n_version }}"
+
+            # Parse version numbers (major.minor.patch)
+            IFS='.' read -r OLD_MAJOR OLD_MINOR OLD_PATCH <<< "$OLD_N8N"
+            IFS='.' read -r NEW_MAJOR NEW_MINOR NEW_PATCH <<< "$NEW_N8N"
+
+            # Determine bump type based on n8n version change
+            if [ "$NEW_MAJOR" != "$OLD_MAJOR" ]; then
+              echo "bump_type=major" >> $GITHUB_OUTPUT
+              echo "n8n major upgrade detected: v$OLD_N8N → v$NEW_N8N, using major version bump"
+            elif [ "$NEW_MINOR" != "$OLD_MINOR" ]; then
+              echo "bump_type=minor" >> $GITHUB_OUTPUT
+              echo "n8n minor upgrade detected: v$OLD_N8N → v$NEW_N8N, using minor version bump"
+            elif [ "$NEW_PATCH" != "$OLD_PATCH" ]; then
+              echo "bump_type=patch" >> $GITHUB_OUTPUT
+              echo "n8n patch upgrade detected: v$OLD_N8N → v$NEW_N8N, using patch version bump"
+            else
+              echo "bump_type=patch" >> $GITHUB_OUTPUT
+              echo "n8n version unchanged: v$NEW_N8N, using patch version bump"
+            fi
           else
             # Data update only, use patch
             echo "bump_type=patch" >> $GITHUB_OUTPUT
-            echo "Data update, using patch version"
+            echo "Data update only, using patch version bump"
           fi
 
       - name: Update package.json version

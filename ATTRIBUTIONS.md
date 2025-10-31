@@ -4,72 +4,7 @@
 
 ## 第三方資源
 
-### 1. n8n - 工作流程自動化平台
-
-n8n 是一個開源的工作流程自動化工具，允許使用者建立複雜的自動化流程。
-
-- 專案名稱: n8n
-- 版權所有: Copyright (c) 2024 n8n GmbH
-- 授權: Sustainable Use License
-- 官方網站: https://n8n.io
-- GitHub: https://github.com/n8n-io/n8n
-- 授權條款: https://github.com/n8n-io/n8n/blob/master/LICENSE.md
-
-#### 使用範圍
-
-本專案使用 n8n 的節點型別定義與元資料，用於教學目的。不包含 n8n 的原始碼。
-
-#### 授權要求
-
-- n8n 採用 Sustainable Use License
-- 使用 n8n 軟體時，使用者必須遵守 n8n 的授權條款
-- 詳細資訊請參考 n8n 官方授權條款：https://github.com/n8n-io/n8n/blob/master/LICENSE.md
-
----
-
-### 2. n8n-docs - n8n 官方文件
-
-n8n 官方文件提供完整的節點說明、使用指南與範例。
-
-- 專案名稱: n8n-docs
-- 版權所有: Copyright (c) 2024 n8n GmbH
-- 授權: MIT License
-- GitHub: https://github.com/n8n-io/n8n-docs
-- 授權條款: https://github.com/n8n-io/n8n-docs/blob/master/LICENSE.md
-
-#### 使用範圍
-
-本專案參考 n8n-docs 的文件內容，用於提供節點說明與範例。
-
-#### MIT License 條款
-
-```
-MIT License
-
-Copyright (c) 2024 n8n GmbH
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
----
-
-### 3. n8n-mcp - n8n Model Context Protocol 整合
+### 1. n8n-mcp - n8n Model Context Protocol 整合
 
 n8n-mcp 是一個整合 n8n 與 Model Context Protocol (MCP) 的專案，提供 AI 助理存取 n8n 節點資訊的能力。
 

@@ -199,12 +199,7 @@ npm run typecheck
 
 本專案採用 MIT License，但包含以下第三方資源：
 
-1. n8n-docs - n8n 官方文件
-   - 授權: MIT License
-   - 來源: https://github.com/n8n-io/n8n-docs
-   - 版權: (c) 2024 n8n GmbH
-
-2. n8n-mcp - n8n Model Context Protocol 整合
+1. n8n-mcp - n8n Model Context Protocol 整合
    - 授權: MIT License
    - 來源: https://github.com/czlonkowski/n8n-mcp
    - 作者: Romuald Czlonkowski @ www.aiadvisors.pl/en
