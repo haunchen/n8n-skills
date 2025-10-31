@@ -170,9 +170,6 @@ jobs:
           - Node configuration examples
           - Workflow pattern reference
           - Category index and search guide
-
-          ---
-          Conceived by Romuald Członkowski - https://www.aiadvisors.pl/en
           EOF
 
           echo "Release notes generated"
