@@ -9,6 +9,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import type { EnrichedNodeInfo, ResourceFile } from './skill-generator';
 import type { Operation, CoreProperty } from '../parsers/property-parser';
+import { escapeMarkdown, escapeTableCell } from './template-formatter';
 
 /**
  * 資源生成器配置
@@ -127,7 +128,7 @@ export class ResourceGenerator {
     lines.push('');
     sortedNodes.forEach(node => {
       const filename = `${node.nodeType}.md`;
-      const description = node.description || '';
+      const description = escapeMarkdown(node.description || '');
       lines.push(`- [${node.displayName}](./${filename}) - ${description}`);
     });
     lines.push('');
@@ -154,7 +155,7 @@ export class ResourceGenerator {
     if (node.description) {
       lines.push('## 描述');
       lines.push('');
-      lines.push(node.description);
+      lines.push(escapeMarkdown(node.description));
       lines.push('');
     }
 
@@ -172,23 +173,6 @@ export class ResourceGenerator {
 
     // JSON 配置範例（增強版：1-3 個範例）
     this.appendExamples(lines, node);
-
-    // 文件資訊
-    if (node.documentation) {
-      if (node.documentation.description) {
-        lines.push('## 詳細說明');
-        lines.push('');
-        lines.push(node.documentation.description);
-        lines.push('');
-      }
-
-      if (node.documentation.officialUrl) {
-        lines.push('## 更多資訊');
-        lines.push('');
-        lines.push(`[官方文件](${node.documentation.officialUrl})`);
-        lines.push('');
-      }
-    }
 
     return lines.join('\n');
   }
@@ -223,7 +207,7 @@ export class ResourceGenerator {
     operations.forEach(op => {
       lines.push(`### ${op.name}`);
       if (op.description) {
-        lines.push(`${op.description}`);
+        lines.push(`${escapeMarkdown(op.description)}`);
       }
       lines.push(`- 值: \`${op.value}\``);
       if (op.resource) {
@@ -244,7 +228,7 @@ export class ResourceGenerator {
 
     properties.forEach(prop => {
       const defaultValue = prop.default !== undefined ? `\`${JSON.stringify(prop.default)}\`` : '-';
-      const description = prop.description || '-';
+      const description = escapeTableCell(prop.description || '-');
       const required = prop.required ? '是' : '否';
       lines.push(`| \`${prop.name}\` | ${prop.type} | ${required} | ${defaultValue} | ${description} |`);
     });
@@ -259,12 +243,12 @@ export class ResourceGenerator {
         lines.push(`#### ${prop.displayName} (\`${prop.name}\`)`);
         lines.push('');
         if (prop.description) {
-          lines.push(prop.description);
+          lines.push(escapeMarkdown(prop.description));
           lines.push('');
         }
         lines.push('可選值:');
         prop.options!.forEach(opt => {
-          const desc = opt.description ? ` - ${opt.description}` : '';
+          const desc = opt.description ? ` - ${escapeMarkdown(opt.description)}` : '';
           lines.push(`- \`${opt.value}\`: ${opt.name}${desc}`);
         });
         lines.push('');

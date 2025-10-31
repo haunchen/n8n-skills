@@ -578,3 +578,43 @@ export function formatMarkdown(content: string, options?: FormatterOptions): str
   const formatter = new TemplateFormatter(options);
   return formatter.format(content);
 }
+
+/**
+ * 轉義 Markdown 特殊字元
+ * 確保文字內容不會被誤解析為 Markdown 語法
+ *
+ * @param text 要轉義的文字
+ * @returns 轉義後的文字
+ */
+export function escapeMarkdown(text: string): string {
+  if (!text) return text;
+
+  return text
+    .replace(/\\/g, '\\\\')   // 反斜線（必須最先處理）
+    .replace(/`/g, '\\`')      // 反引號
+    .replace(/\*/g, '\\*')     // 星號
+    .replace(/_/g, '\\_')      // 底線
+    .replace(/\[/g, '\\[')     // 左方括號
+    .replace(/\]/g, '\\]')     // 右方括號
+    .replace(/</g, '\\<')      // 左尖括號
+    .replace(/>/g, '\\>')      // 右尖括號
+    .replace(/\|/g, '\\|');    // 管道符號
+}
+
+/**
+ * 轉義表格儲存格內容
+ * 表格內的管道符號必須轉義，其他特殊字元也需要處理
+ *
+ * @param text 要轉義的文字
+ * @returns 轉義後的文字
+ */
+export function escapeTableCell(text: string): string {
+  if (!text) return text;
+
+  return text
+    .replace(/\\/g, '\\\\')   // 反斜線（必須最先處理）
+    .replace(/\|/g, '\\|')     // 管道符號（表格中最重要）
+    .replace(/`/g, '\\`')      // 反引號
+    .replace(/\*/g, '\\*')     // 星號
+    .replace(/_/g, '\\_');     // 底線
+}

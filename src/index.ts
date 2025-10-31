@@ -13,7 +13,6 @@
 // 內部使用的 import
 import { NpmCollector, type SimplifiedNodeInfo } from './collectors/npm-collector';
 import { ApiCollector, type NodeUsageStats } from './collectors/api-collector';
-import { DocsCollector, type NodeDocSummary } from './collectors/docs-collector';
 import { type EnrichedNodeInfo, type SkillConfig } from './generators/skill-generator';
 import { SkillGenerator } from './generators/skill-generator';
 
@@ -35,14 +34,6 @@ export {
   type NodeUsageStats,
 } from './collectors/api-collector';
 
-export {
-  // 文件收集器
-  DocsCollector,
-  createDocsCollector,
-  type DocsCollectorConfig,
-  type NodeDocSummary,
-} from './collectors/docs-collector';
-
 // ===== 解析器 (Parsers) =====
 export {
   // 節點解析器
@@ -58,21 +49,6 @@ export {
   type Operation,
   type ParsedProperties,
 } from './parsers/property-parser';
-
-export {
-  // 文件解析器
-  parseDocumentation,
-  cleanMarkdown,
-  truncateText,
-  extractKeywords,
-  extractDescription,
-  extractUsage,
-  extractExamples,
-  extractTags,
-  generateOfficialUrl,
-  type ParsedDocumentation,
-  type ParseOptions,
-} from './parsers/docs-parser';
 
 // ===== 組織器 (Organizers) =====
 export {
@@ -250,26 +226,6 @@ export async function collectNodeUsage(limit: number = 100): Promise<NodeUsageSt
   return result.nodeUsageStats;
 }
 
-/**
- * 收集節點文件
- * 從 n8n-docs 儲存庫收集文件摘要
- *
- * @param summaryLength 摘要長度
- * @returns 文件摘要陣列
- *
- * @example
- * ```typescript
- * import { collectNodeDocs } from 'n8n-skills';
- *
- * const docs = await collectNodeDocs(300);
- * console.log(`收集到 ${docs.length} 個文件`);
- * ```
- */
-export async function collectNodeDocs(summaryLength: number = 300): Promise<NodeDocSummary[]> {
-  const collector = new DocsCollector({ summaryLength });
-  const docsMap = await collector.collectDocsSummaries();
-  return Array.from(docsMap.values());
-}
 
 /**
  * 生成 Skill 文件

@@ -13,9 +13,9 @@
  */
 
 import type { SimplifiedNodeInfo } from '../collectors/npm-collector';
-import type { ParsedDocumentation } from '../parsers/docs-parser';
 import type { NodeUsageStats } from '../collectors/api-collector';
 import type { ParsedProperties } from '../parsers/property-parser';
+import { escapeMarkdown } from './template-formatter';
 
 /**
  * Skill 文件配置
@@ -34,7 +34,6 @@ export interface SkillConfig {
  * 節點資訊（組合後）
  */
 export interface EnrichedNodeInfo extends SimplifiedNodeInfo {
-  documentation?: ParsedDocumentation;
   usageCount?: number;
   usagePercentage?: number;
   properties?: ParsedProperties;
@@ -266,23 +265,13 @@ export class SkillGenerator {
       sections.push(
         `### ${index + 1}. ${node.displayName}`,
         '',
-        node.description || '無描述',
+        escapeMarkdown(node.description || '無描述'),
         '',
         `- 類型: ${this.formatNodeCategory(node)}`,
         `- 分類: ${node.category}`,
         `- 使用率: ${percentage}%`,
         ''
       );
-
-      // 如果有文件，加入使用說明
-      if (node.documentation?.usage) {
-        sections.push(
-          `使用說明: ${node.documentation.usage.substring(0, 200)}${
-            node.documentation.usage.length > 200 ? '...' : ''
-          }`,
-          ''
-        );
-      }
 
       const category = node.category || 'misc';
       sections.push(`詳細資訊請參閱: resources/${category}/${node.nodeType}.md`, '');
@@ -358,12 +347,12 @@ export class SkillGenerator {
       sections.push(
         `## ${index + 1}. ${pattern.name}`,
         '',
-        pattern.description,
+        escapeMarkdown(pattern.description),
         '',
         '使用節點:',
         ...pattern.nodes.map(node => `- ${node}`),
         '',
-        `範例: ${pattern.example}`,
+        `範例: ${escapeMarkdown(pattern.example)}`,
         ''
       );
     });

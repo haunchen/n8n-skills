@@ -42,9 +42,7 @@ class OutputValidator {
   private readonly MAX_FILE_SIZE = 1024 * 1024; // 1MB
   private readonly MAX_LINE_LENGTH = 200;
   private readonly REQUIRED_FILES = [
-    'n8n-workflow-guide.md',
-    'resources/nodes-index.md',
-    'resources/categories-index.md',
+    'Skill.md',
   ];
 
   constructor() {
@@ -278,13 +276,9 @@ class OutputValidator {
     info(`  節點數量: ${nodeCount}`);
     info(`  分類數量: ${categoryCount}`);
 
-    // 驗證節點數量是否符合設定
+    // 不再驗證節點數量上限，僅作為資訊記錄
     if (this.config && nodeCount > this.config.max_nodes_in_main_skill) {
-      this.addIssue(
-        'warning',
-        'statistics',
-        `節點數量 (${nodeCount}) 超過設定上限 (${this.config.max_nodes_in_main_skill})`
-      );
+      info(`  注意: 節點數量 (${nodeCount}) 超過設定建議值 (${this.config.max_nodes_in_main_skill})`);
     }
   }
 

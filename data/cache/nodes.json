@@ -4597,7 +4597,7 @@
     "description": "Returns data for Webhook",
     "category": "transform",
     "packageName": "n8n-nodes-base",
-    "version": "1.4",
+    "version": "1.5",
     "isVersioned": false,
     "isTrigger": false,
     "isWebhook": true,

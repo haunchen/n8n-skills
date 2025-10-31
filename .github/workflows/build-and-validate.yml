@@ -31,8 +31,8 @@ jobs:
         run: npm run typecheck
         continue-on-error: false
 
-      - name: Compile TypeScript
-        run: npm run build
+      - name: Run full build (compile + generate)
+        run: npm run build:full
 
       - name: Check build artifacts
         run: |
@@ -40,9 +40,15 @@ jobs:
             echo "Build failed: dist directory does not exist"
             exit 1
           fi
+          if [ ! -d "output" ]; then
+            echo "Build failed: output directory does not exist"
+            exit 1
+          fi
           echo "Build successful, checking file count..."
-          FILE_COUNT=$(find dist -type f | wc -l)
-          echo "Build generated $FILE_COUNT files"
+          DIST_COUNT=$(find dist -type f | wc -l)
+          OUTPUT_COUNT=$(find output -type f | wc -l)
+          echo "Build generated $DIST_COUNT compiled files"
+          echo "Build generated $OUTPUT_COUNT output files"
 
       - name: Run validation
         id: validate

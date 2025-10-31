@@ -285,14 +285,18 @@ export class TemplateGenerator {
     categories.forEach((category) => {
       const info = CATEGORY_INFO[category];
       const templates = categorizedTemplates.get(category) || [];
-      sections.push(
-        `### ${info.icon} [${info.name}](${category}/README.md)`,
-        '',
-        info.description,
-        '',
-        `**範本數量**: ${templates.length} 個`,
-        ''
-      );
+
+      // 只顯示有範本的分類
+      if (templates.length > 0) {
+        sections.push(
+          `### ${info.icon} [${info.name}](${category}/README.md)`,
+          '',
+          info.description,
+          '',
+          `**範本數量**: ${templates.length} 個`,
+          ''
+        );
+      }
     });
 
     sections.push(

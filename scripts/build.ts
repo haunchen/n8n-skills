@@ -8,10 +8,9 @@ import { promises as fs } from 'fs';
 import * as logger from '../src/utils/logger';
 
 // 導入收集器
-import { NpmCollector, ApiCollector, DocsCollector } from '../src/collectors';
+import { NpmCollector, ApiCollector } from '../src/collectors';
 import type { SimplifiedNodeInfo } from '../src/collectors/npm-collector';
 import type { NodeUsageStats } from '../src/collectors/api-collector';
-import type { NodeDocSummary } from '../src/collectors/docs-collector';
 
 // 導入解析器
 import { NodeParser, PropertyParser } from '../src/parsers';
@@ -50,7 +49,6 @@ interface BuildStats {
   topNodes: number;
   resourceNodes: number;
   templatesCollected: number;
-  docsCollected: number;
   startTime: Date;
   endTime?: Date;
   duration?: number;
@@ -72,7 +70,6 @@ class SkillBuilder {
       topNodes: 0,
       resourceNodes: 0,
       templatesCollected: 0,
-      docsCollected: 0,
       startTime: new Date(),
     };
   }
@@ -215,48 +212,16 @@ class SkillBuilder {
     }
   }
 
-  /**
-   * 步驟 3: 收集文件
-   */
-  private async collectDocs(): Promise<Map<string, NodeDocSummary>> {
-    logger.info('===== 步驟 3: 收集節點文件 =====');
-
-    // 檢查快取
-    const cached = await this.loadCache('docs.json');
-    if (cached) {
-      logger.info(`使用快取的文件資料 (${cached.length} 個文件)`);
-      return new Map(cached.map((doc: NodeDocSummary) => [doc.nodeName, doc]));
-    }
-
-    logger.info('從 n8n-docs 儲存庫收集文件...');
-    try {
-      const docsCollector = new DocsCollector({
-        summaryLength: this.config.docs_summary_max_length,
-      });
-      const docs = await docsCollector.collectDocsSummaries();
-
-      this.stats.docsCollected = docs.size;
-      logger.success(`成功收集 ${docs.size} 個文件摘要`);
-
-      await this.saveCache('docs.json', Array.from(docs.values()));
-      return docs;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.warn(`收集文件失敗，繼續執行: ${errorMsg}`);
-      return new Map();
-    }
-  }
 
   /**
-   * 步驟 4: 組織和排序節點
+   * 步驟 3: 組織和排序節點
    */
   private async organizeNodes(
     nodes: SimplifiedNodeInfo[],
     usageStats: NodeUsageStats,
-    docsMap: Map<string, NodeDocSummary>,
     propertiesMap: Map<string, any>
   ): Promise<{ topNodes: EnrichedNodeInfo[]; remainingNodes: EnrichedNodeInfo[] }> {
-    logger.info('===== 步驟 4: 組織和排序節點 =====');
+    logger.info('===== 步驟 3: 組織和排序節點 =====');
 
     // 建立優先級排序器
     const priorityConfigPath = path.resolve(this.projectRoot, 'config/priorities.json');
@@ -269,7 +234,7 @@ class SkillBuilder {
       description: node.description,
       category: node.category,
       usageCount: usageStats[node.nodeType]?.count || 0,
-      hasDocumentation: docsMap.has(node.nodeType),
+      hasDocumentation: false,
       packageName: node.packageName,
     }));
 
@@ -291,21 +256,12 @@ class SkillBuilder {
 
     // 轉換為 EnrichedNodeInfo
     const enrichNode = (scored: ScoredNode, original: SimplifiedNodeInfo): EnrichedNodeInfo => {
-      const doc = docsMap.get(scored.nodeType);
       const propData = propertiesMap.get(scored.nodeType);
 
       return {
         ...original,
         usageCount: scored.usageCount,
         usagePercentage: usageStats[scored.nodeType]?.percentage || 0,
-        documentation: doc ? {
-          description: doc.summary,
-          usage: '',
-          examples: [],
-          keywords: [],
-          tags: [],
-          officialUrl: doc.url,
-        } : undefined,
         properties: propData?.properties,
       };
     };
@@ -324,7 +280,7 @@ class SkillBuilder {
   }
 
   /**
-   * 步驟 5: 生成主 Skill 文件
+   * 步驟 4: 生成主 Skill 文件
    */
   private async generateMainSkill(
     topNodes: EnrichedNodeInfo[],
@@ -399,7 +355,6 @@ class SkillBuilder {
     console.log(`主要節點: ${this.stats.topNodes}`);
     console.log(`資源節點: ${this.stats.resourceNodes}`);
     console.log(`範本數量: ${this.stats.templatesCollected}`);
-    console.log(`文件數量: ${this.stats.docsCollected}`);
     console.log(`建置時間: ${(this.stats.duration / 1000).toFixed(2)} 秒`);
     console.log('');
   }
@@ -503,19 +458,15 @@ class SkillBuilder {
       // 步驟 2: 收集使用統計
       const usageStats = await this.collectUsageStats();
 
-      // 步驟 3: 收集文件
-      const docsMap = await this.collectDocs();
-
-      // 步驟 4: 組織和排序
+      // 步驟 3: 組織和排序
       const { topNodes, remainingNodes } = await this.organizeNodes(
         nodes,
         usageStats,
-        docsMap,
         propertiesMap
       );
 
-      // 步驟 6: 為所有節點生成資源檔案（包括 topNodes，因為 Skill.md 會連結到它們）
-      logger.info('===== 步驟 6: 生成資源檔案 =====');
+      // 步驟 4: 為所有節點生成資源檔案（包括 topNodes，因為 Skill.md 會連結到它們）
+      logger.info('===== 步驟 4: 生成資源檔案 =====');
       const allNodes = [...topNodes, ...remainingNodes];
 
       const resourceGenerator = new ResourceGenerator({
@@ -525,10 +476,10 @@ class SkillBuilder {
 
       logger.success(`成功生成 ${resourceFiles.length} 個資源檔案`);
 
-      // 步驟 7: 生成 templates 範本檔案
+      // 步驟 5: 生成 templates 範本檔案
       await this.generateTemplates();
 
-      // 步驟 5: 生成主 Skill 文件
+      // 步驟 6: 生成主 Skill 文件
       await this.generateMainSkill(topNodes, usageStats, resourceFiles);
 
       // 顯示統計
