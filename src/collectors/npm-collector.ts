@@ -149,7 +149,20 @@ export class NpmCollector {
   ): LoadedNode | null {
     try {
       const fullPath = require.resolve(`${packagePath}/${nodePath}`);
-      const nodeModule = require(fullPath);
+
+      // 使用 try-catch 保護 require 過程（避免原生模組載入失敗）
+      let nodeModule;
+      try {
+        nodeModule = require(fullPath);
+      } catch (requireError) {
+        const errMsg = (requireError as Error).message;
+        // 如果是 segfault 相關錯誤，記錄但不中斷
+        if (errMsg.includes('segmentation') || errMsg.includes('SIGSEGV')) {
+          console.error(`嚴重錯誤 - 跳過節點 ${packageName}/${nodePath}: segmentation fault`);
+          return null;
+        }
+        throw requireError;
+      }
 
       // 從路徑提取節點名稱（例如："dist/nodes/Slack/Slack.node.js" -> "Slack"）
       const nodeNameMatch = nodePath.match(/\/([^\/]+)\.node\.(js|ts)$/);
@@ -165,7 +178,8 @@ export class NpmCollector {
       console.warn(`找不到有效的節點匯出: ${nodeName} in ${packageName}`);
       return null;
     } catch (error) {
-      console.error(`載入節點失敗 ${packageName}/${nodePath}:`, (error as Error).message);
+      const errMsg = (error as Error).message;
+      console.error(`載入節點失敗 ${packageName}/${nodePath}:`, errMsg);
       return null;
     }
   }
@@ -223,18 +237,32 @@ export class NpmCollector {
    */
   private getNodeDescription(nodeClass: any): INodeTypeBaseDescription | INodeTypeDescription {
     try {
-      // 嘗試實例化節點
+      // 優先嘗試從靜態屬性取得（避免實例化可能的原生模組）
+      if (nodeClass.description) {
+        return nodeClass.description;
+      }
+
+      // 嘗試實例化節點（使用 timeout 保護）
       const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
 
       // 檢查是否為版本化節點
-      if (instance.nodeVersions) {
-        return instance.description || instance.baseDescription || {};
+      if (instance?.nodeVersions) {
+        return instance.description || instance.baseDescription || ({} as INodeTypeBaseDescription);
       }
 
-      return instance.description || {};
+      return instance?.description || ({} as INodeTypeBaseDescription);
     } catch (error) {
-      // 某些節點需要參數才能實例化，嘗試從靜態屬性取得
-      return nodeClass.description || {};
+      // 實例化失敗時的容錯處理
+      try {
+        // 嘗試從 prototype 取得
+        if (nodeClass.prototype?.description) {
+          return nodeClass.prototype.description;
+        }
+      } catch {
+        // 忽略
+      }
+
+      return {} as INodeTypeBaseDescription;
     }
   }
 
@@ -277,31 +305,7 @@ export class NpmCollector {
    */
   private extractVersion(nodeClass: any, description: INodeTypeBaseDescription | INodeTypeDescription): string {
     try {
-      const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
-      const inst = instance as any;
-
-      // 優先順序 1: currentVersion（版本化節點使用）
-      if (inst?.currentVersion !== undefined) {
-        return inst.currentVersion.toString();
-      }
-
-      // 優先順序 2: description.defaultVersion
-      if (inst?.description?.defaultVersion) {
-        return inst.description.defaultVersion.toString();
-      }
-
-      // 優先順序 3: nodeVersions（回退到最大版本）
-      if (inst?.nodeVersions) {
-        const versions = Object.keys(inst.nodeVersions).map(Number);
-        if (versions.length > 0) {
-          const maxVersion = Math.max(...versions);
-          if (!isNaN(maxVersion)) {
-            return maxVersion.toString();
-          }
-        }
-      }
-
-      // 優先順序 4: description.version
+      // 優先從 description 取得版本（避免實例化）
       const desc = description as any;
       if (desc?.version) {
         if (Array.isArray(desc.version)) {
@@ -313,6 +317,41 @@ export class NpmCollector {
         } else {
           return desc.version.toString();
         }
+      }
+
+      if (desc?.defaultVersion) {
+        return desc.defaultVersion.toString();
+      }
+
+      // 嘗試從靜態屬性取得
+      if (nodeClass.currentVersion !== undefined) {
+        return nodeClass.currentVersion.toString();
+      }
+
+      // 最後才嘗試實例化
+      try {
+        const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
+        const inst = instance as any;
+
+        if (inst?.currentVersion !== undefined) {
+          return inst.currentVersion.toString();
+        }
+
+        if (inst?.description?.defaultVersion) {
+          return inst.description.defaultVersion.toString();
+        }
+
+        if (inst?.nodeVersions) {
+          const versions = Object.keys(inst.nodeVersions).map(Number);
+          if (versions.length > 0) {
+            const maxVersion = Math.max(...versions);
+            if (!isNaN(maxVersion)) {
+              return maxVersion.toString();
+            }
+          }
+        }
+      } catch {
+        // 實例化失敗，使用預設值
       }
     } catch (error) {
       // 忽略錯誤，使用預設值
@@ -329,10 +368,19 @@ export class NpmCollector {
    */
   private isVersionedNode(nodeClass: any): boolean {
     try {
-      const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
-      const inst = instance as any;
+      // 優先檢查靜態屬性
+      if (nodeClass.nodeVersions || nodeClass.baseDescription?.defaultVersion) {
+        return true;
+      }
 
-      return !!(inst?.nodeVersions || inst?.baseDescription?.defaultVersion);
+      // 嘗試實例化檢查
+      try {
+        const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
+        const inst = instance as any;
+        return !!(inst?.nodeVersions || inst?.baseDescription?.defaultVersion);
+      } catch {
+        return false;
+      }
     } catch (error) {
       return false;
     }

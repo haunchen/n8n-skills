@@ -143,14 +143,42 @@ class SkillBuilder {
     }
 
     logger.info('從 NPM 套件收集節點資訊...');
-    const npmCollector = new NpmCollector();
-    const nodes = await npmCollector.collectAll();
 
-    this.stats.totalNodes = nodes.length;
-    logger.success(`成功收集 ${nodes.length} 個節點`);
+    // 檢測是否在 CI 環境中
+    const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+    if (isCI) {
+      logger.info('偵測到 CI 環境，啟用記憶體優化模式');
+    }
 
-    await this.saveCache('nodes.json', nodes);
-    return nodes;
+    try {
+      const npmCollector = new NpmCollector();
+      const nodes = await npmCollector.collectAll();
+
+      this.stats.totalNodes = nodes.length;
+      logger.success(`成功收集 ${nodes.length} 個節點`);
+
+      await this.saveCache('nodes.json', nodes);
+
+      // 在 CI 環境中主動觸發垃圾回收
+      if (isCI && global.gc) {
+        global.gc();
+        logger.info('執行記憶體垃圾回收');
+      }
+
+      return nodes;
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logger.error('收集節點資訊時發生錯誤', error);
+
+      // 嘗試從快取恢復（即使快取可能是舊的）
+      const oldCache = await this.loadCache('nodes.json');
+      if (oldCache && oldCache.length > 0) {
+        logger.warn(`使用舊的快取資料恢復 (${oldCache.length} 個節點)`);
+        return oldCache;
+      }
+
+      throw new Error(`收集節點失敗且無法恢復: ${errorMsg}`);
+    }
   }
 
   /**
@@ -390,44 +418,73 @@ class SkillBuilder {
     }
 
     logger.info('從 NPM 套件解析節點屬性...');
-    const npmCollector = new NpmCollector();
-    const loadedNodes = await npmCollector.collectAllWithDetails();
 
-    const propertiesMap = new Map<string, any>();
-    const nodeParser = new NodeParser();
-    const propertyParser = new PropertyParser();
+    const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
 
-    let processed = 0;
-    for (const loadedNode of loadedNodes) {
-      try {
-        const parsed = nodeParser.parse(loadedNode.NodeClass, loadedNode.packageName);
-        const properties = propertyParser.parse(loadedNode.NodeClass);
+    try {
+      const npmCollector = new NpmCollector();
+      const loadedNodes = await npmCollector.collectAllWithDetails();
 
-        propertiesMap.set(parsed.nodeType, {
-          properties,
-          version: parsed.version,
-          nodeCategory: parsed.nodeCategory,
-        });
+      const propertiesMap = new Map<string, any>();
+      const nodeParser = new NodeParser();
+      const propertyParser = new PropertyParser();
 
-        processed++;
-        if (processed % 50 === 0) {
-          logger.progress(processed, loadedNodes.length, '已解析');
+      let processed = 0;
+      for (const loadedNode of loadedNodes) {
+        try {
+          const parsed = nodeParser.parse(loadedNode.NodeClass, loadedNode.packageName);
+          const properties = propertyParser.parse(loadedNode.NodeClass);
+
+          propertiesMap.set(parsed.nodeType, {
+            properties,
+            version: parsed.version,
+            nodeCategory: parsed.nodeCategory,
+          });
+
+          processed++;
+          if (processed % 50 === 0) {
+            logger.progress(processed, loadedNodes.length, '已解析');
+
+            // 在 CI 環境中定期觸發垃圾回收
+            if (isCI && global.gc && processed % 100 === 0) {
+              global.gc();
+            }
+          }
+        } catch (error) {
+          // 忽略解析失敗的節點
         }
-      } catch (error) {
-        // 忽略解析失敗的節點
       }
+
+      logger.success(`成功解析 ${propertiesMap.size} 個節點的屬性`);
+
+      // 轉換為可序列化的格式
+      const cacheData: Record<string, any> = {};
+      propertiesMap.forEach((value, key) => {
+        cacheData[key] = value;
+      });
+
+      await this.saveCache('properties.json', cacheData);
+
+      // 最後執行一次垃圾回收
+      if (isCI && global.gc) {
+        global.gc();
+        logger.info('執行記憶體垃圾回收');
+      }
+
+      return propertiesMap;
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logger.error('收集節點屬性時發生錯誤', error);
+
+      // 嘗試從快取恢復
+      const oldCache = await this.loadCache('properties.json');
+      if (oldCache) {
+        logger.warn('使用舊的快取資料恢復');
+        return new Map(Object.entries(oldCache));
+      }
+
+      throw new Error(`收集節點屬性失敗且無法恢復: ${errorMsg}`);
     }
-
-    logger.success(`成功解析 ${propertiesMap.size} 個節點的屬性`);
-
-    // 轉換為可序列化的格式
-    const cacheData: Record<string, any> = {};
-    propertiesMap.forEach((value, key) => {
-      cacheData[key] = value;
-    });
-
-    await this.saveCache('properties.json', cacheData);
-    return propertiesMap;
   }
 
   /**

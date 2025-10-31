@@ -52,14 +52,31 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Install dependencies
         if: steps.check_tag.outputs.exists == 'false'
         run: npm ci
 
+      - name: Restore build cache
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: actions/cache@v3
+        with:
+          path: |
+            data/cache
+            dist
+          key: ${{ runner.os }}-build-cache-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-cache-
+
       - name: Build project and generate output
         if: steps.check_tag.outputs.exists == 'false'
         run: npm run build:full
+        env:
+          NODE_ENV: production
+          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
+          CI: true
 
       - name: Verify output directory
         if: steps.check_tag.outputs.exists == 'false'
