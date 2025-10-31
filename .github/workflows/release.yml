@@ -59,16 +59,27 @@ jobs:
         if: steps.check_tag.outputs.exists == 'false'
         run: npm ci
 
-      - name: Restore build cache
+      - name: Verify cache files exist
         if: steps.check_tag.outputs.exists == 'false'
-        uses: actions/cache@v3
-        with:
-          path: |
-            data/cache
-            dist
-          key: ${{ runner.os }}-build-cache-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-cache-
+        run: |
+          # Cache is prebuilt locally and committed to avoid CI segfault (exit code 139)
+          # Rebuilding in CI causes memory issues when loading n8n native modules
+          if [ ! -f "data/cache/nodes.json" ]; then
+            echo "❌ Error: data/cache/nodes.json not found"
+            echo "Please run 'npm run build:full' locally and commit cache files"
+            exit 1
+          fi
+          if [ ! -f "data/cache/properties.json" ]; then
+            echo "❌ Error: data/cache/properties.json not found"
+            echo "Please run 'npm run build:full' locally and commit cache files"
+            exit 1
+          fi
+
+          echo "✅ Cache files exist (prebuilt locally to avoid CI segfault)"
+          echo "  - nodes.json: $(du -h data/cache/nodes.json | cut -f1)"
+          echo "  - properties.json: $(du -h data/cache/properties.json | cut -f1)"
+          echo "  - templates.json: $(du -h data/cache/templates.json 2>/dev/null | cut -f1 || echo 'not found')"
+          echo "  - usage-stats.json: $(du -h data/cache/usage-stats.json 2>/dev/null | cut -f1 || echo 'not found')"
 
       - name: Build project and generate output
         if: steps.check_tag.outputs.exists == 'false'

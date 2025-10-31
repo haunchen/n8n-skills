@@ -108,9 +108,15 @@ export class NpmCollector {
       const n8nConfig = packageJson.n8n || {};
       const nodesList = n8nConfig.nodes || [];
 
+      // 檢測是否在 CI 環境中
+      const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+
       if (Array.isArray(nodesList)) {
         // 處理陣列格式（n8n-nodes-base 使用此格式）
         for (const nodePath of nodesList) {
+          if (isCI) {
+            console.log(`[CI] 正在載入: ${packageName}/${nodePath}`);
+          }
           const loadedNode = this.loadSingleNode(packageName, packagePath, nodePath);
           if (loadedNode) {
             nodes.push(loadedNode);
@@ -119,6 +125,9 @@ export class NpmCollector {
       } else {
         // 處理物件格式（其他套件可能使用此格式）
         for (const [nodeName, nodePath] of Object.entries(nodesList)) {
+          if (isCI) {
+            console.log(`[CI] 正在載入: ${packageName}/${nodePath}`);
+          }
           const loadedNode = this.loadSingleNode(packageName, packagePath, nodePath as string, nodeName);
           if (loadedNode) {
             nodes.push(loadedNode);
