@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "n8n_version": "1.117.2",
+  "build_date": "",
+  "max_nodes_in_main_skill": 50,
+  "categories": {
+    "core": {
+      "name": "核心節點",
+      "priority": 1,
+      "max_nodes": 10
+    },
+    "app": {
+      "name": "應用整合",
+      "priority": 2,
+      "max_nodes": 30
+    },
+    "trigger": {
+      "name": "觸發器",
+      "priority": 3,
+      "max_nodes": 10
+    },
+    "ai": {
+      "name": "AI 節點",
+      "priority": 4,
+      "max_nodes": 20
+    },
+    "database": {
+      "name": "資料庫",
+      "priority": 5,
+      "max_nodes": 10
+    },
+    "utility": {
+      "name": "工具節點",
+      "priority": 6,
+      "max_nodes": 10
+    }
+  },
+  "output_format": "markdown",
+  "include_examples": true,
+  "include_templates": true,
+  "max_template_examples": 100,
+  "docs_summary_max_length": 300,
+  "property_max_count": 10
+}

@@ -1,0 +1,64 @@
+{
+  "name": "n8n-skills",
+  "version": "1.0.0",
+  "description": "n8n workflow automation skill pack for AI assistants",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "build:full": "npm run build && node dist/scripts/build.js",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist output data/cache",
+    "rebuild": "npm run clean && npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build",
+    "update": "npm run build && node dist/scripts/update-n8n-data.js",
+    "update:check": "npm run build && node dist/scripts/update-n8n-data.js --dry-run",
+    "validate": "npm run build && node dist/scripts/validate-output.js",
+    "start": "npm run build:full"
+  },
+  "keywords": [
+    "n8n",
+    "workflow",
+    "automation",
+    "mcp",
+    "ai",
+    "skill"
+  ],
+  "author": "haunchen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haunchen/n8n-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/haunchen/n8n-skill/issues"
+  },
+  "homepage": "https://github.com/haunchen/n8n-skill#readme",
+  "dependencies": {
+    "n8n": "^1.117.2",
+    "n8n-core": "^1.116.0",
+    "n8n-workflow": "^1.114.0",
+    "simple-git": "^3.29.0",
+    "@n8n/n8n-nodes-langchain": "^1.116.2",
+    "n8n-nodes-base": "^1.116.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

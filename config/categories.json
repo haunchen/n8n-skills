@@ -1,0 +1,88 @@
+{
+  "categories": {
+    "core": {
+      "name": "核心節點",
+      "description": "n8n 最基本和常用的節點",
+      "icon": "⚙️",
+      "priority": 1,
+      "nodes": [
+        "httpRequest",
+        "code",
+        "webhook",
+        "set",
+        "if",
+        "merge",
+        "split",
+        "function",
+        "executeWorkflow",
+        "loop"
+      ]
+    },
+    "app": {
+      "name": "應用整合",
+      "description": "第三方服務整合節點",
+      "icon": "🔌",
+      "priority": 2,
+      "subcategories": {
+        "communication": ["slack", "discord", "telegram", "microsoftTeams"],
+        "productivity": ["googleSheets", "notion", "airtable", "monday"],
+        "development": ["github", "gitlab", "jira", "linear"],
+        "marketing": ["mailchimp", "sendgrid", "hubspot", "salesforce"],
+        "storage": ["googleDrive", "dropbox", "s3", "box"]
+      }
+    },
+    "trigger": {
+      "name": "觸發器節點",
+      "description": "啟動工作流程的節點",
+      "icon": "⚡",
+      "priority": 3,
+      "nodes": [
+        "cronTrigger",
+        "manualTrigger",
+        "webhookTrigger",
+        "emailTrigger",
+        "scheduleTrigger"
+      ]
+    },
+    "ai": {
+      "name": "AI 節點",
+      "description": "AI 和機器學習相關節點",
+      "icon": "🤖",
+      "priority": 4,
+      "subcategories": {
+        "llm": ["openai", "anthropic", "googlePalm", "huggingFace"],
+        "langchain": ["langchain", "vectorStore", "memoryManager"],
+        "agents": ["aiAgent", "toolCalling"]
+      }
+    },
+    "database": {
+      "name": "資料庫節點",
+      "description": "資料庫操作節點",
+      "icon": "🗄️",
+      "priority": 5,
+      "nodes": [
+        "postgres",
+        "mysql",
+        "mongodb",
+        "redis",
+        "supabase",
+        "firebase"
+      ]
+    },
+    "utility": {
+      "name": "工具節點",
+      "description": "實用工具節點",
+      "icon": "🛠️",
+      "priority": 6,
+      "nodes": [
+        "dateTime",
+        "crypto",
+        "htmlExtract",
+        "xml",
+        "json",
+        "compress",
+        "readPdf"
+      ]
+    }
+  }
+}

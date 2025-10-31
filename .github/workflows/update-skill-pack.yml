@@ -1,0 +1,222 @@
+name: Update n8n Skill Pack
+
+on:
+  schedule:
+    # Run every Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      version-bump:
+        description: 'Version bump type'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update npm packages to latest
+        run: npm update
+
+      - name: Compile TypeScript
+        run: npm run build
+
+      - name: Check n8n version changes
+        id: check_version
+        run: |
+          # Read old version (from main branch)
+          git fetch origin main
+          OLD_N8N_VERSION=$(git show origin/main:package.json | jq -r '.dependencies["n8n"]' | sed 's/\^//')
+
+          # Read new version (after update)
+          NEW_N8N_VERSION=$(jq -r '.dependencies["n8n"]' package.json | sed 's/\^//')
+
+          echo "old_n8n_version=$OLD_N8N_VERSION" >> $GITHUB_OUTPUT
+          echo "new_n8n_version=$NEW_N8N_VERSION" >> $GITHUB_OUTPUT
+
+          if [ "$OLD_N8N_VERSION" != "$NEW_N8N_VERSION" ]; then
+            echo "version_changed=true" >> $GITHUB_OUTPUT
+            echo "n8n version changed: v$OLD_N8N_VERSION → v$NEW_N8N_VERSION"
+          else
+            echo "version_changed=false" >> $GITHUB_OUTPUT
+            echo "n8n version unchanged: v$NEW_N8N_VERSION"
+          fi
+
+      - name: Determine version bump type
+        id: determine_bump
+        run: |
+          MANUAL_BUMP="${{ github.event.inputs.version-bump }}"
+          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+
+          if [ "$MANUAL_BUMP" != "" ] && [ "$MANUAL_BUMP" != "auto" ]; then
+            # Manual trigger with specified version type
+            echo "bump_type=$MANUAL_BUMP" >> $GITHUB_OUTPUT
+            echo "Using manually specified version type: $MANUAL_BUMP"
+          elif [ "$VERSION_CHANGED" == "true" ]; then
+            # n8n version upgraded, use minor
+            echo "bump_type=minor" >> $GITHUB_OUTPUT
+            echo "n8n version upgraded, using minor version"
+          else
+            # Data update only, use patch
+            echo "bump_type=patch" >> $GITHUB_OUTPUT
+            echo "Data update, using patch version"
+          fi
+
+      - name: Update package.json version
+        id: bump_version
+        run: |
+          CURRENT_VERSION=$(jq -r '.version' package.json)
+          BUMP_TYPE="${{ steps.determine_bump.outputs.bump_type }}"
+
+          # Parse version number
+          IFS='.' read -r -a version_parts <<< "$CURRENT_VERSION"
+          MAJOR="${version_parts[0]}"
+          MINOR="${version_parts[1]}"
+          PATCH="${version_parts[2]}"
+
+          # Bump version by type
+          case "$BUMP_TYPE" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+
+          # Update package.json
+          jq --arg version "$NEW_VERSION" '.version = $version' package.json > package.json.tmp
+          mv package.json.tmp package.json
+
+          echo "old_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Version updated: $CURRENT_VERSION → $NEW_VERSION"
+
+      - name: Update README.md version statement
+        run: |
+          N8N_VERSION="${{ steps.check_version.outputs.new_n8n_version }}"
+          sed -i "s/支援 n8n 版本：v[0-9.]\+/支援 n8n 版本：v${N8N_VERSION}/" README.md
+          echo "README.md updated with n8n version v${N8N_VERSION}"
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          fi
+
+      - name: Get change summary
+        if: steps.check_changes.outputs.has_changes == 'true'
+        id: get_summary
+        run: |
+          CHANGED_FILES=$(git diff --name-only | head -20)
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Generate PR title
+        id: pr_title
+        run: |
+          OLD_N8N="${{ steps.check_version.outputs.old_n8n_version }}"
+          NEW_N8N="${{ steps.check_version.outputs.new_n8n_version }}"
+          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+
+          if [ "$VERSION_CHANGED" == "true" ]; then
+            PR_TITLE="Auto update: n8n v${OLD_N8N} → v${NEW_N8N}"
+          else
+            PR_TITLE="Auto update: n8n v${NEW_N8N} data refresh"
+          fi
+
+          echo "title=$PR_TITLE" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            Update n8n skill pack data
+
+            Automatically update n8n node data and documentation
+
+            - n8n version: v${{ steps.check_version.outputs.new_n8n_version }}
+            - Skill pack version: ${{ steps.bump_version.outputs.old_version }} → ${{ steps.bump_version.outputs.new_version }}
+
+            Changed files:
+            ${{ steps.get_summary.outputs.changed_files }}
+          branch: auto-update-skill-pack
+          delete-branch: true
+          title: ${{ steps.pr_title.outputs.title }}
+          body: |
+            ## Auto Update n8n Skill Pack
+
+            This PR is automatically created by GitHub Actions with the latest n8n node data.
+
+            ### Version Information
+
+            - n8n version: v${{ steps.check_version.outputs.new_n8n_version }}
+            - Skill pack version: ${{ steps.bump_version.outputs.old_version }} → ${{ steps.bump_version.outputs.new_version }}
+            - Version bump type: ${{ steps.determine_bump.outputs.bump_type }}
+
+            ### Changes
+
+            ```
+            ${{ steps.get_summary.outputs.changed_files }}
+            ```
+
+            ### Checklist
+
+            - [ ] Check data integrity
+            - [ ] Verify Markdown format
+            - [ ] Confirm internal links work
+            - [ ] Test skill pack loading
+            - [ ] Verify version number
+          labels: |
+            auto-update
+            dependencies
+
+      - name: Update result notification
+        if: always()
+        run: |
+          if [[ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]]; then
+            echo "Pull Request created, awaiting review"
+          else
+            echo "Data is already up-to-date, no update needed"
+          fi

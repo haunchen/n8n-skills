@@ -1,0 +1,75 @@
+{
+  "priority_tiers": {
+    "essential": {
+      "tier": 1,
+      "description": "必須熟記的核心節點",
+      "max_nodes": 10,
+      "nodes": [
+        "httpRequest",
+        "code",
+        "webhook",
+        "set",
+        "if",
+        "merge",
+        "split",
+        "function"
+      ]
+    },
+    "common": {
+      "tier": 2,
+      "description": "常用的應用整合節點",
+      "max_nodes": 40,
+      "nodes": [
+        "slack",
+        "googleSheets",
+        "gmail",
+        "notion",
+        "airtable",
+        "github",
+        "postgres",
+        "mysql",
+        "openai",
+        "discord",
+        "telegram",
+        "googleDrive",
+        "dropbox",
+        "s3"
+      ]
+    },
+    "specialized": {
+      "tier": 3,
+      "description": "專業用途節點",
+      "max_nodes": 491,
+      "include_all_others": true
+    }
+  },
+  "ranking_criteria": {
+    "usage_frequency": {
+      "weight": 0.4,
+      "description": "基於範本使用頻率"
+    },
+    "documentation_quality": {
+      "weight": 0.2,
+      "description": "文件完整性"
+    },
+    "community_popularity": {
+      "weight": 0.2,
+      "description": "社群受歡迎程度"
+    },
+    "versatility": {
+      "weight": 0.2,
+      "description": "節點通用性"
+    }
+  },
+  "boosted_nodes": {
+    "description": "特別提升優先級的節點",
+    "nodes": [
+      "httpRequest",
+      "webhook",
+      "code",
+      "slack",
+      "googleSheets",
+      "openai"
+    ]
+  }
+}

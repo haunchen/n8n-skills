@@ -1,0 +1,63 @@
+MIT License
+
+Copyright (c) 2025 Frank Chen @ www.frankchen.tw/personal
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
+================================================================================
+
+This software incorporates data and documentation from the following projects:
+
+1. n8n - Workflow Automation Platform
+   Copyright (c) 2024 n8n GmbH
+   License: Sustainable Use License (https://github.com/n8n-io/n8n/blob/master/LICENSE.md)
+   Source: https://github.com/n8n-io/n8n
+
+   Note: This project uses n8n node type definitions and metadata for educational
+   purposes only. No n8n source code is included. Users must comply with n8n's
+   license terms when using n8n software.
+
+2. n8n-docs - Official n8n Documentation
+   Copyright (c) 2024 n8n GmbH
+   License: MIT License (https://github.com/n8n-io/n8n-docs/blob/master/LICENSE.md)
+   Source: https://github.com/n8n-io/n8n-docs
+
+   Documentation content is used under MIT License terms with attribution.
+
+3. n8n-mcp - n8n Model Context Protocol Integration
+   Copyright (c) 2024 Romuald Czlonkowski @ www.aiadvisors.pl/en
+   License: MIT License (https://github.com/czlonkowski/n8n-mcp/blob/main/LICENSE)
+   Source: https://github.com/czlonkowski/n8n-mcp
+
+   This project is built upon n8n-mcp architecture and methodology.
+   Created by Romuald Czlonkowski @ www.aiadvisors.pl/en
+
+================================================================================
+IMPORTANT NOTICES
+================================================================================
+
+- This is an UNOFFICIAL project, not affiliated with or endorsed by n8n GmbH
+- n8n is a trademark of n8n GmbH
+- When using n8n software, users must comply with n8n's license terms
+- See ATTRIBUTIONS.md for detailed attribution information
+- All trademarks and copyrights belong to their respective owners
+
+For n8n licensing information, please visit: https://github.com/n8n-io/n8n/blob/master/LICENSE.md

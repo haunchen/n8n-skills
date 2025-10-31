@@ -1,0 +1,116 @@
+name: Build and Validate
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript type checking
+        run: npm run typecheck
+        continue-on-error: false
+
+      - name: Compile TypeScript
+        run: npm run build
+
+      - name: Check build artifacts
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Build failed: dist directory does not exist"
+            exit 1
+          fi
+          echo "Build successful, checking file count..."
+          FILE_COUNT=$(find dist -type f | wc -l)
+          echo "Build generated $FILE_COUNT files"
+
+      - name: Run validation
+        id: validate
+        run: |
+          npm run validate || echo "validation_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Check validation results
+        if: steps.validate.outputs.validation_failed == 'true'
+        run: |
+          echo "Validation failed, please check error messages"
+          cat output/validation-report.json 2>/dev/null || echo "Cannot read validation report"
+          exit 1
+
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: |
+            output/validation-report.json
+            output/*.md
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 7
+
+      - name: Check file size
+        run: |
+          echo "Checking main skill pack file size..."
+          if [ -f "output/n8n-workflow-guide.md" ]; then
+            SIZE=$(wc -c < output/n8n-workflow-guide.md)
+            SIZE_MB=$((SIZE / 1024 / 1024))
+            echo "Main skill pack size: ${SIZE_MB} MB"
+            if [ $SIZE_MB -gt 5 ]; then
+              echo "Warning: Skill pack file exceeds 5MB, may affect loading performance"
+            fi
+          else
+            echo "Warning: Main skill pack file not found"
+          fi
+
+      - name: Count node files
+        run: |
+          if [ -d "output/resources" ]; then
+            NODE_COUNT=$(find output/resources -name "*.md" ! -name "*index.md" | wc -l)
+            echo "Resource file count: $NODE_COUNT"
+          fi
+
+      - name: Validation success notification
+        if: success()
+        run: |
+          echo "All validations passed"
+          echo "- TypeScript compilation successful"
+          echo "- Output file validation passed"
+          echo "- Skill pack quality meets standards"
+
+      - name: Validation failure notification
+        if: failure()
+        run: |
+          echo "Validation failed, please check the following:"
+          echo "1. TypeScript type errors"
+          echo "2. Build failures"
+          echo "3. Output file format errors"
+          echo "4. Broken internal links"
+          echo ""
+          echo "For details, check error messages above or download the validation report"

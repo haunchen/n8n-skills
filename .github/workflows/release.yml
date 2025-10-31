@@ -1,0 +1,176 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version information
+        id: version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          N8N_VERSION=$(jq -r '.dependencies["n8n"]' package.json | sed 's/\^//')
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "n8n_version=$N8N_VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+          echo "Skill pack version: $VERSION"
+          echo "n8n version: v$N8N_VERSION"
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag $TAG already exists, skipping release creation"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag $TAG does not exist, proceeding with release creation"
+          fi
+
+      - name: Setup Node.js
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.check_tag.outputs.exists == 'false'
+        run: npm ci
+
+      - name: Build project and generate output
+        if: steps.check_tag.outputs.exists == 'false'
+        run: npm run build:full
+
+      - name: Verify output directory
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          if [ ! -d "output" ]; then
+            echo "Error: output directory does not exist"
+            exit 1
+          fi
+
+          if [ ! -f "output/Skill.md" ]; then
+            echo "Error: output/Skill.md file does not exist"
+            exit 1
+          fi
+
+          echo "Output directory verification passed"
+          ls -lh output/
+
+      - name: Package skill pack
+        if: steps.check_tag.outputs.exists == 'false'
+        working-directory: output
+        run: |
+          # Create zip file, Skill.md will be in root
+          zip -r n8n-skills-${{ steps.version.outputs.version }}.zip .
+
+          # Display zip contents
+          echo "Zip file contents:"
+          unzip -l n8n-skills-${{ steps.version.outputs.version }}.zip | head -20
+
+          # Move to parent directory
+          mv n8n-skills-${{ steps.version.outputs.version }}.zip ../
+
+          echo "Packaging complete"
+
+      - name: Check file size
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          ZIP_FILE="n8n-skills-${{ steps.version.outputs.version }}.zip"
+          SIZE=$(wc -c < "$ZIP_FILE")
+          SIZE_MB=$((SIZE / 1024 / 1024))
+
+          echo "Zip file size: ${SIZE_MB} MB"
+
+          if [ $SIZE_MB -gt 50 ]; then
+            echo "Warning: File exceeds 50MB, may affect download speed"
+          fi
+
+      - name: Generate Release Notes
+        if: steps.check_tag.outputs.exists == 'false'
+        id: release_notes
+        run: |
+          # Get recent commits
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log ${LAST_TAG}..HEAD --oneline --no-merges)
+          else
+            COMMITS=$(git log --oneline --no-merges -n 10)
+          fi
+
+          # Create Release Notes
+          cat > release-notes.md << EOF
+          ## n8n Skill Pack v${{ steps.version.outputs.version }}
+
+          Supports n8n version: v${{ steps.version.outputs.n8n_version }}
+
+          ### Updates
+
+          $COMMITS
+
+          ### Usage
+
+          1. Download \`n8n-skills-${{ steps.version.outputs.version }}.zip\`
+          2. Extract to your project directory
+          3. Load the \`Skill.md\` file in your AI assistant
+          4. Start exploring n8n node information
+
+          ### Contents
+
+          - Complete n8n node documentation
+          - Node configuration examples
+          - Workflow pattern reference
+          - Category index and search guide
+
+          ---
+          Conceived by Romuald Członkowski - https://www.aiadvisors.pl/en
+          EOF
+
+          echo "Release notes generated"
+
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: v${{ steps.version.outputs.version }}
+          body_path: release-notes.md
+          files: |
+            n8n-skills-${{ steps.version.outputs.version }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release completion notification
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          echo "Release v${{ steps.version.outputs.version }} created successfully"
+          echo "Download link: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}"
+
+      - name: Tag exists notification
+        if: steps.check_tag.outputs.exists == 'true'
+        run: |
+          echo "Tag ${{ steps.version.outputs.tag }} already exists, skipping release creation"
+          echo "To recreate release, delete the existing tag first"
