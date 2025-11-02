@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://n8n-skills.zeabur.app/sitemap.xml
