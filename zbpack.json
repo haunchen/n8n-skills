@@ -1,3 +1,6 @@
 {
-  "app_dir": "website"
+  "app_dir": "website",
+  "build_command": "",
+  "install_command": "",
+  "start_command": ""
 }
