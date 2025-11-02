@@ -43,41 +43,73 @@ jobs:
       - name: Update npm packages to latest
         run: npm update
 
-      - name: Run full build
-        run: npm run build:full
-
-      - name: Check n8n version changes
+      - name: Check n8n packages version changes
         id: check_version
         run: |
-          # Read old version (from main branch)
+          # Read old versions (from main branch)
           git fetch origin main
-          OLD_N8N_VERSION=$(git show origin/main:package.json | jq -r '.dependencies["n8n"]' | sed 's/\^//')
+          OLD_N8N=$(git show origin/main:package.json | jq -r '.dependencies["n8n"]' | sed 's/\^//')
+          OLD_N8N_CORE=$(git show origin/main:package.json | jq -r '.dependencies["n8n-core"]' | sed 's/\^//')
+          OLD_N8N_NODES_BASE=$(git show origin/main:package.json | jq -r '.dependencies["n8n-nodes-base"]' | sed 's/\^//')
+          OLD_N8N_LANGCHAIN=$(git show origin/main:package.json | jq -r '.dependencies["@n8n/n8n-nodes-langchain"]' | sed 's/\^//')
 
-          # Read new version (after update)
-          NEW_N8N_VERSION=$(jq -r '.dependencies["n8n"]' package.json | sed 's/\^//')
+          # Read new versions (after update)
+          NEW_N8N=$(jq -r '.dependencies["n8n"]' package.json | sed 's/\^//')
+          NEW_N8N_CORE=$(jq -r '.dependencies["n8n-core"]' package.json | sed 's/\^//')
+          NEW_N8N_NODES_BASE=$(jq -r '.dependencies["n8n-nodes-base"]' package.json | sed 's/\^//')
+          NEW_N8N_LANGCHAIN=$(jq -r '.dependencies["@n8n/n8n-nodes-langchain"]' package.json | sed 's/\^//')
 
-          echo "old_n8n_version=$OLD_N8N_VERSION" >> $GITHUB_OUTPUT
-          echo "new_n8n_version=$NEW_N8N_VERSION" >> $GITHUB_OUTPUT
+          echo "old_n8n_version=$OLD_N8N" >> $GITHUB_OUTPUT
+          echo "new_n8n_version=$NEW_N8N" >> $GITHUB_OUTPUT
 
-          if [ "$OLD_N8N_VERSION" != "$NEW_N8N_VERSION" ]; then
-            echo "version_changed=true" >> $GITHUB_OUTPUT
-            echo "n8n version changed: v$OLD_N8N_VERSION → v$NEW_N8N_VERSION"
-          else
-            echo "version_changed=false" >> $GITHUB_OUTPUT
-            echo "n8n version unchanged: v$NEW_N8N_VERSION"
+          # Check if any n8n package has changed
+          VERSION_CHANGED=false
+          N8N_CHANGED=false
+
+          if [ "$OLD_N8N" != "$NEW_N8N" ]; then
+            VERSION_CHANGED=true
+            N8N_CHANGED=true
+            echo "n8n version changed: v$OLD_N8N → v$NEW_N8N"
           fi
 
+          if [ "$OLD_N8N_CORE" != "$NEW_N8N_CORE" ]; then
+            VERSION_CHANGED=true
+            echo "n8n-core version changed: v$OLD_N8N_CORE → v$NEW_N8N_CORE"
+          fi
+
+          if [ "$OLD_N8N_NODES_BASE" != "$NEW_N8N_NODES_BASE" ]; then
+            VERSION_CHANGED=true
+            echo "n8n-nodes-base version changed: v$OLD_N8N_NODES_BASE → v$NEW_N8N_NODES_BASE"
+          fi
+
+          if [ "$OLD_N8N_LANGCHAIN" != "$NEW_N8N_LANGCHAIN" ]; then
+            VERSION_CHANGED=true
+            echo "@n8n/n8n-nodes-langchain version changed: v$OLD_N8N_LANGCHAIN → v$NEW_N8N_LANGCHAIN"
+          fi
+
+          echo "version_changed=$VERSION_CHANGED" >> $GITHUB_OUTPUT
+          echo "n8n_changed=$N8N_CHANGED" >> $GITHUB_OUTPUT
+
+          if [ "$VERSION_CHANGED" = false ]; then
+            echo "No n8n package version changes detected, skipping build"
+          fi
+
+      - name: Run full build
+        if: steps.check_version.outputs.version_changed == 'true'
+        run: npm run build:full
+
       - name: Determine version bump type
+        if: steps.check_version.outputs.version_changed == 'true'
         id: determine_bump
         run: |
           MANUAL_BUMP="${{ github.event.inputs.version-bump }}"
-          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+          N8N_CHANGED="${{ steps.check_version.outputs.n8n_changed }}"
 
           if [ "$MANUAL_BUMP" != "" ] && [ "$MANUAL_BUMP" != "auto" ]; then
             # Manual trigger with specified version type
             echo "bump_type=$MANUAL_BUMP" >> $GITHUB_OUTPUT
             echo "Using manually specified version type: $MANUAL_BUMP"
-          elif [ "$VERSION_CHANGED" == "true" ]; then
+          elif [ "$N8N_CHANGED" == "true" ]; then
             # Analyze n8n version change to determine bump type
             OLD_N8N="${{ steps.check_version.outputs.old_n8n_version }}"
             NEW_N8N="${{ steps.check_version.outputs.new_n8n_version }}"
@@ -101,12 +133,13 @@ jobs:
               echo "n8n version unchanged: v$NEW_N8N, using patch version bump"
             fi
           else
-            # Data update only, use patch
+            # Only other n8n packages changed, use patch
             echo "bump_type=patch" >> $GITHUB_OUTPUT
-            echo "Data update only, using patch version bump"
+            echo "Other n8n packages updated (n8n-core/n8n-nodes-base/n8n-nodes-langchain), using patch version bump"
           fi
 
       - name: Update package.json version
+        if: steps.check_version.outputs.version_changed == 'true'
         id: bump_version
         run: |
           CURRENT_VERSION=$(jq -r '.version' package.json)
@@ -145,12 +178,14 @@ jobs:
           echo "Version updated: $CURRENT_VERSION → $NEW_VERSION"
 
       - name: Update README.md version statement
+        if: steps.check_version.outputs.version_changed == 'true'
         run: |
           N8N_VERSION="${{ steps.check_version.outputs.new_n8n_version }}"
           sed -i "s/支援 n8n 版本：v[0-9.]\+/支援 n8n 版本：v${N8N_VERSION}/" README.md
           echo "README.md updated with n8n version v${N8N_VERSION}"
 
       - name: Check for changes
+        if: steps.check_version.outputs.version_changed == 'true'
         id: check_changes
         run: |
           if [[ -n $(git status --porcelain) ]]; then
@@ -171,6 +206,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Generate PR title
+        if: steps.check_version.outputs.version_changed == 'true'
         id: pr_title
         run: |
           OLD_N8N="${{ steps.check_version.outputs.old_n8n_version }}"
@@ -234,8 +270,13 @@ jobs:
       - name: Update result notification
         if: always()
         run: |
-          if [[ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]]; then
+          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+          HAS_CHANGES="${{ steps.check_changes.outputs.has_changes }}"
+
+          if [[ "$VERSION_CHANGED" == "false" ]]; then
+            echo "No n8n package version changes detected, no update needed"
+          elif [[ "$HAS_CHANGES" == "true" ]]; then
             echo "Pull Request created, awaiting review"
           else
-            echo "Data is already up-to-date, no update needed"
+            echo "Version changed but no file changes detected"
           fi
