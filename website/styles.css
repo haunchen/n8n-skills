@@ -49,6 +49,31 @@ body {
     animation: fadeInUp 1s ease-out;
 }
 
+.license-badge {
+    margin-bottom: 1rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.license-badge span {
+    display: inline-block;
+    padding: 0.375rem 0.875rem;
+    background-color: rgba(33, 42, 55, 0.6);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.license-badge span:hover {
+    background-color: var(--color-secondary-1);
+    border-color: var(--color-accent-1);
+    color: var(--color-accent-1);
+    transform: translateY(-2px);
+}
+
 .hero-title {
     font-size: 4rem;
     font-weight: 700;
@@ -394,11 +419,129 @@ body {
         font-size: 2rem;
     }
 
+    .license-badge span {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.75rem;
+    }
+
     .stat-number {
         font-size: 2.5rem;
     }
 
     .feature-icon {
         font-size: 2.5rem;
+    }
+}
+
+/* 滾動導航列 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(79, 91, 98, 0.3);
+}
+
+.navbar-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--color-accent-1), var(--color-accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.navbar-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-nav {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Hero 元素淡出效果 */
+.hero-title,
+.hero-buttons {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.hero-hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* 響應式導航列 */
+@media (max-width: 768px) {
+    .navbar-container {
+        padding: 0.875rem 1rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+
+    .navbar-buttons {
+        gap: 0.5rem;
+    }
+
+    .btn-nav {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-nav svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-container {
+        padding: 0.75rem 1rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    .navbar-buttons {
+        gap: 0.5rem;
+    }
+
+    .btn-nav {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8rem;
+        gap: 0.25rem;
+    }
+
+    .btn-nav svg {
+        width: 14px;
+        height: 14px;
     }
 }
