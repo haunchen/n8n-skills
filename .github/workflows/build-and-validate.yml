@@ -51,17 +51,7 @@ jobs:
           echo "Build generated $OUTPUT_COUNT output files"
 
       - name: Run validation
-        id: validate
-        run: |
-          npm run validate || echo "validation_failed=true" >> $GITHUB_OUTPUT
-        continue-on-error: true
-
-      - name: Check validation results
-        if: steps.validate.outputs.validation_failed == 'true'
-        run: |
-          echo "Validation failed, please check error messages"
-          cat output/validation-report.json 2>/dev/null || echo "Cannot read validation report"
-          exit 1
+        run: node dist/scripts/validate-output.js
 
       - name: Upload validation report
         if: always()
@@ -84,8 +74,8 @@ jobs:
       - name: Check file size
         run: |
           echo "Checking main skill pack file size..."
-          if [ -f "output/n8n-workflow-guide.md" ]; then
-            SIZE=$(wc -c < output/n8n-workflow-guide.md)
+          if [ -f "output/Skill.md" ]; then
+            SIZE=$(wc -c < output/Skill.md)
             SIZE_MB=$((SIZE / 1024 / 1024))
             echo "Main skill pack size: ${SIZE_MB} MB"
             if [ $SIZE_MB -gt 5 ]; then

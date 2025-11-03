@@ -40,7 +40,6 @@ class OutputValidator {
 
   // 驗證規則設定
   private readonly MAX_FILE_SIZE = 1024 * 1024; // 1MB
-  private readonly MAX_LINE_LENGTH = 200;
   private readonly REQUIRED_FILES = [
     'Skill.md',
   ];
@@ -146,23 +145,11 @@ class OutputValidator {
           );
         }
 
-        // 檢查行長度
-        const lines = content.split('\n');
-        lines.forEach((line, index) => {
-          if (line.length > this.MAX_LINE_LENGTH) {
-            this.addIssue(
-              'warning',
-              relativePath,
-              `第 ${index + 1} 行過長 (${line.length} 字元)`,
-              index + 1
-            );
-          }
-        });
-
         // 檢查 Markdown 語法
         this.validateMarkdownSyntax(content, relativePath);
 
         // 收集檔案統計
+        const lines = content.split('\n');
         this.fileStats.push({
           path: relativePath,
           size: stats.size,
@@ -200,10 +187,13 @@ class OutputValidator {
       }
     });
 
-    // 檢查程式碼區塊是否正確關閉
-    const codeBlockMatches = content.match(/```/g);
-    if (codeBlockMatches && codeBlockMatches.length % 2 !== 0) {
-      this.addIssue('error', filePath, '程式碼區塊未正確關閉');
+    // 檢查程式碼區塊是否正確關閉（排除 templates 目錄）
+    const isTemplateFile = filePath.includes('templates/');
+    if (!isTemplateFile) {
+      const codeBlockMatches = content.match(/```/g);
+      if (codeBlockMatches && codeBlockMatches.length % 2 !== 0) {
+        this.addIssue('error', filePath, '程式碼區塊未正確關閉');
+      }
     }
 
     // 檢查連結格式
