@@ -146,18 +146,21 @@ class OutputValidator {
           );
         }
 
-        // 檢查行長度
+        // 檢查行長度（排除特殊表格檔案）
         const lines = content.split('\n');
-        lines.forEach((line, index) => {
-          if (line.length > this.MAX_LINE_LENGTH) {
-            this.addIssue(
-              'warning',
-              relativePath,
-              `第 ${index + 1} 行過長 (${line.length} 字元)`,
-              index + 1
-            );
-          }
-        });
+        const isMatrixFile = relativePath.includes('compatibility-matrix.md');
+        if (!isMatrixFile) {
+          lines.forEach((line, index) => {
+            if (line.length > this.MAX_LINE_LENGTH) {
+              this.addIssue(
+                'warning',
+                relativePath,
+                `第 ${index + 1} 行過長 (${line.length} 字元)`,
+                index + 1
+              );
+            }
+          });
+        }
 
         // 檢查 Markdown 語法
         this.validateMarkdownSyntax(content, relativePath);
