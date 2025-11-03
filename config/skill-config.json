@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "n8n_version": "1.117.2",
   "build_date": "",
-  "max_nodes_in_main_skill": 50,
+  "max_nodes_in_main_skill": 10,
   "categories": {
     "core": {
       "name": "核心節點",

@@ -26,6 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 更新 n8n 資料：
 - `npm run update` - 更新 n8n 節點資料
 - `npm run update:check` - 檢查更新但不實際執行（dry-run）
+- `npm run update:website` - 更新網站資料（節點數量、n8n 版本、更新日期等）
 
 ## 核心架構
 
@@ -45,6 +46,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - NodeParser: 解析節點類別的 description 物件，提取 displayName、description、version 等
 - PropertyParser: 解析節點的 properties 陣列，提取輸入欄位、operations、resources 等配置
+- InputOutputParser: 解析節點的輸入輸出配置，建立相容性矩陣用於判斷節點間連接規則
 - DocsParser: 解析 Markdown 文件，提取摘要、關鍵字、標籤和範例
 
 ### 3. Organizers（組織器）- src/organizers/
@@ -62,6 +64,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - SkillGenerator: 生成主要的 Skill.md 檔案，包含前 N 個最重要的節點
 - ResourceGenerator: 為每個節點生成獨立的詳細文件到 resources/ 目錄
 - TemplateGenerator: 從收集的範本生成 templates/ 文件
+- ConnectionRuleGenerator: 生成節點相容性矩陣文件，說明節點間的連接規則
 - TemplateFormatter: 提供 Markdown 格式化工具
 
 ### 5. Scripts（建置腳本）- scripts/
@@ -70,7 +73,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - build.ts: 主要建置編排腳本，依序執行收集、解析、組織和生成步驟，使用快取機制加速重複建置
 - update-n8n-data.ts: 更新 n8n 節點資料的腳本
+- update-website.ts: 更新專案網站的統計資料（節點數量、n8n 版本、更新時間等）
 - validate-output.ts: 驗證輸出檔案完整性和正確性
+
+測試與除錯腳本（scripts/ 目錄下的 test-*.ts）：
+- test-npm-collector.ts: 測試 NPM 套件收集功能
+- test-io-parser.ts: 測試輸入輸出解析器
+- test-compatibility.ts: 測試相容性分析器
+- test-workflow-analyzer.ts: 測試工作流程分析功能
 
 ## 建置流程
 
@@ -79,13 +89,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 1. 收集節點資訊（npm-collector）：從 n8n-nodes-base 等套件載入所有節點
 2. 收集節點詳細屬性（property-parser）：解析每個節點的 properties 配置
 3. 收集使用統計（api-collector）：從 n8n.io API 取得範本和使用次數
-4. 收集文件（docs-collector）：從 n8n-docs 儲存庫克隆並解析文件
-5. 組織和排序（priority-ranker）：計算優先級分數，選出前 N 個主要節點
+4. 組織和排序（priority-ranker）：計算優先級分數，選出前 N 個主要節點
+5. 建立相容性矩陣（compatibility-analyzer）：分析節點間的輸入輸出相容性
 6. 生成資源檔案（resource-generator）：為每個節點生成詳細文件
-7. 生成 templates 範本檔案（template-generator）：生成範本文件
-8. 生成主 Skill 文件（skill-generator）：生成 Skill.md
+7. 生成相容性矩陣文件（connection-rule-generator）：生成節點連接規則說明
+8. 獲取並生成範本檔案（template-generator）：從 n8n.io API 獲取前 20 個熱門範本並生成文件
+9. 生成主 Skill 文件（skill-generator）：生成 Skill.md
 
-快取機制：建置過程會將中間結果儲存到 data/cache/，加速後續建置。使用 `npm run clean` 清除快取。
+快取機制：
+- 建置過程會將中間結果儲存到 data/cache/，加速後續建置
+- 快取檔案包括：nodes.json、properties.json、usage-stats.json、templates.json、node-io-config.json、compatibility-matrix.json
+- 使用 `npm run clean` 清除快取
+- CI 環境會自動偵測並啟用記憶體優化模式，定期觸發垃圾回收
 
 ## 設定檔
 
@@ -99,15 +114,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 output/
-├── Skill.md              # 主要技能檔案
-└── resources/            # 詳細節點文件
-    ├── input/            # 輸入類節點
-    ├── output/           # 輸出類節點
-    ├── transform/        # 轉換類節點
-    ├── trigger/          # 觸發類節點
-    ├── organization/     # 組織類節點
-    ├── misc/             # 其他節點
-    └── templates/        # 範本文件
+├── Skill.md                      # 主要技能檔案（包含前 10 個最重要節點）
+├── validation-report.json        # 驗證報告（節點數量、分類統計等）
+└── resources/                    # 詳細節點文件
+    ├── compatibility-matrix.md   # 節點相容性矩陣（說明節點間連接規則）
+    ├── input/                    # 輸入類節點
+    ├── output/                   # 輸出類節點
+    ├── transform/                # 轉換類節點
+    ├── trigger/                  # 觸發類節點
+    ├── organization/             # 組織類節點
+    ├── misc/                     # 其他節點
+    └── templates/                # 範本文件（前 20 個熱門範本）
 ```
 
 ## 重要技術細節
@@ -120,9 +137,20 @@ TypeScript 編譯：
 資料收集的挑戰：
 - 節點載入使用動態 require，需處理不同套件的載入方式
 - 部分節點可能缺少文件或統計資料，需要容錯處理
-- Git clone n8n-docs 可能需要網路連線和較長時間
+- API 收集會從 n8n.io 獲取範本資料，每次請求間隔 0.5 秒以避免過載
+
+相容性矩陣功能：
+- 解析每個節點的輸入輸出類型（main、ai_agent、ai_tool、ai_document 等）
+- 建立節點間的連接相容性規則，用於工作流程設計建議
+- 支援多輸入/多輸出節點和動態輸出節點的分析
+
+CI/CD 最佳化：
+- 自動偵測 CI 環境（CI=true 或 GITHUB_ACTIONS=true）
+- 在 CI 環境中啟用記憶體優化模式，定期執行垃圾回收
+- 建置失敗時會嘗試從快取恢復，提高容錯性
 
 生成的 Skill Pack：
-- 主 Skill.md 包含前 50 個（可設定）最重要節點的簡要資訊
+- 主 Skill.md 包含前 10 個（可設定於 config/skill-config.json）最重要節點的簡要資訊
 - resources/ 下的詳細文件按類別組織，供 AI 按需載入
+- 包含節點相容性矩陣和前 20 個熱門工作流程範本
 - 支援 Claude Code、Claude.ai Web 和 Claude Desktop
