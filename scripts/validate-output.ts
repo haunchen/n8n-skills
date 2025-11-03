@@ -239,6 +239,16 @@ class OutputValidator {
       while ((match = linkPattern.exec(content)) !== null) {
         const linkUrl = match[2];
 
+        // 檢查是否為特殊嵌入語法（前面有 @ 符號）
+        const matchIndex = match.index;
+        const beforeChar = matchIndex > 0 ? content[matchIndex - 1] : '';
+        const isEmbedSyntax = beforeChar === '@';
+
+        // 如果是嵌入語法，跳過驗證
+        if (isEmbedSyntax) {
+          continue;
+        }
+
         // 只檢查內部連結（排除 http/https）
         if (!linkUrl.startsWith('http://') && !linkUrl.startsWith('https://')) {
           // 移除錨點
@@ -334,18 +344,43 @@ class OutputValidator {
       info('\n問題詳情:');
       info('----------------------------------------');
 
-      for (const issue of report.issues) {
-        const prefix = issue.severity === 'error' ? '[錯誤]' :
-                       issue.severity === 'warning' ? '[警告]' : '[資訊]';
-        const location = issue.line ? `:${issue.line}` : '';
-        const message = `${prefix} ${issue.file}${location} - ${issue.message}`;
+      // 按嚴重程度分組顯示
+      const errors = report.issues.filter((i) => i.severity === 'error');
+      const warnings = report.issues.filter((i) => i.severity === 'warning');
+      const infos = report.issues.filter((i) => i.severity === 'info');
 
-        if (issue.severity === 'error') {
-          error(message);
-        } else if (issue.severity === 'warning') {
-          warn(message);
-        } else {
-          info(message);
+      // 優先顯示錯誤
+      if (errors.length > 0) {
+        info('\n錯誤 (必須修復):');
+        for (const issue of errors) {
+          const location = issue.line ? `:${issue.line}` : '';
+          error(`[錯誤] ${issue.file}${location} - ${issue.message}`);
+        }
+      }
+
+      // 顯示警告（限制顯示數量）
+      if (warnings.length > 0) {
+        info(`\n警告 (共 ${warnings.length} 個，顯示前 10 個):`);
+        const displayWarnings = warnings.slice(0, 10);
+        for (const issue of displayWarnings) {
+          const location = issue.line ? `:${issue.line}` : '';
+          warn(`[警告] ${issue.file}${location} - ${issue.message}`);
+        }
+        if (warnings.length > 10) {
+          info(`  ... 還有 ${warnings.length - 10} 個警告未顯示`);
+        }
+      }
+
+      // 顯示資訊（限制顯示數量）
+      if (infos.length > 0) {
+        info(`\n資訊 (共 ${infos.length} 個，顯示前 10 個):`);
+        const displayInfos = infos.slice(0, 10);
+        for (const issue of displayInfos) {
+          const location = issue.line ? `:${issue.line}` : '';
+          info(`[資訊] ${issue.file}${location} - ${issue.message}`);
+        }
+        if (infos.length > 10) {
+          info(`  ... 還有 ${infos.length - 10} 個資訊未顯示`);
         }
       }
     }
