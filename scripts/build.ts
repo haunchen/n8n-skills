@@ -24,6 +24,12 @@ import { SkillGenerator } from '../src/generators';
 import type { EnrichedNodeInfo, SkillConfig, ResourceFile } from '../src/generators/skill-generator';
 import { TemplateGenerator } from '../src/generators/template-generator';
 import { ResourceGenerator } from '../src/generators/resource-generator';
+import { ConnectionRuleGenerator } from '../src/generators/connection-rule-generator';
+
+// 導入分析器
+import { CompatibilityAnalyzer } from '../src/analyzers/compatibility-analyzer';
+import { InputOutputParser } from '../src/parsers/input-output-parser';
+import type { NodeConnectionInfo, CompatibilityMatrix } from '../src/models/connection';
 
 /**
  * 建置配置介面
@@ -316,6 +322,127 @@ class SkillBuilder {
   }
 
   /**
+   * 步驟 3.5: 建立相容性矩陣
+   */
+  private async buildCompatibilityMatrix(
+    allNodes: EnrichedNodeInfo[]
+  ): Promise<{ nodeConnectionInfoList: NodeConnectionInfo[]; compatibilityMatrix: CompatibilityMatrix }> {
+    logger.info('===== 步驟 3.5: 建立節點相容性矩陣 =====');
+
+    // 檢查快取
+    const cachedInfo = await this.loadCache('node-io-config.json');
+    const cachedMatrix = await this.loadCache('compatibility-matrix.json');
+
+    if (cachedInfo && cachedMatrix) {
+      logger.info('使用快取的相容性資料');
+      return {
+        nodeConnectionInfoList: cachedInfo,
+        compatibilityMatrix: cachedMatrix
+      };
+    }
+
+    logger.info('收集節點 I/O 配置...');
+
+    // 重新載入節點以提取 I/O 資訊
+    const npmCollector = new NpmCollector();
+    const loadedNodes = await npmCollector.collectAllWithDetails();
+    const ioParser = new InputOutputParser();
+
+    const nodeConnectionInfoList: NodeConnectionInfo[] = [];
+
+    // 建立一個輔助函數來提取節點描述
+    const getNodeDescription = (nodeClass: any) => {
+      try {
+        if (nodeClass.description) {
+          return nodeClass.description;
+        }
+        const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
+        if (instance?.nodeVersions) {
+          return instance.description || instance.baseDescription || {};
+        }
+        return instance?.description || {};
+      } catch {
+        return {};
+      }
+    };
+
+    for (const enrichedNode of allNodes) {
+      // 找到對應的 loadedNode
+      // enrichedNode.nodeType 格式: "nodes-base.actionNetwork"
+      // loadedNode description.name 格式: "actionNetwork"（無前綴）
+      const loadedNode = loadedNodes.find(ln => {
+        // 提取節點描述中的 name
+        const description = getNodeDescription(ln.NodeClass);
+        const descName = description?.name || '';
+
+        // 構建完整節點類型（加上套件前綴）
+        const packagePrefix = ln.packageName.replace('@n8n/', '').replace('n8n-', '');
+        const fullNodeType = descName ? `${packagePrefix}.${descName}` : '';
+
+        // 比對完整節點類型
+        return enrichedNode.nodeType === fullNodeType;
+      });
+
+      if (!loadedNode) {
+        continue;
+      }
+
+      try {
+        const ioInfo = ioParser.parseNodeInputOutput(loadedNode.NodeClass);
+
+        nodeConnectionInfoList.push({
+          nodeType: enrichedNode.nodeType,
+          displayName: enrichedNode.displayName,
+          inputTypes: ioInfo.inputTypes,
+          outputTypes: ioInfo.outputTypes,
+          isMultiInput: ioInfo.isMultiInput,
+          isMultiOutput: ioInfo.isMultiOutput,
+          requiresSpecialInputs: ioInfo.requiresSpecialInputs,
+          category: enrichedNode.category || 'misc',
+          outputCount: ioInfo.outputCount,
+          outputNames: ioInfo.outputNames,
+          isDynamicOutput: ioInfo.isDynamicOutput
+        });
+      } catch (error) {
+        // 忽略無法解析的節點
+      }
+    }
+
+    logger.success(`成功收集 ${nodeConnectionInfoList.length} 個節點的 I/O 配置`);
+
+    // 建立相容性矩陣
+    logger.info('建立相容性矩陣...');
+    const analyzer = new CompatibilityAnalyzer();
+    const compatibilityMatrix = analyzer.buildCompatibilityMatrix(nodeConnectionInfoList);
+
+    logger.success('相容性矩陣建立完成');
+
+    // 儲存快取
+    await this.saveCache('node-io-config.json', nodeConnectionInfoList);
+    await this.saveCache('compatibility-matrix.json', compatibilityMatrix);
+
+    return { nodeConnectionInfoList, compatibilityMatrix };
+  }
+
+  /**
+   * 步驟 4.5: 生成相容性矩陣文件
+   */
+  private async generateCompatibilityMatrixFile(
+    matrix: CompatibilityMatrix,
+    nodeList: NodeConnectionInfo[]
+  ): Promise<void> {
+    logger.info('===== 步驟 4.5: 生成相容性矩陣文件 =====');
+
+    const ruleGenerator = new ConnectionRuleGenerator();
+    const matrixMd = ruleGenerator.generateCompatibilityMatrix(matrix, nodeList, 50);
+
+    const outputPath = path.resolve(this.projectRoot, 'output/resources/compatibility-matrix.md');
+    await fs.writeFile(outputPath, matrixMd, 'utf-8');
+
+    logger.success(`相容性矩陣已生成: ${outputPath}`);
+  }
+
+  /**
    * 步驟 7: 生成 templates 範本檔案
    */
   private async generateTemplates(): Promise<void> {
@@ -330,14 +457,40 @@ class SkillBuilder {
 
     logger.info(`找到 ${templates.length} 個範本`);
 
-    // 使用 TemplateGenerator 生成檔案
-    const outputDir = path.resolve(this.projectRoot, 'output/resources/templates');
+    // 選取前 20 個最受歡迎的範本（按瀏覽次數排序）
+    const topTemplates = [...templates]
+      .sort((a, b) => b.totalViews - a.totalViews)
+      .slice(0, 20);
+
+    logger.info(`選取前 ${topTemplates.length} 個最受歡迎的範本來獲取完整 workflow`);
+
+    // 獲取完整 workflow（帶延遲）
+    const apiCollector = new ApiCollector();
+    const templateIds = topTemplates.map(t => t.id);
+
+    logger.info('開始獲取完整 workflow（每次請求間隔 0.5 秒）...');
+    const workflows = await apiCollector.fetchWorkflowDefinitions(templateIds, 500);
+
+    logger.info(`成功獲取 ${workflows.length}/${topTemplates.length} 個 workflow`);
+
+    // 增強 templates（合併 template 和 workflow）
     const generator = new TemplateGenerator({
-      outputDir,
-      maxTemplatesPerCategory: 20, // 每個分類最多 20 個範本
+      outputDir: path.resolve(this.projectRoot, 'output/resources/templates'),
+      maxTemplatesPerCategory: 20,
     });
 
-    await generator.generate(templates);
+    const enhancedTemplates = topTemplates.map(template => {
+      const workflow = workflows.find(w => w.id === template.id);
+      if (workflow) {
+        return generator.enhanceTemplate(template, workflow);
+      }
+      return template;
+    });
+
+    logger.info(`增強了 ${enhancedTemplates.filter(t => 'workflow' in t).length} 個範本`);
+
+    // 生成檔案
+    await generator.generate(enhancedTemplates);
     logger.success('templates 範本檔案生成完成');
   }
 
@@ -465,16 +618,27 @@ class SkillBuilder {
         propertiesMap
       );
 
+      const allNodes = [...topNodes, ...remainingNodes];
+
+      // 步驟 3.5: 收集節點 I/O 配置並建立相容性矩陣
+      const { nodeConnectionInfoList, compatibilityMatrix } = await this.buildCompatibilityMatrix(allNodes);
+
       // 步驟 4: 為所有節點生成資源檔案（包括 topNodes，因為 Skill.md 會連結到它們）
       logger.info('===== 步驟 4: 生成資源檔案 =====');
-      const allNodes = [...topNodes, ...remainingNodes];
 
       const resourceGenerator = new ResourceGenerator({
         outputDir: path.resolve(this.projectRoot, 'output/resources'),
       });
-      const resourceFiles = await resourceGenerator.generateAll(allNodes);
+      const resourceFiles = await resourceGenerator.generateAll(
+        allNodes,
+        compatibilityMatrix,
+        nodeConnectionInfoList
+      );
 
       logger.success(`成功生成 ${resourceFiles.length} 個資源檔案`);
+
+      // 步驟 4.5: 生成相容性矩陣文件
+      await this.generateCompatibilityMatrixFile(compatibilityMatrix, nodeConnectionInfoList.slice(0, 50));
 
       // 步驟 5: 生成 templates 範本檔案
       await this.generateTemplates();

@@ -1,0 +1,22 @@
+{
+  "id": 6270,
+  "name": "Build Your First AI Agent",
+  "nodes_count": 13,
+  "connections_count": 5,
+  "sample_node": {
+    "id": "2c408b32-7862-4411-9ad1-b6e9ff4e41f7",
+    "name": "Sticky Note2",
+    "type": "n8n-nodes-base.stickyNote",
+    "position": [
+      592,
+      -256
+    ],
+    "parameters": {
+      "color": 7,
+      "width": 512,
+      "height": 352,
+      "content": "## [Video Tutorial](https://youtu.be/laHIzhsz12E)\n@[youtube](laHIzhsz12E)"
+    },
+    "typeVersion": 1
+  }
+}

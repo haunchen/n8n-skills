@@ -10,6 +10,8 @@ import path from 'path';
 import type { EnrichedNodeInfo, ResourceFile } from './skill-generator';
 import type { Operation, CoreProperty } from '../parsers/property-parser';
 import { escapeMarkdown, escapeTableCell } from './template-formatter';
+import type { CompatibilityMatrix, NodeConnectionInfo } from '../models/connection';
+import { ConnectionRuleGenerator } from './connection-rule-generator';
 
 /**
  * 資源生成器配置
@@ -34,6 +36,8 @@ const DEFAULT_CONFIG: Required<ResourceGeneratorConfig> = {
 export class ResourceGenerator {
   private config: Required<ResourceGeneratorConfig>;
   private processedCount: number = 0;
+  private compatibilityMatrix?: CompatibilityMatrix;
+  private nodeConnectionInfoList?: NodeConnectionInfo[];
 
   constructor(config: ResourceGeneratorConfig) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -43,7 +47,14 @@ export class ResourceGenerator {
    * 批次生成所有資源檔案
    * 按分類組織節點並生成對應的文件和索引
    */
-  public async generateAll(nodes: EnrichedNodeInfo[]): Promise<ResourceFile[]> {
+  public async generateAll(
+    nodes: EnrichedNodeInfo[],
+    compatibilityMatrix?: CompatibilityMatrix,
+    nodeConnectionInfoList?: NodeConnectionInfo[]
+  ): Promise<ResourceFile[]> {
+    this.compatibilityMatrix = compatibilityMatrix;
+    this.nodeConnectionInfoList = nodeConnectionInfoList;
+
     const resourceFiles: ResourceFile[] = [];
     const categorizedNodes = new Map<string, EnrichedNodeInfo[]>();
     this.processedCount = 0;
@@ -171,10 +182,40 @@ export class ResourceGenerator {
       this.appendProperties(lines, node.properties.coreProperties);
     }
 
+    // 連接指南（如果有相容性資料）
+    if (this.compatibilityMatrix && this.nodeConnectionInfoList) {
+      const connectionGuide = this.generateConnectionGuide(node);
+      if (connectionGuide) {
+        lines.push(connectionGuide);
+      }
+    }
+
     // JSON 配置範例（增強版：1-3 個範例）
     this.appendExamples(lines, node);
 
     return lines.join('\n');
+  }
+
+  /**
+   * 生成連接指南
+   */
+  private generateConnectionGuide(node: EnrichedNodeInfo): string | null {
+    if (!this.compatibilityMatrix || !this.nodeConnectionInfoList) {
+      return null;
+    }
+
+    const nodeInfo = this.nodeConnectionInfoList.find(n => n.nodeType === node.nodeType);
+    if (!nodeInfo) {
+      return null;
+    }
+
+    const ruleGenerator = new ConnectionRuleGenerator();
+    return ruleGenerator.generateNodeConnectionGuide(
+      nodeInfo,
+      this.compatibilityMatrix,
+      this.nodeConnectionInfoList,
+      10
+    );
   }
 
   /**

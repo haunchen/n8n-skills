@@ -21,6 +21,52 @@ interface TemplateNode {
   };
 }
 
+// 完整的 Workflow 節點定義
+export interface WorkflowNode {
+  id: string;
+  name: string;
+  type: string;
+  typeVersion: number;
+  position: [number, number];
+  parameters: Record<string, any>;
+  credentials?: Record<string, any>;
+  disabled?: boolean;
+  notes?: string;
+  notesInFlow?: boolean;
+}
+
+// Workflow 連接定義
+export interface WorkflowConnection {
+  node: string;
+  type: string;
+  index: number;
+}
+
+export interface WorkflowConnections {
+  [sourceNode: string]: {
+    [outputType: string]: WorkflowConnection[][];
+  };
+}
+
+// 完整的 Workflow 定義
+export interface WorkflowDefinition {
+  nodes: WorkflowNode[];
+  connections: WorkflowConnections;
+  settings?: Record<string, any>;
+  staticData?: Record<string, any>;
+  tags?: Array<{ id: number; name: string }>;
+  pinData?: Record<string, any>;
+  versionId?: string;
+  meta?: {
+    templateId?: string;
+    instanceId?: string;
+  };
+  // 這些屬性可能在 meta 或不存在
+  id?: number;
+  name?: string;
+  description?: string;
+}
+
 interface TemplateUser {
   id: number;
   name: string;
@@ -280,6 +326,73 @@ export class ApiCollector {
       }
       throw new Error(`搜尋範本「${query}」時發生未知錯誤`);
     }
+  }
+
+  // 獲取完整的 workflow 定義
+  public async fetchWorkflowDefinition(templateId: number): Promise<WorkflowDefinition & { id: number; name: string }> {
+    try {
+      console.log(`抓取完整 workflow 定義: ${templateId}...`);
+
+      const response = await this.withRetry(async () => {
+        return await this.client.get<{ id: number; name: string; workflow: WorkflowDefinition }>(
+          `/workflows/templates/${templateId}`
+        );
+      });
+
+      if (!response.data || !response.data.workflow) {
+        throw new Error('API 回應為空或格式不正確');
+      }
+
+      const { id, name, workflow } = response.data;
+
+      if (!workflow.nodes || !Array.isArray(workflow.nodes)) {
+        throw new Error('Workflow 結構無效：缺少 nodes 陣列');
+      }
+
+      console.log(`成功抓取 workflow: ${name} (${workflow.nodes.length} 個節點)`);
+
+      // 合併 id 和 name 到 workflow
+      return {
+        ...workflow,
+        id,
+        name,
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`抓取 workflow ${templateId} 失敗: ${error.message}`);
+      }
+      throw new Error(`抓取 workflow ${templateId} 時發生未知錯誤`);
+    }
+  }
+
+  // 批次獲取多個 workflow 定義（帶延遲）
+  public async fetchWorkflowDefinitions(
+    templateIds: number[],
+    delayMs: number = 500
+  ): Promise<Array<WorkflowDefinition & { id: number; name: string }>> {
+    const workflows: Array<WorkflowDefinition & { id: number; name: string }> = [];
+
+    console.log(`開始批次抓取 ${templateIds.length} 個 workflow 定義...`);
+    console.log(`每次請求間隔: ${delayMs}ms`);
+
+    for (let i = 0; i < templateIds.length; i++) {
+      const templateId = templateIds[i];
+      try {
+        const workflow = await this.fetchWorkflowDefinition(templateId);
+        workflows.push(workflow);
+
+        // 如果不是最後一個，加入延遲
+        if (i < templateIds.length - 1) {
+          await this.delay(delayMs);
+        }
+      } catch (error) {
+        console.error(`跳過 template ${templateId}:`, error);
+        // 繼續處理下一個
+      }
+    }
+
+    console.log(`成功抓取 ${workflows.length}/${templateIds.length} 個 workflow`);
+    return workflows;
   }
 
   // 顯示節點使用統計摘要

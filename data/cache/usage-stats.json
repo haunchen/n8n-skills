@@ -1,298 +1,290 @@
 {
   "@n8n/n8n-nodes-langchain.agent": {
-    "count": 65,
-    "percentage": 12.357414448669202
+    "count": 64,
+    "percentage": 12.284069097888676
   },
   "n8n-nodes-base.httpRequest": {
     "count": 52,
-    "percentage": 9.885931558935361
+    "percentage": 9.980806142034549
   },
   "n8n-nodes-base.googleSheets": {
-    "count": 44,
-    "percentage": 8.365019011406844
+    "count": 45,
+    "percentage": 8.637236084452974
   },
   "@n8n/n8n-nodes-langchain.lmChatOpenAi": {
-    "count": 43,
-    "percentage": 8.17490494296578
+    "count": 42,
+    "percentage": 8.061420345489443
   },
   "n8n-nodes-base.code": {
     "count": 36,
-    "percentage": 6.844106463878327
+    "percentage": 6.90978886756238
   },
   "@n8n/n8n-nodes-langchain.outputParserStructured": {
     "count": 25,
-    "percentage": 4.752851711026616
+    "percentage": 4.798464491362764
+  },
+  "@n8n/n8n-nodes-langchain.openAi": {
+    "count": 24,
+    "percentage": 4.606525911708253
   },
   "@n8n/n8n-nodes-langchain.memoryBufferWindow": {
-    "count": 24,
-    "percentage": 4.562737642585551
+    "count": 23,
+    "percentage": 4.414587332053743
   },
   "@n8n/n8n-nodes-langchain.lmChatGoogleGemini": {
     "count": 23,
-    "percentage": 4.3726235741444865
-  },
-  "@n8n/n8n-nodes-langchain.openAi": {
-    "count": 23,
-    "percentage": 4.3726235741444865
+    "percentage": 4.414587332053743
   },
   "n8n-nodes-base.googleDrive": {
     "count": 16,
-    "percentage": 3.041825095057034
+    "percentage": 3.071017274472169
   },
   "n8n-nodes-base.telegram": {
     "count": 15,
-    "percentage": 2.8517110266159698
+    "percentage": 2.8790786948176583
   },
   "@n8n/n8n-nodes-langchain.toolThink": {
     "count": 11,
-    "percentage": 2.091254752851711
+    "percentage": 2.111324376199616
   },
   "n8n-nodes-base.gmail": {
     "count": 11,
-    "percentage": 2.091254752851711
+    "percentage": 2.111324376199616
   },
   "@n8n/n8n-nodes-langchain.documentDefaultDataLoader": {
-    "count": 9,
-    "percentage": 1.7110266159695817
+    "count": 8,
+    "percentage": 1.5355086372360844
   },
   "@n8n/n8n-nodes-langchain.chainLlm": {
     "count": 8,
-    "percentage": 1.520912547528517
+    "percentage": 1.5355086372360844
   },
   "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter": {
     "count": 7,
-    "percentage": 1.3307984790874523
+    "percentage": 1.3435700575815739
   },
   "@n8n/n8n-nodes-langchain.embeddingsOpenAi": {
     "count": 6,
-    "percentage": 1.1406844106463878
+    "percentage": 1.1516314779270633
   },
   "@n8n/n8n-nodes-langchain.lmChatAnthropic": {
     "count": 6,
-    "percentage": 1.1406844106463878
+    "percentage": 1.1516314779270633
   },
   "@n8n/n8n-nodes-langchain.lmChatOpenRouter": {
     "count": 6,
-    "percentage": 1.1406844106463878
+    "percentage": 1.1516314779270633
   },
   "n8n-nodes-base.whatsApp": {
     "count": 5,
-    "percentage": 0.9505703422053232
+    "percentage": 0.9596928982725527
   },
   "n8n-nodes-base.linkedIn": {
     "count": 4,
-    "percentage": 0.7604562737642585
+    "percentage": 0.7677543186180422
   },
   "n8n-nodes-base.facebookGraphApi": {
     "count": 4,
-    "percentage": 0.7604562737642585
+    "percentage": 0.7677543186180422
   },
   "n8n-nodes-base.html": {
     "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "@n8n/n8n-nodes-langchain.vectorStoreInMemory": {
     "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "@n8n/n8n-nodes-langchain.lmChatOllama": {
     "count": 3,
-    "percentage": 0.5703422053231939
-  },
-  "@n8n/n8n-nodes-langchain.vectorStoreQdrant": {
-    "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "n8n-nodes-base.googleDocs": {
     "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "@n8n/n8n-nodes-langchain.lmChatGroq": {
     "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "n8n-nodes-base.emailSend": {
     "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "n8n-nodes-base.slack": {
     "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "n8n-nodes-base.twitter": {
     "count": 3,
-    "percentage": 0.5703422053231939
+    "percentage": 0.5758157389635317
   },
   "@n8n/n8n-nodes-langchain.mcpClientTool": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.toolWorkflow": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.googleGemini": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
+  },
+  "@n8n/n8n-nodes-langchain.vectorStoreQdrant": {
+    "count": 2,
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.outputParserAutofixing": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "n8n-nodes-base.supabase": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.vectorStoreSupabase": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "n8n-nodes-base.airtable": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.memoryPostgresChat": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.informationExtractor": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.toolSerpApi": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.lmChatDeepSeek": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.lmChatMistralCloud": {
     "count": 2,
-    "percentage": 0.38022813688212925
+    "percentage": 0.3838771593090211
   },
   "@n8n/n8n-nodes-langchain.toolCode": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.toolWikipedia": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.perplexity": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.embeddingsOllama": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.youTube": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.mistralAi": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.wooCommerce": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.hackerNews": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.googleAds": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.rerankerCohere": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.memoryRedisChat": {
     "count": 1,
-    "percentage": 0.19011406844106463
-  },
-  "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter": {
-    "count": 1,
-    "percentage": 0.19011406844106463
-  },
-  "@n8n/n8n-nodes-langchain.embeddingsMistralCloud": {
-    "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.notion": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.apiTemplateIo": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.lmOpenHuggingFaceInference": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.lmChatXAiGrok": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.agentTool": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.toolCalculator": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.evaluation": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.microsoftOutlook": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.phantombuster": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.microsoftSharePoint": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.vectorStoreWeaviate": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.discord": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.microsoftOneDrive": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "@n8n/n8n-nodes-langchain.memoryManager": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   },
   "n8n-nodes-base.postgres": {
     "count": 1,
-    "percentage": 0.19011406844106463
+    "percentage": 0.19193857965451055
   }
 }

@@ -1,5 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import type { WorkflowDefinition } from '../collectors/api-collector';
+import { WorkflowAnalyzer, type WorkflowAnalysis } from '../analyzers/workflow-analyzer';
 
 /**
  * Template 資料結構
@@ -22,6 +24,14 @@ export interface Template {
     icon?: string;
     displayName?: string;
   }>;
+}
+
+/**
+ * 增強的 Template（包含完整 workflow）
+ */
+export interface EnhancedTemplate extends Template {
+  workflow?: WorkflowDefinition;
+  analysis?: WorkflowAnalysis;
 }
 
 /**
@@ -101,11 +111,26 @@ export interface TemplateGeneratorConfig {
  */
 export class TemplateGenerator {
   private config: TemplateGeneratorConfig;
+  private analyzer: WorkflowAnalyzer;
 
   constructor(config: TemplateGeneratorConfig) {
     this.config = {
       maxTemplatesPerCategory: 20,
       ...config,
+    };
+    this.analyzer = new WorkflowAnalyzer();
+  }
+
+  /**
+   * 將 template 和 workflow 結合並分析
+   */
+  enhanceTemplate(template: Template, workflow: WorkflowDefinition & { id: number; name: string }): EnhancedTemplate {
+    const analysis = this.analyzer.analyze(workflow);
+
+    return {
+      ...template,
+      workflow,
+      analysis,
     };
   }
 
@@ -181,7 +206,9 @@ export class TemplateGenerator {
   /**
    * 生成單個 template 的 markdown 檔案
    */
-  generateTemplateMarkdown(template: Template, category: TemplateCategory): string {
+  generateTemplateMarkdown(template: Template | EnhancedTemplate, category: TemplateCategory): string {
+    const enhanced = template as EnhancedTemplate;
+
     const sections = [
       `# ${template.name}`,
       '',
@@ -193,21 +220,32 @@ export class TemplateGenerator {
       '',
       template.description || '無描述',
       '',
-      '## 使用的節點',
-      '',
     ];
 
-    if (template.nodes && template.nodes.length > 0) {
-      template.nodes.forEach((node) => {
-        const displayName = node.displayName || node.name;
-        sections.push(`- ${displayName}`);
-      });
+    // 如果有 workflow 分析結果，使用結構化描述
+    if (enhanced.analysis) {
+      sections.push(
+        '## 工作流程結構',
+        '',
+        enhanced.analysis.structuredDescription,
+        ''
+      );
     } else {
-      sections.push('*此範本不包含節點資訊*');
+      // 否則顯示傳統的節點列表
+      sections.push('## 使用的節點', '');
+
+      if (template.nodes && template.nodes.length > 0) {
+        template.nodes.forEach((node) => {
+          const displayName = node.displayName || node.name;
+          sections.push(`- ${displayName}`);
+        });
+      } else {
+        sections.push('*此範本不包含節點資訊*');
+      }
+      sections.push('');
     }
 
     sections.push(
-      '',
       '## 作者資訊',
       '',
       `- **名稱**: ${template.user.name}`,
@@ -219,6 +257,23 @@ export class TemplateGenerator {
       `- [在 n8n.io 上查看此範本](https://n8n.io/workflows/${template.id})`,
       ''
     );
+
+    // 如果有完整 workflow，加入 JSON
+    if (enhanced.workflow) {
+      sections.push(
+        '## 完整 Workflow JSON',
+        '',
+        '<details>',
+        '<summary>點擊展開 Workflow JSON</summary>',
+        '',
+        '```json',
+        JSON.stringify(enhanced.workflow, null, 2),
+        '```',
+        '',
+        '</details>',
+        ''
+      );
+    }
 
     return sections.filter(Boolean).join('\n');
   }
@@ -338,9 +393,9 @@ export class TemplateGenerator {
   /**
    * 生成所有 template 檔案
    */
-  async generate(templates: Template[]): Promise<void> {
+  async generate(templates: Array<Template | EnhancedTemplate>): Promise<void> {
     // 按分類組織 templates
-    const categorized = new Map<TemplateCategory, Template[]>();
+    const categorized = new Map<TemplateCategory, Array<Template | EnhancedTemplate>>();
 
     templates.forEach((template) => {
       const category = this.categorizeTemplate(template);
