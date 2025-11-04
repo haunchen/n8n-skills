@@ -15,6 +15,7 @@
 import type { SimplifiedNodeInfo } from '../collectors/npm-collector';
 import type { NodeUsageStats } from '../collectors/api-collector';
 import type { ParsedProperties } from '../parsers/property-parser';
+import type { PriorityTier } from '../organizers/priority-ranker';
 import { escapeMarkdown } from './template-formatter';
 
 /**
@@ -42,6 +43,10 @@ export interface EnrichedNodeInfo extends SimplifiedNodeInfo {
     common?: Record<string, any>;
     advanced?: Record<string, any>;
   };
+  // 優先級相關欄位（用於分層合併策略）
+  score?: number;
+  rank?: number;
+  tier?: PriorityTier;
 }
 
 /**
@@ -137,10 +142,9 @@ export class SkillGenerator {
     const sections: string[] = [
       this.generateFrontmatter(totalNodes),
       this.generateOverview(),
-      this.generateQuickStart(input.nodes, input.nodeUsageStats),
-      this.generateNodeIndex(input.nodes, input.nodeUsageStats),
+      this.generateHowToFindNodes(input.nodes, input.nodeUsageStats),
       this.generateWorkflowPatterns(),
-      this.generateResourceIndex(input.resourceFiles),
+      this.generateAIUsageGuide(input.resourceFiles),
       this.generateLicense(),
     ];
 
@@ -214,125 +218,122 @@ export class SkillGenerator {
     ].join('\n');
   }
 
-  /**
-   * 生成快速開始章節
-   */
-  private generateQuickStart(
-    nodes: EnrichedNodeInfo[],
-    stats: NodeUsageStats
-  ): string {
-    // 取得最常用的 8-10 個節點
-    const topNodes = this.getTopNodes(nodes, stats, 10);
-
-    const sections = [
-      '# 快速開始',
-      '',
-      '## 核心概念',
-      '',
-      '### 節點（Nodes）',
-      '節點是工作流程的基本單位，每個節點執行特定的任務。',
-      '節點可以分為以下類型：',
-      '- 觸發器（Trigger）：啟動工作流程的節點',
-      '- 動作（Action）：執行特定操作的節點',
-      '- Webhook：接收 HTTP 請求的節點',
-      '- AI 工具：整合 AI 模型的節點',
-      '',
-      '### 連接（Connections）',
-      '節點之間通過連接傳遞資料，資料以 JSON 格式流動。',
-      '',
-      '### 執行（Executions）',
-      '工作流程可以手動執行、定時執行或由觸發器啟動。',
-      '',
-      '## 最常用節點',
-      '',
-      '以下是最常用的 10 個節點，涵蓋大多數使用場景：',
-      '',
-    ];
-
-    topNodes.forEach((node, index) => {
-      // 嘗試多種格式匹配 nodeType
-      let usage = stats[node.nodeType];
-      if (!usage) {
-        // 嘗試加上 n8n- 前綴
-        usage = stats[`n8n-${node.nodeType}`];
-      }
-      if (!usage) {
-        // 嘗試加上 @n8n/n8n- 前綴（用於 langchain 節點）
-        usage = stats[`@n8n/n8n-${node.nodeType}`];
-      }
-      const percentage = usage?.percentage?.toFixed(1) || '0.0';
-
-      sections.push(
-        `### ${index + 1}. ${node.displayName}`,
-        '',
-        escapeMarkdown(node.description || '無描述'),
-        '',
-        `- 類型: ${this.formatNodeCategory(node)}`,
-        `- 分類: ${node.category}`,
-        `- 使用率: ${percentage}%`,
-        ''
-      );
-
-      const category = node.category || 'misc';
-      sections.push(`詳細資訊請參閱: resources/${category}/${node.nodeType}.md`, '');
-    });
-
-    return sections.join('\n');
-  }
 
   /**
-   * 生成節點索引
+   * 生成節點查找指南（工具使用導向）
    */
-  private generateNodeIndex(
+  private generateHowToFindNodes(
     _nodes: EnrichedNodeInfo[],
     _stats: NodeUsageStats
   ): string {
     const sections = [
       '# 如何查找節點',
       '',
-      '本 skill 包含 542 個 n8n 節點的完整資訊，按照功能分為以下 6 個分類：',
+      '本 skill 包含 542 個 n8n 節點的完整資訊。作為 AI 助理，你可以使用以下工具高效查找和讀取節點資訊。',
       '',
-      '## 分類導航',
+      '## 1. 使用統一索引表 (INDEX.md)',
       '',
-      '### 資料轉換 (Transform)',
-      '處理和轉換資料的節點，包含 Code、Function、If、Switch、Merge 等邏輯和資料處理節點。',
-      '查看完整清單: [resources/transform/README.md](resources/transform/README.md)',
+      'INDEX.md 是所有節點的總索引，提供兩種查找方式：',
       '',
-      '### 資料輸入 (Input)',
-      '從各種來源讀取資料的節點，包含資料庫（MySQL、Postgres、MongoDB）、檔案儲存（Google Drive、Dropbox）等。',
-      '查看完整清單: [resources/input/README.md](resources/input/README.md)',
+      '### 讀取完整索引',
+      '```',
+      'Read("resources/INDEX.md")',
+      '```',
       '',
-      '### 資料輸出 (Output)',
-      '將資料發送到外部服務的節點，包含 HTTP Request、Slack、Discord、Notion 等通訊和儲存服務。',
-      '查看完整清單: [resources/output/README.md](resources/output/README.md)',
+      '索引內容包括：',
+      '- 依分類查找：6 個功能分類（Transform、Input、Output、Trigger、Organization、Misc）',
+      '- 範本索引：100 個工作流程範本',
       '',
-      '### 觸發器 (Trigger)',
-      '啟動工作流程的節點，包含 Webhook、Schedule、Email Trigger、Cron 等各種觸發方式。',
-      '查看完整清單: [resources/trigger/README.md](resources/trigger/README.md)',
+      '### 讀取索引中的特定部分',
       '',
-      '### 組織管理 (Organization)',
-      '工作流程組織和控制節點，包含 Wait、Split In Batches、No Operation 等輔助節點。',
-      '查看完整清單: [resources/organization/README.md](resources/organization/README.md)',
+      'INDEX.md 包含所有 542 個節點的位置資訊（開始行號和行數），你可以精準讀取：',
       '',
-      '### 其他 (Misc)',
-      '其他特殊用途的節點。',
-      '查看完整清單: [resources/misc/README.md](resources/misc/README.md)',
+      '範例：查找「資料轉換」分類的節點',
+      '```',
+      '# 先讀取索引了解分類內容',
+      'Read("resources/INDEX.md", offset=1, limit=100)',
+      '```',
       '',
-      '## 節點相容性參考',
+      '## 2. 使用 Read 工具精準讀取節點文件',
       '',
-      '查看節點之間的連接相容性矩陣：',
-      '- [節點相容性矩陣](resources/compatibility-matrix.md) - 50 個常用節點的連接相容性對照表',
+      '### 讀取高優先級節點（獨立檔案）',
       '',
-      '此外，每個節點的詳細文件都包含連接指南，說明該節點可以接收來自哪些節點，以及可以連接到哪些節點。',
+      '前 50 個最常用節點有獨立檔案，直接讀取即可：',
       '',
-      '## 查詢建議',
+      '```',
+      '# 範例：讀取 Gmail 節點',
+      'Read("resources/output/nodes-base.gmail.md")',
       '',
-      '當你需要特定功能的節點時，可以這樣詢問：',
-      '- "我需要發送 HTTP 請求的節點" → 查看 HTTP Request 節點',
-      '- "如何連接 MySQL 資料庫？" → 查看 MySQL 節點',
-      '- "怎麼在工作流程中使用條件判斷？" → 查看 If 或 Switch 節點',
-      '- "如何定時執行工作流程？" → 查看 Schedule Trigger 或 Cron 節點',
-      '- "想要處理 JSON 資料" → 查看 Code 或 Function 節點',
+      '# 範例：讀取 Code 節點',
+      'Read("resources/transform/nodes-base.code.md")',
+      '```',
+      '',
+      '### 讀取低優先級節點（合併檔案中的特定節點）',
+      '',
+      '其他 492 個節點合併在分類檔案中。INDEX.md 會告訴你每個節點的開始行號和行數：',
+      '',
+      '```',
+      '# 步驟 1：從 INDEX.md 查找節點的位置資訊',
+      '# 例如：Azure Cosmos DB 在 transform-merged-1.md 的開始行號 110，行數 64',
+      '',
+      '# 步驟 2：使用開始行號和行數精準讀取',
+      'Read("resources/transform/transform-merged-1.md", offset=110, limit=64)',
+      '```',
+      '',
+      '## 3. 使用 Glob 工具搜尋檔案',
+      '',
+      '當你知道節點名稱的一部分，可以用 Glob 快速定位檔案：',
+      '',
+      '```',
+      '# 搜尋包含 "gmail" 的節點檔案',
+      'Glob("resources/**/*gmail*.md")',
+      '',
+      '# 搜尋所有輸出類節點',
+      'Glob("resources/output/*.md")',
+      '',
+      '# 搜尋所有觸發器節點',
+      'Glob("resources/trigger/*.md")',
+      '',
+      '# 搜尋合併檔案',
+      'Glob("resources/**/*-merged-*.md")',
+      '```',
+      '',
+      '## 4. 使用 Grep 工具搜尋關鍵字',
+      '',
+      '在所有資源檔案中搜尋功能關鍵字：',
+      '',
+      '```',
+      '# 搜尋包含 "send email" 的節點',
+      'Grep("send email", path="resources", output_mode="files_with_matches")',
+      '',
+      '# 搜尋資料庫相關節點',
+      'Grep("database", path="resources", output_mode="files_with_matches")',
+      '',
+      '# 搜尋 webhook 相關功能（顯示匹配內容）',
+      'Grep("webhook", path="resources", output_mode="content", -n=true, -C=2)',
+      '',
+      '# 搜尋 AI 相關節點',
+      'Grep("AI|artificial intelligence", path="resources", output_mode="files_with_matches")',
+      '```',
+      '',
+      '## 查找策略建議',
+      '',
+      '根據不同情境選擇最佳查找方式：',
+      '',
+      '1. 使用者詢問特定服務（如 "Gmail"、"Slack"）：',
+      '   → 使用 Glob 搜尋：`Glob("resources/**/*gmail*.md")`',
+      '',
+      '2. 使用者詢問功能需求（如 "發送郵件"、"資料庫查詢"）：',
+      '   → 使用 Grep 搜尋關鍵字：`Grep("send email", path="resources")`',
+      '',
+      '3. 使用者詢問節點分類（如 "有哪些觸發器"）：',
+      '   → 讀取 INDEX.md 的分類表：`Read("resources/INDEX.md", offset=<分類起始行>, limit=<行數>)`',
+      '',
+      '4. 使用者想了解熱門節點：',
+      '   → 讀取 INDEX.md 的優先級排名表',
+      '',
+      '5. 使用者需要工作流程範例：',
+      '   → 參考「常見工作流程模式」章節或 resources/templates/ 目錄',
       '',
     ];
 
@@ -382,9 +383,9 @@ export class SkillGenerator {
   }
 
   /**
-   * 生成資源檔案索引
+   * 生成 AI 助理使用指南
    */
-  private generateResourceIndex(resourceFiles: ResourceFile[]): string {
+  private generateAIUsageGuide(resourceFiles: ResourceFile[]): string {
     const categoryCounts = new Map<string, number>();
 
     resourceFiles.forEach(file => {
@@ -395,32 +396,233 @@ export class SkillGenerator {
     const sections = [
       '# 使用指南',
       '',
-      '## 探索節點',
+      '## 1. 檔案結構導覽',
       '',
-      '每個分類目錄下都有詳細的節點資訊文件：',
+      '### 目錄結構',
       '',
-      `- [資料轉換](resources/transform/README.md)：${categoryCounts.get('transform') || 0} 個節點`,
-      `- [資料輸入](resources/input/README.md)：${categoryCounts.get('input') || 0} 個節點`,
-      `- [資料輸出](resources/output/README.md)：${categoryCounts.get('output') || 0} 個節點`,
-      `- [觸發器](resources/trigger/README.md)：${categoryCounts.get('trigger') || 0} 個節點`,
-      `- [組織管理](resources/organization/README.md)：${categoryCounts.get('organization') || 0} 個節點`,
-      `- [其他](resources/misc/README.md)：${categoryCounts.get('misc') || 0} 個節點`,
+      '```',
+      'resources/',
+      '├── INDEX.md                     # 統一索引表（包含所有節點的行號資訊）',
+      '├── compatibility-matrix.md      # 節點相容性矩陣',
+      '├── transform/                   # 資料轉換節點',
+      `│   ├── README.md                # ${categoryCounts.get('transform') || 0} 個節點總覽`,
+      '│   ├── nodes-base.code.md       # 高優先級獨立檔案',
+      '│   ├── nodes-base.function.md',
+      '│   └── transform-merged-*.md    # 低優先級合併檔案',
+      '├── input/                       # 資料輸入節點',
+      `│   ├── README.md                # ${categoryCounts.get('input') || 0} 個節點`,
+      '│   └── ...',
+      '├── output/                      # 資料輸出節點',
+      `│   ├── README.md                # ${categoryCounts.get('output') || 0} 個節點`,
+      '│   └── ...',
+      '├── trigger/                     # 觸發器節點',
+      `│   ├── README.md                # ${categoryCounts.get('trigger') || 0} 個節點`,
+      '│   └── ...',
+      '├── organization/                # 組織管理節點',
+      `│   ├── README.md                # ${categoryCounts.get('organization') || 0} 個節點`,
+      '│   └── ...',
+      '├── misc/                        # 其他節點',
+      `│   ├── README.md                # ${categoryCounts.get('misc') || 0} 個節點`,
+      '│   └── ...',
+      '└── templates/                   # 工作流程範本',
+      '    ├── README.md                # 100 個範本總覽',
+      '    ├── ai-chatbots/             # AI 與聊天機器人範本',
+      '    ├── social-media/            # 社交媒體範本',
+      '    ├── data-processing/         # 資料處理範本',
+      '    └── communication/           # 通訊協作範本',
+      '```',
       '',
-      '## 最佳實踐',
+      '### 高優先級 vs 低優先級節點',
       '',
-      '1. 從常用節點開始學習（參考"快速開始"章節）',
-      '2. 根據需求查找對應分類的節點',
-      '3. 參考常見工作流程模式來組合節點',
-      '4. 查看具體節點的文件了解配置細節',
+      '- 高優先級（前 50 名）：獨立檔案，檔名格式 `nodes-base.{nodeType}.md`',
+      '  - 範例：`resources/transform/nodes-base.code.md`',
+      '  - 直接使用 Read 工具讀取完整檔案',
       '',
-      '## 範例工作流程',
+      '- 低優先級（其他 492 個）：合併在 `*-merged-*.md` 檔案中',
+      '  - 範例：`resources/transform/transform-merged-1.md`',
+      '  - 使用 INDEX.md 查找行號，再用 Read 工具的 offset/limit 參數讀取特定範圍',
       '',
-      '透過組合不同節點可以建立強大的自動化流程：',
+      '## 2. 工具使用完整說明',
       '',
-      '- API 資料處理：Webhook → HTTP Request → Code → Database',
-      '- 定時任務：Schedule Trigger → Database Query → Email Send',
-      '- 即時通知：Form Trigger → AI Transform → Slack/Discord',
-      '- 資料同步：Cron → API Fetch → Transform → Multiple Outputs',
+      '### Read 工具',
+      '',
+      '用途：讀取檔案內容',
+      '',
+      '完整讀取：',
+      '```',
+      'Read("resources/INDEX.md")',
+      'Read("resources/transform/nodes-base.code.md")',
+      '```',
+      '',
+      '精準讀取（使用開始行號和行數）：',
+      '```',
+      'Read("resources/transform/transform-merged-1.md", offset=110, limit=64)',
+      '```',
+      '',
+      '### Glob 工具',
+      '',
+      '用途：搜尋符合 pattern 的檔案',
+      '',
+      '常用 patterns：',
+      '```',
+      'Glob("resources/**/*{關鍵字}*.md")    # 搜尋包含關鍵字的檔案',
+      'Glob("resources/transform/*.md")      # 搜尋特定分類的所有檔案',
+      'Glob("resources/**/*-merged-*.md")    # 搜尋所有合併檔案',
+      '```',
+      '',
+      '### Grep 工具',
+      '',
+      '用途：在檔案內容中搜尋關鍵字',
+      '',
+      '基本搜尋：',
+      '```',
+      'Grep("{關鍵字}", path="resources", output_mode="files_with_matches")',
+      '```',
+      '',
+      '進階搜尋：',
+      '```',
+      '# 顯示匹配內容和行號',
+      'Grep("{關鍵字}", path="resources", output_mode="content", -n=true, -C=2)',
+      '',
+      '# 使用正則表達式',
+      'Grep("email|mail", path="resources", output_mode="files_with_matches")',
+      '',
+      '# 限制搜尋特定分類',
+      'Grep("{關鍵字}", path="resources/transform", output_mode="files_with_matches")',
+      '```',
+      '',
+      '### INDEX.md 查詢方法',
+      '',
+      'INDEX.md 是最重要的導航工具，建議優先使用：',
+      '',
+      '1. 先讀取 INDEX.md 了解整體結構',
+      '2. 根據分類找到目標節點',
+      '3. 記錄節點的檔案路徑、開始行號和行數',
+      '4. 使用 Read 工具精準讀取節點內容',
+      '',
+      '## 3. 決策流程指引',
+      '',
+      '### 情境 1：使用者詢問特定服務節點',
+      '',
+      '範例：「如何使用 Gmail 節點？」',
+      '',
+      '決策流程：',
+      '```',
+      '1. 使用 Glob 快速定位',
+      '   Glob("resources/**/*gmail*.md")',
+      '',
+      '2. 如果找到獨立檔案，直接讀取',
+      '   Read("resources/output/nodes-base.gmail.md")',
+      '',
+      '3. 如果在合併檔案中，先查 INDEX.md',
+      '   → 找到開始行號和行數',
+      '   → 使用 offset/limit 讀取',
+      '```',
+      '',
+      '### 情境 2：使用者詢問功能需求',
+      '',
+      '範例：「我需要發送郵件的節點」',
+      '',
+      '決策流程：',
+      '```',
+      '1. 使用 Grep 搜尋關鍵字',
+      '   Grep("send email|send mail", path="resources", output_mode="files_with_matches")',
+      '',
+      '2. 獲得候選節點列表',
+      '   → Gmail、SendGrid、SMTP 等',
+      '',
+      '3. 讀取相關節點的詳細文件',
+      '   → 比較功能差異',
+      '   → 推薦最適合的節點',
+      '```',
+      '',
+      '### 情境 3：使用者詢問節點分類',
+      '',
+      '範例：「有哪些觸發器節點？」',
+      '',
+      '決策流程：',
+      '```',
+      '1. 讀取 INDEX.md 的觸發器分類部分',
+      '   Read("resources/INDEX.md")',
+      '   → 找到 "## 依分類查找" > "### Trigger"',
+      '',
+      '2. 或直接讀取分類 README',
+      '   Read("resources/trigger/README.md")',
+      '',
+      '3. 提供節點列表和簡要說明',
+      '```',
+      '',
+      '### 情境 4：使用者需要工作流程範例',
+      '',
+      '範例：「如何建立 AI 聊天機器人？」',
+      '',
+      '決策流程：',
+      '```',
+      '1. 先查看「常見工作流程模式」章節',
+      '   → 尋找相關模式',
+      '',
+      '2. 查看範本庫',
+      '   Read("resources/templates/ai-chatbots/README.md")',
+      '',
+      '3. 結合節點文件',
+      '   → AI Agent 節點',
+      '   → OpenAI 節點',
+      '   → Vector Store 節點',
+      '```',
+      '',
+      '## 4. 最佳實踐和注意事項',
+      '',
+      '### 查找策略',
+      '',
+      '1. 優先使用 INDEX.md 獲得全局視野',
+      '   - 了解節點分類和優先級',
+      '   - 快速定位目標節點',
+      '',
+      '2. 善用 Grep 進行功能導向搜尋',
+      '   - 當使用者描述需求而非具體節點名稱',
+      '   - 搜尋關鍵字可以快速找到候選節點',
+      '',
+      '3. 使用 Glob 進行檔案名稱搜尋',
+      '   - 當知道節點名稱的一部分',
+      '   - 比 Grep 更快速',
+      '',
+      '4. 善用開始行號和行數讀取',
+      '   - 合併檔案可能很大（數千行）',
+      '   - 使用 offset/limit 只讀取需要的部分',
+      '   - 節省 token 使用',
+      '',
+      '### 節點選擇建議',
+      '',
+      '1. 優先推薦高優先級節點',
+      '   - 使用率高 = 更穩定、文件更完整',
+      '   - 社群支援更好',
+      '',
+      '2. 檢查節點相容性',
+      '   - 讀取 resources/compatibility-matrix.md',
+      '   - 或查看節點文件中的「連接指南」章節',
+      '',
+      '3. 參考實際範本',
+      '   - templates/ 目錄包含 100 個真實使用案例',
+      '   - 可以學習節點組合方式',
+      '',
+      '### 常見陷阱',
+      '',
+      '1. 不要每次都讀取完整的合併檔案',
+      '   - 合併檔案可能有數千行',
+      '   - 應該使用 INDEX.md 找到行號後精準讀取',
+      '',
+      '2. 注意節點命名格式',
+      '   - 檔案格式：`nodes-base.{nodeType}.md`',
+      '   - nodeType 通常是小寫加連字號',
+      '   - 例如：`nodes-base.httpRequest.md`（不是 `http-request`）',
+      '',
+      '3. 區分觸發器和動作節點',
+      '   - 觸發器只能放在工作流程開頭',
+      '   - Webhook 節點也是觸發器的一種',
+      '',
+      '4. 檢查節點版本',
+      '   - 部分節點有多個版本',
+      '   - 文件中會標註版本號和差異',
       '',
     ];
 
@@ -463,40 +665,6 @@ export class SkillGenerator {
       '',
       '使用 n8n 軟體時需遵循 n8n 的授權條款，詳見：https://github.com/n8n-io/n8n/blob/master/LICENSE.md',
     ].join('\n');
-  }
-
-  /**
-   * 取得使用率最高的節點
-   */
-  private getTopNodes(
-    nodes: EnrichedNodeInfo[],
-    stats: NodeUsageStats,
-    count: number
-  ): EnrichedNodeInfo[] {
-    // 為節點加上使用統計
-    const enriched = nodes.map(node => {
-      const usage = stats[node.nodeType];
-      return {
-        ...node,
-        usageCount: usage?.count || 0,
-        usagePercentage: usage?.percentage || 0,
-      };
-    });
-
-    // 按使用率排序並取前 N 個
-    return enriched
-      .sort((a, b) => (b.usagePercentage || 0) - (a.usagePercentage || 0))
-      .slice(0, count);
-  }
-
-  /**
-   * 格式化節點類別
-   */
-  private formatNodeCategory(node: EnrichedNodeInfo): string {
-    if (node.isTrigger) return '觸發器';
-    if (node.isWebhook) return 'Webhook';
-    if (node.isAITool) return 'AI 工具';
-    return '動作';
   }
 }
 

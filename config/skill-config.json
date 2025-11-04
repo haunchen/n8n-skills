@@ -1,8 +1,11 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "n8n_version": "1.117.2",
   "build_date": "",
   "max_nodes_in_main_skill": 10,
+  "high_priority_node_count": 50,
+  "merge_remaining_nodes": true,
+  "max_nodes_per_merged_file": 100,
   "categories": {
     "core": {
       "name": "核心節點",
