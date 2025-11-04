@@ -31,6 +31,9 @@ import { CompatibilityAnalyzer } from '../src/analyzers/compatibility-analyzer';
 import { InputOutputParser } from '../src/parsers/input-output-parser';
 import type { NodeConnectionInfo, CompatibilityMatrix } from '../src/models/connection';
 
+// 導入快取管理器
+import { TemplateCacheManager } from '../src/utils/template-cache-manager';
+
 /**
  * 建置配置介面
  */
@@ -38,6 +41,9 @@ interface BuildConfig {
   version: string;
   n8n_version: string;
   max_nodes_in_main_skill: number;
+  high_priority_node_count?: number;
+  merge_remaining_nodes?: boolean;
+  max_nodes_per_merged_file?: number;
   categories: Record<string, any>;
   output_format: string;
   include_examples: boolean;
@@ -269,6 +275,10 @@ class SkillBuilder {
         usageCount: scored.usageCount,
         usagePercentage: usageStats[scored.nodeType]?.percentage || 0,
         properties: propData?.properties,
+        // 保留優先級評分資訊（用於分層合併策略）
+        score: scored.score,
+        rank: scored.rank,
+        tier: scored.tier,
       };
     };
 
@@ -464,14 +474,87 @@ class SkillBuilder {
 
     logger.info(`選取前 ${topTemplates.length} 個最受歡迎的範本來獲取完整 workflow`);
 
-    // 獲取完整 workflow（帶延遲）
-    const apiCollector = new ApiCollector();
-    const templateIds = topTemplates.map(t => t.id);
+    // 初始化快取管理器
+    const cacheManager = new TemplateCacheManager(
+      path.resolve(this.projectRoot, 'data/cache')
+    );
 
-    logger.info('開始獲取完整 workflow（每次請求間隔 0.5 秒）...');
-    const workflows = await apiCollector.fetchWorkflowDefinitions(templateIds, 500);
+    // 檢查是否強制更新
+    const forceUpdate = process.env.FORCE_TEMPLATE_UPDATE === 'true';
+    if (forceUpdate) {
+      logger.info('偵測到 FORCE_TEMPLATE_UPDATE=true，將強制重新下載所有 workflow');
+    }
 
-    logger.info(`成功獲取 ${workflows.length}/${topTemplates.length} 個 workflow`);
+    let workflows: Array<any> = [];
+
+    if (forceUpdate) {
+      // 強制更新：下載所有 workflow
+      const apiCollector = new ApiCollector();
+      const templateIds = topTemplates.map(t => t.id);
+
+      logger.info('開始獲取完整 workflow（每次請求間隔 0.5 秒）...');
+      workflows = await apiCollector.fetchWorkflowDefinitions(templateIds, 500);
+
+      logger.info(`成功獲取 ${workflows.length}/${topTemplates.length} 個 workflow`);
+
+      // 更新快取
+      await cacheManager.updateCache(topTemplates, workflows);
+    } else {
+      // 智能快取模式
+      logger.info('\n分析 template 快取變化...');
+      const analysis = await cacheManager.analyzeCacheChanges(topTemplates);
+
+      if (analysis.needsUpdate) {
+        logger.info(`✓ 新增: ${analysis.newTemplates.length} 個`);
+        logger.info(`✓ 排序改變: ${analysis.rankChanged.length} 個`);
+        logger.info(`✓ 未變動: ${analysis.unchanged.length} 個`);
+        logger.info(`✓ 移除: ${analysis.removed.length} 個`);
+
+        const needsDownload = [...analysis.newTemplates, ...analysis.rankChanged];
+
+        if (needsDownload.length > 0) {
+          logger.info(`\n需要下載 ${needsDownload.length} 個 workflow`);
+
+          // 下載需要更新的 workflows
+          const apiCollector = new ApiCollector();
+          logger.info('開始下載新/變更的 workflow（每次請求間隔 0.5 秒）...');
+          const newWorkflows = await apiCollector.fetchWorkflowDefinitions(needsDownload, 500);
+
+          logger.success(`成功下載 ${newWorkflows.length} 個 workflow`);
+
+          // 從快取讀取未變動的 workflows
+          logger.info(`從快取讀取 ${analysis.unchanged.length} 個 workflow`);
+          const cachedWorkflows = await cacheManager.getCachedWorkflows(analysis.unchanged);
+
+          // 合併新下載和快取的 workflows
+          workflows = [
+            ...newWorkflows,
+            ...Array.from(cachedWorkflows.values())
+          ];
+
+          logger.success(`總共 ${workflows.length} 個 workflow 準備完成`);
+
+          // 更新快取
+          logger.info('更新快取...');
+          await cacheManager.updateCache(topTemplates, newWorkflows);
+          logger.success('快取已更新');
+        } else {
+          logger.info('所有 template 排序未變動，從快取讀取...');
+          const cachedWorkflows = await cacheManager.getCachedWorkflows(
+            topTemplates.map(t => t.id)
+          );
+          workflows = Array.from(cachedWorkflows.values());
+          logger.success(`從快取讀取 ${workflows.length} 個 workflow`);
+        }
+      } else {
+        logger.info('所有 template 完全未變動，從快取讀取...');
+        const cachedWorkflows = await cacheManager.getCachedWorkflows(
+          topTemplates.map(t => t.id)
+        );
+        workflows = Array.from(cachedWorkflows.values());
+        logger.success(`從快取讀取 ${workflows.length} 個 workflow`);
+      }
+    }
 
     // 增強 templates（合併 template 和 workflow）
     const generator = new TemplateGenerator({
@@ -623,14 +706,28 @@ class SkillBuilder {
       // 步驟 3.5: 收集節點 I/O 配置並建立相容性矩陣
       const { nodeConnectionInfoList, compatibilityMatrix } = await this.buildCompatibilityMatrix(allNodes);
 
-      // 步驟 4: 為所有節點生成資源檔案（包括 topNodes，因為 Skill.md 會連結到它們）
+      // 步驟 4: 為所有節點生成資源檔案（使用分層合併策略）
       logger.info('===== 步驟 4: 生成資源檔案 =====');
+
+      // 依分數重新排序所有節點（已包含 score, rank, tier 資訊）
+      const sortedAllNodes = [...allNodes].sort((a, b) => (b.score || 0) - (a.score || 0));
+
+      // 依配置分割為高優先級和低優先級節點
+      const highPriorityCount = this.config.high_priority_node_count || 50;
+      const highPriorityNodes = sortedAllNodes.slice(0, highPriorityCount);
+      const lowPriorityNodes = sortedAllNodes.slice(highPriorityCount);
+
+      logger.info(`高優先級節點（獨立檔案）：${highPriorityNodes.length} 個`);
+      logger.info(`低優先級節點（合併檔案）：${lowPriorityNodes.length} 個`);
 
       const resourceGenerator = new ResourceGenerator({
         outputDir: path.resolve(this.projectRoot, 'output/resources'),
       });
-      const resourceFiles = await resourceGenerator.generateAll(
-        allNodes,
+
+      // 使用分層合併策略生成資源檔案
+      const resourceFiles = await resourceGenerator.generateTiered(
+        highPriorityNodes,
+        lowPriorityNodes,
         compatibilityMatrix,
         nodeConnectionInfoList
       );
