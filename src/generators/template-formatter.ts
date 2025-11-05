@@ -90,7 +90,7 @@ export class TemplateFormatter {
     // 確保適當的空行
     formatted = this.ensureProperSpacing(formatted);
 
-    // 加入目錄
+    // 加入Table of Contents
     if (this.options.addTableOfContents) {
       formatted = this.addTableOfContents(formatted);
     }
@@ -404,7 +404,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 加入目錄
+   * 加入Table of Contents
    */
   private addTableOfContents(content: string): string {
     const headings = this.extractHeadings(content);
@@ -418,7 +418,7 @@ export class TemplateFormatter {
       return content;
     }
 
-    // 生成目錄
+    // 生成Table of Contents
     const toc = this.generateTOC(tocHeadings);
 
     // 找到第一個 H1 標題的位置
@@ -432,8 +432,8 @@ export class TemplateFormatter {
       }
     }
 
-    // 插入目錄
-    lines.splice(insertIndex, 0, '', '## 目錄', '', ...toc.split('\n'), '');
+    // 插入Table of Contents
+    lines.splice(insertIndex, 0, '', '## Table of Contents', '', ...toc.split('\n'), '');
 
     return lines.join('\n');
   }
@@ -472,7 +472,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 生成目錄內容
+   * 生成Table of Contents內容
    */
   private generateTOC(headings: HeadingInfo[]): string {
     const lines: string[] = [];
@@ -526,7 +526,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 格式化目錄下的所有 Markdown 檔案
+   * 格式化Table of Contents下的所有 Markdown 檔案
    */
   public async formatDirectory(
     dirPath: string,

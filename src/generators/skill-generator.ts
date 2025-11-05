@@ -7,9 +7,9 @@
 
 /**
  * Skill Generator
- * 生成主要的 Skill.md 文件
+ * Generate the main Skill.md file
  *
- * 此生成器會組合所有收集和處理的資料，生成結構化的 Markdown 文件
+ * This generator combines all collected and processed data to generate a structured Markdown file
  */
 
 import type { SimplifiedNodeInfo } from '../collectors/npm-collector';
@@ -19,7 +19,7 @@ import type { PriorityTier } from '../organizers/priority-ranker';
 import { escapeMarkdown } from './template-formatter';
 
 /**
- * Skill 文件配置
+ * Skill file configuration
  */
 export interface SkillConfig {
   name: string;
@@ -32,7 +32,7 @@ export interface SkillConfig {
 }
 
 /**
- * 節點資訊（組合後）
+ * Node information (combined)
  */
 export interface EnrichedNodeInfo extends SimplifiedNodeInfo {
   usageCount?: number;
@@ -43,14 +43,14 @@ export interface EnrichedNodeInfo extends SimplifiedNodeInfo {
     common?: Record<string, any>;
     advanced?: Record<string, any>;
   };
-  // 優先級相關欄位（用於分層合併策略）
+  // Priority-related fields (for tiered merge strategy)
   score?: number;
   rank?: number;
   tier?: PriorityTier;
 }
 
 /**
- * 資源檔案資訊
+ * Resource file information
  */
 export interface ResourceFile {
   name: string;
@@ -60,7 +60,7 @@ export interface ResourceFile {
 }
 
 /**
- * Skill 生成器輸入資料
+ * Skill generator input data
  */
 export interface SkillGeneratorInput {
   nodes: EnrichedNodeInfo[];
@@ -70,12 +70,12 @@ export interface SkillGeneratorInput {
 }
 
 /**
- * 預設配置
+ * Default configuration
  */
 const DEFAULT_CONFIG: Required<SkillConfig> = {
   name: 'n8n-skills',
   version: '1.0.0',
-  description: 'n8n 工作流程自動化知識庫。使用此 skill 查找 n8n 節點資訊、了解節點功能用法、學習工作流程模式、取得節點配置範例。涵蓋觸發器、資料轉換、資料輸入輸出、AI 整合等節點。關鍵詞：n8n、workflow、automation、node、trigger、webhook、http request、database、ai agent。',
+  description: 'n8n workflow automation knowledge base. Use this skill to find n8n node information, understand node functionality and usage, learn workflow patterns, and get node configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
   author: 'n8n-skill',
   license: 'MIT',
   maxLines: 5000,
@@ -83,49 +83,49 @@ const DEFAULT_CONFIG: Required<SkillConfig> = {
 };
 
 /**
- * 常見工作流程模式
+ * Common workflow patterns
  */
 const COMMON_PATTERNS = [
   {
-    name: 'HTTP 資料擷取',
-    description: '從 API 抓取資料並處理',
+    name: 'HTTP Data Fetching',
+    description: 'Fetch data from APIs and process it',
     nodes: ['HTTP Request', 'Set', 'IF'],
-    example: '使用 HTTP Request 節點從外部 API 取得資料，用 Set 節點轉換格式，IF 節點做條件判斷'
+    example: 'Use HTTP Request node to fetch data from external APIs, Set node to transform formats, and IF node for conditional logic'
   },
   {
-    name: 'Email 自動化',
-    description: '監控郵件並自動回應或轉發',
+    name: 'Email Automation',
+    description: 'Monitor emails and auto-respond or forward',
     nodes: ['Email Trigger (IMAP)', 'Gmail', 'IF'],
-    example: '用 Email Trigger 監控收件匣，IF 節點篩選特定條件，Gmail 節點自動回覆或轉發'
+    example: 'Use Email Trigger to monitor inbox, IF node to filter specific conditions, and Gmail node to auto-reply or forward'
   },
   {
-    name: '資料庫同步',
-    description: '在不同系統間同步資料',
+    name: 'Database Synchronization',
+    description: 'Sync data between different systems',
     nodes: ['Schedule Trigger', 'HTTP Request', 'Postgres', 'MySQL'],
-    example: '定時觸發從一個資料庫讀取資料，轉換後寫入另一個資料庫'
+    example: 'Scheduled trigger to read data from one database, transform it, and write to another database'
   },
   {
-    name: 'Webhook 接收處理',
-    description: '接收外部 webhook 並觸發動作',
+    name: 'Webhook Processing',
+    description: 'Receive external webhooks and trigger actions',
     nodes: ['Webhook', 'Set', 'HTTP Request', 'Slack'],
-    example: '接收 webhook 事件，處理資料後發送通知到 Slack 或其他系統'
+    example: 'Receive webhook events, process data, and send notifications to Slack or other systems'
   },
   {
-    name: 'AI 助理整合',
-    description: '使用 AI 模型處理和生成內容',
+    name: 'AI Assistant Integration',
+    description: 'Use AI models to process and generate content',
     nodes: ['AI Agent', 'OpenAI', 'Vector Store', 'Embeddings OpenAI'],
-    example: '建立 AI 助理處理使用者查詢，整合向量資料庫進行語義搜尋'
+    example: 'Build AI assistants to handle user queries, integrate vector databases for semantic search'
   },
   {
-    name: '檔案處理',
-    description: '自動處理和轉換檔案',
+    name: 'File Processing',
+    description: 'Automatically process and transform files',
     nodes: ['Google Drive Trigger', 'Extract from File', 'Move Binary Data', 'Dropbox'],
-    example: '監控 Google Drive 新檔案，提取內容處理後上傳到 Dropbox'
+    example: 'Monitor Google Drive for new files, extract and process content, then upload to Dropbox'
   },
 ];
 
 /**
- * Skill.md 生成器
+ * Skill.md generator
  */
 export class SkillGenerator {
   private config: Required<SkillConfig>;
@@ -135,7 +135,7 @@ export class SkillGenerator {
   }
 
   /**
-   * 生成完整的 Skill.md 內容
+   * Generate complete Skill.md content
    */
   generate(input: SkillGeneratorInput): string {
     const totalNodes = input.nodes.length;
@@ -150,11 +150,11 @@ export class SkillGenerator {
 
     const content = sections.filter(Boolean).join('\n\n');
 
-    // 檢查行數限制
+    // Check line count limit
     const actualLines = content.split('\n').length;
     if (actualLines > this.config.maxLines) {
       console.warn(
-        `警告: 生成的內容超過限制 (${actualLines} > ${this.config.maxLines} 行)`
+        `Warning: Generated content exceeds limit (${actualLines} > ${this.config.maxLines} lines)`
       );
     }
 
@@ -162,12 +162,12 @@ export class SkillGenerator {
   }
 
   /**
-   * 生成 YAML frontmatter
+   * Generate YAML frontmatter
    */
   private generateFrontmatter(totalNodes: number): string {
     const description = this.config.description.replace(
-      '等節點',
-      `等 ${totalNodes} 個節點`
+      'and more',
+      `covering ${totalNodes} nodes`
     );
 
     return [
@@ -180,160 +180,160 @@ export class SkillGenerator {
   }
 
   /**
-   * 生成概述章節
+   * Generate overview section
    */
   private generateOverview(): string {
     return [
       '# n8n Workflow Automation Skill Pack',
       '',
-      '## 什麼是 n8n？',
+      '## What is n8n?',
       '',
-      'n8n 是一個可擴展的工作流程自動化工具，讓你可以連接任何應用程式並自動化工作流程。',
-      '它提供了超過 400 個內建整合（節點），支援視覺化工作流程設計，並可自訂擴展。',
+      'n8n is an extensible workflow automation tool that allows you to connect any application and automate workflows.',
+      'It provides over 400 built-in integrations (nodes), supports visual workflow design, and is highly customizable.',
       '',
-      '主要特色：',
-      '- 視覺化工作流程編輯器',
-      '- 400+ 內建整合節點',
-      '- 自訂程式碼執行（JavaScript/Python）',
-      '- AI 工具整合（OpenAI、Anthropic、Hugging Face 等）',
-      '- 資料轉換和處理',
-      '- 條件邏輯和分支',
-      '- 排程和觸發器',
-      '- 錯誤處理和重試機制',
+      'Key Features:',
+      '- Visual workflow editor',
+      '- 400+ built-in integration nodes',
+      '- Custom code execution (JavaScript/Python)',
+      '- AI tool integration (OpenAI, Anthropic, Hugging Face, etc.)',
+      '- Data transformation and processing',
+      '- Conditional logic and branching',
+      '- Scheduling and triggers',
+      '- Error handling and retry mechanisms',
       '',
-      '## 何時使用這個 Skill',
+      '## When to Use This Skill',
       '',
-      '使用這個 skill 來：',
-      '- 了解 n8n 節點的功能和用法',
-      '- 查找適合特定任務的節點',
-      '- 學習常見的工作流程模式',
-      '- 取得節點配置範例',
-      '- 解決工作流程設計問題',
+      'Use this skill to:',
+      '- Understand n8n node functionality and usage',
+      '- Find nodes suitable for specific tasks',
+      '- Learn common workflow patterns',
+      '- Get node configuration examples',
+      '- Solve workflow design problems',
       '',
-      '本 skill 包含：',
-      `- ${this.config.topNodesCount} 個最常用的 n8n 節點詳細資訊`,
-      '- 節點配置範例和最佳實踐',
-      '- 常見工作流程模式',
-      '- 節點分類和索引',
+      'This skill includes:',
+      `- Detailed information on the ${this.config.topNodesCount} most commonly used n8n nodes`,
+      '- Node configuration examples and best practices',
+      '- Common workflow patterns',
+      '- Node categorization and indexing',
     ].join('\n');
   }
 
 
   /**
-   * 生成節點查找指南（工具使用導向）
+   * Generate node finding guide (tool-usage oriented)
    */
   private generateHowToFindNodes(
     _nodes: EnrichedNodeInfo[],
     _stats: NodeUsageStats
   ): string {
     const sections = [
-      '# 如何查找節點',
+      '# How to Find Nodes',
       '',
-      '本 skill 包含 542 個 n8n 節點的完整資訊。作為 AI 助理，你可以使用以下工具高效查找和讀取節點資訊。',
+      'This skill contains complete information for 542 n8n nodes. As an AI assistant, you can use the following tools to efficiently find and read node information.',
       '',
-      '## 1. 使用統一索引表 (INDEX.md)',
+      '## 1. Using the Unified Index (INDEX.md)',
       '',
-      'INDEX.md 是所有節點的總索引，提供兩種查找方式：',
+      'INDEX.md is the master index for all nodes, providing two ways to search:',
       '',
-      '### 讀取完整索引',
+      '### Read Complete Index',
       '```',
       'Read("resources/INDEX.md")',
       '```',
       '',
-      '索引內容包括：',
-      '- 依分類查找：6 個功能分類（Transform、Input、Output、Trigger、Organization、Misc）',
-      '- 範本索引：100 個工作流程範本',
+      'Index contents include:',
+      '- Find by category: 6 functional categories (Transform, Input, Output, Trigger, Organization, Misc)',
+      '- Template index: 100 workflow templates',
       '',
-      '### 讀取索引中的特定部分',
+      '### Read Specific Sections of the Index',
       '',
-      'INDEX.md 包含所有 542 個節點的位置資訊（開始行號和行數），你可以精準讀取：',
+      'INDEX.md contains location information (starting line number and line count) for all 542 nodes, allowing you to read precisely:',
       '',
-      '範例：查找「資料轉換」分類的節點',
+      'Example: Finding nodes in the "Data Transformation" category',
       '```',
-      '# 先讀取索引了解分類內容',
+      '# First read the index to understand category contents',
       'Read("resources/INDEX.md", offset=1, limit=100)',
       '```',
       '',
-      '## 2. 使用 Read 工具精準讀取節點文件',
+      '## 2. Using Read Tool to Precisely Read Node Documentation',
       '',
-      '### 讀取高優先級節點（獨立檔案）',
+      '### Read High-Priority Nodes (Individual Files)',
       '',
-      '前 50 個最常用節點有獨立檔案，直接讀取即可：',
+      'The top 50 most commonly used nodes have individual files, which can be read directly:',
       '',
       '```',
-      '# 範例：讀取 Gmail 節點',
+      '# Example: Read Gmail node',
       'Read("resources/output/nodes-base.gmail.md")',
       '',
-      '# 範例：讀取 Code 節點',
+      '# Example: Read Code node',
       'Read("resources/transform/nodes-base.code.md")',
       '```',
       '',
-      '### 讀取低優先級節點（合併檔案中的特定節點）',
+      '### Read Low-Priority Nodes (Specific Nodes in Merged Files)',
       '',
-      '其他 492 個節點合併在分類檔案中。INDEX.md 會告訴你每個節點的開始行號和行數：',
+      'The other 492 nodes are merged in category files. INDEX.md will tell you the starting line number and line count for each node:',
       '',
       '```',
-      '# 步驟 1：從 INDEX.md 查找節點的位置資訊',
-      '# 例如：Azure Cosmos DB 在 transform-merged-1.md 的開始行號 110，行數 64',
+      '# Step 1: Find the node\'s location information from INDEX.md',
+      '# Example: Azure Cosmos DB is at line 110 in transform-merged-1.md with 64 lines',
       '',
-      '# 步驟 2：使用開始行號和行數精準讀取',
+      '# Step 2: Use starting line number and line count to read precisely',
       'Read("resources/transform/transform-merged-1.md", offset=110, limit=64)',
       '```',
       '',
-      '## 3. 使用 Glob 工具搜尋檔案',
+      '## 3. Using Glob Tool to Search Files',
       '',
-      '當你知道節點名稱的一部分，可以用 Glob 快速定位檔案：',
+      'When you know part of a node name, use Glob to quickly locate files:',
       '',
       '```',
-      '# 搜尋包含 "gmail" 的節點檔案',
+      '# Search for node files containing "gmail"',
       'Glob("resources/**/*gmail*.md")',
       '',
-      '# 搜尋所有輸出類節點',
+      '# Search all output-type nodes',
       'Glob("resources/output/*.md")',
       '',
-      '# 搜尋所有觸發器節點',
+      '# Search all trigger nodes',
       'Glob("resources/trigger/*.md")',
       '',
-      '# 搜尋合併檔案',
+      '# Search merged files',
       'Glob("resources/**/*-merged-*.md")',
       '```',
       '',
-      '## 4. 使用 Grep 工具搜尋關鍵字',
+      '## 4. Using Grep Tool to Search Keywords',
       '',
-      '在所有資源檔案中搜尋功能關鍵字：',
+      'Search for functional keywords in all resource files:',
       '',
       '```',
-      '# 搜尋包含 "send email" 的節點',
+      '# Search for nodes containing "send email"',
       'Grep("send email", path="resources", output_mode="files_with_matches")',
       '',
-      '# 搜尋資料庫相關節點',
+      '# Search for database-related nodes',
       'Grep("database", path="resources", output_mode="files_with_matches")',
       '',
-      '# 搜尋 webhook 相關功能（顯示匹配內容）',
+      '# Search webhook-related functionality (show matching content)',
       'Grep("webhook", path="resources", output_mode="content", -n=true, -C=2)',
       '',
-      '# 搜尋 AI 相關節點',
+      '# Search for AI-related nodes',
       'Grep("AI|artificial intelligence", path="resources", output_mode="files_with_matches")',
       '```',
       '',
-      '## 查找策略建議',
+      '## Search Strategy Recommendations',
       '',
-      '根據不同情境選擇最佳查找方式：',
+      'Choose the best search method for different scenarios:',
       '',
-      '1. 使用者詢問特定服務（如 "Gmail"、"Slack"）：',
-      '   → 使用 Glob 搜尋：`Glob("resources/**/*gmail*.md")`',
+      '1. User asks about specific services (e.g., "Gmail", "Slack"):',
+      '   → Use Glob search: `Glob("resources/**/*gmail*.md")`',
       '',
-      '2. 使用者詢問功能需求（如 "發送郵件"、"資料庫查詢"）：',
-      '   → 使用 Grep 搜尋關鍵字：`Grep("send email", path="resources")`',
+      '2. User asks about functional requirements (e.g., "send email", "database query"):',
+      '   → Use Grep to search keywords: `Grep("send email", path="resources")`',
       '',
-      '3. 使用者詢問節點分類（如 "有哪些觸發器"）：',
-      '   → 讀取 INDEX.md 的分類表：`Read("resources/INDEX.md", offset=<分類起始行>, limit=<行數>)`',
+      '3. User asks about node categories (e.g., "what triggers are available"):',
+      '   → Read category table in INDEX.md: `Read("resources/INDEX.md", offset=<category_start_line>, limit=<line_count>)`',
       '',
-      '4. 使用者想了解熱門節點：',
-      '   → 讀取 INDEX.md 的優先級排名表',
+      '4. User wants to learn about popular nodes:',
+      '   → Read the priority ranking table in INDEX.md',
       '',
-      '5. 使用者需要工作流程範例：',
-      '   → 參考「常見工作流程模式」章節或 resources/templates/ 目錄',
+      '5. User needs workflow examples:',
+      '   → Reference the "Common Workflow Patterns" section or resources/templates/ directory',
       '',
     ];
 
@@ -341,13 +341,13 @@ export class SkillGenerator {
   }
 
   /**
-   * 生成工作流程模式章節
+   * Generate workflow patterns section
    */
   private generateWorkflowPatterns(): string {
     const sections = [
-      '# 常見工作流程模式',
+      '# Common Workflow Patterns',
       '',
-      '以下是一些常見的工作流程模式，可作為起點參考：',
+      'Here are some common workflow patterns you can use as a starting point:',
       '',
     ];
 
@@ -357,25 +357,25 @@ export class SkillGenerator {
         '',
         escapeMarkdown(pattern.description),
         '',
-        '使用節點:',
+        'Nodes used:',
         ...pattern.nodes.map(node => `- ${node}`),
         '',
-        `範例: ${escapeMarkdown(pattern.example)}`,
+        `Example: ${escapeMarkdown(pattern.example)}`,
         ''
       );
     });
 
     sections.push(
-      '## 完整範本庫',
+      '## Complete Template Library',
       '',
-      '我們收錄了 100 個來自 n8n.io 的熱門工作流程範本，按使用場景分類：',
+      'We have collected 100 popular workflow templates from n8n.io, categorized by use case:',
       '',
-      '- 🤖 [AI 與聊天機器人](resources/templates/ai-chatbots/README.md) - AI Agent、RAG 系統、智能對話',
-      '- 📱 [社交媒體與影片](resources/templates/social-media/README.md) - TikTok、Instagram、YouTube 自動化',
-      '- 📊 [資料處理與分析](resources/templates/data-processing/README.md) - Google Sheets、資料庫整合',
-      '- 💬 [通訊與協作](resources/templates/communication/README.md) - Email、WhatsApp、Telegram 自動化',
+      '- 🤖 [AI & Chatbots](resources/templates/ai-chatbots/README.md) - AI Agents, RAG systems, intelligent conversations',
+      '- 📱 [Social Media & Video](resources/templates/social-media/README.md) - TikTok, Instagram, YouTube automation',
+      '- 📊 [Data Processing & Analysis](resources/templates/data-processing/README.md) - Google Sheets, database integration',
+      '- 💬 [Communication & Collaboration](resources/templates/communication/README.md) - Email, WhatsApp, Telegram automation',
       '',
-      '查看 [完整範本索引](resources/templates/README.md) 了解所有可用範本。',
+      'See the [complete template index](resources/templates/README.md) for all available templates.',
       ''
     );
 
@@ -383,7 +383,7 @@ export class SkillGenerator {
   }
 
   /**
-   * 生成 AI 助理使用指南
+   * Generate AI assistant usage guide
    */
   private generateAIUsageGuide(resourceFiles: ResourceFile[]): string {
     const categoryCounts = new Map<string, number>();
@@ -394,235 +394,235 @@ export class SkillGenerator {
     });
 
     const sections = [
-      '# 使用指南',
+      '# Usage Guide',
       '',
-      '## 1. 檔案結構導覽',
+      '## 1. File Structure Navigation',
       '',
-      '### 目錄結構',
+      '### Directory Structure',
       '',
       '```',
       'resources/',
-      '├── INDEX.md                     # 統一索引表（包含所有節點的行號資訊）',
-      '├── compatibility-matrix.md      # 節點相容性矩陣',
-      '├── transform/                   # 資料轉換節點',
-      `│   ├── README.md                # ${categoryCounts.get('transform') || 0} 個節點總覽`,
-      '│   ├── nodes-base.code.md       # 高優先級獨立檔案',
+      '├── INDEX.md                     # Unified index (contains line number info for all nodes)',
+      '├── compatibility-matrix.md      # Node compatibility matrix',
+      '├── transform/                   # Data transformation nodes',
+      `│   ├── README.md                # ${categoryCounts.get('transform') || 0} nodes overview`,
+      '│   ├── nodes-base.code.md       # High-priority individual files',
       '│   ├── nodes-base.function.md',
-      '│   └── transform-merged-*.md    # 低優先級合併檔案',
-      '├── input/                       # 資料輸入節點',
-      `│   ├── README.md                # ${categoryCounts.get('input') || 0} 個節點`,
+      '│   └── transform-merged-*.md    # Low-priority merged files',
+      '├── input/                       # Data input nodes',
+      `│   ├── README.md                # ${categoryCounts.get('input') || 0} nodes`,
       '│   └── ...',
-      '├── output/                      # 資料輸出節點',
-      `│   ├── README.md                # ${categoryCounts.get('output') || 0} 個節點`,
+      '├── output/                      # Data output nodes',
+      `│   ├── README.md                # ${categoryCounts.get('output') || 0} nodes`,
       '│   └── ...',
-      '├── trigger/                     # 觸發器節點',
-      `│   ├── README.md                # ${categoryCounts.get('trigger') || 0} 個節點`,
+      '├── trigger/                     # Trigger nodes',
+      `│   ├── README.md                # ${categoryCounts.get('trigger') || 0} nodes`,
       '│   └── ...',
-      '├── organization/                # 組織管理節點',
-      `│   ├── README.md                # ${categoryCounts.get('organization') || 0} 個節點`,
+      '├── organization/                # Organization management nodes',
+      `│   ├── README.md                # ${categoryCounts.get('organization') || 0} nodes`,
       '│   └── ...',
-      '├── misc/                        # 其他節點',
-      `│   ├── README.md                # ${categoryCounts.get('misc') || 0} 個節點`,
+      '├── misc/                        # Miscellaneous nodes',
+      `│   ├── README.md                # ${categoryCounts.get('misc') || 0} nodes`,
       '│   └── ...',
-      '└── templates/                   # 工作流程範本',
-      '    ├── README.md                # 100 個範本總覽',
-      '    ├── ai-chatbots/             # AI 與聊天機器人範本',
-      '    ├── social-media/            # 社交媒體範本',
-      '    ├── data-processing/         # 資料處理範本',
-      '    └── communication/           # 通訊協作範本',
+      '└── templates/                   # Workflow templates',
+      '    ├── README.md                # 100 templates overview',
+      '    ├── ai-chatbots/             # AI & chatbot templates',
+      '    ├── social-media/            # Social media templates',
+      '    ├── data-processing/         # Data processing templates',
+      '    └── communication/           # Communication & collaboration templates',
       '```',
       '',
-      '### 高優先級 vs 低優先級節點',
+      '### High-Priority vs Low-Priority Nodes',
       '',
-      '- 高優先級（前 50 名）：獨立檔案，檔名格式 `nodes-base.{nodeType}.md`',
-      '  - 範例：`resources/transform/nodes-base.code.md`',
-      '  - 直接使用 Read 工具讀取完整檔案',
+      '- High-priority (top 50): Individual files, filename format `nodes-base.{nodeType}.md`',
+      '  - Example: `resources/transform/nodes-base.code.md`',
+      '  - Read the complete file directly using the Read tool',
       '',
-      '- 低優先級（其他 492 個）：合併在 `*-merged-*.md` 檔案中',
-      '  - 範例：`resources/transform/transform-merged-1.md`',
-      '  - 使用 INDEX.md 查找行號，再用 Read 工具的 offset/limit 參數讀取特定範圍',
+      '- Low-priority (other 492): Merged in `*-merged-*.md` files',
+      '  - Example: `resources/transform/transform-merged-1.md`',
+      '  - Use INDEX.md to find line numbers, then use Read tool\'s offset/limit parameters to read specific ranges',
       '',
-      '## 2. 工具使用完整說明',
+      '## 2. Complete Tool Usage Instructions',
       '',
-      '### Read 工具',
+      '### Read Tool',
       '',
-      '用途：讀取檔案內容',
+      'Purpose: Read file contents',
       '',
-      '完整讀取：',
+      'Complete read:',
       '```',
       'Read("resources/INDEX.md")',
       'Read("resources/transform/nodes-base.code.md")',
       '```',
       '',
-      '精準讀取（使用開始行號和行數）：',
+      'Precise read (using starting line number and line count):',
       '```',
       'Read("resources/transform/transform-merged-1.md", offset=110, limit=64)',
       '```',
       '',
-      '### Glob 工具',
+      '### Glob Tool',
       '',
-      '用途：搜尋符合 pattern 的檔案',
+      'Purpose: Search for files matching a pattern',
       '',
-      '常用 patterns：',
+      'Common patterns:',
       '```',
-      'Glob("resources/**/*{關鍵字}*.md")    # 搜尋包含關鍵字的檔案',
-      'Glob("resources/transform/*.md")      # 搜尋特定分類的所有檔案',
-      'Glob("resources/**/*-merged-*.md")    # 搜尋所有合併檔案',
-      '```',
-      '',
-      '### Grep 工具',
-      '',
-      '用途：在檔案內容中搜尋關鍵字',
-      '',
-      '基本搜尋：',
-      '```',
-      'Grep("{關鍵字}", path="resources", output_mode="files_with_matches")',
+      'Glob("resources/**/*{keyword}*.md")    # Search for files containing keyword',
+      'Glob("resources/transform/*.md")      # Search all files in a specific category',
+      'Glob("resources/**/*-merged-*.md")    # Search all merged files',
       '```',
       '',
-      '進階搜尋：',
-      '```',
-      '# 顯示匹配內容和行號',
-      'Grep("{關鍵字}", path="resources", output_mode="content", -n=true, -C=2)',
+      '### Grep Tool',
       '',
-      '# 使用正則表達式',
+      'Purpose: Search for keywords in file contents',
+      '',
+      'Basic search:',
+      '```',
+      'Grep("{keyword}", path="resources", output_mode="files_with_matches")',
+      '```',
+      '',
+      'Advanced search:',
+      '```',
+      '# Show matching content and line numbers',
+      'Grep("{keyword}", path="resources", output_mode="content", -n=true, -C=2)',
+      '',
+      '# Use regular expressions',
       'Grep("email|mail", path="resources", output_mode="files_with_matches")',
       '',
-      '# 限制搜尋特定分類',
-      'Grep("{關鍵字}", path="resources/transform", output_mode="files_with_matches")',
+      '# Limit search to specific category',
+      'Grep("{keyword}", path="resources/transform", output_mode="files_with_matches")',
       '```',
       '',
-      '### INDEX.md 查詢方法',
+      '### INDEX.md Query Method',
       '',
-      'INDEX.md 是最重要的導航工具，建議優先使用：',
+      'INDEX.md is the most important navigation tool, recommended to use first:',
       '',
-      '1. 先讀取 INDEX.md 了解整體結構',
-      '2. 根據分類找到目標節點',
-      '3. 記錄節點的檔案路徑、開始行號和行數',
-      '4. 使用 Read 工具精準讀取節點內容',
+      '1. First read INDEX.md to understand overall structure',
+      '2. Find target nodes based on categories',
+      '3. Record node\'s file path, starting line number, and line count',
+      '4. Use Read tool to precisely read node content',
       '',
-      '## 3. 決策流程指引',
+      '## 3. Decision Flow Guide',
       '',
-      '### 情境 1：使用者詢問特定服務節點',
+      '### Scenario 1: User Asks About a Specific Service Node',
       '',
-      '範例：「如何使用 Gmail 節點？」',
+      'Example: "How do I use the Gmail node?"',
       '',
-      '決策流程：',
+      'Decision flow:',
       '```',
-      '1. 使用 Glob 快速定位',
+      '1. Use Glob for quick location',
       '   Glob("resources/**/*gmail*.md")',
       '',
-      '2. 如果找到獨立檔案，直接讀取',
+      '2. If an individual file is found, read it directly',
       '   Read("resources/output/nodes-base.gmail.md")',
       '',
-      '3. 如果在合併檔案中，先查 INDEX.md',
-      '   → 找到開始行號和行數',
-      '   → 使用 offset/limit 讀取',
+      '3. If in a merged file, check INDEX.md first',
+      '   → Find starting line number and line count',
+      '   → Use offset/limit to read',
       '```',
       '',
-      '### 情境 2：使用者詢問功能需求',
+      '### Scenario 2: User Asks About Functional Requirements',
       '',
-      '範例：「我需要發送郵件的節點」',
+      'Example: "I need a node to send emails"',
       '',
-      '決策流程：',
+      'Decision flow:',
       '```',
-      '1. 使用 Grep 搜尋關鍵字',
+      '1. Use Grep to search keywords',
       '   Grep("send email|send mail", path="resources", output_mode="files_with_matches")',
       '',
-      '2. 獲得候選節點列表',
-      '   → Gmail、SendGrid、SMTP 等',
+      '2. Get a list of candidate nodes',
+      '   → Gmail, SendGrid, SMTP, etc.',
       '',
-      '3. 讀取相關節點的詳細文件',
-      '   → 比較功能差異',
-      '   → 推薦最適合的節點',
+      '3. Read detailed documentation for relevant nodes',
+      '   → Compare functional differences',
+      '   → Recommend the most suitable node',
       '```',
       '',
-      '### 情境 3：使用者詢問節點分類',
+      '### Scenario 3: User Asks About Node Categories',
       '',
-      '範例：「有哪些觸發器節點？」',
+      'Example: "What trigger nodes are available?"',
       '',
-      '決策流程：',
+      'Decision flow:',
       '```',
-      '1. 讀取 INDEX.md 的觸發器分類部分',
+      '1. Read the trigger category section in INDEX.md',
       '   Read("resources/INDEX.md")',
-      '   → 找到 "## 依分類查找" > "### Trigger"',
+      '   → Find "## Find by Category" > "### Trigger"',
       '',
-      '2. 或直接讀取分類 README',
+      '2. Or directly read the category README',
       '   Read("resources/trigger/README.md")',
       '',
-      '3. 提供節點列表和簡要說明',
+      '3. Provide node list and brief descriptions',
       '```',
       '',
-      '### 情境 4：使用者需要工作流程範例',
+      '### Scenario 4: User Needs Workflow Examples',
       '',
-      '範例：「如何建立 AI 聊天機器人？」',
+      'Example: "How do I build an AI chatbot?"',
       '',
-      '決策流程：',
+      'Decision flow:',
       '```',
-      '1. 先查看「常見工作流程模式」章節',
-      '   → 尋找相關模式',
+      '1. First check the "Common Workflow Patterns" section',
+      '   → Look for relevant patterns',
       '',
-      '2. 查看範本庫',
+      '2. Check the template library',
       '   Read("resources/templates/ai-chatbots/README.md")',
       '',
-      '3. 結合節點文件',
-      '   → AI Agent 節點',
-      '   → OpenAI 節點',
-      '   → Vector Store 節點',
+      '3. Combine with node documentation',
+      '   → AI Agent node',
+      '   → OpenAI node',
+      '   → Vector Store node',
       '```',
       '',
-      '## 4. 最佳實踐和注意事項',
+      '## 4. Best Practices and Considerations',
       '',
-      '### 查找策略',
+      '### Search Strategy',
       '',
-      '1. 優先使用 INDEX.md 獲得全局視野',
-      '   - 了解節點分類和優先級',
-      '   - 快速定位目標節點',
+      '1. Prioritize using INDEX.md for a global view',
+      '   - Understand node categorization and priorities',
+      '   - Quickly locate target nodes',
       '',
-      '2. 善用 Grep 進行功能導向搜尋',
-      '   - 當使用者描述需求而非具體節點名稱',
-      '   - 搜尋關鍵字可以快速找到候選節點',
+      '2. Leverage Grep for function-oriented searches',
+      '   - When users describe needs rather than specific node names',
+      '   - Keyword searches can quickly find candidate nodes',
       '',
-      '3. 使用 Glob 進行檔案名稱搜尋',
-      '   - 當知道節點名稱的一部分',
-      '   - 比 Grep 更快速',
+      '3. Use Glob for filename searches',
+      '   - When you know part of a node name',
+      '   - Faster than Grep',
       '',
-      '4. 善用開始行號和行數讀取',
-      '   - 合併檔案可能很大（數千行）',
-      '   - 使用 offset/limit 只讀取需要的部分',
-      '   - 節省 token 使用',
+      '4. Leverage starting line number and line count reading',
+      '   - Merged files can be very large (thousands of lines)',
+      '   - Use offset/limit to read only the needed portions',
+      '   - Save token usage',
       '',
-      '### 節點選擇建議',
+      '### Node Selection Recommendations',
       '',
-      '1. 優先推薦高優先級節點',
-      '   - 使用率高 = 更穩定、文件更完整',
-      '   - 社群支援更好',
+      '1. Prioritize recommending high-priority nodes',
+      '   - High usage = more stable, more complete documentation',
+      '   - Better community support',
       '',
-      '2. 檢查節點相容性',
-      '   - 讀取 resources/compatibility-matrix.md',
-      '   - 或查看節點文件中的「連接指南」章節',
+      '2. Check node compatibility',
+      '   - Read resources/compatibility-matrix.md',
+      '   - Or check the "Connection Guide" section in node documentation',
       '',
-      '3. 參考實際範本',
-      '   - templates/ 目錄包含 100 個真實使用案例',
-      '   - 可以學習節點組合方式',
+      '3. Reference actual templates',
+      '   - The templates/ directory contains 100 real-world use cases',
+      '   - Learn how nodes are combined',
       '',
-      '### 常見陷阱',
+      '### Common Pitfalls',
       '',
-      '1. 不要每次都讀取完整的合併檔案',
-      '   - 合併檔案可能有數千行',
-      '   - 應該使用 INDEX.md 找到行號後精準讀取',
+      '1. Don\'t always read complete merged files',
+      '   - Merged files can have thousands of lines',
+      '   - Should use INDEX.md to find line numbers, then read precisely',
       '',
-      '2. 注意節點命名格式',
-      '   - 檔案格式：`nodes-base.{nodeType}.md`',
-      '   - nodeType 通常是小寫加連字號',
-      '   - 例如：`nodes-base.httpRequest.md`（不是 `http-request`）',
+      '2. Pay attention to node naming format',
+      '   - File format: `nodes-base.{nodeType}.md`',
+      '   - nodeType is usually lowercase with hyphens',
+      '   - Example: `nodes-base.httpRequest.md` (not `http-request`)',
       '',
-      '3. 區分觸發器和動作節點',
-      '   - 觸發器只能放在工作流程開頭',
-      '   - Webhook 節點也是觸發器的一種',
+      '3. Distinguish between trigger and action nodes',
+      '   - Triggers can only be placed at the beginning of workflows',
+      '   - Webhook nodes are also a type of trigger',
       '',
-      '4. 檢查節點版本',
-      '   - 部分節點有多個版本',
-      '   - 文件中會標註版本號和差異',
+      '4. Check node versions',
+      '   - Some nodes have multiple versions',
+      '   - Documentation will note version numbers and differences',
       '',
     ];
 
@@ -630,46 +630,46 @@ export class SkillGenerator {
   }
 
   /**
-   * 生成授權聲明
+   * Generate license statement
    */
   private generateLicense(): string {
     return [
       '---',
       '',
-      '# 授權與聲明',
+      '# License and Attribution',
       '',
-      '## 本 Skill Pack 授權',
+      '## This Skill Pack License',
       '',
-      '本 skill pack 專案採用 MIT License。',
-      '詳見：https://github.com/haunchen/n8n-skill/blob/main/LICENSE',
+      'This skill pack project is licensed under the MIT License.',
+      'See: https://github.com/haunchen/n8n-skill/blob/main/LICENSE',
       '',
-      '## 重要聲明',
+      '## Important Notice',
       '',
-      '本專案為非官方教學專案，不隸屬於 n8n GmbH。',
+      'This is an unofficial educational project and is not affiliated with n8n GmbH.',
       '',
-      '本 skill 內容基於以下資源產生：',
-      '- n8n 節點型別定義（Sustainable Use License）',
-      '- n8n 官方文件（MIT License）',
-      '- n8n-mcp 專案架構（MIT License）',
+      'This skill content is generated based on the following resources:',
+      '- n8n node type definitions (Sustainable Use License)',
+      '- n8n official documentation (MIT License)',
+      '- n8n-mcp project architecture (MIT License)',
       '',
-      '詳細授權資訊請參閱專案的 ATTRIBUTIONS.md 檔案。',
+      'For detailed attribution information, please refer to the ATTRIBUTIONS.md file in the project.',
       '',
-      '## 關於 n8n',
+      '## About n8n',
       '',
-      'n8n 是由 n8n GmbH 開發和維護的開源工作流程自動化平台。',
+      'n8n is an open-source workflow automation platform developed and maintained by n8n GmbH.',
       '',
-      '- 官方網站: https://n8n.io',
-      '- 文件: https://docs.n8n.io',
-      '- 原始碼: https://github.com/n8n-io/n8n',
-      '- 授權: Sustainable Use License',
+      '- Official website: https://n8n.io',
+      '- Documentation: https://docs.n8n.io',
+      '- Source code: https://github.com/n8n-io/n8n',
+      '- License: Sustainable Use License',
       '',
-      '使用 n8n 軟體時需遵循 n8n 的授權條款，詳見：https://github.com/n8n-io/n8n/blob/master/LICENSE.md',
+      'When using n8n software, you must comply with n8n\'s license terms. See: https://github.com/n8n-io/n8n/blob/master/LICENSE.md',
     ].join('\n');
   }
 }
 
 /**
- * 便利函數：快速生成 Skill.md
+ * Convenience function: quickly generate Skill.md
  */
 export function generateSkillMarkdown(
   input: SkillGeneratorInput
@@ -679,7 +679,7 @@ export function generateSkillMarkdown(
 }
 
 /**
- * 便利函數：生成並寫入檔案
+ * Convenience function: generate and write to file
  */
 export async function generateSkillFile(
   input: SkillGeneratorInput,
@@ -688,6 +688,6 @@ export async function generateSkillFile(
   const { writeFile } = await import('fs/promises');
   const content = generateSkillMarkdown(input);
   await writeFile(outputPath, content, 'utf-8');
-  console.log(`Skill.md 已生成: ${outputPath}`);
-  console.log(`總行數: ${content.split('\n').length}`);
+  console.log(`Skill.md generated: ${outputPath}`);
+  console.log(`Total lines: ${content.split('\n').length}`);
 }

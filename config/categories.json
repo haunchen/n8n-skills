@@ -1,8 +1,8 @@
 {
   "categories": {
     "core": {
-      "name": "核心節點",
-      "description": "n8n 最基本和常用的節點",
+      "name": "Core Nodes",
+      "description": "The most basic and commonly used n8n nodes",
       "icon": "⚙️",
       "priority": 1,
       "nodes": [
@@ -19,8 +19,8 @@
       ]
     },
     "app": {
-      "name": "應用整合",
-      "description": "第三方服務整合節點",
+      "name": "Application Integration",
+      "description": "Third-party service integration nodes",
       "icon": "🔌",
       "priority": 2,
       "subcategories": {
@@ -32,8 +32,8 @@
       }
     },
     "trigger": {
-      "name": "觸發器節點",
-      "description": "啟動工作流程的節點",
+      "name": "Trigger Nodes",
+      "description": "Nodes that initiate workflows",
       "icon": "⚡",
       "priority": 3,
       "nodes": [
@@ -45,8 +45,8 @@
       ]
     },
     "ai": {
-      "name": "AI 節點",
-      "description": "AI 和機器學習相關節點",
+      "name": "AI Nodes",
+      "description": "AI and machine learning related nodes",
       "icon": "🤖",
       "priority": 4,
       "subcategories": {
@@ -56,8 +56,8 @@
       }
     },
     "database": {
-      "name": "資料庫節點",
-      "description": "資料庫操作節點",
+      "name": "Database Nodes",
+      "description": "Database operation nodes",
       "icon": "🗄️",
       "priority": 5,
       "nodes": [
@@ -70,8 +70,8 @@
       ]
     },
     "utility": {
-      "name": "工具節點",
-      "description": "實用工具節點",
+      "name": "Utility Nodes",
+      "description": "Practical utility nodes",
       "icon": "🛠️",
       "priority": 6,
       "nodes": [

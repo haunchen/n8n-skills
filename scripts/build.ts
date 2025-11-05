@@ -310,7 +310,7 @@ class SkillBuilder {
     const skillConfig: SkillConfig = {
       name: 'n8n-skills',
       version: this.config.version,
-      description: 'n8n 工作流程自動化知識庫。使用此 skill 查找 n8n 節點資訊、了解節點功能用法、學習工作流程模式、取得節點配置範例。涵蓋觸發器、資料轉換、資料輸入輸出、AI 整合等節點。關鍵詞：n8n、workflow、automation、node、trigger、webhook、http request、database、ai agent。',
+      description: 'n8n workflow automation knowledge base. Use this skill to find n8n node information, understand node functionality and usage, learn workflow patterns, and get node configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
       topNodesCount: this.config.max_nodes_in_main_skill,
     };
 

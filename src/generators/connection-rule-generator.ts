@@ -9,17 +9,17 @@ import type { CompatibilityMatrix, NodeConnectionInfo } from '../models/connecti
 import type { NodeConnectionType } from 'n8n-workflow';
 
 /**
- * 連接規則生成器
- * 為節點生成連接指南的 Markdown 內容
+ * Connection rule generator
+ * Generate Markdown content for node connection guide
  */
 export class ConnectionRuleGenerator {
   /**
-   * 為單一節點生成完整的連接指南
-   * @param node 節點資訊
-   * @param matrix 相容性矩陣
-   * @param allNodes 所有節點列表（用於查詢顯示名稱）
-   * @param limit 限制推薦數量
-   * @returns Markdown 格式的連接指南
+   * Generate complete connection guide for a single node
+   * @param node Node information
+   * @param matrix Compatibility matrix
+   * @param allNodes All nodes list（for querying display names）
+   * @param limit Limit recommendation count
+   * @returns Markdown format connection guide
    */
   generateNodeConnectionGuide(
     node: NodeConnectionInfo,
@@ -29,27 +29,27 @@ export class ConnectionRuleGenerator {
   ): string {
     const sections: string[] = [];
 
-    sections.push('## 連接指南\n');
+    sections.push('## Connection Guide\n');
 
-    // 1. 連接類型資訊
-    sections.push('### 連接類型\n');
+    // 1. Connection Type資訊
+    sections.push('### Connection Type\n');
     sections.push(this.formatConnectionTypes(node));
 
-    // 2. 可接收來自哪些節點
+    // 2. Can Receive From哪些節點
     if (node.inputTypes.length > 0) {
-      sections.push('\n### 可接收來自\n');
+      sections.push('\n### Can Receive From\n');
       sections.push(this.formatIncomingConnections(node, matrix, allNodes, limit));
     }
 
-    // 3. 可連接到哪些節點
+    // 3. Can Connect To哪些節點
     if (node.outputTypes.length > 0) {
-      sections.push('\n### 可連接到\n');
+      sections.push('\n### Can Connect To\n');
       sections.push(this.formatOutgoingConnections(node, matrix, allNodes, limit));
     }
 
-    // 4. 特殊說明（針對 AI 節點）
+    // 4. Special notes（for AI 節點）
     if (node.requiresSpecialInputs) {
-      sections.push('\n### 特殊要求\n');
+      sections.push('\n### Special Requirements\n');
       sections.push(this.formatSpecialRequirements(node));
     }
 
@@ -57,23 +57,23 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 格式化連接類型資訊
+   * 格式化Connection Type資訊
    */
   private formatConnectionTypes(node: NodeConnectionInfo): string {
     const lines: string[] = [];
 
     if (node.inputTypes.length > 0) {
-      lines.push(`- 輸入類型: ${this.formatConnectionTypeList(node.inputTypes)}`);
+      lines.push(`- Input Types: ${this.formatConnectionTypeList(node.inputTypes)}`);
     } else {
-      lines.push('- 輸入類型: 無（這是觸發器或起始節點）');
+      lines.push('- Input Types: None (this is a trigger or starting node)');
     }
 
     if (node.outputTypes.length > 0) {
-      lines.push(`- 輸出類型: ${this.formatConnectionTypeList(node.outputTypes)}`);
+      lines.push(`- Output Types: ${this.formatConnectionTypeList(node.outputTypes)}`);
 
       // 如果有多個輸出，顯示輸出詳情
       if (node.outputCount > 1 || node.isDynamicOutput) {
-        lines.push(`- 輸出數量: ${node.isDynamicOutput ? `${node.outputCount} 個（可配置）` : `${node.outputCount} 個`}`);
+        lines.push(`- Output Count: ${node.isDynamicOutput ? `${node.outputCount} 個（可配置）` : `${node.outputCount} 個`}`);
 
         if (node.outputNames.length > 0) {
           lines.push('\n輸出詳情:');
@@ -89,7 +89,7 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 格式化連接類型列表
+   * 格式化Connection Type列表
    */
   private formatConnectionTypeList(types: NodeConnectionType[]): string {
     return types.map(type => {
@@ -217,7 +217,7 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 格式化特殊要求（AI 節點）
+   * 格式化Special Requirements（AI 節點）
    */
   private formatSpecialRequirements(node: NodeConnectionInfo): string {
     const lines: string[] = [];
@@ -249,9 +249,9 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 生成相容性矩陣的 Markdown 表格
-   * @param matrix 相容性矩陣
-   * @param allNodes 所有節點列表
+   * 生成Compatibility matrix的 Markdown 表格
+   * @param matrix Compatibility matrix
+   * @param allNodes All nodes list
    * @param topN 只顯示前 N 個最常用的節點
    * @returns Markdown 格式的矩陣表格
    */
@@ -262,7 +262,7 @@ export class ConnectionRuleGenerator {
   ): string {
     const sections: string[] = [];
 
-    sections.push('# 節點相容性矩陣\n');
+    sections.push('# 節點Compatibility matrix\n');
     sections.push('此矩陣顯示節點之間的連接相容性。橫列為來源節點，縱欄為目標節點。\n');
 
     // 只選擇前 N 個節點
@@ -309,9 +309,9 @@ export class ConnectionRuleGenerator {
 
     // 圖例
     sections.push('\n## 圖例\n');
-    sections.push('- `++` 高度相容（分數 ≥ 70）- 強烈推薦');
-    sections.push('- `+` 中度相容（分數 50-69）- 可以連接');
-    sections.push('- `~` 低度相容（分數 < 50）- 可能可以連接');
+    sections.push('- `++` High Compatibility（分數 ≥ 70）- 強烈推薦');
+    sections.push('- `+` Medium Compatibility（分數 50-69）- 可以連接');
+    sections.push('- `~` Low Compatibility（分數 < 50）- 可能可以連接');
     sections.push('- `X` 不相容 - 無法連接');
     sections.push('- `-` N/A - 同一節點');
 
