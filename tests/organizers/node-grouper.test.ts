@@ -8,7 +8,7 @@ describe('NodeGrouper', () => {
   });
 
   describe('group', () => {
-    it('應該正確分類必備節點', () => {
+    it('should correctly classify essential nodes', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.httpRequest',
@@ -32,7 +32,7 @@ describe('NodeGrouper', () => {
       expect(essentialNodes[0].usageFrequency).toBe(UsageFrequency.ESSENTIAL);
     });
 
-    it('應該正確分類常用節點', () => {
+    it('should correctly classify common nodes', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.slack',
@@ -49,7 +49,7 @@ describe('NodeGrouper', () => {
       expect(commonNodes[0].displayName).toBe('Slack');
     });
 
-    it('應該正確分配功能群組', () => {
+    it('should correctly assign functional groups', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.slack',
@@ -74,7 +74,7 @@ describe('NodeGrouper', () => {
       expect(dbNodes.length).toBe(1);
     });
 
-    it('應該為 AI 節點添加正確的標籤和群組', () => {
+    it('should add correct tags and groups for AI nodes', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-langchain.openai',
@@ -93,7 +93,7 @@ describe('NodeGrouper', () => {
       expect(aiNodes[0].functionalGroups).toContain(FunctionalGroup.AI_ML);
     });
 
-    it('應該為觸發節點添加正確的標籤', () => {
+    it('should add correct tags for trigger nodes', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.cronTrigger',
@@ -115,7 +115,7 @@ describe('NodeGrouper', () => {
   });
 
   describe('generateStatistics', () => {
-    it('應該產生正確的統計資訊', () => {
+    it('should generate correct statistics', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.httpRequest',
@@ -147,8 +147,8 @@ describe('NodeGrouper', () => {
     });
   });
 
-  describe('節點關係', () => {
-    it('應該找出相關節點', () => {
+  describe('Node Relationships', () => {
+    it('should find related nodes', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.slack',
@@ -181,15 +181,15 @@ describe('NodeGrouper', () => {
     });
   });
 
-  describe('邊界情況', () => {
-    it('應該處理空節點陣列', () => {
+  describe('Edge Cases', () => {
+    it('should handle empty node array', () => {
       const result = grouper.group([]);
       const stats = grouper.generateStatistics(result);
 
       expect(stats.totalNodes).toBe(0);
     });
 
-    it('應該為未知節點分配預設群組', () => {
+    it('should assign default group for unknown nodes', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.unknownNode',

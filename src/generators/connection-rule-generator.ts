@@ -17,7 +17,7 @@ export class ConnectionRuleGenerator {
    * Generate complete connection guide for a single node
    * @param node Node information
    * @param matrix Compatibility matrix
-   * @param allNodes All nodes list（for querying display names）
+   * @param allNodes All nodes list (for querying display names)
    * @param limit Limit recommendation count
    * @returns Markdown format connection guide
    */
@@ -31,23 +31,23 @@ export class ConnectionRuleGenerator {
 
     sections.push('## Connection Guide\n');
 
-    // 1. Connection Type資訊
+    // 1. Connection Type information
     sections.push('### Connection Type\n');
     sections.push(this.formatConnectionTypes(node));
 
-    // 2. Can Receive From哪些節點
+    // 2. Can Receive From which nodes
     if (node.inputTypes.length > 0) {
       sections.push('\n### Can Receive From\n');
       sections.push(this.formatIncomingConnections(node, matrix, allNodes, limit));
     }
 
-    // 3. Can Connect To哪些節點
+    // 3. Can Connect To which nodes
     if (node.outputTypes.length > 0) {
       sections.push('\n### Can Connect To\n');
       sections.push(this.formatOutgoingConnections(node, matrix, allNodes, limit));
     }
 
-    // 4. Special notes（for AI 節點）
+    // 4. Special notes (for AI nodes)
     if (node.requiresSpecialInputs) {
       sections.push('\n### Special Requirements\n');
       sections.push(this.formatSpecialRequirements(node));
@@ -57,7 +57,7 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 格式化Connection Type資訊
+   * Format connection type information
    */
   private formatConnectionTypes(node: NodeConnectionInfo): string {
     const lines: string[] = [];
@@ -71,12 +71,12 @@ export class ConnectionRuleGenerator {
     if (node.outputTypes.length > 0) {
       lines.push(`- Output Types: ${this.formatConnectionTypeList(node.outputTypes)}`);
 
-      // 如果有多個輸出，顯示輸出詳情
+      // If there are multiple outputs, display output details
       if (node.outputCount > 1 || node.isDynamicOutput) {
-        lines.push(`- Output Count: ${node.isDynamicOutput ? `${node.outputCount} 個（可配置）` : `${node.outputCount} 個`}`);
+        lines.push(`- Output Count: ${node.isDynamicOutput ? `${node.outputCount} (configurable)` : `${node.outputCount}`}`);
 
         if (node.outputNames.length > 0) {
-          lines.push('\n輸出詳情:');
+          lines.push('\nOutput Details:');
           node.outputNames.forEach((name, index) => {
             const description = this.getOutputDescription(node.nodeType, name);
             lines.push(`${index + 1}. \`${name}\`${description ? ` - ${description}` : ''}`);
@@ -89,15 +89,15 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 格式化Connection Type列表
+   * Format connection type list
    */
   private formatConnectionTypeList(types: NodeConnectionType[]): string {
     return types.map(type => {
       if (type === 'main') {
-        return '`main`（一般資料流）';
+        return '`main` (general data flow)';
       } else if (type.startsWith('ai_')) {
         const name = type.replace('ai_', '').replace(/([A-Z])/g, ' $1').trim();
-        return `\`${type}\`（${name}）`;
+        return `\`${type}\` (${name})`;
       } else {
         return `\`${type}\``;
       }
@@ -105,43 +105,43 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 取得輸出端口的描述
-   * 為常見的多輸出節點提供有用的說明
+   * Get output port description
+   * Provides useful descriptions for common multi-output nodes
    */
   private getOutputDescription(nodeType: string, outputName: string): string {
-    // If 節點
+    // If node
     if (nodeType === 'nodes-base.if') {
-      if (outputName === 'true') return '當條件判斷為真時的輸出';
-      if (outputName === 'false') return '當條件判斷為假時的輸出';
+      if (outputName === 'true') return 'Output when condition is true';
+      if (outputName === 'false') return 'Output when condition is false';
     }
 
-    // Split In Batches 節點
+    // Split In Batches node
     if (nodeType === 'nodes-base.splitInBatches') {
-      if (outputName === 'done') return '當所有批次處理完成時輸出';
-      if (outputName === 'loop') return '每次批次迭代時輸出（用於循環）';
+      if (outputName === 'done') return 'Output when all batches are processed';
+      if (outputName === 'loop') return 'Output for each batch iteration (for looping)';
     }
 
-    // Compare Datasets 節點
+    // Compare Datasets node
     if (nodeType === 'nodes-base.compareDatasets') {
-      if (outputName === 'In A only') return '只存在於資料集 A 的項目';
-      if (outputName === 'Same') return '兩個資料集中相同的項目';
-      if (outputName === 'Different') return '兩個資料集中不同的項目';
-      if (outputName === 'In B only') return '只存在於資料集 B 的項目';
+      if (outputName === 'In A only') return 'Items only in dataset A';
+      if (outputName === 'Same') return 'Items that are the same in both datasets';
+      if (outputName === 'Different') return 'Items that are different between datasets';
+      if (outputName === 'In B only') return 'Items only in dataset B';
     }
 
-    // Switch 節點
+    // Switch node
     if (nodeType === 'nodes-base.switch') {
       if (!isNaN(Number(outputName))) {
-        return `輸出路徑 ${outputName}`;
+        return `Output path ${outputName}`;
       }
-      if (outputName === 'Fallback') return '不符合任何規則時的預設輸出';
+      if (outputName === 'Fallback') return 'Default output when no rules match';
     }
 
     return '';
   }
 
   /**
-   * 格式化可接收的來源節點
+   * Format incoming source nodes
    */
   private formatIncomingConnections(
     node: NodeConnectionInfo,
@@ -149,7 +149,7 @@ export class ConnectionRuleGenerator {
     allNodes: NodeConnectionInfo[],
     limit: number
   ): string {
-    // 找出所有可以連接到此節點的節點
+    // Find all nodes that can connect to this node
     const incoming = allNodes
       .filter(sourceNode => {
         if (sourceNode.nodeType === node.nodeType) return false;
@@ -169,20 +169,20 @@ export class ConnectionRuleGenerator {
       .slice(0, limit);
 
     if (incoming.length === 0) {
-      return '此節點不接受來自其他節點的輸入（通常是觸發器節點）。';
+      return 'This node does not accept input from other nodes (usually a trigger node).';
     }
 
     const lines: string[] = [];
     incoming.forEach((item, idx) => {
       const typeStr = item.connectionTypes.map(t => `\`${t}\``).join(', ');
-      lines.push(`${idx + 1}. ${item.node.displayName} - 透過 ${typeStr} 連接`);
+      lines.push(`${idx + 1}. ${item.node.displayName} - via ${typeStr} connection`);
     });
 
     return lines.join('\n');
   }
 
   /**
-   * 格式化可連接的目標節點
+   * Format outgoing target nodes
    */
   private formatOutgoingConnections(
     node: NodeConnectionInfo,
@@ -192,7 +192,7 @@ export class ConnectionRuleGenerator {
   ): string {
     const entry = matrix[node.nodeType];
     if (!entry || entry.compatible.length === 0) {
-      return '此節點沒有輸出，通常作為工作流程的終點。';
+      return 'This node has no output, usually used as a workflow endpoint.';
     }
 
     const outgoing = entry.compatible
@@ -210,14 +210,14 @@ export class ConnectionRuleGenerator {
     const lines: string[] = [];
     outgoing.forEach((item, idx) => {
       const typeStr = item.connectionTypes.map(t => `\`${t}\``).join(', ');
-      lines.push(`${idx + 1}. ${item.node!.displayName} - 透過 ${typeStr} 連接`);
+      lines.push(`${idx + 1}. ${item.node!.displayName} - via ${typeStr} connection`);
     });
 
     return lines.join('\n');
   }
 
   /**
-   * 格式化Special Requirements（AI 節點）
+   * Format special requirements (AI nodes)
    */
   private formatSpecialRequirements(node: NodeConnectionInfo): string {
     const lines: string[] = [];
@@ -228,18 +228,18 @@ export class ConnectionRuleGenerator {
       return '';
     }
 
-    lines.push('此 AI 節點需要以下特殊輸入：\n');
+    lines.push('This AI node requires the following special inputs:\n');
 
     aiInputTypes.forEach(type => {
       const name = type.replace('ai_', '').replace(/([A-Z])/g, ' $1').trim();
       let required = '';
 
       if (type === 'ai_languageModel') {
-        required = '（必需）';
+        required = '(required)';
       } else if (type === 'ai_tool' || type === 'ai_memory') {
-        required = '（選用，可多個）';
+        required = '(optional, multiple allowed)';
       } else {
-        required = '（選用）';
+        required = '(optional)';
       }
 
       lines.push(`- ${name} ${required}`);
@@ -249,11 +249,11 @@ export class ConnectionRuleGenerator {
   }
 
   /**
-   * 生成Compatibility matrix的 Markdown 表格
+   * Generate compatibility matrix Markdown table
    * @param matrix Compatibility matrix
    * @param allNodes All nodes list
-   * @param topN 只顯示前 N 個最常用的節點
-   * @returns Markdown 格式的矩陣表格
+   * @param topN Only display top N most commonly used nodes
+   * @returns Markdown formatted matrix table
    */
   generateCompatibilityMatrix(
     matrix: CompatibilityMatrix,
@@ -262,24 +262,24 @@ export class ConnectionRuleGenerator {
   ): string {
     const sections: string[] = [];
 
-    sections.push('# 節點Compatibility matrix\n');
-    sections.push('此矩陣顯示節點之間的連接相容性。橫列為來源節點，縱欄為目標節點。\n');
+    sections.push('# Node Compatibility Matrix\n');
+    sections.push('This matrix shows connection compatibility between nodes. Rows are source nodes, columns are target nodes.\n');
 
-    // 只選擇前 N 個節點
+    // Only select top N nodes
     const selectedNodes = allNodes.slice(0, topN);
 
-    // 建立表頭
-    const header = ['來源節點 ↓ / 目標節點 →'];
+    // Build header
+    const header = ['Source Node ↓ / Target Node →'];
     selectedNodes.forEach(node => {
       header.push(this.truncateName(node.displayName, 12));
     });
     sections.push(`| ${header.join(' | ')} |`);
 
-    // 建立分隔線
+    // Build separator
     const separator = header.map(() => '---');
     sections.push(`| ${separator.join(' | ')} |`);
 
-    // 建立每一列
+    // Build each row
     selectedNodes.forEach(sourceNode => {
       const row = [this.truncateName(sourceNode.displayName, 20)];
 
@@ -307,19 +307,19 @@ export class ConnectionRuleGenerator {
       sections.push(`| ${row.join(' | ')} |`);
     });
 
-    // 圖例
-    sections.push('\n## 圖例\n');
-    sections.push('- `++` High Compatibility（分數 ≥ 70）- 強烈推薦');
-    sections.push('- `+` Medium Compatibility（分數 50-69）- 可以連接');
-    sections.push('- `~` Low Compatibility（分數 < 50）- 可能可以連接');
-    sections.push('- `X` 不相容 - 無法連接');
-    sections.push('- `-` N/A - 同一節點');
+    // Legend
+    sections.push('\n## Legend\n');
+    sections.push('- `++` High Compatibility (score ≥ 70) - Strongly recommended');
+    sections.push('- `+` Medium Compatibility (score 50-69) - Can connect');
+    sections.push('- `~` Low Compatibility (score < 50) - May be able to connect');
+    sections.push('- `X` Incompatible - Cannot connect');
+    sections.push('- `-` N/A - Same node');
 
     return sections.join('\n');
   }
 
   /**
-   * 截斷名稱以適應表格
+   * Truncate name to fit table
    */
   private truncateName(name: string, maxLength: number): string {
     if (name.length <= maxLength) {

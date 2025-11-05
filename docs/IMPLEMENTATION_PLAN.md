@@ -1,5 +1,7 @@
 # n8n Workflow API 實作計畫
 
+中文版 | [English](./IMPLEMENTATION_PLAN.en.md)
+
 基於研究結果，這是完整的實作計畫和優先級排序。
 
 ## 研究成果總結

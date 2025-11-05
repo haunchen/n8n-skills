@@ -62,37 +62,37 @@ export interface CategoryInfo {
 export const CATEGORY_INFO: Record<TemplateCategory, CategoryInfo> = {
   [TemplateCategory.AI_CHATBOTS]: {
     id: TemplateCategory.AI_CHATBOTS,
-    name: 'AI AI AI 與聊天機器人 Chatbots Chatbots',
+    name: 'AI & Chatbots',
     description: 'AI Agents, RAG systems, intelligent conversational bots',
     icon: '🤖',
   },
   [TemplateCategory.SOCIAL_MEDIA]: {
     id: TemplateCategory.SOCIAL_MEDIA,
-    name: 'Social Media Social Media 社交媒體與影片 Video Video',
+    name: 'Social Media & Video',
     description: 'TikTok, Instagram, YouTube automation and AI video generation',
     icon: '📱',
   },
   [TemplateCategory.DATA_PROCESSING]: {
     id: TemplateCategory.DATA_PROCESSING,
-    name: 'Data Processing Data Processing 資料處理與分析 Analysis Analysis',
+    name: 'Data Processing & Analysis',
     description: 'Google Sheets, database integration, data analysis workflows',
     icon: '📊',
   },
   [TemplateCategory.COMMUNICATION]: {
     id: TemplateCategory.COMMUNICATION,
-    name: 'Communication Communication 通訊與協作 Collaboration Collaboration',
+    name: 'Communication & Collaboration',
     description: 'Email, WhatsApp, Telegram, Slack automation',
     icon: '💬',
   },
   [TemplateCategory.AUTOMATION]: {
     id: TemplateCategory.AUTOMATION,
-    name: 'Automation Automation 自動化與整合 Integration Integration',
+    name: 'Automation & Integration',
     description: 'Workflow automation, API integration, scheduled tasks',
     icon: '⚡',
   },
   [TemplateCategory.LEARNING]: {
     id: TemplateCategory.LEARNING,
-    name: 'Learning Learning 學習與教學 Teaching Teaching',
+    name: 'Learning & Teaching',
     description: 'n8n introductory tutorials, interactive lessons',
     icon: '📚',
   },
@@ -212,9 +212,9 @@ export class TemplateGenerator {
     const sections = [
       `# ${template.name}`,
       '',
-      `> ${CATEGORY_INFO[category].icon} **分類**: ${CATEGORY_INFO[category].name}`,
-      `> 👁️ **瀏覽次數**: ${template.totalViews.toLocaleString()}`,
-      `> 📅 **建立時間**: ${new Date(template.createdAt).toLocaleDateString('zh-TW')}`,
+      `> ${CATEGORY_INFO[category].icon} **Category**: ${CATEGORY_INFO[category].name}`,
+      `> 👁️ **Views**: ${template.totalViews.toLocaleString()}`,
+      `> 📅 **Created**: ${new Date(template.createdAt).toLocaleDateString('en-US')}`,
       '',
       '## Description',
       '',
@@ -248,8 +248,8 @@ export class TemplateGenerator {
     sections.push(
       '## Author Information',
       '',
-      `- **名稱**: ${template.user.name}`,
-      `- **用戶名**: @${template.user.username}`,
+      `- **Name**: ${template.user.name}`,
+      `- **Username**: @${template.user.username}`,
       template.user.verified ? `- ✓ Verified user` : '',
       '',
       '## Related Links',
@@ -292,7 +292,7 @@ export class TemplateGenerator {
       '',
       info.description,
       '',
-      `Total: ${templates.length}  templates`,
+      `Total: ${templates.length} templates`,
       '',
       '## Template List',
       '',
@@ -305,7 +305,7 @@ export class TemplateGenerator {
       const filename = this.getTemplateFilename(template);
       const views = template.totalViews.toLocaleString();
       sections.push(
-        `- [${template.name}](./${filename}) - ${views} 次瀏覽`
+        `- [${template.name}](./${filename}) - ${views} views`
       );
     });
 
@@ -315,19 +315,19 @@ export class TemplateGenerator {
   }
 
   /**
-   * 生成主索引
+   * Generate main index
    */
   generateMainIndex(categorizedTemplates: Map<TemplateCategory, Template[]>): string {
     const sections = [
-      '# n8n 工作流程範本',
+      '# n8n Workflow Templates',
       '',
-      'Here we have collected 100 popular workflow templates from n8n.io from n8n.io，按照使用場景分類。',
+      'We have collected 100 popular workflow templates from n8n.io, organized by use case categories.',
       '',
-      '## 分類導覽',
+      '## Category Navigation',
       '',
     ];
 
-    // 按照定義順序列出分類
+    // List categories in defined order
     const categories = [
       TemplateCategory.AI_CHATBOTS,
       TemplateCategory.SOCIAL_MEDIA,
@@ -341,34 +341,34 @@ export class TemplateGenerator {
       const info = CATEGORY_INFO[category];
       const templates = categorizedTemplates.get(category) || [];
 
-      // 只顯示有範本的分類
+      // Only display categories with templates
       if (templates.length > 0) {
         sections.push(
           `### ${info.icon} [${info.name}](${category}/README.md)`,
           '',
           info.description,
           '',
-          `**範本數量**: ${templates.length} 個`,
+          `**Template Count**: ${templates.length}`,
           ''
         );
       }
     });
 
     sections.push(
-      '## 使用說明',
+      '## Usage Instructions',
       '',
-      '1. 瀏覽上方分類，找到你需要的工作流程類型',
-      '2. 點擊分類連結查看該類別的所有範本',
-      '3. 選擇感興趣的範本查看詳細說明',
-      '4. 點擊範本中的 "在 n8n.io 上查看" 連結可以直接在 n8n 中使用',
+      '1. Browse the categories above to find the workflow type you need',
+      '2. Click on a category link to view all templates in that category',
+      '3. Select a template you are interested in to view detailed information',
+      '4. Click on the "View this template on n8n.io" link in the template to use it directly in n8n',
       '',
-      '## 統計資訊',
+      '## Statistics',
       '',
-      `- 總範本數量: ${Array.from(categorizedTemplates.values()).reduce((sum, arr) => sum + arr.length, 0)} 個`,
-      `- 總Views: ${Array.from(categorizedTemplates.values())
+      `- Total Templates: ${Array.from(categorizedTemplates.values()).reduce((sum, arr) => sum + arr.length, 0)}`,
+      `- Total Views: ${Array.from(categorizedTemplates.values())
         .flat()
         .reduce((sum, t) => sum + t.totalViews, 0)
-        .toLocaleString()} 次`,
+        .toLocaleString()}`,
       ''
     );
 
@@ -376,10 +376,10 @@ export class TemplateGenerator {
   }
 
   /**
-   * 取得 template 檔案名稱
+   * Get template filename
    */
   private getTemplateFilename(template: Template): string {
-    // 移除特殊字元，保留英文、數字、連字號
+    // Remove special characters, keep only letters, numbers, and hyphens
     const slug = template.name
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
@@ -391,10 +391,10 @@ export class TemplateGenerator {
   }
 
   /**
-   * 生成所有 template 檔案
+   * Generate all template files
    */
   async generate(templates: Array<Template | EnhancedTemplate>): Promise<void> {
-    // 按分類組織 templates
+    // Organize templates by category
     const categorized = new Map<TemplateCategory, Array<Template | EnhancedTemplate>>();
 
     templates.forEach((template) => {
@@ -405,17 +405,17 @@ export class TemplateGenerator {
       categorized.get(category)!.push(template);
     });
 
-    // 為每個分類創建目錄
+    // Create directory for each category
     for (const [category, categoryTemplates] of categorized.entries()) {
       const categoryDir = path.join(this.config.outputDir, category);
       await fs.mkdir(categoryDir, { recursive: true });
 
-      // 限制每個分類的範本數量
+      // Limit the number of templates per category
       const limited = categoryTemplates
         .sort((a, b) => b.totalViews - a.totalViews)
         .slice(0, this.config.maxTemplatesPerCategory);
 
-      // 生成每個 template 的檔案
+      // Generate file for each template
       for (const template of limited) {
         const filename = this.getTemplateFilename(template);
         const filepath = path.join(categoryDir, filename);
@@ -432,7 +432,7 @@ export class TemplateGenerator {
       );
     }
 
-    // 生成主索引
+    // Generate main index
     const mainIndex = this.generateMainIndex(categorized);
     await fs.writeFile(
       path.join(this.config.outputDir, 'README.md'),
@@ -440,16 +440,16 @@ export class TemplateGenerator {
       'utf-8'
     );
 
-    console.log(`成功生成 ${templates.length}  templates檔案`);
-    console.log(`分類數量: ${categorized.size}`);
+    console.log(`Successfully generated ${templates.length} template files`);
+    console.log(`Number of categories: ${categorized.size}`);
     categorized.forEach((templates, category) => {
-      console.log(`  ${CATEGORY_INFO[category].name}: ${templates.length} 個`);
+      console.log(`  ${CATEGORY_INFO[category].name}: ${templates.length}`);
     });
   }
 }
 
 /**
- * 便利函數：生成 templates
+ * Convenience function: generate templates
  */
 export async function generateTemplates(
   templates: Template[],

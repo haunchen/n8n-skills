@@ -1,20 +1,46 @@
-// 滾動導航列控制
-document.addEventListener('DOMContentLoaded', function() {
+// Scroll-based navbar control
+document.addEventListener('DOMContentLoaded', async function() {
     const navbar = document.getElementById('navbar');
     const heroButtons = document.querySelector('.hero-buttons');
     const heroTitle = document.querySelector('.hero-title');
 
-    // 使用 Intersection Observer 監測按鈕區域
+    // Initialize i18n
+    const i18n = new I18n();
+    await i18n.init();
+
+    // Update language toggle button text
+    updateLangToggleButton(i18n.getCurrentLanguage());
+
+    // Setup language toggle
+    const langToggle = document.getElementById('lang-toggle');
+    if (langToggle) {
+        langToggle.addEventListener('click', async function() {
+            const currentLang = i18n.getCurrentLanguage();
+            const newLang = currentLang === 'zh-TW' ? 'en' : 'zh-TW';
+            await i18n.switchLanguage(newLang);
+            updateLangToggleButton(newLang);
+        });
+    }
+
+    // Update language toggle button text
+    function updateLangToggleButton(lang) {
+        const langText = document.querySelector('.lang-text');
+        if (langText) {
+            langText.textContent = lang === 'zh-TW' ? '中' : 'En';
+        }
+    }
+
+    // Use Intersection Observer to monitor button area
     const observerOptions = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.1  // 當按鈕區域只有 10% 可見時就觸發
+        threshold: 0.1  // Trigger when button area is 10% visible
     };
 
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (!entry.isIntersecting) {
-                // 按鈕區域開始離開畫面,顯示導航列
+                // Button area leaving viewport, show navbar
                 navbar.classList.add('navbar-visible');
                 if (heroTitle) {
                     heroTitle.classList.add('hero-hidden');
@@ -23,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     heroButtons.classList.add('hero-hidden');
                 }
             } else {
-                // 按鈕區域回到畫面,隱藏導航列
+                // Button area back in viewport, hide navbar
                 navbar.classList.remove('navbar-visible');
                 if (heroTitle) {
                     heroTitle.classList.remove('hero-hidden');
@@ -35,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, observerOptions);
 
-    // 開始觀察按鈕區域
+    // Start observing button area
     if (heroButtons) {
         observer.observe(heroButtons);
     }

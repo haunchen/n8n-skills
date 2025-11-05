@@ -1,16 +1,16 @@
 /**
- * 快速測試組織器功能
+ * Quick test for organizer functionality
  */
 
 import path from 'path';
 import { CategoryOrganizer } from '../src/organizers/category-organizer';
 import { NodeGrouper } from '../src/organizers/node-grouper';
 
-console.log('測試組織器功能\n');
+console.log('Testing Organizer Functionality\n');
 console.log('='.repeat(60));
 
-// 測試 CategoryOrganizer
-console.log('\n1. 測試 CategoryOrganizer：');
+// Test CategoryOrganizer
+console.log('\n1. Testing CategoryOrganizer:');
 const configPath = path.join(__dirname, 'config/categories.json');
 const categoryOrganizer = new CategoryOrganizer(configPath);
 
@@ -36,34 +36,34 @@ const mockNodes = [
 ];
 
 const categoryResult = categoryOrganizer.organize(mockNodes, 2);
-console.log(`   主要節點：${categoryResult.topNodes.length}`);
-console.log(`   次要節點：${categoryResult.remainingNodes.length}`);
-console.log(`   未分類節點：${categoryResult.uncategorizedNodes.length}`);
+console.log(`   Top nodes: ${categoryResult.topNodes.length}`);
+console.log(`   Remaining nodes: ${categoryResult.remainingNodes.length}`);
+console.log(`   Uncategorized nodes: ${categoryResult.uncategorizedNodes.length}`);
 
 categoryResult.topNodes.forEach(node => {
-  console.log(`   - ${node.displayName} (優先順序: ${node.priority})`);
+  console.log(`   - ${node.displayName} (Priority: ${node.priority})`);
 });
 
-// 測試 NodeGrouper
-console.log('\n2. 測試 NodeGrouper：');
+// Test NodeGrouper
+console.log('\n2. Testing NodeGrouper:');
 const nodeGrouper = new NodeGrouper();
 
 const groupingResult = nodeGrouper.group(mockNodes);
 const stats = nodeGrouper.generateStatistics(groupingResult);
 
-console.log(`   總節點數：${stats.totalNodes}`);
-console.log(`   關係數：${stats.relationshipsCount}`);
+console.log(`   Total nodes: ${stats.totalNodes}`);
+console.log(`   Relationships: ${stats.relationshipsCount}`);
 
-console.log('\n   頻率分布：');
+console.log('\n   Frequency distribution:');
 for (const [freq, count] of Object.entries(stats.frequencyDistribution)) {
   console.log(`     ${freq}: ${count}`);
 }
 
-console.log('\n   功能分布（非零）：');
+console.log('\n   Function distribution (non-zero):');
 for (const [func, count] of Object.entries(stats.functionDistribution)) {
   if (count > 0) {
     console.log(`     ${func}: ${count}`);
   }
 }
 
-console.log('\n測試完成！所有組織器運作正常。');
+console.log('\nTest completed! All organizers working properly.');

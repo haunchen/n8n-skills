@@ -1,41 +1,41 @@
 /**
- * 主要建置編排腳本
- * 協調整個建置流程：收集、解析、組織和生成
+ * Main Build Orchestration Script
+ * Coordinates the entire build process: collect, parse, organize, and generate
  */
 
 import path from 'path';
 import { promises as fs } from 'fs';
 import * as logger from '../src/utils/logger';
 
-// 導入收集器
+// Import collectors
 import { NpmCollector, ApiCollector } from '../src/collectors';
 import type { SimplifiedNodeInfo } from '../src/collectors/npm-collector';
 import type { NodeUsageStats } from '../src/collectors/api-collector';
 
-// 導入解析器
+// Import parsers
 import { NodeParser, PropertyParser } from '../src/parsers';
 
-// 導入組織器
+// Import organizers
 import { PriorityRanker } from '../src/organizers';
 import type { ScoredNode } from '../src/organizers/priority-ranker';
 
-// 導入生成器
+// Import generators
 import { SkillGenerator } from '../src/generators';
 import type { EnrichedNodeInfo, SkillConfig, ResourceFile } from '../src/generators/skill-generator';
 import { TemplateGenerator } from '../src/generators/template-generator';
 import { ResourceGenerator } from '../src/generators/resource-generator';
 import { ConnectionRuleGenerator } from '../src/generators/connection-rule-generator';
 
-// 導入分析器
+// Import analyzers
 import { CompatibilityAnalyzer } from '../src/analyzers/compatibility-analyzer';
 import { InputOutputParser } from '../src/parsers/input-output-parser';
 import type { NodeConnectionInfo, CompatibilityMatrix } from '../src/models/connection';
 
-// 導入快取管理器
+// Import cache manager
 import { TemplateCacheManager } from '../src/utils/template-cache-manager';
 
 /**
- * 建置配置介面
+ * Build configuration interface
  */
 interface BuildConfig {
   version: string;
@@ -54,7 +54,7 @@ interface BuildConfig {
 }
 
 /**
- * 建置統計資訊
+ * Build statistics
  */
 interface BuildStats {
   totalNodes: number;
@@ -67,7 +67,7 @@ interface BuildStats {
 }
 
 /**
- * 主要建置類別
+ * Main build class
  */
 class SkillBuilder {
   private config: BuildConfig;
@@ -87,22 +87,22 @@ class SkillBuilder {
   }
 
   /**
-   * 載入配置檔案
+   * Load configuration file
    */
   private loadConfig(configPath: string): BuildConfig {
     try {
       const fullPath = path.resolve(this.projectRoot, configPath);
       const content = require(fullPath);
-      logger.info(`成功載入配置: ${configPath}`);
+      logger.info(`Successfully loaded config: ${configPath}`);
       return content;
     } catch (error) {
-      logger.error('載入配置檔案失敗', error);
+      logger.error('Failed to load config file', error);
       throw error;
     }
   }
 
   /**
-   * 確保目錄存在
+   * Ensure directory exists
    */
   private async ensureDirectory(dirPath: string): Promise<void> {
     const fullPath = path.resolve(this.projectRoot, dirPath);
@@ -116,17 +116,17 @@ class SkillBuilder {
   }
 
   /**
-   * 儲存快取資料
+   * Save cache data
    */
   private async saveCache(filename: string, data: any): Promise<void> {
     await this.ensureDirectory('data/cache');
     const cachePath = path.resolve(this.projectRoot, 'data/cache', filename);
     await fs.writeFile(cachePath, JSON.stringify(data, null, 2), 'utf-8');
-    logger.info(`快取已儲存: ${filename}`);
+    logger.info(`Cache saved: ${filename}`);
   }
 
   /**
-   * 載入快取資料
+   * Load cache data
    */
   private async loadCache(filename: string): Promise<any | null> {
     const cachePath = path.resolve(this.projectRoot, 'data/cache', filename);
@@ -139,24 +139,24 @@ class SkillBuilder {
   }
 
   /**
-   * 步驟 1: 收集節點資訊
+   * Step 1: Collect node information
    */
   private async collectNodes(): Promise<SimplifiedNodeInfo[]> {
-    logger.info('===== 步驟 1: 收集節點資訊 =====');
+    logger.info('===== Step 1: Collecting node information =====');
 
-    // 檢查快取
+    // Check cache
     const cached = await this.loadCache('nodes.json');
     if (cached) {
-      logger.info(`使用快取的節點資料 (${cached.length} 個節點)`);
+      logger.info(`Using cached node data (${cached.length} nodes)`);
       return cached;
     }
 
-    logger.info('從 NPM 套件收集節點資訊...');
+    logger.info('Collecting node information from NPM packages...');
 
-    // 檢測是否在 CI 環境中
+    // Detect CI environment
     const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
     if (isCI) {
-      logger.info('偵測到 CI 環境，啟用記憶體優化模式');
+      logger.info('CI environment detected, enabling memory optimization mode');
     }
 
     try {
@@ -164,46 +164,46 @@ class SkillBuilder {
       const nodes = await npmCollector.collectAll();
 
       this.stats.totalNodes = nodes.length;
-      logger.success(`成功收集 ${nodes.length} 個節點`);
+      logger.success(`Successfully collected ${nodes.length} nodes`);
 
       await this.saveCache('nodes.json', nodes);
 
-      // 在 CI 環境中主動觸發垃圾回收
+      // Trigger garbage collection in CI environment
       if (isCI && global.gc) {
         global.gc();
-        logger.info('執行記憶體垃圾回收');
+        logger.info('Executed memory garbage collection');
       }
 
       return nodes;
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.error('收集節點資訊時發生錯誤', error);
+      logger.error('Error occurred while collecting node information', error);
 
-      // 嘗試從快取恢復（即使快取可能是舊的）
+      // Try to recover from cache (even if cache might be old)
       const oldCache = await this.loadCache('nodes.json');
       if (oldCache && oldCache.length > 0) {
-        logger.warn(`使用舊的快取資料恢復 (${oldCache.length} 個節點)`);
+        logger.warn(`Recovering using old cache data (${oldCache.length} nodes)`);
         return oldCache;
       }
 
-      throw new Error(`收集節點失敗且無法恢復: ${errorMsg}`);
+      throw new Error(`Failed to collect nodes and cannot recover: ${errorMsg}`);
     }
   }
 
   /**
-   * 步驟 2: 收集使用統計
+   * Step 2: Collect usage statistics
    */
   private async collectUsageStats(): Promise<NodeUsageStats> {
-    logger.info('===== 步驟 2: 收集使用統計 =====');
+    logger.info('===== Step 2: Collecting usage statistics =====');
 
-    // 檢查快取
+    // Check cache
     const cached = await this.loadCache('usage-stats.json');
     if (cached) {
-      logger.info('使用快取的使用統計資料');
+      logger.info('Using cached usage statistics data');
       return cached;
     }
 
-    logger.info('從 n8n.io API 收集範本和使用統計...');
+    logger.info('Collecting templates and usage statistics from n8n.io API...');
     try {
       const apiCollector = new ApiCollector({
         limit: this.config.max_template_examples,
@@ -211,7 +211,7 @@ class SkillBuilder {
       const result = await apiCollector.fetchTemplates();
 
       this.stats.templatesCollected = result.totalTemplates;
-      logger.success(`成功收集 ${result.totalTemplates} 個範本`);
+      logger.success(`Successfully collected ${result.totalTemplates} templates`);
 
       await this.saveCache('usage-stats.json', result.nodeUsageStats);
       await this.saveCache('templates.json', result.templates);
@@ -219,27 +219,27 @@ class SkillBuilder {
       return result.nodeUsageStats;
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.warn(`收集使用統計失敗，使用空白資料: ${errorMsg}`);
+      logger.warn(`Failed to collect usage statistics, using empty data: ${errorMsg}`);
       return {};
     }
   }
 
 
   /**
-   * 步驟 3: 組織和排序節點
+   * Step 3: Organize and rank nodes
    */
   private async organizeNodes(
     nodes: SimplifiedNodeInfo[],
     usageStats: NodeUsageStats,
     propertiesMap: Map<string, any>
   ): Promise<{ topNodes: EnrichedNodeInfo[]; remainingNodes: EnrichedNodeInfo[] }> {
-    logger.info('===== 步驟 3: 組織和排序節點 =====');
+    logger.info('===== Step 3: Organizing and ranking nodes =====');
 
-    // 建立優先級排序器
+    // Create priority ranker
     const priorityConfigPath = path.resolve(this.projectRoot, 'config/priorities.json');
     const ranker = new PriorityRanker(priorityConfigPath);
 
-    // 將節點資料轉換為評分格式
+    // Convert node data to scoring format
     const nodeDataList = nodes.map(node => ({
       nodeType: node.nodeType,
       displayName: node.displayName,
@@ -250,11 +250,11 @@ class SkillBuilder {
       packageName: node.packageName,
     }));
 
-    logger.info('計算節點優先級分數...');
+    logger.info('Calculating node priority scores...');
     const scoredNodes = ranker.rankNodes(nodeDataList);
-    logger.progress(scoredNodes.length, nodes.length, '已評分');
+    logger.progress(scoredNodes.length, nodes.length, 'scored');
 
-    // 排序並取得前 N 個節點
+    // Sort and get top N nodes
     const topCount = this.config.max_nodes_in_main_skill;
     const sortedNodes = scoredNodes.sort((a, b) => b.score - a.score);
     const topScoredNodes = sortedNodes.slice(0, topCount);
@@ -263,10 +263,10 @@ class SkillBuilder {
     this.stats.topNodes = topScoredNodes.length;
     this.stats.resourceNodes = remainingScoredNodes.length;
 
-    logger.success(`選出 ${topScoredNodes.length} 個主要節點`);
-    logger.info(`其餘 ${remainingScoredNodes.length} 個節點將生成為資源檔案`);
+    logger.success(`Selected ${topScoredNodes.length} primary nodes`);
+    logger.info(`Remaining ${remainingScoredNodes.length} nodes will be generated as resource files`);
 
-    // 轉換為 EnrichedNodeInfo
+    // Convert to EnrichedNodeInfo
     const enrichNode = (scored: ScoredNode, original: SimplifiedNodeInfo): EnrichedNodeInfo => {
       const propData = propertiesMap.get(scored.nodeType);
 
@@ -275,7 +275,7 @@ class SkillBuilder {
         usageCount: scored.usageCount,
         usagePercentage: usageStats[scored.nodeType]?.percentage || 0,
         properties: propData?.properties,
-        // 保留優先級評分資訊（用於分層合併策略）
+        // Preserve priority score information (for tiered merge strategy)
         score: scored.score,
         rank: scored.rank,
         tier: scored.tier,
@@ -296,14 +296,14 @@ class SkillBuilder {
   }
 
   /**
-   * 步驟 4: 生成主 Skill 文件
+   * Step 4: Generate main Skill document
    */
   private async generateMainSkill(
     topNodes: EnrichedNodeInfo[],
     usageStats: NodeUsageStats,
     resourceFiles: ResourceFile[]
   ): Promise<void> {
-    logger.info('===== 步驟 5: 生成主 Skill 文件 =====');
+    logger.info('===== Step 5: Generating main Skill document =====');
 
     await this.ensureDirectory('output');
 
@@ -327,40 +327,40 @@ class SkillBuilder {
 
     const lineCount = content.split('\n').length;
     const charCount = content.length;
-    logger.success(`主 Skill 文件已生成: ${outputPath}`);
-    logger.info(`檔案大小: ${lineCount} 行, ${charCount} 字元`);
+    logger.success(`Main Skill document generated: ${outputPath}`);
+    logger.info(`File size: ${lineCount} lines, ${charCount} characters`);
   }
 
   /**
-   * 步驟 3.5: 建立相容性矩陣
+   * Step 3.5: Build compatibility matrix
    */
   private async buildCompatibilityMatrix(
     allNodes: EnrichedNodeInfo[]
   ): Promise<{ nodeConnectionInfoList: NodeConnectionInfo[]; compatibilityMatrix: CompatibilityMatrix }> {
-    logger.info('===== 步驟 3.5: 建立節點相容性矩陣 =====');
+    logger.info('===== Step 3.5: Building node compatibility matrix =====');
 
-    // 檢查快取
+    // Check cache
     const cachedInfo = await this.loadCache('node-io-config.json');
     const cachedMatrix = await this.loadCache('compatibility-matrix.json');
 
     if (cachedInfo && cachedMatrix) {
-      logger.info('使用快取的相容性資料');
+      logger.info('Using cached compatibility data');
       return {
         nodeConnectionInfoList: cachedInfo,
         compatibilityMatrix: cachedMatrix
       };
     }
 
-    logger.info('收集節點 I/O 配置...');
+    logger.info('Collecting node I/O configurations...');
 
-    // 重新載入節點以提取 I/O 資訊
+    // Reload nodes to extract I/O information
     const npmCollector = new NpmCollector();
     const loadedNodes = await npmCollector.collectAllWithDetails();
     const ioParser = new InputOutputParser();
 
     const nodeConnectionInfoList: NodeConnectionInfo[] = [];
 
-    // 建立一個輔助函數來提取節點描述
+    // Helper function to extract node description
     const getNodeDescription = (nodeClass: any) => {
       try {
         if (nodeClass.description) {
@@ -377,19 +377,19 @@ class SkillBuilder {
     };
 
     for (const enrichedNode of allNodes) {
-      // 找到對應的 loadedNode
-      // enrichedNode.nodeType 格式: "nodes-base.actionNetwork"
-      // loadedNode description.name 格式: "actionNetwork"（無前綴）
+      // Find corresponding loadedNode
+      // enrichedNode.nodeType format: "nodes-base.actionNetwork"
+      // loadedNode description.name format: "actionNetwork" (no prefix)
       const loadedNode = loadedNodes.find(ln => {
-        // 提取節點描述中的 name
+        // Extract name from node description
         const description = getNodeDescription(ln.NodeClass);
         const descName = description?.name || '';
 
-        // 構建完整節點類型（加上套件前綴）
+        // Build full node type (with package prefix)
         const packagePrefix = ln.packageName.replace('@n8n/', '').replace('n8n-', '');
         const fullNodeType = descName ? `${packagePrefix}.${descName}` : '';
 
-        // 比對完整節點類型
+        // Match full node type
         return enrichedNode.nodeType === fullNodeType;
       });
 
@@ -414,20 +414,20 @@ class SkillBuilder {
           isDynamicOutput: ioInfo.isDynamicOutput
         });
       } catch (error) {
-        // 忽略無法解析的節點
+        // Ignore nodes that cannot be parsed
       }
     }
 
-    logger.success(`成功收集 ${nodeConnectionInfoList.length} 個節點的 I/O 配置`);
+    logger.success(`Successfully collected I/O configurations for ${nodeConnectionInfoList.length} nodes`);
 
-    // 建立相容性矩陣
-    logger.info('建立相容性矩陣...');
+    // Build compatibility matrix
+    logger.info('Building compatibility matrix...');
     const analyzer = new CompatibilityAnalyzer();
     const compatibilityMatrix = analyzer.buildCompatibilityMatrix(nodeConnectionInfoList);
 
-    logger.success('相容性矩陣建立完成');
+    logger.success('Compatibility matrix build completed');
 
-    // 儲存快取
+    // Save cache
     await this.saveCache('node-io-config.json', nodeConnectionInfoList);
     await this.saveCache('compatibility-matrix.json', compatibilityMatrix);
 
@@ -435,13 +435,13 @@ class SkillBuilder {
   }
 
   /**
-   * 步驟 4.5: 生成相容性矩陣文件
+   * Step 4.5: Generate compatibility matrix document
    */
   private async generateCompatibilityMatrixFile(
     matrix: CompatibilityMatrix,
     nodeList: NodeConnectionInfo[]
   ): Promise<void> {
-    logger.info('===== 步驟 4.5: 生成相容性矩陣文件 =====');
+    logger.info('===== Step 4.5: Generating compatibility matrix document =====');
 
     const ruleGenerator = new ConnectionRuleGenerator();
     const matrixMd = ruleGenerator.generateCompatibilityMatrix(matrix, nodeList, 50);
@@ -449,114 +449,114 @@ class SkillBuilder {
     const outputPath = path.resolve(this.projectRoot, 'output/resources/compatibility-matrix.md');
     await fs.writeFile(outputPath, matrixMd, 'utf-8');
 
-    logger.success(`相容性矩陣已生成: ${outputPath}`);
+    logger.success(`Compatibility matrix generated: ${outputPath}`);
   }
 
   /**
-   * 步驟 7: 生成 templates 範本檔案
+   * Step 7: Generate template files
    */
   private async generateTemplates(): Promise<void> {
-    logger.info('===== 步驟 7: 生成 templates 範本檔案 =====');
+    logger.info('===== Step 7: Generating template files =====');
 
-    // 檢查是否有 templates 快取
+    // Check for templates cache
     const templates = await this.loadCache('templates.json');
     if (!templates || !Array.isArray(templates) || templates.length === 0) {
-      logger.warn('沒有找到 templates 快取，跳過 templates 生成');
+      logger.warn('No templates cache found, skipping template generation');
       return;
     }
 
-    logger.info(`找到 ${templates.length} 個範本`);
+    logger.info(`Found ${templates.length} templates`);
 
-    // 選取前 20 個最受歡迎的範本（按瀏覽次數排序）
+    // Select top 20 most popular templates (sorted by view count)
     const topTemplates = [...templates]
       .sort((a, b) => b.totalViews - a.totalViews)
       .slice(0, 20);
 
-    logger.info(`選取前 ${topTemplates.length} 個最受歡迎的範本來獲取完整 workflow`);
+    logger.info(`Selecting top ${topTemplates.length} most popular templates to fetch complete workflows`);
 
-    // 初始化快取管理器
+    // Initialize cache manager
     const cacheManager = new TemplateCacheManager(
       path.resolve(this.projectRoot, 'data/cache')
     );
 
-    // 檢查是否強制更新
+    // Check for forced update
     const forceUpdate = process.env.FORCE_TEMPLATE_UPDATE === 'true';
     if (forceUpdate) {
-      logger.info('偵測到 FORCE_TEMPLATE_UPDATE=true，將強制重新下載所有 workflow');
+      logger.info('Detected FORCE_TEMPLATE_UPDATE=true, will force re-download all workflows');
     }
 
     let workflows: Array<any> = [];
 
     if (forceUpdate) {
-      // 強制更新：下載所有 workflow
+      // Force update: download all workflows
       const apiCollector = new ApiCollector();
       const templateIds = topTemplates.map(t => t.id);
 
-      logger.info('開始獲取完整 workflow（每次請求間隔 0.5 秒）...');
+      logger.info('Starting to fetch complete workflows (0.5s interval between requests)...');
       workflows = await apiCollector.fetchWorkflowDefinitions(templateIds, 500);
 
-      logger.info(`成功獲取 ${workflows.length}/${topTemplates.length} 個 workflow`);
+      logger.info(`Successfully fetched ${workflows.length}/${topTemplates.length} workflows`);
 
-      // 更新快取
+      // Update cache
       await cacheManager.updateCache(topTemplates, workflows);
     } else {
-      // 智能快取模式
-      logger.info('\n分析 template 快取變化...');
+      // Smart cache mode
+      logger.info('\nAnalyzing template cache changes...');
       const analysis = await cacheManager.analyzeCacheChanges(topTemplates);
 
       if (analysis.needsUpdate) {
-        logger.info(`✓ 新增: ${analysis.newTemplates.length} 個`);
-        logger.info(`✓ 排序改變: ${analysis.rankChanged.length} 個`);
-        logger.info(`✓ 未變動: ${analysis.unchanged.length} 個`);
-        logger.info(`✓ 移除: ${analysis.removed.length} 個`);
+        logger.info(`✓ New: ${analysis.newTemplates.length}`);
+        logger.info(`✓ Rank changed: ${analysis.rankChanged.length}`);
+        logger.info(`✓ Unchanged: ${analysis.unchanged.length}`);
+        logger.info(`✓ Removed: ${analysis.removed.length}`);
 
         const needsDownload = [...analysis.newTemplates, ...analysis.rankChanged];
 
         if (needsDownload.length > 0) {
-          logger.info(`\n需要下載 ${needsDownload.length} 個 workflow`);
+          logger.info(`\nNeed to download ${needsDownload.length} workflows`);
 
-          // 下載需要更新的 workflows
+          // Download workflows that need updates
           const apiCollector = new ApiCollector();
-          logger.info('開始下載新/變更的 workflow（每次請求間隔 0.5 秒）...');
+          logger.info('Starting to download new/changed workflows (0.5s interval between requests)...');
           const newWorkflows = await apiCollector.fetchWorkflowDefinitions(needsDownload, 500);
 
-          logger.success(`成功下載 ${newWorkflows.length} 個 workflow`);
+          logger.success(`Successfully downloaded ${newWorkflows.length} workflows`);
 
-          // 從快取讀取未變動的 workflows
-          logger.info(`從快取讀取 ${analysis.unchanged.length} 個 workflow`);
+          // Read unchanged workflows from cache
+          logger.info(`Reading ${analysis.unchanged.length} workflows from cache`);
           const cachedWorkflows = await cacheManager.getCachedWorkflows(analysis.unchanged);
 
-          // 合併新下載和快取的 workflows
+          // Merge newly downloaded and cached workflows
           workflows = [
             ...newWorkflows,
             ...Array.from(cachedWorkflows.values())
           ];
 
-          logger.success(`總共 ${workflows.length} 個 workflow 準備完成`);
+          logger.success(`Total ${workflows.length} workflows prepared`);
 
-          // 更新快取
-          logger.info('更新快取...');
+          // Update cache
+          logger.info('Updating cache...');
           await cacheManager.updateCache(topTemplates, newWorkflows);
-          logger.success('快取已更新');
+          logger.success('Cache updated');
         } else {
-          logger.info('所有 template 排序未變動，從快取讀取...');
+          logger.info('All template rankings unchanged, reading from cache...');
           const cachedWorkflows = await cacheManager.getCachedWorkflows(
             topTemplates.map(t => t.id)
           );
           workflows = Array.from(cachedWorkflows.values());
-          logger.success(`從快取讀取 ${workflows.length} 個 workflow`);
+          logger.success(`Read ${workflows.length} workflows from cache`);
         }
       } else {
-        logger.info('所有 template 完全未變動，從快取讀取...');
+        logger.info('All templates completely unchanged, reading from cache...');
         const cachedWorkflows = await cacheManager.getCachedWorkflows(
           topTemplates.map(t => t.id)
         );
         workflows = Array.from(cachedWorkflows.values());
-        logger.success(`從快取讀取 ${workflows.length} 個 workflow`);
+        logger.success(`Read ${workflows.length} workflows from cache`);
       }
     }
 
-    // 增強 templates（合併 template 和 workflow）
+    // Enhance templates (merge template and workflow)
     const generator = new TemplateGenerator({
       outputDir: path.resolve(this.projectRoot, 'output/resources/templates'),
       maxTemplatesPerCategory: 20,
@@ -570,45 +570,45 @@ class SkillBuilder {
       return template;
     });
 
-    logger.info(`增強了 ${enhancedTemplates.filter(t => 'workflow' in t).length} 個範本`);
+    logger.info(`Enhanced ${enhancedTemplates.filter(t => 'workflow' in t).length} templates`);
 
-    // 生成檔案
+    // Generate files
     await generator.generate(enhancedTemplates);
-    logger.success('templates 範本檔案生成完成');
+    logger.success('Template files generation completed');
   }
 
 
   /**
-   * 顯示建置統計
+   * Display build statistics
    */
   private printStats(): void {
     this.stats.endTime = new Date();
     this.stats.duration = this.stats.endTime.getTime() - this.stats.startTime.getTime();
 
     console.log('\n');
-    logger.success('===== 建置完成 =====');
-    console.log(`總節點數: ${this.stats.totalNodes}`);
-    console.log(`主要節點: ${this.stats.topNodes}`);
-    console.log(`資源節點: ${this.stats.resourceNodes}`);
-    console.log(`範本數量: ${this.stats.templatesCollected}`);
-    console.log(`建置時間: ${(this.stats.duration / 1000).toFixed(2)} 秒`);
+    logger.success('===== Build completed =====');
+    console.log(`Total nodes: ${this.stats.totalNodes}`);
+    console.log(`Primary nodes: ${this.stats.topNodes}`);
+    console.log(`Resource nodes: ${this.stats.resourceNodes}`);
+    console.log(`Templates: ${this.stats.templatesCollected}`);
+    console.log(`Build time: ${(this.stats.duration / 1000).toFixed(2)} seconds`);
     console.log('');
   }
 
   /**
-   * 步驟 1.5: 收集節點詳細屬性
+   * Step 1.5: Collect detailed node properties
    */
   private async collectDetailedProperties(): Promise<Map<string, any>> {
-    logger.info('===== 步驟 1.5: 收集節點詳細屬性 =====');
+    logger.info('===== Step 1.5: Collecting detailed node properties =====');
 
-    // 檢查快取
+    // Check cache
     const cached = await this.loadCache('properties.json');
     if (cached) {
-      logger.info('使用快取的屬性資料');
+      logger.info('Using cached property data');
       return new Map(Object.entries(cached));
     }
 
-    logger.info('從 NPM 套件解析節點屬性...');
+    logger.info('Parsing node properties from NPM packages...');
 
     const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
 
@@ -634,21 +634,21 @@ class SkillBuilder {
 
           processed++;
           if (processed % 50 === 0) {
-            logger.progress(processed, loadedNodes.length, '已解析');
+            logger.progress(processed, loadedNodes.length, 'parsed');
 
-            // 在 CI 環境中定期觸發垃圾回收
+            // Trigger garbage collection periodically in CI environment
             if (isCI && global.gc && processed % 100 === 0) {
               global.gc();
             }
           }
         } catch (error) {
-          // 忽略解析失敗的節點
+          // Ignore nodes that failed to parse
         }
       }
 
-      logger.success(`成功解析 ${propertiesMap.size} 個節點的屬性`);
+      logger.success(`Successfully parsed properties for ${propertiesMap.size} nodes`);
 
-      // 轉換為可序列化的格式
+      // Convert to serializable format
       const cacheData: Record<string, any> = {};
       propertiesMap.forEach((value, key) => {
         cacheData[key] = value;
@@ -656,45 +656,45 @@ class SkillBuilder {
 
       await this.saveCache('properties.json', cacheData);
 
-      // 最後執行一次垃圾回收
+      // Execute final garbage collection
       if (isCI && global.gc) {
         global.gc();
-        logger.info('執行記憶體垃圾回收');
+        logger.info('Executed memory garbage collection');
       }
 
       return propertiesMap;
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logger.error('收集節點屬性時發生錯誤', error);
+      logger.error('Error occurred while collecting node properties', error);
 
-      // 嘗試從快取恢復
+      // Try to recover from cache
       const oldCache = await this.loadCache('properties.json');
       if (oldCache) {
-        logger.warn('使用舊的快取資料恢復');
+        logger.warn('Recovering using old cache data');
         return new Map(Object.entries(oldCache));
       }
 
-      throw new Error(`收集節點屬性失敗且無法恢復: ${errorMsg}`);
+      throw new Error(`Failed to collect node properties and cannot recover: ${errorMsg}`);
     }
   }
 
   /**
-   * 執行完整建置流程
+   * Execute complete build process
    */
   async build(): Promise<void> {
     try {
-      logger.info('開始建置 n8n Skill Pack...\n');
+      logger.info('Starting n8n Skill Pack build...\n');
 
-      // 步驟 1: 收集節點
+      // Step 1: Collect nodes
       const nodes = await this.collectNodes();
 
-      // 步驟 1.5: 收集節點詳細屬性
+      // Step 1.5: Collect detailed node properties
       const propertiesMap = await this.collectDetailedProperties();
 
-      // 步驟 2: 收集使用統計
+      // Step 2: Collect usage statistics
       const usageStats = await this.collectUsageStats();
 
-      // 步驟 3: 組織和排序
+      // Step 3: Organize and rank
       const { topNodes, remainingNodes } = await this.organizeNodes(
         nodes,
         usageStats,
@@ -703,28 +703,28 @@ class SkillBuilder {
 
       const allNodes = [...topNodes, ...remainingNodes];
 
-      // 步驟 3.5: 收集節點 I/O 配置並建立相容性矩陣
+      // Step 3.5: Collect node I/O configurations and build compatibility matrix
       const { nodeConnectionInfoList, compatibilityMatrix } = await this.buildCompatibilityMatrix(allNodes);
 
-      // 步驟 4: 為所有節點生成資源檔案（使用分層合併策略）
-      logger.info('===== 步驟 4: 生成資源檔案 =====');
+      // Step 4: Generate resource files for all nodes (using tiered merge strategy)
+      logger.info('===== Step 4: Generating resource files =====');
 
-      // 依分數重新排序所有節點（已包含 score, rank, tier 資訊）
+      // Re-sort all nodes by score (already contains score, rank, tier information)
       const sortedAllNodes = [...allNodes].sort((a, b) => (b.score || 0) - (a.score || 0));
 
-      // 依配置分割為高優先級和低優先級節點
+      // Split into high-priority and low-priority nodes based on configuration
       const highPriorityCount = this.config.high_priority_node_count || 50;
       const highPriorityNodes = sortedAllNodes.slice(0, highPriorityCount);
       const lowPriorityNodes = sortedAllNodes.slice(highPriorityCount);
 
-      logger.info(`高優先級節點（獨立檔案）：${highPriorityNodes.length} 個`);
-      logger.info(`低優先級節點（合併檔案）：${lowPriorityNodes.length} 個`);
+      logger.info(`High-priority nodes (individual files): ${highPriorityNodes.length}`);
+      logger.info(`Low-priority nodes (merged files): ${lowPriorityNodes.length}`);
 
       const resourceGenerator = new ResourceGenerator({
         outputDir: path.resolve(this.projectRoot, 'output/resources'),
       });
 
-      // 使用分層合併策略生成資源檔案
+      // Generate resource files using tiered merge strategy
       const resourceFiles = await resourceGenerator.generateTiered(
         highPriorityNodes,
         lowPriorityNodes,
@@ -732,28 +732,28 @@ class SkillBuilder {
         nodeConnectionInfoList
       );
 
-      logger.success(`成功生成 ${resourceFiles.length} 個資源檔案`);
+      logger.success(`Successfully generated ${resourceFiles.length} resource files`);
 
-      // 步驟 4.5: 生成相容性矩陣文件
+      // Step 4.5: Generate compatibility matrix document
       await this.generateCompatibilityMatrixFile(compatibilityMatrix, nodeConnectionInfoList.slice(0, 50));
 
-      // 步驟 5: 生成 templates 範本檔案
+      // Step 5: Generate template files
       await this.generateTemplates();
 
-      // 步驟 6: 生成主 Skill 文件
+      // Step 6: Generate main Skill document
       await this.generateMainSkill(topNodes, usageStats, resourceFiles);
 
-      // 顯示統計
+      // Display statistics
       this.printStats();
     } catch (error) {
-      logger.error('建置過程發生錯誤', error);
+      logger.error('Error occurred during build process', error);
       throw error;
     }
   }
 }
 
 /**
- * 主程式入口
+ * Main program entry point
  */
 async function main() {
   try {
@@ -762,12 +762,12 @@ async function main() {
     await builder.build();
     process.exit(0);
   } catch (error) {
-    logger.error('建置失敗', error);
+    logger.error('Build failed', error);
     process.exit(1);
   }
 }
 
-// 執行主程式
+// Execute main program
 if (require.main === module) {
   main();
 }

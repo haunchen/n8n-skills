@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "title": "n8n Skills - AI 助理的 n8n 工作流程知識庫",
+    "description": "讓 AI 助理成為你的 n8n 工作流程專家。包含 575 個節點的完整知識庫，支援 Claude Code、Claude.ai Web 和 Claude Desktop。",
+    "keywords": "n8n, workflow automation, AI assistant, Claude, skill pack, n8n nodes, 工作流程自動化, n8n 節點"
+  },
+  "nav": {
+    "github": "GitHub",
+    "getStarted": "開始使用",
+    "ariaGithub": "前往 n8n Skills GitHub 專案",
+    "ariaGetStarted": "下載最新版本的 n8n Skills"
+  },
+  "hero": {
+    "license": "Open Source MIT License",
+    "title": "n8n Skills",
+    "subtitle": "讓 AI 助理成為你的 n8n 工作流程專家",
+    "description": "575 個節點的完整知識庫，定期更新，智慧排序"
+  },
+  "stats": {
+    "nodes": "n8n 節點",
+    "categories": "主要分類",
+    "templates": "工作流程範本"
+  },
+  "features": {
+    "title": "核心特色",
+    "comprehensive": {
+      "title": "全面的節點知識庫",
+      "description": "包含 575 個 n8n 節點的詳細文件，按照 6 個主要分類組織，支援最新的 n8n v1.117.2"
+    },
+    "multiPlatform": {
+      "title": "多平台 AI 整合",
+      "description": "支援 Claude Code、Claude.ai Web 和 Claude Desktop，通過 Skill Pack 格式無縫整合"
+    },
+    "priority": {
+      "title": "優先級排序",
+      "description": "基於使用頻率、文件完整度、社群受歡迎程度和通用性的多維度評分系統"
+    },
+    "updates": {
+      "title": "定期發布更新",
+      "description": "每週自動追蹤 n8n 最新版本並發布更新，下載即可獲得最新內容"
+    },
+    "structure": {
+      "title": "完整資源結構",
+      "description": "主 Skill.md 提供快速參考，resources/ 目錄包含按分類組織的詳細文件和範本"
+    },
+    "integration": {
+      "title": "多平台 AI 整合",
+      "description": "支援 Claude Code、Claude.ai Web 和 Claude Desktop，通過 Skill Pack 格式無縫整合"
+    }
+  },
+  "howItWorks": {
+    "title": "如何使用",
+    "step1": {
+      "title": "下載 n8n Skills",
+      "description": "從 GitHub Releases 下載最新版本的 n8n Skills"
+    },
+    "step2": {
+      "title": "安裝到 AI 助理",
+      "description": "將 n8n Skills 導入你的 Claude Code、Web 或 Desktop"
+    },
+    "step3": {
+      "title": "開始使用",
+      "description": "詢問 AI 助理關於 n8n 節點和工作流程的問題"
+    }
+  },
+  "categories": {
+    "title": "節點分類",
+    "core": {
+      "title": "核心節點",
+      "description": "HTTP Request、Code、Webhook、Set、If、Merge 等基礎節點"
+    },
+    "apps": {
+      "title": "應用整合",
+      "description": "30+ 個熱門應用整合，包含 Google、Slack、Discord 等"
+    },
+    "triggers": {
+      "title": "觸發器",
+      "description": "Webhook、Schedule、Email 等多種觸發方式"
+    },
+    "ai": {
+      "title": "AI 節點",
+      "description": "20+ 個 AI 相關節點，支援各種 AI 模型整合"
+    },
+    "database": {
+      "title": "資料庫",
+      "description": "MongoDB、PostgreSQL、MySQL 等資料庫連接器"
+    },
+    "utilities": {
+      "title": "工具節點",
+      "description": "資料處理、檔案操作、格式轉換等實用工具"
+    },
+    "tools": {
+      "title": "工具節點",
+      "description": "資料處理、檔案操作、格式轉換等實用工具"
+    }
+  },
+  "footer": {
+    "github": "GitHub",
+    "releases": "Releases",
+    "n8nWebsite": "n8n 官方網站",
+    "n8nDocs": "n8n 文件",
+    "license": "開源專案，採用 MIT License",
+    "version": "支援 n8n v1.117.2 | 最後更新：2025-11-03",
+    "madeBy": "Made by"
+  }
+}

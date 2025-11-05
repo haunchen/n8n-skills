@@ -10,7 +10,7 @@ import path from 'path';
 import type { WorkflowDefinition } from '../collectors/api-collector';
 
 /**
- * Template 快取項目
+ * Template cache item
  */
 export interface TemplateCacheItem {
   id: number;
@@ -21,7 +21,7 @@ export interface TemplateCacheItem {
 }
 
 /**
- * Template 排序快照
+ * Template ranking snapshot
  */
 export interface TemplateRankingSnapshot {
   version: string;
@@ -34,7 +34,7 @@ export interface TemplateRankingSnapshot {
 }
 
 /**
- * 快取變更分析結果
+ * Cache change analysis result
  */
 export interface CacheAnalysis {
   needsUpdate: boolean;
@@ -45,8 +45,8 @@ export interface CacheAnalysis {
 }
 
 /**
- * Template 快取管理器
- * 負責管理 template workflow 的快取，避免重複下載未變動的 template
+ * Template Cache Manager
+ * Manages template workflow cache to avoid re-downloading unchanged templates
  */
 export class TemplateCacheManager {
   private cacheDir: string;
@@ -60,7 +60,7 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 載入排序快照
+   * Load ranking snapshot
    */
   private async loadRankingSnapshot(): Promise<TemplateRankingSnapshot | null> {
     try {
@@ -72,7 +72,7 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 儲存排序快照
+   * Save ranking snapshot
    */
   private async saveRankingSnapshot(snapshot: TemplateRankingSnapshot): Promise<void> {
     await fs.mkdir(this.cacheDir, { recursive: true });
@@ -84,7 +84,7 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 載入 workflow 快取
+   * Load workflow cache
    */
   private async loadWorkflowCache(): Promise<Map<number, TemplateCacheItem>> {
     try {
@@ -97,7 +97,7 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 儲存 workflow 快取
+   * Save workflow cache
    */
   private async saveWorkflowCache(cache: Map<number, TemplateCacheItem>): Promise<void> {
     await fs.mkdir(this.cacheDir, { recursive: true });
@@ -110,15 +110,15 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 分析快取變更
-   * 比對新的 template 列表與快取的排序，判斷哪些需要更新
+   * Analyze cache changes
+   * Compare new template list with cached rankings to determine which need updates
    */
   async analyzeCacheChanges(
     currentTemplates: Array<{ id: number; totalViews: number }>
   ): Promise<CacheAnalysis> {
     const oldSnapshot = await this.loadRankingSnapshot();
 
-    // 如果沒有舊快取，所有 template 都是新的
+    // If no old cache exists, all templates are new
     if (!oldSnapshot) {
       return {
         needsUpdate: true,
@@ -129,12 +129,12 @@ export class TemplateCacheManager {
       };
     }
 
-    // 建立舊排序的 Map（id -> rank）
+    // Build old ranking map (id -> rank)
     const oldRankMap = new Map(
       oldSnapshot.rankings.map(r => [r.id, r.rank])
     );
 
-    // 建立舊排序的 Map（id -> totalViews）
+    // Build old views map (id -> totalViews)
     const oldViewsMap = new Map(
       oldSnapshot.rankings.map(r => [r.id, r.totalViews])
     );
@@ -143,25 +143,25 @@ export class TemplateCacheManager {
     const rankChanged: number[] = [];
     const unchanged: number[] = [];
 
-    // 檢查每個當前 template
+    // Check each current template
     currentTemplates.forEach((template, index) => {
       const currentRank = index + 1;
       const oldRank = oldRankMap.get(template.id);
       const oldViews = oldViewsMap.get(template.id);
 
       if (oldRank === undefined) {
-        // 新出現的 template
+        // Newly appeared template
         newTemplates.push(template.id);
       } else if (oldRank !== currentRank || oldViews !== template.totalViews) {
-        // 排序改變或瀏覽次數改變
+        // Rank changed or view count changed
         rankChanged.push(template.id);
       } else {
-        // 完全沒變
+        // Completely unchanged
         unchanged.push(template.id);
       }
     });
 
-    // 找出被移除的 template（在舊快照中但不在新列表中）
+    // Find removed templates (in old snapshot but not in new list)
     const currentIds = new Set(currentTemplates.map(t => t.id));
     const removed = oldSnapshot.rankings
       .map(r => r.id)
@@ -179,19 +179,19 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 取得需要下載的 template IDs
+   * Get template IDs that need downloading
    */
   async getTemplatesNeedingDownload(
     currentTemplates: Array<{ id: number; totalViews: number }>
   ): Promise<number[]> {
     const analysis = await this.analyzeCacheChanges(currentTemplates);
 
-    // 需要下載的 = 新 template + 排序改變的
+    // Need to download = new templates + rank changed
     return [...analysis.newTemplates, ...analysis.rankChanged];
   }
 
   /**
-   * 從快取取得 workflow
+   * Get workflow from cache
    */
   async getCachedWorkflow(
     templateId: number
@@ -202,7 +202,7 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 批次取得快取的 workflows
+   * Batch get cached workflows
    */
   async getCachedWorkflows(
     templateIds: number[]
@@ -221,17 +221,17 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 更新快取
-   * 儲存新下載的 workflows 並更新排序快照
+   * Update cache
+   * Save newly downloaded workflows and update ranking snapshot
    */
   async updateCache(
     currentTemplates: Array<{ id: number; name: string; totalViews: number }>,
     newWorkflows: Array<WorkflowDefinition & { id: number; name: string }>
   ): Promise<void> {
-    // 載入現有快取
+    // Load existing cache
     const cache = await this.loadWorkflowCache();
 
-    // 更新新下載的 workflows
+    // Update newly downloaded workflows
     for (const workflow of newWorkflows) {
       cache.set(workflow.id, {
         id: workflow.id,
@@ -242,7 +242,7 @@ export class TemplateCacheManager {
       });
     }
 
-    // 移除不在當前列表中的快取項目（清理舊資料）
+    // Remove cache items not in current list (cleanup old data)
     const currentIds = new Set(currentTemplates.map(t => t.id));
     for (const id of cache.keys()) {
       if (!currentIds.has(id)) {
@@ -250,10 +250,10 @@ export class TemplateCacheManager {
       }
     }
 
-    // 儲存 workflow 快取
+    // Save workflow cache
     await this.saveWorkflowCache(cache);
 
-    // 更新排序快照
+    // Update ranking snapshot
     const snapshot: TemplateRankingSnapshot = {
       version: '1.0.0',
       fetchedAt: new Date().toISOString(),
@@ -268,7 +268,7 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 清除所有快取
+   * Clear all cache
    */
   async clearCache(): Promise<void> {
     try {
@@ -280,7 +280,7 @@ export class TemplateCacheManager {
   }
 
   /**
-   * 取得快取統計資訊
+   * Get cache statistics
    */
   async getCacheStats(): Promise<{
     totalCached: number;
@@ -302,7 +302,7 @@ export class TemplateCacheManager {
       }
     }
 
-    // 計算快取檔案大小
+    // Calculate cache file size
     let totalSize = 0;
     try {
       const stats = await fs.stat(this.workflowCachePath);

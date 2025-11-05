@@ -1,3 +1,5 @@
+[繁體中文](README.md) | [English](README.en.md)
+
 # n8n Skills
 
 > 支援 n8n 版本：v1.117.2

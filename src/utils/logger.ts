@@ -6,27 +6,27 @@
  */
 
 export function info(message: string): void {
-  console.log(`[資訊] ${message}`);
+  console.log(`[INFO] ${message}`);
 }
 
 export function warn(message: string): void {
-  console.warn(`[警告] ${message}`);
+  console.warn(`[WARN] ${message}`);
 }
 
 export function error(message: string, err?: Error | unknown): void {
   const errorMsg = err instanceof Error ? err.message : String(err);
-  console.error(`[錯誤] ${message}${err ? `: ${errorMsg}` : ''}`);
+  console.error(`[ERROR] ${message}${err ? `: ${errorMsg}` : ''}`);
 }
 
 export function success(message: string): void {
-  console.log(`[成功] ${message}`);
+  console.log(`[SUCCESS] ${message}`);
 }
 
 export function progress(current: number, total: number, message?: string): void {
   const percentage = Math.round((current / total) * 100);
   const progressBar = createProgressBar(current, total, 20);
   const msg = message ? ` - ${message}` : '';
-  console.log(`[進度] ${progressBar} ${percentage}% (${current}/${total})${msg}`);
+  console.log(`[PROGRESS] ${progressBar} ${percentage}% (${current}/${total})${msg}`);
 }
 
 function createProgressBar(current: number, total: number, width: number = 20): string {

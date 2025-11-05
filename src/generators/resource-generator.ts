@@ -239,7 +239,7 @@ export class ResourceGenerator {
 
   /**
    * Generate unified index (INDEX.md)
-   * 提供所有節點的快速查找，including line number location information
+   * Provides quick access to all nodes, including line number location information
    */
   private async generateMasterIndex(
     highPriorityNodes: EnrichedNodeInfo[],
@@ -477,7 +477,7 @@ export class ResourceGenerator {
         resourceFiles.push({
           name: `${category} - Node Collection (Part ${partNumber})`,
           path: `resources/${category}/${filename}`,
-          description: `Contains ${partNodes.length}  nodes`,
+          description: `Contains ${partNodes.length} nodes`,
           category,
         });
 
@@ -501,7 +501,7 @@ export class ResourceGenerator {
       resourceFiles.push({
         name: `${category} - Node Collection`,
         path: `resources/${category}/${filename}`,
-        description: `Contains ${nodes.length}  nodes`,
+        description: `Contains ${nodes.length} nodes`,
         category,
       });
 
@@ -558,11 +558,11 @@ export class ResourceGenerator {
 
     // Sort nodes alphabetically for TOC
     const sortedNodes = [...nodes].sort((a, b) =>
-      a.displayName.localeCompare(b.displayName, 'zh-TW')
+      a.displayName.localeCompare(b.displayName, 'en')
     );
 
     sortedNodes.forEach(node => {
-      // Generate anchor：Convert node name to lowercase, spaces and special characters to hyphens
+      // Generate anchor: Convert node name to lowercase, spaces and special characters to hyphens
       const anchor = node.displayName
         .toLowerCase()
         .replace(/\s+/g, '-')
@@ -573,7 +573,7 @@ export class ResourceGenerator {
     lines.push('---');
     lines.push('');
 
-    // Record current line number after TOC ends（for calculating node starting line numbers）
+    // Record current line number after TOC ends (for calculating node starting line numbers)
     let currentLine = lines.length + 1; // +1 because line numbers start from 1
 
     // Generate complete content for each node and record line numbers
@@ -617,16 +617,16 @@ export class ResourceGenerator {
       if (this.compatibilityMatrix && this.nodeConnectionInfoList) {
         const connectionGuide = this.generateConnectionGuide(node);
         if (connectionGuide) {
-          // 將Connection guide的標題層level調整為三level
+          // Adjust Connection guide heading level to three levels
           const adjustedGuide = connectionGuide.replace(/^## /gm, '### ');
           lines.push(adjustedGuide);
         }
       }
 
-      // JSON 配置Example
+      // JSON configuration examples
       this.appendExamplesForMerged(lines, node);
 
-      // 計算節點內容的行數
+      // Calculate line count for node content
       const nodeLineCount = lines.length - nodeLinesStart;
       const nodeEndLine = nodeStartLine + nodeLineCount - 1;
 
@@ -636,7 +636,7 @@ export class ResourceGenerator {
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9\u4e00-\u9fa5-]/g, '');
 
-      // 記錄節點位置
+      // Record node position
       nodePositions.push({
         nodeType: node.nodeType,
         displayName: node.displayName,
@@ -648,7 +648,7 @@ export class ResourceGenerator {
         usagePercentage: node.usagePercentage,
       });
 
-      // 更新當前行號
+      // Update current line number
       currentLine = nodeEndLine + 1;
     });
 
@@ -659,7 +659,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 為合併檔案Append properties list（調整標題層level）
+   * Append properties list for merged files (adjust heading levels)
    */
   private appendPropertiesForMerged(lines: string[], properties: CoreProperty[]): void {
     lines.push('### Core Properties');
@@ -698,7 +698,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 為合併檔案附加 JSON Example（調整標題層level）
+   * Append JSON examples for merged files (adjust heading levels)
    */
   private appendExamplesForMerged(lines: string[], node: EnrichedNodeInfo): void {
     lines.push('### JSON Configuration Examples');
@@ -707,18 +707,18 @@ export class ResourceGenerator {
     const operations = node.properties?.operations || [];
     const hasOperations = operations.length > 0;
 
-    // 總Yes生成基本Example
+    // Always generate basic example
     lines.push('#### Basic Configuration');
     lines.push('```json');
     lines.push(JSON.stringify(this.generateBasicExample(node), null, 2));
     lines.push('```');
     lines.push('');
 
-    // If operations exist，生成操作Example（at most 2 個）
+    // If operations exist, generate operation examples (up to 2)
     if (hasOperations) {
       const exampleOperations = operations.slice(0, 2);
       exampleOperations.forEach(operation => {
-        lines.push(`#### ${operation.name}Example`);
+        lines.push(`#### ${operation.name} Example`);
         lines.push('```json');
         lines.push(JSON.stringify(this.generateOperationExample(node, operation), null, 2));
         lines.push('```');
@@ -728,8 +728,8 @@ export class ResourceGenerator {
   }
 
   /**
-   * 生成分類索引檔案
-   * 支援區分高優先level獨立檔案和低優先level合併檔案
+   * Generate category index file
+   * Supports distinguishing high-priority individual files and low-priority merged files
    */
   private async generateCategoryIndex(
     category: string,
@@ -738,39 +738,39 @@ export class ResourceGenerator {
   ): Promise<void> {
     const lines: string[] = [];
 
-    // 分類名稱對照
+    // Category name mapping
     const categoryNames: Record<string, string> = {
-      transform: '資料轉換節點',
-      input: '輸入節點',
-      output: '輸出節點',
-      trigger: '觸發器節點',
-      organization: '組織節點',
-      misc: '其他節點',
+      transform: 'Data Transformation Nodes',
+      input: 'Input Nodes',
+      output: 'Output Nodes',
+      trigger: 'Trigger Nodes',
+      organization: 'Organization Nodes',
+      misc: 'Miscellaneous Nodes',
     };
 
     const categoryName = categoryNames[category] || category;
 
-    // 兼容舊的單一參數用法（generateAll 方法）
+    // Compatibility with old single-parameter usage (generateAll method)
     if (highPriorityNodes === undefined && lowPriorityNodes === undefined) {
-      // 這種情況不應該發生，但為了向後兼容，返回
+      // This should not happen, but return for backward compatibility
       return;
     }
 
-    // 如果只傳入 highPriorityNodes（當作所有節點），則Yes舊的 generateAll 用法
+    // If only highPriorityNodes passed (treated as all nodes), use old generateAll usage
     if (lowPriorityNodes === undefined && highPriorityNodes !== undefined) {
       const allNodes = highPriorityNodes;
       lines.push(`# ${categoryName}`);
       lines.push('');
-      lines.push(`共 ${allNodes.length}  nodes`);
+      lines.push(`Total: ${allNodes.length} nodes`);
       lines.push('');
 
-      // 按字母順序排序
+      // Sort alphabetically
       const sortedNodes = [...allNodes].sort((a, b) =>
-        a.displayName.localeCompare(b.displayName, 'zh-TW')
+        a.displayName.localeCompare(b.displayName, 'en')
       );
 
-      // 生成節點列表
-      lines.push('## 節點列表');
+      // Generate node list
+      lines.push('## Node List');
       lines.push('');
       sortedNodes.forEach(node => {
         const filename = `${node.nodeType}.md`;
@@ -779,25 +779,25 @@ export class ResourceGenerator {
       });
       lines.push('');
     } else {
-      // 新的分層用法（generateTiered 方法）
+      // New tiered usage (generateTiered method)
       const high = highPriorityNodes || [];
       const low = lowPriorityNodes || [];
       const totalCount = high.length + low.length;
 
       lines.push(`# ${categoryName}`);
       lines.push('');
-      lines.push(`共 ${totalCount}  nodes（高優先level: ${high.length}，其他: ${low.length}）`);
+      lines.push(`Total: ${totalCount} nodes (high-priority: ${high.length}, other: ${low.length})`);
       lines.push('');
 
-      // 高優先level節點（獨立檔案）
+      // High-priority nodes (individual files)
       if (high.length > 0) {
-        lines.push('## 高優先level節點');
+        lines.push('## High-Priority Nodes');
         lines.push('');
-        lines.push('以下節點具有獨立的詳細文件：');
+        lines.push('The following nodes have individual detailed documentation:');
         lines.push('');
 
         const sortedHigh = [...high].sort((a, b) =>
-          a.displayName.localeCompare(b.displayName, 'zh-TW')
+          a.displayName.localeCompare(b.displayName, 'en')
         );
 
         sortedHigh.forEach(node => {
@@ -808,16 +808,16 @@ export class ResourceGenerator {
         lines.push('');
       }
 
-      // 低優先level節點（合併檔案）
+      // Low-priority nodes (merged files)
       if (low.length > 0) {
-        lines.push('## 其他節點');
+        lines.push('## Other Nodes');
         lines.push('');
 
         const NODES_PER_FILE = 100;
         if (low.length > NODES_PER_FILE) {
-          // 多個合併檔案
+          // Multiple merged files
           const numParts = Math.ceil(low.length / NODES_PER_FILE);
-          lines.push(`以下 ${low.length}  nodes已合併到 ${numParts} 個文件中：`);
+          lines.push(`The following ${low.length} nodes are merged into ${numParts} files:`);
           lines.push('');
 
           for (let i = 0; i < numParts; i++) {
@@ -826,32 +826,32 @@ export class ResourceGenerator {
             const partNodes = low.slice(startIdx, endIdx);
             const partNumber = i + 1;
 
-            lines.push(`- [Part ${partNumber}](./${category}-merged-${partNumber}.md) - Contains ${partNodes.length}  nodes`);
+            lines.push(`- [Part ${partNumber}](./${category}-merged-${partNumber}.md) - Contains ${partNodes.length} nodes`);
           }
           lines.push('');
 
-          // 列出所有節點名稱
+          // List all node names
           lines.push('### Complete Node List');
           lines.push('');
           const sortedLow = [...low].sort((a, b) =>
-            a.displayName.localeCompare(b.displayName, 'zh-TW')
+            a.displayName.localeCompare(b.displayName, 'en')
           );
           sortedLow.forEach(node => {
             lines.push(`- ${node.displayName}`);
           });
           lines.push('');
         } else {
-          // 單一合併檔案
-          lines.push('以下節點已合併到單一文件中：');
+          // Single merged file
+          lines.push('The following nodes are merged into a single file:');
           lines.push('');
-          lines.push(`- [查看完整列表](./${category}-merged.md) - Contains ${low.length}  nodes`);
+          lines.push(`- [View Complete List](./${category}-merged.md) - Contains ${low.length} nodes`);
           lines.push('');
 
-          // 列出所有節點名稱
+          // List all node names
           lines.push('### Complete Node List');
           lines.push('');
           const sortedLow = [...low].sort((a, b) =>
-            a.displayName.localeCompare(b.displayName, 'zh-TW')
+            a.displayName.localeCompare(b.displayName, 'en')
           );
           sortedLow.forEach(node => {
             lines.push(`- ${node.displayName}`);
@@ -1015,7 +1015,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 附加增強的 JSON Example（1-3 個）
+   * Append enhanced JSON examples (1-3 examples)
    */
   private appendExamples(lines: string[], node: EnrichedNodeInfo): void {
     lines.push('## JSON Configuration Examples');
@@ -1024,18 +1024,18 @@ export class ResourceGenerator {
     const operations = node.properties?.operations || [];
     const hasOperations = operations.length > 0;
 
-    // 總Yes生成基本Example
+    // Always generate basic example
     lines.push('### Basic Configuration');
     lines.push('```json');
     lines.push(JSON.stringify(this.generateBasicExample(node), null, 2));
     lines.push('```');
     lines.push('');
 
-    // If operations exist，生成操作Example（at most 2 個）
+    // If operations exist, generate operation examples (up to 2)
     if (hasOperations) {
       const exampleOperations = operations.slice(0, 2);
       exampleOperations.forEach(operation => {
-        lines.push(`### ${operation.name}Example`);
+        lines.push(`### ${operation.name} Example`);
         lines.push('```json');
         lines.push(JSON.stringify(this.generateOperationExample(node, operation), null, 2));
         lines.push('```');
@@ -1045,7 +1045,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 生成基本Example
+   * Generate basic example
    */
   private generateBasicExample(node: EnrichedNodeInfo): Record<string, any> {
     const example: Record<string, any> = {
@@ -1075,7 +1075,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 生成操作Example
+   * Generate operation example
    */
   private generateOperationExample(node: EnrichedNodeInfo, operation: Operation): Record<string, any> {
     const example = this.generateBasicExample(node);
@@ -1138,7 +1138,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * Clean node resource directory（保留 templates 目錄）
+   * Clean node resource directory (preserve templates directory)
    */
   private async cleanNodeResources(): Promise<void> {
     const categories = ['transform', 'input', 'output', 'trigger', 'organization', 'misc'];

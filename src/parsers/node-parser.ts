@@ -6,15 +6,15 @@
  */
 
 /**
- * 節點類型定義
- * 可以是建構函式或已實例化的節點
+ * Node type definition
+ * Can be a constructor function or an instantiated node
  */
 export type NodeClass =
   | (new () => any)
   | { description?: any; nodeVersions?: any };
 
 /**
- * 解析後的節點資訊
+ * Parsed node information
  */
 export interface ParsedNode {
   nodeType: string;
@@ -27,15 +27,15 @@ export interface ParsedNode {
 }
 
 /**
- * 節點解析器
- * 提取節點的基本資訊和分類
+ * Node Parser
+ * Extracts basic information and classification from nodes
  */
 export class NodeParser {
   /**
-   * 解析節點類別
-   * @param nodeClass 節點類別或實例
-   * @param packageName 套件名稱
-   * @returns 解析後的節點資訊
+   * Parse node class
+   * @param nodeClass Node class or instance
+   * @param packageName Package name
+   * @returns Parsed node information
    */
   parse(nodeClass: NodeClass, packageName: string): ParsedNode {
     const description = this.getNodeDescription(nodeClass);
@@ -52,48 +52,48 @@ export class NodeParser {
   }
 
   /**
-   * 取得節點描述
-   * 處理一般節點和版本化節點
+   * Get node description
+   * Handles regular nodes and versioned nodes
    */
   private getNodeDescription(nodeClass: NodeClass): any {
     try {
-      // 如果是函式，嘗試實例化
+      // If it's a function, try to instantiate it
       if (typeof nodeClass === 'function') {
         const instance = new nodeClass();
         return instance.description || instance.baseDescription || {};
       }
 
-      // 已經是實例
+      // Already an instance
       return nodeClass.description || {};
     } catch (e) {
-      // 某些節點需要參數才能實例化
+      // Some nodes require parameters to instantiate
       return (nodeClass as any).description || {};
     }
   }
 
   /**
-   * 提取節點類型名稱
-   * 確保包含套件前綴
+   * Extract node type name
+   * Ensures package prefix is included
    */
   private extractNodeType(description: any, packageName: string): string {
     const name = description.name;
 
     if (!name) {
-      throw new Error('節點缺少 name 屬性');
+      throw new Error('Node is missing name property');
     }
 
-    // 如果已包含點號，直接返回
+    // If already includes a dot, return directly
     if (name.includes('.')) {
       return name;
     }
 
-    // 加上套件前綴
+    // Add package prefix
     const packagePrefix = packageName.replace('@n8n/', '').replace('n8n-', '');
     return `${packagePrefix}.${name}`;
   }
 
   /**
-   * 提取分類
+   * Extract category
    */
   private extractCategory(description: any): string {
     return description.group?.[0] ||
@@ -103,39 +103,39 @@ export class NodeParser {
   }
 
   /**
-   * 判斷節點類型
-   * 分為 trigger（觸發）、action（動作）、webhook、ai（AI工具）
+   * Determine node category
+   * Categories: trigger, action, webhook, ai (AI tool)
    */
   private determineNodeCategory(description: any): 'trigger' | 'action' | 'webhook' | 'ai' {
-    // 檢查是否為觸發節點
+    // Check if it's a trigger node
     if (this.isTrigger(description)) {
       return 'trigger';
     }
 
-    // 檢查是否為 webhook
+    // Check if it's a webhook
     if (this.isWebhook(description)) {
       return 'webhook';
     }
 
-    // 檢查是否為 AI 工具
+    // Check if it's an AI tool
     if (this.isAITool(description)) {
       return 'ai';
     }
 
-    // 預設為動作節點
+    // Default to action node
     return 'action';
   }
 
   /**
-   * 偵測是否為觸發節點
+   * Detect if it's a trigger node
    */
   private isTrigger(description: any): boolean {
-    // 檢查 group 是否包含 'trigger'
+    // Check if group contains 'trigger'
     if (description.group?.includes('trigger')) {
       return true;
     }
 
-    // 檢查其他觸發指標
+    // Check other trigger indicators
     return description.polling === true ||
            description.trigger === true ||
            description.eventTrigger === true ||
@@ -143,7 +143,7 @@ export class NodeParser {
   }
 
   /**
-   * 偵測是否為 webhook 節點
+   * Detect if it's a webhook node
    */
   private isWebhook(description: any): boolean {
     return description.webhooks?.length > 0 ||
@@ -152,15 +152,15 @@ export class NodeParser {
   }
 
   /**
-   * 偵測是否為 AI 工具
+   * Detect if it's an AI tool
    */
   private isAITool(description: any): boolean {
-    // 檢查是否標記為可用作工具
+    // Check if marked as usable as tool
     if (description.usableAsTool === true) {
       return true;
     }
 
-    // 檢查名稱中是否包含 AI 相關關鍵字
+    // Check if name contains AI-related keywords
     const aiIndicators = ['openai', 'anthropic', 'huggingface', 'cohere', 'ai'];
     const nodeName = description.name?.toLowerCase() || '';
 
@@ -168,29 +168,29 @@ export class NodeParser {
   }
 
   /**
-   * 提取版本資訊
-   * 優先順序：
-   * 1. currentVersion（版本化節點的計算屬性）
-   * 2. description.defaultVersion（明確的預設版本）
-   * 3. nodeVersions（取最大版本）
-   * 4. description.version（陣列或數值）
-   * 5. 預設為 "1"
+   * Extract version information
+   * Priority order:
+   * 1. currentVersion (computed property for versioned nodes)
+   * 2. description.defaultVersion (explicit default version)
+   * 3. nodeVersions (get maximum version)
+   * 4. description.version (array or numeric value)
+   * 5. Default to "1"
    */
   private extractVersion(nodeClass: NodeClass, description: any): string {
     try {
       const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
 
-      // 檢查 currentVersion
+      // Check currentVersion
       if (instance.currentVersion !== undefined) {
         return instance.currentVersion.toString();
       }
 
-      // 檢查 description.defaultVersion
+      // Check description.defaultVersion
       if (instance.description?.defaultVersion) {
         return instance.description.defaultVersion.toString();
       }
 
-      // 檢查 nodeVersions（取最大版本）
+      // Check nodeVersions (get maximum version)
       if (instance.nodeVersions) {
         const versions = Object.keys(instance.nodeVersions).map(Number);
         if (versions.length > 0) {
@@ -201,7 +201,7 @@ export class NodeParser {
         }
       }
 
-      // 檢查 description.version
+      // Check description.version
       if (description.version) {
         if (Array.isArray(description.version)) {
           const numericVersions = description.version.map((v: any) => parseFloat(v.toString()));
@@ -214,10 +214,10 @@ export class NodeParser {
         }
       }
     } catch (e) {
-      // 實例化失敗，嘗試類別層級屬性
+      // Instantiation failed, try class-level properties
     }
 
-    // 預設版本
+    // Default version
     return '1';
   }
 }

@@ -6,12 +6,12 @@
  */
 
 /**
- * Markdown 格式化器
- * 統一和美化 Markdown 文件的格式
+ * Markdown Formatter
+ * Standardizes and beautifies Markdown document formatting
  */
 
 /**
- * 格式化選項
+ * Formatter options
  */
 export interface FormatterOptions {
   maxLineLength?: number;
@@ -25,7 +25,7 @@ export interface FormatterOptions {
 }
 
 /**
- * 預設選項
+ * Default options
  */
 const DEFAULT_OPTIONS: Required<FormatterOptions> = {
   maxLineLength: 100,
@@ -39,7 +39,7 @@ const DEFAULT_OPTIONS: Required<FormatterOptions> = {
 };
 
 /**
- * 標題資訊
+ * Heading information
  */
 interface HeadingInfo {
   level: number;
@@ -49,7 +49,7 @@ interface HeadingInfo {
 }
 
 /**
- * Markdown 範本格式化器
+ * Markdown Template Formatter
  */
 export class TemplateFormatter {
   private options: Required<FormatterOptions>;
@@ -59,43 +59,43 @@ export class TemplateFormatter {
   }
 
   /**
-   * 格式化 Markdown 內容
+   * Format Markdown content
    */
   public format(content: string): string {
     let formatted = content;
 
-    // 正規化換行符號
+    // Normalize line endings
     formatted = this.normalizeLineEndings(formatted);
 
-    // 清理多餘空白
+    // Clean extra whitespace
     if (this.options.cleanExtraWhitespace) {
       formatted = this.cleanWhitespace(formatted);
     }
 
-    // 統一標題格式
+    // Normalize headings
     formatted = this.normalizeHeadings(formatted);
 
-    // 統一列表格式
+    // Normalize lists
     formatted = this.normalizeLists(formatted);
 
-    // 統一程式碼區塊格式
+    // Normalize code blocks
     formatted = this.normalizeCodeBlocks(formatted);
 
-    // 修正表格格式
+    // Normalize tables
     formatted = this.normalizeTables(formatted);
 
-    // 修正連結和圖片格式
+    // Normalize links and images
     formatted = this.normalizeLinks(formatted);
 
-    // 確保適當的空行
+    // Ensure proper spacing
     formatted = this.ensureProperSpacing(formatted);
 
-    // 加入Table of Contents
+    // Add Table of Contents
     if (this.options.addTableOfContents) {
       formatted = this.addTableOfContents(formatted);
     }
 
-    // 確保結尾換行
+    // Ensure trailing newline
     if (this.options.ensureTrailingNewline) {
       formatted = this.ensureTrailingNewline(formatted);
     }
@@ -104,29 +104,29 @@ export class TemplateFormatter {
   }
 
   /**
-   * 正規化換行符號
+   * Normalize line endings
    */
   private normalizeLineEndings(content: string): string {
     return content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   }
 
   /**
-   * 清理多餘空白
+   * Clean extra whitespace
    */
   private cleanWhitespace(content: string): string {
     return content
-      // 移除行尾空白
+      // Remove trailing whitespace
       .replace(/[ \t]+$/gm, '')
-      // 移除連續空行（超過 2 個）
+      // Remove consecutive blank lines (more than 2)
       .replace(/\n{3,}/g, '\n\n')
-      // 移除檔案開頭的空行
+      // Remove blank lines at file beginning
       .replace(/^\n+/, '')
-      // 移除檔案結尾的多餘空行
+      // Remove extra blank lines at file end
       .replace(/\n{2,}$/, '\n');
   }
 
   /**
-   * 統一標題格式
+   * Normalize headings
    */
   private normalizeHeadings(content: string): string {
     const lines = content.split('\n');
@@ -136,31 +136,31 @@ export class TemplateFormatter {
       const line = lines[i];
 
       if (this.options.headingStyle === 'atx') {
-        // 統一使用 ATX 樣式 (# 標題)
-        // 處理 Setext 樣式的轉換
+        // Use ATX style (# heading)
+        // Handle Setext style conversion
         if (i < lines.length - 1) {
           const nextLine = lines[i + 1];
 
-          // H1: 下一行全是 =
+          // H1: next line all =
           if (/^=+$/.test(nextLine)) {
             result.push(`# ${line.trim()}`);
-            i++; // 跳過下一行
+            i++; // Skip next line
             continue;
           }
 
-          // H2: 下一行全是 -
+          // H2: next line all -
           if (/^-+$/.test(nextLine)) {
             result.push(`## ${line.trim()}`);
-            i++; // 跳過下一行
+            i++; // Skip next line
             continue;
           }
         }
 
-        // 已經是 ATX 樣式，確保格式正確
+        // Already ATX style, ensure correct format
         const atxMatch = line.match(/^(#{1,6})\s*(.*)$/);
         if (atxMatch) {
           const level = atxMatch[1];
-          const text = atxMatch[2].replace(/\s*#+$/, '').trim(); // 移除結尾的 #
+          const text = atxMatch[2].replace(/\s*#+$/, '').trim(); // Remove trailing #
           result.push(`${level} ${text}`);
           continue;
         }
@@ -173,7 +173,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 統一列表格式
+   * Normalize lists
    */
   private normalizeLists(content: string): string {
     const listMarker = this.getListMarker();
@@ -181,7 +181,7 @@ export class TemplateFormatter {
     const result: string[] = [];
 
     for (const line of lines) {
-      // 無序列表
+      // Unordered list
       const unorderedMatch = line.match(/^(\s*)[-*+]\s+(.*)$/);
       if (unorderedMatch) {
         const indent = unorderedMatch[1];
@@ -190,7 +190,7 @@ export class TemplateFormatter {
         continue;
       }
 
-      // 有序列表 - 確保數字後面有點和空格
+      // Ordered list - ensure dot and space after number
       const orderedMatch = line.match(/^(\s*)(\d+)[.)]\s*(.*)$/);
       if (orderedMatch) {
         const indent = orderedMatch[1];
@@ -207,7 +207,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 取得列表標記符號
+   * Get list marker symbol
    */
   private getListMarker(): string {
     const markers: Record<string, string> = {
@@ -219,7 +219,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 統一程式碼區塊格式
+   * Normalize code blocks
    */
   private normalizeCodeBlocks(content: string): string {
     if (this.options.codeBlockStyle !== 'fenced') {
@@ -231,27 +231,27 @@ export class TemplateFormatter {
     let inCodeBlock = false;
 
     for (const line of lines) {
-      // 檢查是否為程式碼區塊標記
+      // Check if it's a code block marker
       if (line.trim().startsWith('```')) {
         if (!inCodeBlock) {
-          // 開始程式碼區塊
+          // Start code block
           inCodeBlock = true;
         } else {
-          // 結束程式碼區塊
+          // End code block
           inCodeBlock = false;
         }
         result.push(line);
         continue;
       }
 
-      // 在程式碼區塊內，保持原樣
+      // Inside code block, keep as-is
       if (inCodeBlock) {
         result.push(line);
         continue;
       }
 
-      // 處理縮排式程式碼區塊（轉換為 fenced）
-      // 這部分較複雜，暫時保持原樣
+      // Handle indented code blocks (convert to fenced)
+      // This is complex, keep as-is for now
       result.push(line);
     }
 
@@ -259,7 +259,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 統一表格格式
+   * Normalize tables
    */
   private normalizeTables(content: string): string {
     const lines = content.split('\n');
@@ -278,9 +278,9 @@ export class TemplateFormatter {
         tableLines.push(line.trim());
       } else {
         if (inTable) {
-          // 表格結束，格式化並加入結果
+          // Table ended, format and add to result
           result.push(...this.formatTable(tableLines));
-          result.push(''); // 表格後加空行
+          result.push(''); // Add blank line after table
           inTable = false;
           tableLines = [];
         }
@@ -288,7 +288,7 @@ export class TemplateFormatter {
       }
     }
 
-    // 處理檔案結尾的表格
+    // Handle table at end of file
     if (inTable && tableLines.length > 0) {
       result.push(...this.formatTable(tableLines));
     }
@@ -297,27 +297,27 @@ export class TemplateFormatter {
   }
 
   /**
-   * 格式化單一表格
+   * Format a single table
    */
   private formatTable(tableLines: string[]): string[] {
     if (tableLines.length < 2) {
       return tableLines;
     }
 
-    // 解析每一行的儲存格
+    // Parse cells in each row
     const rows = tableLines.map(line =>
       line.split('|')
-        .slice(1, -1) // 移除首尾的空字串
+        .slice(1, -1) // Remove leading/trailing empty strings
         .map(cell => cell.trim())
     );
 
-    // 計算每列的最大寬度
+    // Calculate max width for each column
     const columnCount = rows[0].length;
     const columnWidths = new Array(columnCount).fill(0);
 
     for (const row of rows) {
       for (let i = 0; i < row.length; i++) {
-        // 對於分隔行，保持最小寬度 3
+        // For separator row, keep minimum width of 3
         const width = row[i].match(/^:?-+:?$/)
           ? 3
           : row[i].length;
@@ -325,12 +325,12 @@ export class TemplateFormatter {
       }
     }
 
-    // 格式化每一行
+    // Format each row
     const formatted = rows.map((row, rowIndex) => {
       const cells = row.map((cell, colIndex) => {
         const width = columnWidths[colIndex];
 
-        // 分隔行特殊處理
+        // Special handling for separator row
         if (rowIndex === 1 && cell.match(/^:?-+:?$/)) {
           const hasLeftColon = cell.startsWith(':');
           const hasRightColon = cell.endsWith(':');
@@ -346,7 +346,7 @@ export class TemplateFormatter {
           }
         }
 
-        // 一般儲存格，左對齊
+        // Normal cell, left-aligned
         return cell.padEnd(width);
       });
 
@@ -357,18 +357,18 @@ export class TemplateFormatter {
   }
 
   /**
-   * 統一連結和圖片格式
+   * Normalize links and images
    */
   private normalizeLinks(content: string): string {
     return content
-      // 確保連結格式正確 [text](url)
+      // Ensure correct link format [text](url)
       .replace(/\[([^\]]+)\]\s*\(([^)]+)\)/g, '[$1]($2)')
-      // 確保圖片格式正確 ![alt](url)
+      // Ensure correct image format ![alt](url)
       .replace(/!\[([^\]]*)\]\s*\(([^)]+)\)/g, '![$1]($2)');
   }
 
   /**
-   * 確保適當的空行
+   * Ensure proper spacing
    */
   private ensureProperSpacing(content: string): string {
     const lines = content.split('\n');
@@ -381,22 +381,22 @@ export class TemplateFormatter {
 
       result.push(line);
 
-      // 標題前後需要空行
+      // Headings need blank lines before and after
       if (line.match(/^#{1,6}\s/)) {
         if (nextLine && !nextLine.match(/^#{1,6}\s/) && nextLine.trim() !== '') {
           if (i < lines.length - 1 && lines[i + 1].trim() !== '') {
-            // 下一行不是空行，加入空行
-            // 但先檢查，避免重複
+            // Next line is not blank, add blank line
+            // But check first to avoid duplication
           }
         }
       }
 
-      // 列表和段落之間需要空行
+      // Lists and paragraphs need blank lines between them
       const isListItem = line.match(/^[\s]*[-*+\d.]+\s/);
       const prevIsListItem = prevLine.match(/^[\s]*[-*+\d.]+\s/);
 
       if (isListItem && !prevIsListItem && prevLine.trim() !== '') {
-        // 列表開始前需要空行（但已經在前面處理了）
+        // List start needs blank line before (already handled above)
       }
     }
 
@@ -404,12 +404,12 @@ export class TemplateFormatter {
   }
 
   /**
-   * 加入Table of Contents
+   * Add Table of Contents
    */
   private addTableOfContents(content: string): string {
     const headings = this.extractHeadings(content);
 
-    // 過濾掉第一個 H1 標題（通常是文件標題）
+    // Filter out first H1 heading (usually the document title)
     const tocHeadings = headings.filter((h, index) =>
       h.level > 1 && h.level <= this.options.tocDepth && index > 0
     );
@@ -418,10 +418,10 @@ export class TemplateFormatter {
       return content;
     }
 
-    // 生成Table of Contents
+    // Generate Table of Contents
     const toc = this.generateTOC(tocHeadings);
 
-    // 找到第一個 H1 標題的位置
+    // Find position of first H1 heading
     const lines = content.split('\n');
     let insertIndex = 0;
 
@@ -432,14 +432,14 @@ export class TemplateFormatter {
       }
     }
 
-    // 插入Table of Contents
+    // Insert Table of Contents
     lines.splice(insertIndex, 0, '', '## Table of Contents', '', ...toc.split('\n'), '');
 
     return lines.join('\n');
   }
 
   /**
-   * 提取標題
+   * Extract headings
    */
   private extractHeadings(content: string): HeadingInfo[] {
     const lines = content.split('\n');
@@ -460,19 +460,19 @@ export class TemplateFormatter {
   }
 
   /**
-   * 生成錨點 ID
+   * Generate anchor ID
    */
   private generateAnchor(text: string): string {
     return text
       .toLowerCase()
-      .replace(/[^\w\u4e00-\u9fa5\s-]/g, '') // 保留中文字元
+      .replace(/[^\w\u4e00-\u9fa5\s-]/g, '') // Preserve Chinese characters
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '');
   }
 
   /**
-   * 生成Table of Contents內容
+   * Generate Table of Contents content
    */
   private generateTOC(headings: HeadingInfo[]): string {
     const lines: string[] = [];
@@ -487,7 +487,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 確保結尾換行
+   * Ensure trailing newline
    */
   private ensureTrailingNewline(content: string): string {
     if (!content.endsWith('\n')) {
@@ -497,7 +497,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 格式化並寫入檔案
+   * Format and write file
    */
   public async formatFile(filePath: string): Promise<void> {
     const fs = await import('fs/promises');
@@ -507,7 +507,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 批次格式化多個檔案
+   * Batch format multiple files
    */
   public async formatFiles(filePaths: string[]): Promise<Map<string, boolean>> {
     const results = new Map<string, boolean>();
@@ -518,7 +518,7 @@ export class TemplateFormatter {
         results.set(filePath, true);
       } catch (error) {
         results.set(filePath, false);
-        console.error(`格式化檔案失敗 ${filePath}:`, error);
+        console.error(`Failed to format file ${filePath}:`, error);
       }
     }
 
@@ -526,7 +526,7 @@ export class TemplateFormatter {
   }
 
   /**
-   * 格式化Table of Contents下的所有 Markdown 檔案
+   * Format all Markdown files in a directory
    */
   public async formatDirectory(
     dirPath: string,
@@ -553,7 +553,7 @@ export class TemplateFormatter {
             results.set(fullPath, true);
           } catch (error) {
             results.set(fullPath, false);
-            console.error(`格式化檔案失敗 ${fullPath}:`, error);
+            console.error(`Failed to format file ${fullPath}:`, error);
           }
         }
       }
@@ -565,14 +565,14 @@ export class TemplateFormatter {
 }
 
 /**
- * 建立範本格式化器實例
+ * Create template formatter instance
  */
 export function createTemplateFormatter(options?: FormatterOptions): TemplateFormatter {
   return new TemplateFormatter(options);
 }
 
 /**
- * 快速格式化函式
+ * Quick format function
  */
 export function formatMarkdown(content: string, options?: FormatterOptions): string {
   const formatter = new TemplateFormatter(options);
@@ -580,41 +580,41 @@ export function formatMarkdown(content: string, options?: FormatterOptions): str
 }
 
 /**
- * 轉義 Markdown 特殊字元
- * 確保文字內容不會被誤解析為 Markdown 語法
+ * Escape Markdown special characters
+ * Ensures text content is not misinterpreted as Markdown syntax
  *
- * @param text 要轉義的文字
- * @returns 轉義後的文字
+ * @param text Text to escape
+ * @returns Escaped text
  */
 export function escapeMarkdown(text: string): string {
   if (!text) return text;
 
   return text
-    .replace(/\\/g, '\\\\')   // 反斜線（必須最先處理）
-    .replace(/`/g, '\\`')      // 反引號
-    .replace(/\*/g, '\\*')     // 星號
-    .replace(/_/g, '\\_')      // 底線
-    .replace(/\[/g, '\\[')     // 左方括號
-    .replace(/\]/g, '\\]')     // 右方括號
-    .replace(/</g, '\\<')      // 左尖括號
-    .replace(/>/g, '\\>')      // 右尖括號
-    .replace(/\|/g, '\\|');    // 管道符號
+    .replace(/\\/g, '\\\\')   // Backslash (must process first)
+    .replace(/`/g, '\\`')      // Backtick
+    .replace(/\*/g, '\\*')     // Asterisk
+    .replace(/_/g, '\\_')      // Underscore
+    .replace(/\[/g, '\\[')     // Left bracket
+    .replace(/\]/g, '\\]')     // Right bracket
+    .replace(/</g, '\\<')      // Left angle bracket
+    .replace(/>/g, '\\>')      // Right angle bracket
+    .replace(/\|/g, '\\|');    // Pipe
 }
 
 /**
- * 轉義表格儲存格內容
- * 表格內的管道符號必須轉義，其他特殊字元也需要處理
+ * Escape table cell content
+ * Pipe symbols in tables must be escaped, along with other special characters
  *
- * @param text 要轉義的文字
- * @returns 轉義後的文字
+ * @param text Text to escape
+ * @returns Escaped text
  */
 export function escapeTableCell(text: string): string {
   if (!text) return text;
 
   return text
-    .replace(/\\/g, '\\\\')   // 反斜線（必須最先處理）
-    .replace(/\|/g, '\\|')     // 管道符號（表格中最重要）
-    .replace(/`/g, '\\`')      // 反引號
-    .replace(/\*/g, '\\*')     // 星號
-    .replace(/_/g, '\\_');     // 底線
+    .replace(/\\/g, '\\\\')   // Backslash (must process first)
+    .replace(/\|/g, '\\|')     // Pipe (most important in tables)
+    .replace(/`/g, '\\`')      // Backtick
+    .replace(/\*/g, '\\*')     // Asterisk
+    .replace(/_/g, '\\_');     // Underscore
 }

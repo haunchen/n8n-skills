@@ -25,30 +25,30 @@ class WebsiteUpdater {
 
   async run(): Promise<void> {
     try {
-      info('開始更新網站資料...');
+      info('Starting website data update...');
 
-      // 1. 讀取資料來源
-      info('讀取資料來源...');
+      // 1. Read data sources
+      info('Reading data sources...');
       const { nodeCount, timestamp } = await this.readValidationReport();
       const n8nVersion = await this.readN8nVersion();
       const templateCount = await this.countTemplateFiles();
 
-      info(`節點數量: ${nodeCount}`);
-      info(`n8n 版本: ${n8nVersion}`);
-      info(`工作流程範本: ${templateCount}`);
-      info(`更新時間: ${timestamp}`);
+      info(`Node count: ${nodeCount}`);
+      info(`n8n version: ${n8nVersion}`);
+      info(`Workflow templates: ${templateCount}`);
+      info(`Update time: ${timestamp}`);
 
-      // 2. 更新 index.html
-      info('更新 index.html...');
+      // 2. Update index.html
+      info('Updating index.html...');
       await this.updateIndexHtml(nodeCount, n8nVersion, timestamp, templateCount);
 
-      // 3. 更新 sitemap.xml
-      info('更新 sitemap.xml...');
+      // 3. Update sitemap.xml
+      info('Updating sitemap.xml...');
       await this.updateSitemap(timestamp);
 
-      success('網站資料更新完成');
+      success('Website data update completed');
     } catch (err) {
-      logError('網站資料更新失敗', err);
+      logError('Website data update failed', err);
       process.exit(1);
     }
   }
@@ -63,7 +63,7 @@ class WebsiteUpdater {
         timestamp: report.timestamp,
       };
     } catch (err) {
-      throw new Error(`無法讀取 validation-report.json: ${err}`);
+      throw new Error(`Failed to read validation-report.json: ${err}`);
     }
   }
 
@@ -72,10 +72,10 @@ class WebsiteUpdater {
       const packagePath = path.join(process.cwd(), 'package.json');
       const content = await fs.readFile(packagePath, 'utf-8');
       const packageJson: PackageJson = JSON.parse(content);
-      // 移除版本號前的 ^ 或 ~ 符號
+      // Remove ^ or ~ prefix from version number
       return packageJson.dependencies.n8n.replace(/^[\^~]/, '');
     } catch (err) {
-      throw new Error(`無法讀取 package.json: ${err}`);
+      throw new Error(`Failed to read package.json: ${err}`);
     }
   }
 
@@ -85,7 +85,7 @@ class WebsiteUpdater {
       const count = await this.countMarkdownFiles(templatesPath);
       return count;
     } catch (err) {
-      throw new Error(`無法計算範本檔案數量: ${err}`);
+      throw new Error(`Failed to count template files: ${err}`);
     }
   }
 
@@ -97,10 +97,10 @@ class WebsiteUpdater {
       const fullPath = path.join(dirPath, entry.name);
 
       if (entry.isDirectory()) {
-        // 遞迴計算子目錄中的 .md 檔案
+        // Recursively count .md files in subdirectories
         count += await this.countMarkdownFiles(fullPath);
       } else if (entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'README.md') {
-        // 計算 .md 檔案，但排除 README.md
+        // Count .md files, but exclude README.md
         count++;
       }
     }
@@ -118,63 +118,63 @@ class WebsiteUpdater {
       const indexPath = path.join(this.websiteDir, 'index.html');
       let content = await fs.readFile(indexPath, 'utf-8');
 
-      // 格式化更新日期（從 ISO 格式轉換為 YYYY-MM-DD）
+      // Format update date (convert from ISO format to YYYY-MM-DD)
       const updateDate = timestamp.split('T')[0];
 
-      // 1. 更新節點數量（8 處）
-      // meta description (第 10 行)
+      // 1. Update node count (8 locations)
+      // meta description (line 10)
       content = content.replace(
         /包含 \d+ 個節點的完整知識庫/g,
         `包含 ${nodeCount} 個節點的完整知識庫`
       );
 
-      // Hero description (第 91 行)
+      // Hero description (line 91)
       content = content.replace(
         /<p class="hero-description">\d+ 個節點的完整知識庫/,
         `<p class="hero-description">${nodeCount} 個節點的完整知識庫`
       );
 
-      // 統計卡片 - n8n 節點 (第 110 行)
+      // Statistics card - n8n nodes (line 110)
       content = content.replace(
         /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label">n8n 節點<\/div>)/,
         `$1${nodeCount}$2`
       );
 
-      // 功能說明 (第 137 行)
+      // Feature description (line 137)
       content = content.replace(
         /包含 \d+ 個 n8n 節點的詳細文件/,
         `包含 ${nodeCount} 個 n8n 節點的詳細文件`
       );
 
-      // 2. 更新工作流程範本數量（1 處）
+      // 2. Update workflow template count (1 location)
       content = content.replace(
         /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label">工作流程範本<\/div>)/,
         `$1${templateCount}$2`
       );
 
-      // 3. 更新 n8n 版本號（2 處）
-      // 功能說明 (第 137 行)
+      // 3. Update n8n version number (2 locations)
+      // Feature description (line 137)
       content = content.replace(
         /支援最新的 n8n v[\d.]+/,
         `支援最新的 n8n v${n8nVersion}`
       );
 
-      // Footer (第 231 行)
+      // Footer (line 231)
       content = content.replace(
         /支援 n8n v[\d.]+/,
         `支援 n8n v${n8nVersion}`
       );
 
-      // 4. 更新最後更新日期（1 處）
+      // 4. Update last update date (1 location)
       content = content.replace(
         /最後更新：\d{4}-\d{2}-\d{2}/,
         `最後更新：${updateDate}`
       );
 
       await fs.writeFile(indexPath, content, 'utf-8');
-      info('index.html 更新完成');
+      info('index.html update completed');
     } catch (err) {
-      throw new Error(`無法更新 index.html: ${err}`);
+      throw new Error(`Failed to update index.html: ${err}`);
     }
   }
 
@@ -183,23 +183,23 @@ class WebsiteUpdater {
       const sitemapPath = path.join(this.websiteDir, 'sitemap.xml');
       let content = await fs.readFile(sitemapPath, 'utf-8');
 
-      // 格式化時間戳為 sitemap 格式 (YYYY-MM-DD)
+      // Format timestamp for sitemap format (YYYY-MM-DD)
       const lastmod = timestamp.split('T')[0];
 
-      // 更新 lastmod
+      // Update lastmod
       content = content.replace(
         /<lastmod>[\d-]+<\/lastmod>/g,
         `<lastmod>${lastmod}</lastmod>`
       );
 
       await fs.writeFile(sitemapPath, content, 'utf-8');
-      info('sitemap.xml 更新完成');
+      info('sitemap.xml update completed');
     } catch (err) {
-      throw new Error(`無法更新 sitemap.xml: ${err}`);
+      throw new Error(`Failed to update sitemap.xml: ${err}`);
     }
   }
 }
 
-// 執行更新
+// Execute update
 const updater = new WebsiteUpdater();
 updater.run();

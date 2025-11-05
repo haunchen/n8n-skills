@@ -14,7 +14,7 @@ import type {
 import { AI_NODE_INPUTS_MAP, getAINodeInputs } from '../utils/ai-node-inputs';
 
 /**
- * 節點輸入輸出資訊
+ * Node input/output information
  */
 export interface NodeInputOutputInfo {
   nodeType: string;
@@ -33,14 +33,14 @@ export interface NodeInputOutputInfo {
 }
 
 /**
- * 輸入輸出解析器
- * 從 n8n 節點類別提取輸入輸出配置
+ * Input/Output Parser
+ * Extracts input/output configuration from n8n node classes
  */
 export class InputOutputParser {
   /**
-   * 從節點類別提取輸入輸出配置
-   * @param nodeClass 節點類別或實例
-   * @returns 節點 I/O 資訊
+   * Extract input/output configuration from node class
+   * @param nodeClass Node class or instance
+   * @returns Node I/O information
    */
   parseNodeInputOutput(nodeClass: any): NodeInputOutputInfo {
     const desc = this.getNodeDescription(nodeClass);
@@ -51,7 +51,7 @@ export class InputOutputParser {
     const isDynamicOutput = this.isDynamicOutputs(desc.outputs);
     const outputNames = this.extractOutputNames(desc, outputs);
 
-    // 計算輸出數量：動態輸出使用 outputNames 長度，否則使用 outputs 長度
+    // Calculate output count: use outputNames length for dynamic outputs, otherwise use outputs length
     const outputCount = isDynamicOutput ? outputNames.length : outputs.length;
     const isMultiOutput = isDynamicOutput ? outputNames.length > 1 : outputs.length > 1;
 
@@ -73,14 +73,14 @@ export class InputOutputParser {
   }
 
   /**
-   * 取得節點描述
-   * 處理版本化節點和一般節點
+   * Get node description
+   * Handles versioned nodes and regular nodes
    */
   private getNodeDescription(nodeClass: any): INodeTypeDescription {
     try {
       const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
 
-      // 處理版本化節點
+      // Handle versioned nodes
       if (instance.nodeVersions) {
         const versions = Object.keys(instance.nodeVersions).map(Number);
         if (versions.length > 0) {
@@ -92,7 +92,7 @@ export class InputOutputParser {
         }
       }
 
-      // 一般節點
+      // Regular nodes
       return instance.description || instance.baseDescription || ({} as any);
     } catch (error) {
       return {} as any;
@@ -100,7 +100,7 @@ export class InputOutputParser {
   }
 
   /**
-   * 提取版本資訊
+   * Extract version information
    */
   private extractVersion(desc: INodeTypeDescription): string {
     if (Array.isArray(desc.version)) {
@@ -110,17 +110,17 @@ export class InputOutputParser {
   }
 
   /**
-   * 正規化輸入配置
+   * Normalize input configuration
    */
   private normalizeInputs(inputs: any, nodeType?: string): Array<string | INodeInputConfiguration> {
-    // 處理未定義或 null
+    // Handle undefined or null
     if (!inputs) {
       return [];
     }
 
-    // 處理動態表達式（ExpressionString）
+    // Handle dynamic expressions (ExpressionString)
     if (typeof inputs === 'string') {
-      // 動態表達式：嘗試從 AI 節點映射表取得配置
+      // Dynamic expression: try to get configuration from AI node mapping
       if (nodeType && AI_NODE_INPUTS_MAP[nodeType]) {
         const aiInputs = getAINodeInputs(nodeType);
         if (aiInputs.length > 0) {
@@ -128,45 +128,45 @@ export class InputOutputParser {
         }
       }
 
-      // 無法靜態評估，回傳預設值
+      // Cannot statically evaluate, return default value
       return ['main'];
     }
 
-    // 處理陣列
+    // Handle arrays
     if (Array.isArray(inputs)) {
       return inputs;
     }
 
-    // 未知格式
+    // Unknown format
     return [];
   }
 
   /**
-   * 正規化輸出配置
+   * Normalize output configuration
    */
   private normalizeOutputs(outputs: any): Array<string | INodeOutputConfiguration> {
-    // 處理未定義或 null
+    // Handle undefined or null
     if (!outputs) {
       return [];
     }
 
-    // 處理動態表達式（如 Switch 節點）
+    // Handle dynamic expressions (e.g., Switch node)
     if (typeof outputs === 'string') {
-      // 動態輸出，回傳空陣列，由 isDynamicOutput 標記處理
+      // Dynamic output, return empty array, handled by isDynamicOutput flag
       return [];
     }
 
-    // 處理陣列
+    // Handle arrays
     if (Array.isArray(outputs)) {
       return outputs;
     }
 
-    // 未知格式
+    // Unknown format
     return [];
   }
 
   /**
-   * 從輸入配置提取連接類型
+   * Extract connection types from input configuration
    */
   private extractInputTypes(inputs: Array<string | INodeInputConfiguration>): NodeConnectionType[] {
     const types = new Set<NodeConnectionType>();
@@ -183,7 +183,7 @@ export class InputOutputParser {
   }
 
   /**
-   * 從輸出配置提取連接類型
+   * Extract connection types from output configuration
    */
   private extractOutputTypes(outputs: Array<string | INodeOutputConfiguration>): NodeConnectionType[] {
     const types = new Set<NodeConnectionType>();
@@ -200,7 +200,7 @@ export class InputOutputParser {
   }
 
   /**
-   * 檢測是否需要特殊輸入（AI 相關節點）
+   * Detect if special inputs are required (AI-related nodes)
    */
   private hasSpecialInputs(inputs: Array<string | INodeInputConfiguration>): boolean {
     const specialTypes: NodeConnectionType[] = [
@@ -223,7 +223,7 @@ export class InputOutputParser {
   }
 
   /**
-   * 檢測是否有錯誤輸出
+   * Detect if there is an error output
    */
   private hasErrorOutput(outputs: Array<string | INodeOutputConfiguration>): boolean {
     return outputs.some(output => {
@@ -235,39 +235,39 @@ export class InputOutputParser {
   }
 
   /**
-   * 檢測是否為動態輸出（使用表達式）
+   * Detect if outputs are dynamic (using expressions)
    */
   private isDynamicOutputs(outputs: any): boolean {
     return typeof outputs === 'string';
   }
 
   /**
-   * 提取輸出名稱
-   * @param desc 節點描述
-   * @param outputs 正規化後的輸出陣列
-   * @returns 輸出名稱列表
+   * Extract output names
+   * @param desc Node description
+   * @param outputs Normalized output array
+   * @returns List of output names
    */
   private extractOutputNames(
     desc: INodeTypeDescription,
     outputs: Array<string | INodeOutputConfiguration>
   ): string[] {
-    // 如果有明確定義的 outputNames，使用它
+    // If there are explicitly defined outputNames, use them
     if (desc.outputNames && Array.isArray(desc.outputNames)) {
       return desc.outputNames;
     }
 
-    // Switch 節點特殊處理
+    // Special handling for Switch node
     if (desc.name === 'switch' && typeof desc.outputs === 'string') {
       return this.extractSwitchOutputInfo(desc);
     }
 
-    // 從輸出配置中提取 displayName
+    // Extract displayName from output configuration
     const names: string[] = [];
     outputs.forEach(output => {
       if (typeof output === 'object' && output.displayName) {
         names.push(output.displayName);
       } else if (typeof output === 'string') {
-        // 對於簡單的字串類型，使用類型名稱
+        // For simple string types, use the type name
         names.push(output);
       }
     });
@@ -276,22 +276,22 @@ export class InputOutputParser {
   }
 
   /**
-   * 提取 Switch 節點的輸出資訊
-   * Switch 節點有兩種模式：expression（預設 4 個輸出）和 rules（根據規則動態生成）
+   * Extract Switch node output information
+   * Switch node has two modes: expression (default 4 outputs) and rules (dynamically generated based on rules)
    */
   private extractSwitchOutputInfo(desc: INodeTypeDescription): string[] {
-    // 尋找 numberOutputs 參數來取得預設輸出數量
+    // Find numberOutputs parameter to get default output count
     const numberOutputsProp = desc.properties?.find(
       (p: any) => p.name === 'numberOutputs'
     );
 
     if (numberOutputsProp && typeof numberOutputsProp.default === 'number') {
       const defaultCount = numberOutputsProp.default as number;
-      // 生成預設的輸出名稱（0, 1, 2, ...）
+      // Generate default output names (0, 1, 2, ...)
       return Array.from({ length: defaultCount }, (_, i: number) => i.toString());
     }
 
-    // 如果找不到，使用預設的 4 個輸出
+    // If not found, use default 4 outputs
     return ['0', '1', '2', '3'];
   }
 }

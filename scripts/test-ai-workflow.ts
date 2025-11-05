@@ -8,15 +8,15 @@ async function test() {
   const workflow = await collector.fetchWorkflowDefinition(6270);
   const analysis = analyzer.analyze(workflow);
 
-  console.log(`名稱: ${analysis.name}`);
-  console.log(`總節點: ${analysis.totalNodes}`);
-  console.log(`活動節點: ${analysis.activeNodes}`);
-  console.log(`\n關鍵節點:`);
-  console.log(`  觸發器: ${analysis.keyNodes.triggers.length}`);
-  console.log(`  AI 節點: ${analysis.keyNodes.aiNodes.length}`);
-  console.log(`  工具: ${analysis.keyNodes.tools.length}`);
+  console.log(`Name: ${analysis.name}`);
+  console.log(`Total nodes: ${analysis.totalNodes}`);
+  console.log(`Active nodes: ${analysis.activeNodes}`);
+  console.log(`\nKey nodes:`);
+  console.log(`  Triggers: ${analysis.keyNodes.triggers.length}`);
+  console.log(`  AI nodes: ${analysis.keyNodes.aiNodes.length}`);
+  console.log(`  Tools: ${analysis.keyNodes.tools.length}`);
 
-  console.log(`\n結構化描述:\n`);
+  console.log(`\nStructured description:\n`);
   console.log(analysis.structuredDescription);
 }
 

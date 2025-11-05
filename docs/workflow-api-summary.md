@@ -1,5 +1,7 @@
 # n8n.io Workflow API 研究總結
 
+中文版 | [English](./workflow-api-summary.en.md)
+
 研究日期: 2025-11-03
 
 ## 重要發現
