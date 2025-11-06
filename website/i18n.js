@@ -4,6 +4,16 @@ class I18n {
     this.currentLang = this.detectLanguage();
     this.translations = {};
     this.fallbackLang = 'en';
+    // Auto-detect base path for subpath deployments
+    this.basePath = this.getBasePath();
+  }
+
+  // Get base path from current location
+  getBasePath() {
+    const pathname = window.location.pathname;
+    // If pathname ends with / or .html, get the directory path
+    const lastSlashIndex = pathname.lastIndexOf('/');
+    return pathname.substring(0, lastSlashIndex + 1);
   }
 
   // Detect user's preferred language
@@ -21,7 +31,7 @@ class I18n {
   // Load translations for a specific language
   async loadTranslations(lang) {
     try {
-      const response = await fetch(`locales/${lang}.json`);
+      const response = await fetch(`${this.basePath}locales/${lang}.json`);
       if (!response.ok) {
         throw new Error(`Failed to load ${lang} translations`);
       }
