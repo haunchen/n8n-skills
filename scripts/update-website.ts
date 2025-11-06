@@ -6,6 +6,17 @@ interface ValidationReport {
   timestamp: string;
   nodeCount: number;
   categoryCount: number;
+  totalFiles: number;
+  totalSize: number;
+}
+
+interface UpdateData {
+  actualNodeCount: number;  // Real node count from nodes.json
+  outputFileCount: number;   // Output file count from validation report
+  templateCount: number;
+  n8nVersion: string;
+  timestamp: string;
+  totalSize: string;         // Formatted as "X.X MB"
 }
 
 interface PackageJson {
@@ -27,24 +38,35 @@ class WebsiteUpdater {
     try {
       info('Starting website data update...');
 
-      // 1. Read data sources
+      // 1. Collect all data
       info('Reading data sources...');
-      const { nodeCount, timestamp } = await this.readValidationReport();
-      const n8nVersion = await this.readN8nVersion();
-      const templateCount = await this.countTemplateFiles();
+      const data = await this.collectData();
 
-      info(`Node count: ${nodeCount}`);
-      info(`n8n version: ${n8nVersion}`);
-      info(`Workflow templates: ${templateCount}`);
-      info(`Update time: ${timestamp}`);
+      info(`Actual node count: ${data.actualNodeCount}`);
+      info(`Output file count: ${data.outputFileCount}`);
+      info(`Template count: ${data.templateCount}`);
+      info(`n8n version: ${data.n8nVersion}`);
+      info(`Total size: ${data.totalSize}`);
+      info(`Update time: ${data.timestamp}`);
 
-      // 2. Update index.html
-      info('Updating index.html...');
-      await this.updateIndexHtml(nodeCount, n8nVersion, timestamp, templateCount);
+      // 2. Update all files
+      info('Updating README.md (English)...');
+      await this.updateReadmeEn(data);
 
-      // 3. Update sitemap.xml
-      info('Updating sitemap.xml...');
-      await this.updateSitemap(timestamp);
+      info('Updating README.zh-TW.md (Traditional Chinese)...');
+      await this.updateReadmeZhTW(data);
+
+      info('Updating website/locales/en.json...');
+      await this.updateLocaleEn(data);
+
+      info('Updating website/locales/zh-TW.json...');
+      await this.updateLocaleZhTW(data);
+
+      info('Updating website/index.html...');
+      await this.updateIndexHtml(data);
+
+      info('Updating website/sitemap.xml...');
+      await this.updateSitemap(data.timestamp);
 
       success('Website data update completed');
     } catch (err) {
@@ -53,17 +75,44 @@ class WebsiteUpdater {
     }
   }
 
-  private async readValidationReport(): Promise<{ nodeCount: number; timestamp: string }> {
+  private async collectData(): Promise<UpdateData> {
+    const report = await this.readValidationReport();
+    const actualNodeCount = await this.readActualNodeCount();
+    const n8nVersion = await this.readN8nVersion();
+    const templateCount = await this.countTemplateFiles();
+
+    // Format total size as MB with 1 decimal place
+    const totalSizeMB = (report.totalSize / (1024 * 1024)).toFixed(1);
+
+    return {
+      actualNodeCount,
+      outputFileCount: report.totalFiles,
+      templateCount,
+      n8nVersion,
+      timestamp: report.timestamp,
+      totalSize: `${totalSizeMB} MB`,
+    };
+  }
+
+  private async readValidationReport(): Promise<ValidationReport> {
     try {
       const reportPath = path.join(this.outputDir, 'validation-report.json');
       const content = await fs.readFile(reportPath, 'utf-8');
       const report: ValidationReport = JSON.parse(content);
-      return {
-        nodeCount: report.nodeCount,
-        timestamp: report.timestamp,
-      };
+      return report;
     } catch (err) {
       throw new Error(`Failed to read validation-report.json: ${err}`);
+    }
+  }
+
+  private async readActualNodeCount(): Promise<number> {
+    try {
+      const nodesPath = path.join(process.cwd(), 'data', 'cache', 'nodes.json');
+      const content = await fs.readFile(nodesPath, 'utf-8');
+      const nodes = JSON.parse(content);
+      return Array.isArray(nodes) ? nodes.length : 0;
+    } catch (err) {
+      throw new Error(`Failed to read nodes.json: ${err}`);
     }
   }
 
@@ -108,67 +157,311 @@ class WebsiteUpdater {
     return count;
   }
 
-  private async updateIndexHtml(
-    nodeCount: number,
-    n8nVersion: string,
-    timestamp: string,
-    templateCount: number
-  ): Promise<void> {
+  private async updateReadmeEn(data: UpdateData): Promise<void> {
+    try {
+      const readmePath = path.join(process.cwd(), 'README.md');
+      let content = await fs.readFile(readmePath, 'utf-8');
+
+      // Format date as "Month YYYY" (e.g., "November 2025")
+      const date = new Date(data.timestamp);
+      const monthYear = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      // Update version in header (line 5)
+      content = content.replace(
+        /> Supported n8n version: v[\d.]+/,
+        `> Supported n8n version: v${data.n8nVersion}`
+      );
+
+      // Update node count and template count in intro (line 7)
+      content = content.replace(
+        /covering comprehensive information on \d+ nodes and \d+ curated templates/,
+        `covering comprehensive information on ${data.actualNodeCount} nodes and ${data.templateCount} curated templates`
+      );
+
+      // Update node count in features section (line 13)
+      content = content.replace(
+        /- Covers detailed documentation and usage guides for \d+ n8n nodes/,
+        `- Covers detailed documentation and usage guides for ${data.actualNodeCount} n8n nodes`
+      );
+
+      // Update template count in features section (line 14)
+      content = content.replace(
+        /- Provides \d+ curated workflow templates/,
+        `- Provides ${data.templateCount} curated workflow templates`
+      );
+
+      // Update node count in features section (line 24)
+      content = content.replace(
+        /- Explore unlimited application possibilities with \d+ nodes/,
+        `- Explore unlimited application possibilities with ${data.actualNodeCount} nodes`
+      );
+
+      // Update version in Project Information section (line 270)
+      content = content.replace(
+        /- Supported n8n Version: v[\d.]+/,
+        `- Supported n8n Version: v${data.n8nVersion}`
+      );
+
+      // Update last updated date (line 271)
+      content = content.replace(
+        /- Last Updated: [A-Za-z]+ \d{4}/,
+        `- Last Updated: ${monthYear}`
+      );
+
+      // Update Project Statistics section (lines 276-279)
+      content = content.replace(
+        /- Node Coverage: \d+ nodes/,
+        `- Node Coverage: ${data.actualNodeCount} nodes`
+      );
+
+      content = content.replace(
+        /- Curated Templates: \d+ templates/,
+        `- Curated Templates: ${data.templateCount} templates`
+      );
+
+      content = content.replace(
+        /- Output Files: \d+ files/,
+        `- Output Files: ${data.outputFileCount} files`
+      );
+
+      content = content.replace(
+        /- Total Documentation Size: [\d.]+ MB/,
+        `- Total Documentation Size: ${data.totalSize}`
+      );
+
+      await fs.writeFile(readmePath, content, 'utf-8');
+      info('README.md update completed');
+    } catch (err) {
+      throw new Error(`Failed to update README.md: ${err}`);
+    }
+  }
+
+  private async updateReadmeZhTW(data: UpdateData): Promise<void> {
+    try {
+      const readmePath = path.join(process.cwd(), 'README.zh-TW.md');
+      let content = await fs.readFile(readmePath, 'utf-8');
+
+      // Format date as "YYYY 年 MM 月" (e.g., "2025 年 11 月")
+      const date = new Date(data.timestamp);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      // Update version in header (line 5)
+      content = content.replace(
+        /> 支援 n8n 版本：v[\d.]+/,
+        `> 支援 n8n 版本：v${data.n8nVersion}`
+      );
+
+      // Update node count and template count in intro (line 7)
+      content = content.replace(
+        /涵蓋 \d+ 個節點的完整資訊和 \d+ 個精選範本/,
+        `涵蓋 ${data.actualNodeCount} 個節點的完整資訊和 ${data.templateCount} 個精選範本`
+      );
+
+      // Update node count in features section (line 13)
+      content = content.replace(
+        /- 涵蓋 \d+ 個 n8n 節點的詳細文件和使用指南/,
+        `- 涵蓋 ${data.actualNodeCount} 個 n8n 節點的詳細文件和使用指南`
+      );
+
+      // Update template count in features section (line 14)
+      content = content.replace(
+        /- 提供 \d+ 個精選工作流程範本/,
+        `- 提供 ${data.templateCount} 個精選工作流程範本`
+      );
+
+      // Update node count in features section (line 24)
+      content = content.replace(
+        /- 探索 \d+ 個節點的無限應用可能性/,
+        `- 探索 ${data.actualNodeCount} 個節點的無限應用可能性`
+      );
+
+      // Update version in Project Information section (line 270)
+      content = content.replace(
+        /- 支援 n8n 版本：v[\d.]+/,
+        `- 支援 n8n 版本：v${data.n8nVersion}`
+      );
+
+      // Update last updated date (line 271)
+      content = content.replace(
+        /- 最後更新：\d{4} 年 \d{1,2} 月/,
+        `- 最後更新：${year} 年 ${month} 月`
+      );
+
+      // Update Project Statistics section (lines 276-279)
+      content = content.replace(
+        /- 涵蓋節點數：\d+ 個/,
+        `- 涵蓋節點數：${data.actualNodeCount} 個`
+      );
+
+      content = content.replace(
+        /- 精選範本數：\d+ 個/,
+        `- 精選範本數：${data.templateCount} 個`
+      );
+
+      content = content.replace(
+        /- 輸出檔案數：\d+ 個/,
+        `- 輸出檔案數：${data.outputFileCount} 個`
+      );
+
+      content = content.replace(
+        /- 總文件大小：[\d.]+ MB/,
+        `- 總文件大小：${data.totalSize}`
+      );
+
+      await fs.writeFile(readmePath, content, 'utf-8');
+      info('README.zh-TW.md update completed');
+    } catch (err) {
+      throw new Error(`Failed to update README.zh-TW.md: ${err}`);
+    }
+  }
+
+  private async updateLocaleEn(data: UpdateData): Promise<void> {
+    try {
+      const localePath = path.join(this.websiteDir, 'locales', 'en.json');
+      const content = await fs.readFile(localePath, 'utf-8');
+      const locale = JSON.parse(content);
+
+      // Format date as YYYY-MM-DD
+      const updateDate = data.timestamp.split('T')[0];
+
+      // Update meta description
+      locale.meta.description = locale.meta.description.replace(
+        /\d+ nodes/,
+        `${data.actualNodeCount} nodes`
+      );
+
+      // Update hero description
+      locale.hero.description = locale.hero.description.replace(
+        /\d+ nodes/,
+        `${data.actualNodeCount} nodes`
+      );
+
+      // Update features.comprehensive.description
+      locale.features.comprehensive.description = locale.features.comprehensive.description
+        .replace(/\d+ n8n nodes/, `${data.actualNodeCount} n8n nodes`)
+        .replace(/n8n v[\d.]+/, `n8n v${data.n8nVersion}`);
+
+      // Update footer version
+      locale.footer.version = `Supports n8n v${data.n8nVersion} | Last updated: ${updateDate}`;
+
+      await fs.writeFile(localePath, JSON.stringify(locale, null, 2) + '\n', 'utf-8');
+      info('en.json update completed');
+    } catch (err) {
+      throw new Error(`Failed to update en.json: ${err}`);
+    }
+  }
+
+  private async updateLocaleZhTW(data: UpdateData): Promise<void> {
+    try {
+      const localePath = path.join(this.websiteDir, 'locales', 'zh-TW.json');
+      const content = await fs.readFile(localePath, 'utf-8');
+      const locale = JSON.parse(content);
+
+      // Format date as YYYY-MM-DD
+      const updateDate = data.timestamp.split('T')[0];
+
+      // Update meta description
+      locale.meta.description = locale.meta.description.replace(
+        /\d+ 個節點/,
+        `${data.actualNodeCount} 個節點`
+      );
+
+      // Update hero description
+      locale.hero.description = locale.hero.description.replace(
+        /\d+ 個節點/,
+        `${data.actualNodeCount} 個節點`
+      );
+
+      // Update features.comprehensive.description
+      locale.features.comprehensive.description = locale.features.comprehensive.description
+        .replace(/\d+ 個 n8n 節點/, `${data.actualNodeCount} 個 n8n 節點`)
+        .replace(/n8n v[\d.]+/, `n8n v${data.n8nVersion}`);
+
+      // Update footer version
+      locale.footer.version = `支援 n8n v${data.n8nVersion} | 最後更新：${updateDate}`;
+
+      await fs.writeFile(localePath, JSON.stringify(locale, null, 2) + '\n', 'utf-8');
+      info('zh-TW.json update completed');
+    } catch (err) {
+      throw new Error(`Failed to update zh-TW.json: ${err}`);
+    }
+  }
+
+  private async updateIndexHtml(data: UpdateData): Promise<void> {
     try {
       const indexPath = path.join(this.websiteDir, 'index.html');
       let content = await fs.readFile(indexPath, 'utf-8');
 
-      // Format update date (convert from ISO format to YYYY-MM-DD)
-      const updateDate = timestamp.split('T')[0];
+      const updateDate = data.timestamp.split('T')[0];
 
-      // 1. Update node count (8 locations)
-      // meta description (line 10)
+      // Update statistics cards - these are hardcoded numbers, not i18n
+      // Note: Most text content is handled by i18n (locale JSON files),
+      // but the stat numbers are direct HTML content
+      // We match using data-i18n attributes since the actual text is loaded dynamically
+
+      // 1. Update node count in statistics card (data-i18n="stats.nodes")
+      content = content.replace(
+        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label"[^>]*data-i18n="stats\.nodes")/s,
+        `$1${data.actualNodeCount}$2`
+      );
+
+      // 2. Update template count in statistics card (data-i18n="stats.templates")
+      content = content.replace(
+        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label"[^>]*data-i18n="stats\.templates")/s,
+        `$1${data.templateCount}$2`
+      );
+
+      // 3. Update fallback content for i18n elements (optional, will be overridden by i18n)
+      // These provide default text before i18n loads
+
+      // Update meta descriptions
       content = content.replace(
         /包含 \d+ 個節點的完整知識庫/g,
-        `包含 ${nodeCount} 個節點的完整知識庫`
+        `包含 ${data.actualNodeCount} 個節點的完整知識庫`
       );
 
-      // Hero description (line 91)
       content = content.replace(
-        /<p class="hero-description">\d+ 個節點的完整知識庫/,
-        `<p class="hero-description">${nodeCount} 個節點的完整知識庫`
+        /Complete knowledge base with \d+ nodes/g,
+        `Complete knowledge base with ${data.actualNodeCount} nodes`
       );
 
-      // Statistics card - n8n nodes (line 110)
+      // Update hero description
       content = content.replace(
-        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label">n8n 節點<\/div>)/,
-        `$1${nodeCount}$2`
+        />\d+ 個節點的完整知識庫，定期更新/,
+        `>${data.actualNodeCount} 個節點的完整知識庫，定期更新`
       );
 
-      // Feature description (line 137)
+      // Update feature descriptions
       content = content.replace(
         /包含 \d+ 個 n8n 節點的詳細文件/,
-        `包含 ${nodeCount} 個 n8n 節點的詳細文件`
+        `包含 ${data.actualNodeCount} 個 n8n 節點的詳細文件`
       );
 
-      // 2. Update workflow template count (1 location)
       content = content.replace(
-        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label">工作流程範本<\/div>)/,
-        `$1${templateCount}$2`
+        /Detailed documentation for \d+ n8n nodes/,
+        `Detailed documentation for ${data.actualNodeCount} n8n nodes`
       );
 
-      // 3. Update n8n version number (2 locations)
-      // Feature description (line 137)
       content = content.replace(
         /支援最新的 n8n v[\d.]+/,
-        `支援最新的 n8n v${n8nVersion}`
+        `支援最新的 n8n v${data.n8nVersion}`
       );
 
-      // Footer (line 231)
       content = content.replace(
-        /支援 n8n v[\d.]+/,
-        `支援 n8n v${n8nVersion}`
+        /supports the latest n8n v[\d.]+/i,
+        `supports the latest n8n v${data.n8nVersion}`
       );
 
-      // 4. Update last update date (1 location)
+      // Update footer
       content = content.replace(
-        /最後更新：\d{4}-\d{2}-\d{2}/,
-        `最後更新：${updateDate}`
+        /支援 n8n v[\d.]+ \| 最後更新：\d{4}-\d{2}-\d{2}/,
+        `支援 n8n v${data.n8nVersion} | 最後更新：${updateDate}`
+      );
+
+      content = content.replace(
+        /Supports n8n v[\d.]+ \| Last updated: \d{4}-\d{2}-\d{2}/,
+        `Supports n8n v${data.n8nVersion} | Last updated: ${updateDate}`
       );
 
       await fs.writeFile(indexPath, content, 'utf-8');

@@ -7,6 +7,15 @@
 
 ## [Unreleased]
 
+### Changed
+- 重構網站更新腳本以支援完整雙語自動更新
+  - 新增 README.md 和 README.zh-TW.md 自動更新功能
+  - 新增 website/locales/en.json 和 zh-TW.json 自動更新功能
+  - 改進 index.html 更新邏輯，使用 data-i18n 屬性匹配，移除硬編碼中文依賴
+  - 區分實際節點數（從 nodes.json）和輸出檔案數（從 validation-report.json）
+  - 統一管理所有更新資料（節點數、範本數、版本號、更新日期、檔案統計）
+  - 確保中英文文件內容自動同步，降低維護成本
+
 ## [1.2.0] - 2025-11-04
 
 ### Changed

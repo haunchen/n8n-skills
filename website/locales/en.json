@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "n8n Skills - n8n Workflow Knowledge Base for AI Assistants",
-    "description": "Turn your AI assistant into an n8n workflow expert. Complete knowledge base with 575 nodes, supports Claude Code, Claude.ai Web, and Claude Desktop.",
+    "description": "Turn your AI assistant into an n8n workflow expert. Complete knowledge base with 542 nodes, supports Claude Code, Claude.ai Web, and Claude Desktop.",
     "keywords": "n8n, workflow automation, AI assistant, Claude, skill pack, n8n nodes, workflow automation, n8n nodes"
   },
   "nav": {
@@ -14,7 +14,7 @@
     "license": "Open Source MIT License",
     "title": "n8n Skills",
     "subtitle": "Turn your AI assistant into an n8n workflow expert",
-    "description": "Complete knowledge base with 575 nodes, regularly updated, intelligently prioritized"
+    "description": "Complete knowledge base with 542 nodes, regularly updated, intelligently prioritized"
   },
   "stats": {
     "nodes": "n8n Nodes",
@@ -25,7 +25,7 @@
     "title": "Features",
     "comprehensive": {
       "title": "Comprehensive Node Knowledge Base",
-      "description": "Detailed documentation for 575 n8n nodes, organized into 6 main categories, supports the latest n8n v1.117.2"
+      "description": "Detailed documentation for 542 n8n nodes, organized into 6 main categories, supports the latest n8n v1.117.2"
     },
     "multiPlatform": {
       "title": "Multi-Platform AI Integration",
@@ -100,7 +100,7 @@
     "n8nWebsite": "n8n Official Website",
     "n8nDocs": "n8n Documentation",
     "license": "Open source project, MIT License",
-    "version": "Supports n8n v1.117.2 | Last updated: 2025-11-03",
+    "version": "Supports n8n v1.117.2 | Last updated: 2025-11-06",
     "madeBy": "Made by"
   }
 }

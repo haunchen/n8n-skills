@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Refactor website update script to support full bilingual auto-update
+  - Add auto-update functionality for README.md and README.zh-TW.md
+  - Add auto-update functionality for website/locales/en.json and zh-TW.json
+  - Improve index.html update logic with data-i18n attribute matching, remove hardcoded Chinese dependencies
+  - Distinguish actual node count (from nodes.json) from output file count (from validation-report.json)
+  - Centralize all update data management (node count, template count, version, date, file statistics)
+  - Ensure English and Chinese content auto-sync, reducing maintenance overhead
+
 ## [1.2.0] - 2025-11-04
 
 ### Changed
