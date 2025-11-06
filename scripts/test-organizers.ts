@@ -11,7 +11,7 @@ console.log('='.repeat(60));
 
 // Test CategoryOrganizer
 console.log('\n1. Testing CategoryOrganizer:');
-const configPath = path.join(__dirname, 'config/categories.json');
+const configPath = path.join(__dirname, '../../config/categories.json');
 const categoryOrganizer = new CategoryOrganizer(configPath);
 
 const mockNodes = [

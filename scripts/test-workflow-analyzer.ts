@@ -14,7 +14,7 @@ async function testWorkflowAnalyzer() {
 
     // Fetch several workflows for testing
     console.log('Fetching test workflows...\n');
-    const workflows = await collector.fetchWorkflowDefinitions([1, 1279, 2104], 500);
+    const workflows = await collector.fetchWorkflowDefinitions([1, 6270], 500);
 
     workflows.forEach((workflow, index) => {
       console.log(`\n${'='.repeat(80)}`);
