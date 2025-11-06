@@ -1,3 +1,6 @@
+// Global i18n instance
+let i18n = null;
+
 // Scroll-based navbar control
 document.addEventListener('DOMContentLoaded', async function() {
     const navbar = document.getElementById('navbar');
@@ -5,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const heroTitle = document.querySelector('.hero-title');
 
     // Initialize i18n
-    const i18n = new I18n();
+    i18n = new I18n();
     await i18n.init();
 
     // Update language toggle button text
