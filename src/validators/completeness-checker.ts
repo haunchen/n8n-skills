@@ -7,7 +7,7 @@
 
 /**
  * Completeness Checker
- * 檢查資料完整性和一致性
+ * Checks data completeness and consistency
  */
 
 import * as logger from '../utils/logger';
@@ -15,7 +15,7 @@ import { existsSync, readdirSync, statSync } from 'fs';
 import { join, extname } from 'path';
 
 /**
- * 完整性檢查結果
+ * Completeness check result
  */
 export interface CompletenessResult {
   success: boolean;
@@ -25,7 +25,7 @@ export interface CompletenessResult {
 }
 
 /**
- * 完整性錯誤
+ * Completeness error
  */
 export interface CompletenessError {
   type: string;
@@ -34,7 +34,7 @@ export interface CompletenessError {
 }
 
 /**
- * 完整性警告
+ * Completeness warning
  */
 export interface CompletenessWarning {
   type: string;
@@ -43,7 +43,7 @@ export interface CompletenessWarning {
 }
 
 /**
- * 完整性統計
+ * Completeness statistics
  */
 export interface CompletenessStats {
   totalNodes: number;
@@ -56,7 +56,7 @@ export interface CompletenessStats {
 }
 
 /**
- * 節點資訊介面
+ * Node information interface
  */
 export interface NodeInfo {
   nodeType: string;
@@ -67,7 +67,7 @@ export interface NodeInfo {
 }
 
 /**
- * 分類資訊介面
+ * Category information interface
  */
 export interface CategoryInfo {
   name: string;
@@ -76,7 +76,7 @@ export interface CategoryInfo {
 }
 
 /**
- * 檢查選項
+ * Check options
  */
 export interface CheckOptions {
   resourcesPath: string;
@@ -105,47 +105,47 @@ const DEFAULT_OPTIONS: Required<Omit<CheckOptions, 'resourcesPath'>> & Pick<Chec
 };
 
 /**
- * 檢查資料完整性
+ * Check data completeness
  */
 export function check(
   nodes: NodeInfo[],
   options: CheckOptions
 ): CompletenessResult {
-  logger.info('開始檢查資料完整性');
+  logger.info('Starting data completeness check');
 
   const opts = { ...DEFAULT_OPTIONS, ...options };
   const errors: CompletenessError[] = [];
   const warnings: CompletenessWarning[] = [];
 
-  // 檢查 top 50 節點詳細資料
+  // Check top 50 node detailed data
   const top50Result = checkTop50Coverage(nodes, opts);
   errors.push(...top50Result.errors);
   warnings.push(...top50Result.warnings);
 
-  // 檢查分類完整性
+  // Check category completeness
   const categoriesResult = checkCategoryCoverage(nodes, opts);
   errors.push(...categoriesResult.errors);
   warnings.push(...categoriesResult.warnings);
 
-  // 檢查資源檔案
+  // Check resource files
   const resourcesResult = checkResourceFiles(nodes, opts);
   errors.push(...resourcesResult.errors);
   warnings.push(...resourcesResult.warnings);
 
-  // 檢查節點統計數字
+  // Check node statistics
   const statsResult = checkNodeStats(nodes, opts);
   errors.push(...statsResult.errors);
   warnings.push(...statsResult.warnings);
 
-  // 收集統計資訊
+  // Collect statistics
   const stats = collectCompletenessStats(nodes, opts, resourcesResult);
 
   const success = errors.length === 0 && (!opts.strictMode || warnings.length === 0);
 
   if (success) {
-    logger.success('資料完整性檢查通過');
+    logger.success('Data completeness check passed');
   } else {
-    logger.error(`發現 ${errors.length} 個錯誤，${warnings.length} 個警告`);
+    logger.error(`Found ${errors.length} error(s) and ${warnings.length} warning(s)`);
   }
 
   return {
@@ -157,7 +157,7 @@ export function check(
 }
 
 /**
- * 檢查 top 50 節點是否有詳細資料
+ * Check if top 50 nodes have detailed data
  */
 function checkTop50Coverage(
   nodes: NodeInfo[],
@@ -169,7 +169,7 @@ function checkTop50Coverage(
   const errors: CompletenessError[] = [];
   const warnings: CompletenessWarning[] = [];
 
-  // 按使用率排序取得 top N 節點
+  // Sort by usage rate and get top N nodes
   const topNodes = nodes
     .filter(n => n.usageRank !== undefined)
     .sort((a, b) => (a.usageRank || 0) - (b.usageRank || 0))
@@ -178,11 +178,11 @@ function checkTop50Coverage(
   if (topNodes.length < options.topNodesCount) {
     warnings.push({
       type: 'TOP_NODES',
-      message: `只有 ${topNodes.length} 個節點有使用率資料（預期 ${options.topNodesCount} 個）`,
+      message: `Only ${topNodes.length} nodes have usage data (expected ${options.topNodesCount})`,
     });
   }
 
-  // 檢查每個 top 節點是否有詳細文件
+  // Check if each top node has detailed documentation
   const missingDocs: string[] = [];
   for (const node of topNodes) {
     if (!node.hasDetailedDocs) {
@@ -194,8 +194,8 @@ function checkTop50Coverage(
     const coverage = ((topNodes.length - missingDocs.length) / topNodes.length * 100).toFixed(1);
     errors.push({
       type: 'TOP_NODES',
-      message: `${missingDocs.length} 個 top ${options.topNodesCount} 節點缺少詳細文件（覆蓋率：${coverage}%）`,
-      context: `缺少文件的節點：${missingDocs.slice(0, 5).join(', ')}${missingDocs.length > 5 ? ` 等 ${missingDocs.length} 個` : ''}`,
+      message: `${missingDocs.length} top ${options.topNodesCount} node(s) missing detailed documentation (coverage: ${coverage}%)`,
+      context: `Nodes missing docs: ${missingDocs.slice(0, 5).join(', ')}${missingDocs.length > 5 ? ` and ${missingDocs.length} more` : ''}`,
     });
   }
 
@@ -203,7 +203,7 @@ function checkTop50Coverage(
 }
 
 /**
- * 檢查分類覆蓋率
+ * Check category coverage
  */
 function checkCategoryCoverage(
   nodes: NodeInfo[],
@@ -215,7 +215,7 @@ function checkCategoryCoverage(
   const errors: CompletenessError[] = [];
   const warnings: CompletenessWarning[] = [];
 
-  // 統計每個分類的節點數量
+  // Count nodes in each category
   const categoryCounts = new Map<string, number>();
   const uncategorizedNodes: string[] = [];
 
@@ -227,25 +227,25 @@ function checkCategoryCoverage(
     }
   }
 
-  // 檢查未分類節點
+  // Check uncategorized nodes
   if (uncategorizedNodes.length > 0) {
     const percentage = (uncategorizedNodes.length / nodes.length * 100).toFixed(1);
     if (uncategorizedNodes.length > nodes.length * 0.1) {
       errors.push({
         type: 'CATEGORY',
-        message: `${uncategorizedNodes.length} 個節點未正確分類（${percentage}%）`,
-        context: `未分類節點：${uncategorizedNodes.slice(0, 5).join(', ')}${uncategorizedNodes.length > 5 ? ` 等 ${uncategorizedNodes.length} 個` : ''}`,
+        message: `${uncategorizedNodes.length} node(s) not properly categorized (${percentage}%)`,
+        context: `Uncategorized nodes: ${uncategorizedNodes.slice(0, 5).join(', ')}${uncategorizedNodes.length > 5 ? ` and ${uncategorizedNodes.length} more` : ''}`,
       });
     } else {
       warnings.push({
         type: 'CATEGORY',
-        message: `${uncategorizedNodes.length} 個節點未正確分類（${percentage}%）`,
-        context: `未分類節點：${uncategorizedNodes.join(', ')}`,
+        message: `${uncategorizedNodes.length} node(s) not properly categorized (${percentage}%)`,
+        context: `Uncategorized nodes: ${uncategorizedNodes.join(', ')}`,
       });
     }
   }
 
-  // 檢查預期分類是否存在
+  // Check if expected categories exist
   const missingCategories: string[] = [];
   for (const expectedCategory of options.expectedCategories || []) {
     if (!Array.from(categoryCounts.keys()).some(c =>
@@ -258,19 +258,19 @@ function checkCategoryCoverage(
   if (missingCategories.length > 0) {
     warnings.push({
       type: 'CATEGORY',
-      message: `缺少預期的分類：${missingCategories.join(', ')}`,
+      message: `Missing expected categories: ${missingCategories.join(', ')}`,
     });
   }
 
-  // 檢查分類是否過於集中
+  // Check if categories are too concentrated
   const totalCategorized = nodes.length - uncategorizedNodes.length;
   for (const [category, count] of categoryCounts.entries()) {
     const percentage = (count / totalCategorized * 100);
     if (percentage > 40) {
       warnings.push({
         type: 'CATEGORY',
-        message: `分類 "${category}" 包含過多節點（${count} 個，${percentage.toFixed(1)}%）`,
-        context: '建議細分為更具體的子分類',
+        message: `Category "${category}" contains too many nodes (${count} nodes, ${percentage.toFixed(1)}%)`,
+        context: 'Recommend subdividing into more specific subcategories',
       });
     }
   }
@@ -279,7 +279,7 @@ function checkCategoryCoverage(
 }
 
 /**
- * 檢查資源檔案完整性
+ * Check resource file completeness
  */
 function checkResourceFiles(
   nodes: NodeInfo[],
@@ -298,12 +298,12 @@ function checkResourceFiles(
   if (!existsSync(options.resourcesPath)) {
     errors.push({
       type: 'RESOURCES',
-      message: `資源目錄不存在：${options.resourcesPath}`,
+      message: `Resource directory does not exist: ${options.resourcesPath}`,
     });
     return { errors, warnings, missingFiles, orphanedFiles };
   }
 
-  // 收集所有資源檔案
+  // Collect all resource files
   const resourceFiles = new Set<string>();
   try {
     const files = readdirSync(options.resourcesPath);
@@ -312,19 +312,19 @@ function checkResourceFiles(
       const stats = statSync(filePath);
 
       if (stats.isFile() && extname(file).toLowerCase() === '.md') {
-        // 移除 .md 副檔名
+        // Remove .md extension
         resourceFiles.add(file.slice(0, -3));
       }
     }
   } catch (err) {
     errors.push({
       type: 'RESOURCES',
-      message: `無法讀取資源目錄：${err instanceof Error ? err.message : String(err)}`,
+      message: `Unable to read resource directory: ${err instanceof Error ? err.message : String(err)}`,
     });
     return { errors, warnings, missingFiles, orphanedFiles };
   }
 
-  // 檢查每個節點是否有對應的資源檔案
+  // Check if each node has a corresponding resource file
   const nodeTypes = new Set(nodes.map(n => n.nodeType));
 
   for (const node of nodes) {
@@ -333,29 +333,29 @@ function checkResourceFiles(
     }
   }
 
-  // 檢查是否有孤立的資源檔案（沒有對應節點）
+  // Check for orphaned resource files (no corresponding node)
   for (const file of resourceFiles) {
     if (!nodeTypes.has(file)) {
       orphanedFiles.push(file);
     }
   }
 
-  // 報告缺少的資源檔案
+  // Report missing resource files
   if (missingFiles.length > 0) {
     const percentage = (missingFiles.length / nodes.length * 100).toFixed(1);
     errors.push({
       type: 'RESOURCES',
-      message: `${missingFiles.length} 個節點缺少資源檔案（${percentage}%）`,
-      context: `缺少檔案的節點：${missingFiles.slice(0, 5).join(', ')}${missingFiles.length > 5 ? ` 等 ${missingFiles.length} 個` : ''}`,
+      message: `${missingFiles.length} node(s) missing resource files (${percentage}%)`,
+      context: `Nodes missing files: ${missingFiles.slice(0, 5).join(', ')}${missingFiles.length > 5 ? ` and ${missingFiles.length} more` : ''}`,
     });
   }
 
-  // 報告孤立的資源檔案
+  // Report orphaned resource files
   if (orphanedFiles.length > 0) {
     warnings.push({
       type: 'RESOURCES',
-      message: `${orphanedFiles.length} 個資源檔案沒有對應的節點`,
-      context: `孤立檔案：${orphanedFiles.slice(0, 5).join(', ')}${orphanedFiles.length > 5 ? ` 等 ${orphanedFiles.length} 個` : ''}`,
+      message: `${orphanedFiles.length} resource file(s) have no corresponding node`,
+      context: `Orphaned files: ${orphanedFiles.slice(0, 5).join(', ')}${orphanedFiles.length > 5 ? ` and ${orphanedFiles.length} more` : ''}`,
     });
   }
 
@@ -363,7 +363,7 @@ function checkResourceFiles(
 }
 
 /**
- * 檢查節點統計數字的合理性
+ * Check reasonableness of node statistics
  */
 function checkNodeStats(
   nodes: NodeInfo[],
@@ -375,11 +375,11 @@ function checkNodeStats(
   const errors: CompletenessError[] = [];
   const warnings: CompletenessWarning[] = [];
 
-  // 檢查節點總數
+  // Check total node count
   if (nodes.length === 0) {
     errors.push({
       type: 'STATS',
-      message: '沒有任何節點資料',
+      message: 'No node data available',
     });
     return { errors, warnings };
   }
@@ -387,26 +387,26 @@ function checkNodeStats(
   if (nodes.length < 50) {
     warnings.push({
       type: 'STATS',
-      message: `節點數量較少：${nodes.length} 個（預期至少 50 個）`,
+      message: `Low node count: ${nodes.length} nodes (expected at least 50)`,
     });
   }
 
-  // 檢查使用率資料
+  // Check usage rate data
   const nodesWithRank = nodes.filter(n => n.usageRank !== undefined);
   if (nodesWithRank.length === 0) {
     errors.push({
       type: 'STATS',
-      message: '沒有任何節點有使用率資料',
+      message: 'No nodes have usage rate data',
     });
   } else if (nodesWithRank.length < nodes.length * 0.8) {
     const percentage = (nodesWithRank.length / nodes.length * 100).toFixed(1);
     warnings.push({
       type: 'STATS',
-      message: `只有 ${percentage}% 的節點有使用率資料`,
+      message: `Only ${percentage}% of nodes have usage rate data`,
     });
   }
 
-  // 檢查使用率排名是否連續
+  // Check if usage rankings are consecutive
   const ranks = nodesWithRank
     .map(n => n.usageRank!)
     .sort((a, b) => a - b);
@@ -415,7 +415,7 @@ function checkNodeStats(
     if (ranks[i] !== ranks[i - 1] + 1) {
       warnings.push({
         type: 'STATS',
-        message: `使用率排名不連續：第 ${ranks[i - 1]} 名之後是第 ${ranks[i]} 名`,
+        message: `Usage rankings not consecutive: rank ${ranks[i - 1]} followed by rank ${ranks[i]}`,
       });
       break;
     }
@@ -425,7 +425,7 @@ function checkNodeStats(
 }
 
 /**
- * 收集完整性統計資訊
+ * Collect completeness statistics
  */
 function collectCompletenessStats(
   nodes: NodeInfo[],
@@ -468,24 +468,24 @@ function collectCompletenessStats(
 }
 
 /**
- * 格式化完整性檢查結果
+ * Format completeness check result
  */
 export function formatCompletenessResult(result: CompletenessResult): string {
   const output: string[] = [];
 
-  output.push('=== 資料完整性檢查結果 ===\n');
+  output.push('=== Data Completeness Check Result ===\n');
 
-  output.push('統計資訊：');
-  output.push(`  總節點數：${result.stats.totalNodes}`);
-  output.push(`  Top 50 覆蓋率：${result.stats.top50Coverage.toFixed(1)}%`);
-  output.push(`  分類數量：${result.stats.categoriesCount}`);
-  output.push(`  資源檔案數：${result.stats.resourceFilesCount}`);
-  output.push(`  缺少檔案數：${result.stats.missingResourceFiles.length}`);
-  output.push(`  孤立檔案數：${result.stats.orphanedResourceFiles.length}`);
+  output.push('Statistics:');
+  output.push(`  Total nodes: ${result.stats.totalNodes}`);
+  output.push(`  Top 50 coverage: ${result.stats.top50Coverage.toFixed(1)}%`);
+  output.push(`  Categories: ${result.stats.categoriesCount}`);
+  output.push(`  Resource files: ${result.stats.resourceFilesCount}`);
+  output.push(`  Missing files: ${result.stats.missingResourceFiles.length}`);
+  output.push(`  Orphaned files: ${result.stats.orphanedResourceFiles.length}`);
   output.push('');
 
   if (result.stats.categoryCoverage.size > 0) {
-    output.push('分類分布：');
+    output.push('Category Distribution:');
     const sortedCategories = Array.from(result.stats.categoryCoverage.entries())
       .sort((a, b) => b[1] - a[1]);
 
@@ -496,7 +496,7 @@ export function formatCompletenessResult(result: CompletenessResult): string {
   }
 
   if (result.errors.length > 0) {
-    output.push(`錯誤（${result.errors.length}）：`);
+    output.push(`Errors (${result.errors.length}):`);
     result.errors.forEach((error, index) => {
       output.push(`  ${index + 1}. [${error.type}] ${error.message}`);
       if (error.context) {
@@ -507,7 +507,7 @@ export function formatCompletenessResult(result: CompletenessResult): string {
   }
 
   if (result.warnings.length > 0) {
-    output.push(`警告（${result.warnings.length}）：`);
+    output.push(`Warnings (${result.warnings.length}):`);
     result.warnings.forEach((warning, index) => {
       output.push(`  ${index + 1}. [${warning.type}] ${warning.message}`);
       if (warning.context) {
@@ -517,7 +517,7 @@ export function formatCompletenessResult(result: CompletenessResult): string {
     output.push('');
   }
 
-  output.push(result.success ? '完整性檢查通過' : '完整性檢查失敗');
+  output.push(result.success ? 'Completeness check passed' : 'Completeness check failed');
 
   return output.join('\n');
 }

@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "title": "n8n Skills - n8n Workflow Knowledge Base for AI Assistants",
+    "description": "Turn your AI assistant into an n8n workflow expert. Complete knowledge base with 542 nodes, supports Claude Code, Claude.ai Web, and Claude Desktop.",
+    "keywords": "n8n, workflow automation, AI assistant, Claude, skill pack, n8n nodes, workflow automation, n8n nodes"
+  },
+  "nav": {
+    "github": "GitHub",
+    "getStarted": "Get Started",
+    "ariaGithub": "Visit n8n Skills GitHub repository",
+    "ariaGetStarted": "Download the latest version of n8n Skills"
+  },
+  "hero": {
+    "license": "Open Source MIT License",
+    "title": "n8n Skills",
+    "subtitle": "Turn your AI assistant into an n8n workflow expert",
+    "description": "Complete knowledge base with 542 nodes, regularly updated, intelligently prioritized"
+  },
+  "stats": {
+    "nodes": "n8n Nodes",
+    "categories": "Main Categories",
+    "templates": "Workflow Templates"
+  },
+  "features": {
+    "title": "Features",
+    "comprehensive": {
+      "title": "Comprehensive Node Knowledge Base",
+      "description": "Detailed documentation for 542 n8n nodes, organized into 6 main categories, supports the latest n8n v1.117.2"
+    },
+    "multiPlatform": {
+      "title": "Multi-Platform AI Integration",
+      "description": "Supports Claude Code, Claude.ai Web, and Claude Desktop through seamless Skill Pack format integration"
+    },
+    "priority": {
+      "title": "Priority Ranking",
+      "description": "Multi-dimensional scoring system based on usage frequency, documentation completeness, community popularity, and versatility"
+    },
+    "updates": {
+      "title": "Regular Release Updates",
+      "description": "Automatically tracks the latest n8n versions weekly and publishes updates, download to get the latest content"
+    },
+    "structure": {
+      "title": "Complete Resource Structure",
+      "description": "Main Skill.md provides quick reference, resources/ directory contains detailed documentation and templates organized by category"
+    },
+    "integration": {
+      "title": "Multi-Platform AI Integration",
+      "description": "Supports Claude Code, Claude.ai Web, and Claude Desktop through seamless Skill Pack format integration"
+    }
+  },
+  "howItWorks": {
+    "title": "How to Use",
+    "step1": {
+      "title": "Download n8n Skills",
+      "description": "Download the latest version of n8n Skills from GitHub Releases"
+    },
+    "step2": {
+      "title": "Install to AI Assistant",
+      "description": "Import n8n Skills into your Claude Code, Web, or Desktop"
+    },
+    "step3": {
+      "title": "Start Using",
+      "description": "Ask your AI assistant questions about n8n nodes and workflows"
+    }
+  },
+  "categories": {
+    "title": "Node Categories",
+    "core": {
+      "title": "Core Nodes",
+      "description": "Essential nodes like HTTP Request, Code, Webhook, Set, If, Merge, etc."
+    },
+    "apps": {
+      "title": "App Integrations",
+      "description": "30+ popular app integrations including Google, Slack, Discord, and more"
+    },
+    "triggers": {
+      "title": "Triggers",
+      "description": "Various trigger methods including Webhook, Schedule, Email, and more"
+    },
+    "ai": {
+      "title": "AI Nodes",
+      "description": "20+ AI-related nodes supporting various AI model integrations"
+    },
+    "database": {
+      "title": "Databases",
+      "description": "Database connectors for MongoDB, PostgreSQL, MySQL, and more"
+    },
+    "utilities": {
+      "title": "Utility Nodes",
+      "description": "Practical tools for data processing, file operations, format conversion, and more"
+    },
+    "tools": {
+      "title": "Utility Nodes",
+      "description": "Practical tools for data processing, file operations, format conversion, and more"
+    }
+  },
+  "footer": {
+    "github": "GitHub",
+    "releases": "Releases",
+    "n8nWebsite": "n8n Official Website",
+    "n8nDocs": "n8n Documentation",
+    "license": "Open source project, MIT License",
+    "version": "Supports n8n v1.117.2 | Last updated: 2025-11-06",
+    "madeBy": "Made by"
+  }
+}

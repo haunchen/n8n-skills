@@ -545,3 +545,82 @@ body {
         height: 14px;
     }
 }
+
+/* Language Toggle Fixed Button */
+.lang-toggle-fixed {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 1001;
+
+    /* Appearance */
+    background: rgba(33, 42, 55, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(79, 91, 98, 0.5);
+    border-radius: 2rem;
+
+    /* Spacing & Layout */
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    /* Typography */
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    /* Interaction */
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    /* Shadow */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.lang-toggle-fixed:hover {
+    background: rgba(33, 42, 55, 0.95);
+    border-color: var(--color-accent-1);
+    color: var(--color-accent-1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 132, 255, 0.25);
+}
+
+.lang-toggle-fixed .lang-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.lang-toggle-fixed .lang-text {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* Language Toggle Responsive */
+@media (max-width: 768px) {
+    .lang-toggle-fixed {
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8rem;
+    }
+
+    .lang-toggle-fixed .lang-icon {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .lang-toggle-fixed {
+        top: 0.75rem;
+        right: 0.75rem;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 1.5rem;
+    }
+
+    .lang-toggle-fixed .lang-icon {
+        font-size: 0.95rem;
+    }
+}

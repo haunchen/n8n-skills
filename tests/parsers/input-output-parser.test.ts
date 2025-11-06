@@ -14,8 +14,8 @@ describe('InputOutputParser', () => {
     parser = new InputOutputParser();
   });
 
-  describe('多輸出節點解析', () => {
-    it('應該正確解析 If 節點的兩個輸出', () => {
+  describe('Multi-output Node Parsing', () => {
+    it('should correctly parse If node with two outputs', () => {
       const mockIfNode = {
         description: {
           name: 'if',
@@ -36,7 +36,7 @@ describe('InputOutputParser', () => {
       expect(result.isDynamicOutput).toBe(false);
     });
 
-    it('應該正確解析 Split In Batches 節點的兩個輸出', () => {
+    it('should correctly parse Split In Batches node with two outputs', () => {
       const mockSplitNode = {
         description: {
           name: 'splitInBatches',
@@ -57,7 +57,7 @@ describe('InputOutputParser', () => {
       expect(result.isDynamicOutput).toBe(false);
     });
 
-    it('應該正確解析 Compare Datasets 節點的四個輸出', () => {
+    it('should correctly parse Compare Datasets node with four outputs', () => {
       const mockCompareNode = {
         description: {
           name: 'compareDatasets',
@@ -82,7 +82,7 @@ describe('InputOutputParser', () => {
       expect(result.isDynamicOutput).toBe(false);
     });
 
-    it('應該正確識別 Switch 節點為動態輸出', () => {
+    it('should correctly identify Switch node as dynamic output', () => {
       const mockSwitchNode = {
         description: {
           name: 'switch',
@@ -110,7 +110,7 @@ describe('InputOutputParser', () => {
       expect(result.outputNames).toEqual(['0', '1', '2', '3']);
     });
 
-    it('應該正確處理單一輸出節點', () => {
+    it('should correctly handle single output node', () => {
       const mockSingleOutputNode = {
         description: {
           name: 'httpRequest',
@@ -131,8 +131,8 @@ describe('InputOutputParser', () => {
     });
   });
 
-  describe('版本化節點處理', () => {
-    it('應該從版本化節點中提取最新版本的輸出配置', () => {
+  describe('Versioned Node Handling', () => {
+    it('should extract output configuration from latest version of versioned node', () => {
       const mockVersionedNode = {
         nodeVersions: {
           1: {

@@ -1,7 +1,9 @@
 # n8n.io API 研究結果
 
-研究人員: Claude Code  
-研究日期: 2025-11-03  
+中文版 | [English](./API_RESEARCH_RESULTS.en.md)
+
+研究人員: Claude Code
+研究日期: 2025-11-03
 專案: n8n-skills
 
 ---

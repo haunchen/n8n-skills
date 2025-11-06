@@ -9,8 +9,8 @@ import path from 'path';
 import type { INodeTypeBaseDescription, INodeTypeDescription } from 'n8n-workflow';
 
 /**
- * 簡化的節點資訊介面
- * 僅包含關鍵資訊以減少儲存大小
+ * Simplified node information interface
+ * Contains only key information to reduce storage size
  */
 export interface SimplifiedNodeInfo {
   nodeType: string;
@@ -28,7 +28,7 @@ export interface SimplifiedNodeInfo {
 }
 
 /**
- * 載入的節點類別介面
+ * Loaded node class interface
  */
 export interface LoadedNode {
   packageName: string;
@@ -37,14 +37,14 @@ export interface LoadedNode {
 }
 
 /**
- * 從 n8n npm 套件收集節點資訊
+ * Collects node information from n8n npm packages
  *
- * 此收集器會：
- * 1. 載入 n8n-nodes-base 和 @n8n/n8n-nodes-langchain 套件
- * 2. 從 package.json 讀取節點列表
- * 3. 動態載入每個節點類別
- * 4. 提取節點基本資訊
- * 5. 回傳簡化的節點資訊陣列
+ * This collector will:
+ * 1. Load n8n-nodes-base and @n8n/n8n-nodes-langchain packages
+ * 2. Read node list from package.json
+ * 3. Dynamically load each node class
+ * 4. Extract basic node information
+ * 5. Return simplified node information array
  */
 export class NpmCollector {
   private readonly CORE_PACKAGES = [
@@ -53,9 +53,9 @@ export class NpmCollector {
   ];
 
   /**
-   * 收集所有 n8n 節點的簡化資訊
+   * Collects simplified information for all n8n nodes
    *
-   * @returns 簡化節點資訊陣列
+   * @returns Array of simplified node information
    */
   async collectAll(): Promise<SimplifiedNodeInfo[]> {
     const results: SimplifiedNodeInfo[] = [];
@@ -66,7 +66,7 @@ export class NpmCollector {
         const simplifiedNodes = loadedNodes.map(node => this.extractNodeInfo(node));
         results.push(...simplifiedNodes);
       } catch (error) {
-        console.error(`載入套件失敗 ${pkg.name}:`, error);
+        console.error(`Failed to load package ${pkg.name}:`, error);
       }
     }
 
@@ -74,9 +74,9 @@ export class NpmCollector {
   }
 
   /**
-   * 收集所有 n8n 節點的完整資訊（包含 NodeClass）
+   * Collects complete information for all n8n nodes (including NodeClass)
    *
-   * @returns 載入的節點陣列
+   * @returns Array of loaded nodes
    */
   async collectAllWithDetails(): Promise<LoadedNode[]> {
     const results: LoadedNode[] = [];
@@ -86,7 +86,7 @@ export class NpmCollector {
         const loadedNodes = await this.loadPackageNodes(pkg.name, pkg.path);
         results.push(...loadedNodes);
       } catch (error) {
-        console.error(`載入套件失敗 ${pkg.name}:`, error);
+        console.error(`Failed to load package ${pkg.name}:`, error);
       }
     }
 
@@ -94,11 +94,11 @@ export class NpmCollector {
   }
 
   /**
-   * 從單一套件載入所有節點
+   * Loads all nodes from a single package
    *
-   * @param packageName 套件名稱
-   * @param packagePath 套件路徑
-   * @returns 載入的節點陣列
+   * @param packageName Package name
+   * @param packagePath Package path
+   * @returns Array of loaded nodes
    */
   private async loadPackageNodes(packageName: string, packagePath: string): Promise<LoadedNode[]> {
     try {
@@ -108,14 +108,14 @@ export class NpmCollector {
       const n8nConfig = packageJson.n8n || {};
       const nodesList = n8nConfig.nodes || [];
 
-      // 檢測是否在 CI 環境中
+      // Detect if running in CI environment
       const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
 
       if (Array.isArray(nodesList)) {
-        // 處理陣列格式（n8n-nodes-base 使用此格式）
+        // Handle array format (used by n8n-nodes-base)
         for (const nodePath of nodesList) {
           if (isCI) {
-            console.log(`[CI] 正在載入: ${packageName}/${nodePath}`);
+            console.log(`[CI] Loading: ${packageName}/${nodePath}`);
           }
           const loadedNode = this.loadSingleNode(packageName, packagePath, nodePath);
           if (loadedNode) {
@@ -123,10 +123,10 @@ export class NpmCollector {
           }
         }
       } else {
-        // 處理物件格式（其他套件可能使用此格式）
+        // Handle object format (may be used by other packages)
         for (const [nodeName, nodePath] of Object.entries(nodesList)) {
           if (isCI) {
-            console.log(`[CI] 正在載入: ${packageName}/${nodePath}`);
+            console.log(`[CI] Loading: ${packageName}/${nodePath}`);
           }
           const loadedNode = this.loadSingleNode(packageName, packagePath, nodePath as string, nodeName);
           if (loadedNode) {
@@ -137,18 +137,18 @@ export class NpmCollector {
 
       return nodes;
     } catch (error) {
-      throw new Error(`無法載入套件 ${packageName}: ${(error as Error).message}`);
+      throw new Error(`Cannot load package ${packageName}: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 載入單一節點類別
+   * Loads a single node class
    *
-   * @param packageName 套件名稱
-   * @param packagePath 套件路徑
-   * @param nodePath 節點檔案路徑
-   * @param nodeNameHint 節點名稱提示（選用）
-   * @returns 載入的節點或 null
+   * @param packageName Package name
+   * @param packagePath Package path
+   * @param nodePath Node file path
+   * @param nodeNameHint Node name hint (optional)
+   * @returns Loaded node or null
    */
   private loadSingleNode(
     packageName: string,
@@ -159,45 +159,45 @@ export class NpmCollector {
     try {
       const fullPath = require.resolve(`${packagePath}/${nodePath}`);
 
-      // 使用 try-catch 保護 require 過程（避免原生模組載入失敗）
+      // Use try-catch to protect require process (avoid native module loading failures)
       let nodeModule;
       try {
         nodeModule = require(fullPath);
       } catch (requireError) {
         const errMsg = (requireError as Error).message;
-        // 如果是 segfault 相關錯誤，記錄但不中斷
+        // If segfault related error, log but don't interrupt
         if (errMsg.includes('segmentation') || errMsg.includes('SIGSEGV')) {
-          console.error(`嚴重錯誤 - 跳過節點 ${packageName}/${nodePath}: segmentation fault`);
+          console.error(`Critical error - Skipping node ${packageName}/${nodePath}: segmentation fault`);
           return null;
         }
         throw requireError;
       }
 
-      // 從路徑提取節點名稱（例如："dist/nodes/Slack/Slack.node.js" -> "Slack"）
+      // Extract node name from path (e.g., "dist/nodes/Slack/Slack.node.js" -> "Slack")
       const nodeNameMatch = nodePath.match(/\/([^\/]+)\.node\.(js|ts)$/);
       const nodeName = nodeNameHint || (nodeNameMatch ? nodeNameMatch[1] : path.basename(nodePath, '.node.js'));
 
-      // 處理不同的匯出模式
+      // Handle different export modes
       const NodeClass = nodeModule.default || nodeModule[nodeName] || Object.values(nodeModule)[0];
 
       if (NodeClass) {
         return { packageName, nodeName, NodeClass };
       }
 
-      console.warn(`找不到有效的節點匯出: ${nodeName} in ${packageName}`);
+      console.warn(`Cannot find valid node export: ${nodeName} in ${packageName}`);
       return null;
     } catch (error) {
       const errMsg = (error as Error).message;
-      console.error(`載入節點失敗 ${packageName}/${nodePath}:`, errMsg);
+      console.error(`Failed to load node ${packageName}/${nodePath}:`, errMsg);
       return null;
     }
   }
 
   /**
-   * 從節點類別提取簡化資訊
+   * Extracts simplified information from node class
    *
-   * @param loadedNode 載入的節點
-   * @returns 簡化的節點資訊
+   * @param loadedNode Loaded node
+   * @returns Simplified node information
    */
   private extractNodeInfo(loadedNode: LoadedNode): SimplifiedNodeInfo {
     const { packageName, nodeName, NodeClass } = loadedNode;
@@ -220,7 +220,7 @@ export class NpmCollector {
         hasOperations: this.hasOperations(description)
       };
     } catch (error) {
-      // 回傳最基本的資訊
+      // Return minimal information
       return {
         nodeType: `${packageName}.${nodeName}`,
         displayName: nodeName,
@@ -239,36 +239,36 @@ export class NpmCollector {
   }
 
   /**
-   * 取得節點描述
+   * Gets node description
    *
-   * @param nodeClass 節點類別
-   * @returns 節點描述
+   * @param nodeClass Node class
+   * @returns Node description
    */
   private getNodeDescription(nodeClass: any): INodeTypeBaseDescription | INodeTypeDescription {
     try {
-      // 優先嘗試從靜態屬性取得（避免實例化可能的原生模組）
+      // Try to get from static properties first (avoid instantiating potential native modules)
       if (nodeClass.description) {
         return nodeClass.description;
       }
 
-      // 嘗試實例化節點（使用 timeout 保護）
+      // Try to instantiate node (with timeout protection)
       const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
 
-      // 檢查是否為版本化節點
+      // Check if it's a versioned node
       if (instance?.nodeVersions) {
         return instance.description || instance.baseDescription || ({} as INodeTypeBaseDescription);
       }
 
       return instance?.description || ({} as INodeTypeBaseDescription);
     } catch (error) {
-      // 實例化失敗時的容錯處理
+      // Fallback handling when instantiation fails
       try {
-        // 嘗試從 prototype 取得
+        // Try to get from prototype
         if (nodeClass.prototype?.description) {
           return nodeClass.prototype.description;
         }
       } catch {
-        // 忽略
+        // Ignore
       }
 
       return {} as INodeTypeBaseDescription;
@@ -276,11 +276,11 @@ export class NpmCollector {
   }
 
   /**
-   * 提取完整的節點類型名稱
+   * Extracts full node type name
    *
-   * @param description 節點描述
-   * @param packageName 套件名稱
-   * @returns 完整節點類型（例如：nodes-base.Slack）
+   * @param description Node description
+   * @param packageName Package name
+   * @returns Full node type (e.g., nodes-base.Slack)
    */
   private extractNodeType(description: INodeTypeBaseDescription | INodeTypeDescription, packageName: string): string {
     const name = description.name || '';
@@ -289,16 +289,16 @@ export class NpmCollector {
       return name;
     }
 
-    // 加入套件前綴
+    // Add package prefix
     const packagePrefix = packageName.replace('@n8n/', '').replace('n8n-', '');
     return `${packagePrefix}.${name}`;
   }
 
   /**
-   * 提取節點分類
+   * Extracts node category
    *
-   * @param description 節點描述
-   * @returns 分類名稱
+   * @param description Node description
+   * @returns Category name
    */
   private extractCategory(description: INodeTypeBaseDescription | INodeTypeDescription): string {
     const desc = description as any;
@@ -306,15 +306,15 @@ export class NpmCollector {
   }
 
   /**
-   * 提取節點版本
+   * Extracts node version
    *
-   * @param nodeClass 節點類別
-   * @param description 節點描述
-   * @returns 版本字串
+   * @param nodeClass Node class
+   * @param description Node description
+   * @returns Version string
    */
   private extractVersion(nodeClass: any, description: INodeTypeBaseDescription | INodeTypeDescription): string {
     try {
-      // 優先從 description 取得版本（避免實例化）
+      // Get version from description first (avoid instantiation)
       const desc = description as any;
       if (desc?.version) {
         if (Array.isArray(desc.version)) {
@@ -332,12 +332,12 @@ export class NpmCollector {
         return desc.defaultVersion.toString();
       }
 
-      // 嘗試從靜態屬性取得
+      // Try to get from static properties
       if (nodeClass.currentVersion !== undefined) {
         return nodeClass.currentVersion.toString();
       }
 
-      // 最後才嘗試實例化
+      // Try instantiation as last resort
       try {
         const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
         const inst = instance as any;
@@ -360,29 +360,29 @@ export class NpmCollector {
           }
         }
       } catch {
-        // 實例化失敗，使用預設值
+        // Instantiation failed, use default value
       }
     } catch (error) {
-      // 忽略錯誤，使用預設值
+      // Ignore error, use default value
     }
 
     return '1';
   }
 
   /**
-   * 檢測是否為版本化節點
+   * Detects if node is versioned
    *
-   * @param nodeClass 節點類別
-   * @returns 是否為版本化節點
+   * @param nodeClass Node class
+   * @returns Whether node is versioned
    */
   private isVersionedNode(nodeClass: any): boolean {
     try {
-      // 優先檢查靜態屬性
+      // Check static properties first
       if (nodeClass.nodeVersions || nodeClass.baseDescription?.defaultVersion) {
         return true;
       }
 
-      // 嘗試實例化檢查
+      // Try instantiation check
       try {
         const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
         const inst = instance as any;
@@ -396,10 +396,10 @@ export class NpmCollector {
   }
 
   /**
-   * 檢測是否為觸發器節點
+   * Detects if node is a trigger
    *
-   * @param description 節點描述
-   * @returns 是否為觸發器
+   * @param description Node description
+   * @returns Whether node is a trigger
    */
   private detectTrigger(description: INodeTypeBaseDescription | INodeTypeDescription): boolean {
     const desc = description as any;
@@ -417,10 +417,10 @@ export class NpmCollector {
   }
 
   /**
-   * 檢測是否為 Webhook 節點
+   * Detects if node is a Webhook
    *
-   * @param description 節點描述
-   * @returns 是否為 Webhook
+   * @param description Node description
+   * @returns Whether node is a Webhook
    */
   private detectWebhook(description: INodeTypeBaseDescription | INodeTypeDescription): boolean {
     const desc = description as any;
@@ -430,10 +430,10 @@ export class NpmCollector {
   }
 
   /**
-   * 檢測是否為 AI 工具節點
+   * Detects if node is an AI tool
    *
-   * @param description 節點描述
-   * @returns 是否為 AI 工具
+   * @param description Node description
+   * @returns Whether node is an AI tool
    */
   private detectAITool(description: INodeTypeBaseDescription | INodeTypeDescription): boolean {
     const desc = description as any;
@@ -445,10 +445,10 @@ export class NpmCollector {
   }
 
   /**
-   * 檢測節點是否需要認證
+   * Detects if node requires credentials
    *
-   * @param description 節點描述
-   * @returns 是否需要認證
+   * @param description Node description
+   * @returns Whether node requires credentials
    */
   private hasCredentials(description: INodeTypeBaseDescription | INodeTypeDescription): boolean {
     const desc = description as any;
@@ -456,10 +456,10 @@ export class NpmCollector {
   }
 
   /**
-   * 檢測節點是否有操作選項
+   * Detects if node has operation options
    *
-   * @param description 節點描述
-   * @returns 是否有操作選項
+   * @param description Node description
+   * @returns Whether node has operation options
    */
   private hasOperations(description: INodeTypeBaseDescription | INodeTypeDescription): boolean {
     const desc = description as any;

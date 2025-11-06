@@ -2,8 +2,8 @@
  * Copyright (c) 2025 Frank Chen @ www.frankchen.tw/personal
  * SPDX-License-Identifier: MIT
  *
- * AI 節點輸入配置映射表
- * 提供 AI 節點的完整輸入配置，避免試圖動態評估表達式
+ * AI Node Input Configuration Mapping
+ * Provides complete input configurations for AI nodes to avoid attempting dynamic expression evaluation
  */
 
 import type {
@@ -12,7 +12,7 @@ import type {
 } from 'n8n-workflow';
 
 /**
- * AI 節點輸入配置
+ * AI node input configuration
  */
 export interface AINodeInputConfig {
   nodeType: string;
@@ -26,11 +26,11 @@ export interface AINodeInputConfig {
 }
 
 /**
- * AI 節點輸入配置映射表
- * 包含所有常用 AI 節點的輸入配置
+ * AI node input configuration mapping table
+ * Contains input configurations for all commonly used AI nodes
  */
 export const AI_NODE_INPUTS_MAP: Record<string, AINodeInputConfig> = {
-  // ========== Agent 節點 ==========
+  // ========== Agent Nodes ==========
   'agent': {
     nodeType: 'agent',
     version: ['1', '2', '3'],
@@ -95,7 +95,7 @@ export const AI_NODE_INPUTS_MAP: Record<string, AINodeInputConfig> = {
     },
   },
 
-  // ========== 語言模型節點 ==========
+  // ========== Language Model Nodes ==========
   'lmOpenAi': {
     nodeType: 'lmOpenAi',
     version: '1',
@@ -145,7 +145,7 @@ export const AI_NODE_INPUTS_MAP: Record<string, AINodeInputConfig> = {
     baseInputs: [],
   },
 
-  // ========== Tool 節點 ==========
+  // ========== Tool Nodes ==========
   'toolCode': {
     nodeType: 'toolCode',
     version: ['1', '1.1', '1.2', '1.3'],
@@ -209,7 +209,7 @@ export const AI_NODE_INPUTS_MAP: Record<string, AINodeInputConfig> = {
     baseInputs: [],
   },
 
-  // ========== Memory 節點 ==========
+  // ========== Memory Nodes ==========
   'memoryBuffer': {
     nodeType: 'memoryBuffer',
     version: '1',
@@ -231,7 +231,7 @@ export const AI_NODE_INPUTS_MAP: Record<string, AINodeInputConfig> = {
     ],
   },
 
-  // ========== 檢索器節點 ==========
+  // ========== Retriever Nodes ==========
   'vectorStoreRetriever': {
     nodeType: 'vectorStoreRetriever',
     version: '1',
@@ -246,7 +246,7 @@ export const AI_NODE_INPUTS_MAP: Record<string, AINodeInputConfig> = {
     ],
   },
 
-  // ========== 輸出解析器節點 ==========
+  // ========== Output Parser Nodes ==========
   'outputParserJson': {
     nodeType: 'outputParserJson',
     version: '1',
@@ -263,10 +263,10 @@ export const AI_NODE_INPUTS_MAP: Record<string, AINodeInputConfig> = {
 };
 
 /**
- * 取得 AI 節點的完整輸入配置
- * @param nodeType 節點類型
- * @param parameters 節點參數（用於條件輸入）
- * @returns 輸入配置陣列
+ * Get complete input configuration for AI node
+ * @param nodeType Node type
+ * @param parameters Node parameters (for conditional inputs)
+ * @returns Array of input configurations
  */
 export function getAINodeInputs(
   nodeType: string,
@@ -277,10 +277,10 @@ export function getAINodeInputs(
     return [];
   }
 
-  // 靜態輸入
+  // Static inputs
   let inputs = [...config.baseInputs];
 
-  // 條件輸入
+  // Conditional inputs
   if (config.conditionalInputs) {
     if (parameters?.hasOutputParser !== false && config.conditionalInputs.hasOutputParser) {
       inputs = inputs.concat(config.conditionalInputs.hasOutputParser);
@@ -294,27 +294,27 @@ export function getAINodeInputs(
 }
 
 /**
- * 檢查是否為已知的 AI 節點
- * @param nodeType 節點類型
- * @returns 是否為 AI 節點
+ * Check if a node is a known AI node
+ * @param nodeType Node type
+ * @returns Whether it is an AI node
  */
 export function isKnownAINode(nodeType: string): boolean {
   return nodeType in AI_NODE_INPUTS_MAP;
 }
 
 /**
- * 取得所有 AI 節點類型
- * @returns AI 節點類型陣列
+ * Get all AI node types
+ * @returns Array of AI node types
  */
 export function getAllAINodeTypes(): string[] {
   return Object.keys(AI_NODE_INPUTS_MAP);
 }
 
 /**
- * 檢查節點是否需要特定的輸入類型
- * @param nodeType 節點類型
- * @param requiredInputType 所需的輸入類型
- * @returns 是否需要該輸入類型
+ * Check if a node requires a specific input type
+ * @param nodeType Node type
+ * @param requiredInputType Required input type
+ * @returns Whether the input type is required
  */
 export function requiresInputType(
   nodeType: string,
@@ -325,9 +325,9 @@ export function requiresInputType(
 }
 
 /**
- * 取得節點的所有支援的輸入類型
- * @param nodeType 節點類型
- * @returns 支援的輸入類型陣列
+ * Get all supported input types for a node
+ * @param nodeType Node type
+ * @returns Array of supported input types
  */
 export function getSupportedInputTypes(nodeType: string): NodeConnectionType[] {
   const inputs = getAINodeInputs(nodeType);

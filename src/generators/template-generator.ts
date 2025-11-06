@@ -4,7 +4,7 @@ import type { WorkflowDefinition } from '../collectors/api-collector';
 import { WorkflowAnalyzer, type WorkflowAnalysis } from '../analyzers/workflow-analyzer';
 
 /**
- * Template 資料結構
+ * Template data structure
  */
 export interface Template {
   id: number;
@@ -27,7 +27,7 @@ export interface Template {
 }
 
 /**
- * 增強的 Template（包含完整 workflow）
+ * Enhanced Template(including complete workflow)
  */
 export interface EnhancedTemplate extends Template {
   workflow?: WorkflowDefinition;
@@ -35,7 +35,7 @@ export interface EnhancedTemplate extends Template {
 }
 
 /**
- * Template 分類
+ * Template categories
  */
 export enum TemplateCategory {
   AI_CHATBOTS = 'ai-chatbots',
@@ -47,7 +47,7 @@ export enum TemplateCategory {
 }
 
 /**
- * 分類資訊
+ * Category information
  */
 export interface CategoryInfo {
   id: TemplateCategory;
@@ -57,49 +57,49 @@ export interface CategoryInfo {
 }
 
 /**
- * 分類對應表
+ * Category mapping
  */
 export const CATEGORY_INFO: Record<TemplateCategory, CategoryInfo> = {
   [TemplateCategory.AI_CHATBOTS]: {
     id: TemplateCategory.AI_CHATBOTS,
-    name: 'AI 與聊天機器人',
-    description: 'AI Agent、RAG 系統、智能對話機器人',
+    name: 'AI & Chatbots',
+    description: 'AI Agents, RAG systems, intelligent conversational bots',
     icon: '🤖',
   },
   [TemplateCategory.SOCIAL_MEDIA]: {
     id: TemplateCategory.SOCIAL_MEDIA,
-    name: '社交媒體與影片',
-    description: 'TikTok、Instagram、YouTube 自動化和 AI 影片生成',
+    name: 'Social Media & Video',
+    description: 'TikTok, Instagram, YouTube automation and AI video generation',
     icon: '📱',
   },
   [TemplateCategory.DATA_PROCESSING]: {
     id: TemplateCategory.DATA_PROCESSING,
-    name: '資料處理與分析',
-    description: 'Google Sheets、資料庫整合、資料分析工作流程',
+    name: 'Data Processing & Analysis',
+    description: 'Google Sheets, database integration, data analysis workflows',
     icon: '📊',
   },
   [TemplateCategory.COMMUNICATION]: {
     id: TemplateCategory.COMMUNICATION,
-    name: '通訊與協作',
-    description: 'Email、WhatsApp、Telegram、Slack 自動化',
+    name: 'Communication & Collaboration',
+    description: 'Email, WhatsApp, Telegram, Slack automation',
     icon: '💬',
   },
   [TemplateCategory.AUTOMATION]: {
     id: TemplateCategory.AUTOMATION,
-    name: '自動化與整合',
-    description: '工作流程自動化、API 整合、排程任務',
+    name: 'Automation & Integration',
+    description: 'Workflow automation, API integration, scheduled tasks',
     icon: '⚡',
   },
   [TemplateCategory.LEARNING]: {
     id: TemplateCategory.LEARNING,
-    name: '學習與教學',
-    description: 'n8n 入門教學、互動式教程',
+    name: 'Learning & Teaching',
+    description: 'n8n introductory tutorials, interactive lessons',
     icon: '📚',
   },
 };
 
 /**
- * Template 生成器配置
+ * Template generator configuration
  */
 export interface TemplateGeneratorConfig {
   outputDir: string;
@@ -107,7 +107,7 @@ export interface TemplateGeneratorConfig {
 }
 
 /**
- * Template 生成器
+ * Template generator
  */
 export class TemplateGenerator {
   private config: TemplateGeneratorConfig;
@@ -122,7 +122,7 @@ export class TemplateGenerator {
   }
 
   /**
-   * 將 template 和 workflow 結合並分析
+   * Combine template and workflow and analyze
    */
   enhanceTemplate(template: Template, workflow: WorkflowDefinition & { id: number; name: string }): EnhancedTemplate {
     const analysis = this.analyzer.analyze(workflow);
@@ -135,7 +135,7 @@ export class TemplateGenerator {
   }
 
   /**
-   * 分類 template
+   * Categorize templates
    */
   categorizeTemplate(template: Template): TemplateCategory {
     const name = template.name.toLowerCase();
@@ -204,7 +204,7 @@ export class TemplateGenerator {
   }
 
   /**
-   * 生成單個 template 的 markdown 檔案
+   * Generate markdown file for single template
    */
   generateTemplateMarkdown(template: Template | EnhancedTemplate, category: TemplateCategory): string {
     const enhanced = template as EnhancedTemplate;
@@ -212,27 +212,27 @@ export class TemplateGenerator {
     const sections = [
       `# ${template.name}`,
       '',
-      `> ${CATEGORY_INFO[category].icon} **分類**: ${CATEGORY_INFO[category].name}`,
-      `> 👁️ **瀏覽次數**: ${template.totalViews.toLocaleString()}`,
-      `> 📅 **建立時間**: ${new Date(template.createdAt).toLocaleDateString('zh-TW')}`,
+      `> ${CATEGORY_INFO[category].icon} **Category**: ${CATEGORY_INFO[category].name}`,
+      `> 👁️ **Views**: ${template.totalViews.toLocaleString()}`,
+      `> 📅 **Created**: ${new Date(template.createdAt).toLocaleDateString('en-US')}`,
       '',
-      '## 描述',
+      '## Description',
       '',
-      template.description || '無描述',
+      template.description || 'No description',
       '',
     ];
 
-    // 如果有 workflow 分析結果，使用結構化描述
+    // If workflow analysis results exist, use structured description
     if (enhanced.analysis) {
       sections.push(
-        '## 工作流程結構',
+        '## Workflow Structure',
         '',
         enhanced.analysis.structuredDescription,
         ''
       );
     } else {
-      // 否則顯示傳統的節點列表
-      sections.push('## 使用的節點', '');
+      // Otherwise display traditional node list
+      sections.push('## Nodes Used', '');
 
       if (template.nodes && template.nodes.length > 0) {
         template.nodes.forEach((node) => {
@@ -240,31 +240,31 @@ export class TemplateGenerator {
           sections.push(`- ${displayName}`);
         });
       } else {
-        sections.push('*此範本不包含節點資訊*');
+        sections.push('*This template contains no node information*');
       }
       sections.push('');
     }
 
     sections.push(
-      '## 作者資訊',
+      '## Author Information',
       '',
-      `- **名稱**: ${template.user.name}`,
-      `- **用戶名**: @${template.user.username}`,
-      template.user.verified ? `- ✓ 已驗證用戶` : '',
+      `- **Name**: ${template.user.name}`,
+      `- **Username**: @${template.user.username}`,
+      template.user.verified ? `- ✓ Verified user` : '',
       '',
-      '## 相關連結',
+      '## Related Links',
       '',
-      `- [在 n8n.io 上查看此範本](https://n8n.io/workflows/${template.id})`,
+      `- [View this template on n8n.io](https://n8n.io/workflows/${template.id})`,
       ''
     );
 
-    // 如果有完整 workflow，加入 JSON
+    // If complete workflow exists, add JSON
     if (enhanced.workflow) {
       sections.push(
-        '## 完整 Workflow JSON',
+        '## Complete Workflow JSON',
         '',
         '<details>',
-        '<summary>點擊展開 Workflow JSON</summary>',
+        '<summary>Click to expand Workflow JSON</summary>',
         '',
         '```json',
         JSON.stringify(enhanced.workflow, null, 2),
@@ -279,7 +279,7 @@ export class TemplateGenerator {
   }
 
   /**
-   * 生成分類索引
+   * Generate category index
    */
   generateCategoryIndex(
     category: TemplateCategory,
@@ -292,20 +292,20 @@ export class TemplateGenerator {
       '',
       info.description,
       '',
-      `共 ${templates.length} 個範本`,
+      `Total: ${templates.length} templates`,
       '',
-      '## 範本列表',
+      '## Template List',
       '',
     ];
 
-    // 按瀏覽次數排序
+    // Sort by views
     const sorted = [...templates].sort((a, b) => b.totalViews - a.totalViews);
 
     sorted.forEach((template) => {
       const filename = this.getTemplateFilename(template);
       const views = template.totalViews.toLocaleString();
       sections.push(
-        `- [${template.name}](./${filename}) - ${views} 次瀏覽`
+        `- [${template.name}](./${filename}) - ${views} views`
       );
     });
 
@@ -315,19 +315,19 @@ export class TemplateGenerator {
   }
 
   /**
-   * 生成主索引
+   * Generate main index
    */
   generateMainIndex(categorizedTemplates: Map<TemplateCategory, Template[]>): string {
     const sections = [
-      '# n8n 工作流程範本',
+      '# n8n Workflow Templates',
       '',
-      '這裡收錄了 100 個來自 n8n.io 的熱門工作流程範本，按照使用場景分類。',
+      'We have collected 100 popular workflow templates from n8n.io, organized by use case categories.',
       '',
-      '## 分類導覽',
+      '## Category Navigation',
       '',
     ];
 
-    // 按照定義順序列出分類
+    // List categories in defined order
     const categories = [
       TemplateCategory.AI_CHATBOTS,
       TemplateCategory.SOCIAL_MEDIA,
@@ -341,34 +341,34 @@ export class TemplateGenerator {
       const info = CATEGORY_INFO[category];
       const templates = categorizedTemplates.get(category) || [];
 
-      // 只顯示有範本的分類
+      // Only display categories with templates
       if (templates.length > 0) {
         sections.push(
           `### ${info.icon} [${info.name}](${category}/README.md)`,
           '',
           info.description,
           '',
-          `**範本數量**: ${templates.length} 個`,
+          `**Template Count**: ${templates.length}`,
           ''
         );
       }
     });
 
     sections.push(
-      '## 使用說明',
+      '## Usage Instructions',
       '',
-      '1. 瀏覽上方分類，找到你需要的工作流程類型',
-      '2. 點擊分類連結查看該類別的所有範本',
-      '3. 選擇感興趣的範本查看詳細說明',
-      '4. 點擊範本中的 "在 n8n.io 上查看" 連結可以直接在 n8n 中使用',
+      '1. Browse the categories above to find the workflow type you need',
+      '2. Click on a category link to view all templates in that category',
+      '3. Select a template you are interested in to view detailed information',
+      '4. Click on the "View this template on n8n.io" link in the template to use it directly in n8n',
       '',
-      '## 統計資訊',
+      '## Statistics',
       '',
-      `- 總範本數量: ${Array.from(categorizedTemplates.values()).reduce((sum, arr) => sum + arr.length, 0)} 個`,
-      `- 總瀏覽次數: ${Array.from(categorizedTemplates.values())
+      `- Total Templates: ${Array.from(categorizedTemplates.values()).reduce((sum, arr) => sum + arr.length, 0)}`,
+      `- Total Views: ${Array.from(categorizedTemplates.values())
         .flat()
         .reduce((sum, t) => sum + t.totalViews, 0)
-        .toLocaleString()} 次`,
+        .toLocaleString()}`,
       ''
     );
 
@@ -376,10 +376,10 @@ export class TemplateGenerator {
   }
 
   /**
-   * 取得 template 檔案名稱
+   * Get template filename
    */
   private getTemplateFilename(template: Template): string {
-    // 移除特殊字元，保留英文、數字、連字號
+    // Remove special characters, keep only letters, numbers, and hyphens
     const slug = template.name
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
@@ -391,10 +391,10 @@ export class TemplateGenerator {
   }
 
   /**
-   * 生成所有 template 檔案
+   * Generate all template files
    */
   async generate(templates: Array<Template | EnhancedTemplate>): Promise<void> {
-    // 按分類組織 templates
+    // Organize templates by category
     const categorized = new Map<TemplateCategory, Array<Template | EnhancedTemplate>>();
 
     templates.forEach((template) => {
@@ -405,17 +405,17 @@ export class TemplateGenerator {
       categorized.get(category)!.push(template);
     });
 
-    // 為每個分類創建目錄
+    // Create directory for each category
     for (const [category, categoryTemplates] of categorized.entries()) {
       const categoryDir = path.join(this.config.outputDir, category);
       await fs.mkdir(categoryDir, { recursive: true });
 
-      // 限制每個分類的範本數量
+      // Limit the number of templates per category
       const limited = categoryTemplates
         .sort((a, b) => b.totalViews - a.totalViews)
         .slice(0, this.config.maxTemplatesPerCategory);
 
-      // 生成每個 template 的檔案
+      // Generate file for each template
       for (const template of limited) {
         const filename = this.getTemplateFilename(template);
         const filepath = path.join(categoryDir, filename);
@@ -423,7 +423,7 @@ export class TemplateGenerator {
         await fs.writeFile(filepath, content, 'utf-8');
       }
 
-      // 生成分類索引
+      // Generate category index
       const indexContent = this.generateCategoryIndex(category, limited);
       await fs.writeFile(
         path.join(categoryDir, 'README.md'),
@@ -432,7 +432,7 @@ export class TemplateGenerator {
       );
     }
 
-    // 生成主索引
+    // Generate main index
     const mainIndex = this.generateMainIndex(categorized);
     await fs.writeFile(
       path.join(this.config.outputDir, 'README.md'),
@@ -440,16 +440,16 @@ export class TemplateGenerator {
       'utf-8'
     );
 
-    console.log(`成功生成 ${templates.length} 個範本檔案`);
-    console.log(`分類數量: ${categorized.size}`);
+    console.log(`Successfully generated ${templates.length} template files`);
+    console.log(`Number of categories: ${categorized.size}`);
     categorized.forEach((templates, category) => {
-      console.log(`  ${CATEGORY_INFO[category].name}: ${templates.length} 個`);
+      console.log(`  ${CATEGORY_INFO[category].name}: ${templates.length}`);
     });
   }
 }
 
 /**
- * 便利函數：生成 templates
+ * Convenience function: generate templates
  */
 export async function generateTemplates(
   templates: Template[],

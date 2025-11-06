@@ -8,7 +8,7 @@ describe('PriorityRanker', () => {
   });
 
   describe('rankNodes', () => {
-    it('應該正確計算節點分數並排序', () => {
+    it('should correctly calculate node scores and sort them', () => {
       const nodes: NodeData[] = [
         {
           nodeType: 'nodes-base.HttpRequest',
@@ -49,7 +49,7 @@ describe('PriorityRanker', () => {
       expect(ranked[1].score).toBeGreaterThan(ranked[2].score);
     });
 
-    it('應該正確分配層級', () => {
+    it('should correctly assign tiers', () => {
       const nodes: NodeData[] = Array.from({ length: 60 }, (_, i) => ({
         nodeType: `nodes-base.Node${i}`,
         displayName: `Node ${i}`,
@@ -71,7 +71,7 @@ describe('PriorityRanker', () => {
       expect(specialized.length).toBe(10);
     });
 
-    it('應該為核心節點給予高分', () => {
+    it('should give high scores to core nodes', () => {
       const coreNode: NodeData = {
         nodeType: 'nodes-base.Code',
         displayName: 'Code',
@@ -101,7 +101,7 @@ describe('PriorityRanker', () => {
   });
 
   describe('groupByTier', () => {
-    it('應該正確依層級分組', () => {
+    it('should correctly group by tier', () => {
       const nodes: NodeData[] = Array.from({ length: 15 }, (_, i) => ({
         nodeType: `nodes-base.Node${i}`,
         displayName: `Node ${i}`,
@@ -120,7 +120,7 @@ describe('PriorityRanker', () => {
   });
 
   describe('generateReport', () => {
-    it('應該產生正確的統計報告', () => {
+    it('should generate correct statistical report', () => {
       const nodes: NodeData[] = Array.from({ length: 60 }, (_, i) => ({
         nodeType: `nodes-base.Node${i}`,
         displayName: `Node ${i}`,
@@ -142,7 +142,7 @@ describe('PriorityRanker', () => {
   });
 
   describe('getNodesByTier', () => {
-    it('應該正確篩選指定層級的節點', () => {
+    it('should correctly filter nodes by specified tier', () => {
       const nodes: NodeData[] = Array.from({ length: 20 }, (_, i) => ({
         nodeType: `nodes-base.Node${i}`,
         displayName: `Node ${i}`,

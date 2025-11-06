@@ -15,7 +15,7 @@ async function testRuleGenerator() {
   const analyzer = new CompatibilityAnalyzer();
   const ruleGenerator = new ConnectionRuleGenerator();
 
-  // 收集測試節點
+  // Collect test nodes
   const testNodes: NodeConnectionInfo[] = [];
 
   // 1. Webhook
@@ -103,10 +103,10 @@ async function testRuleGenerator() {
     isDynamicOutput: openaiIO.isDynamicOutput
   });
 
-  // 建立相容性矩陣
+  // Build compatibility matrix
   const matrix = analyzer.buildCompatibilityMatrix(testNodes);
 
-  console.log('===== 測試 1: Webhook 的連接指南 =====\n');
+  console.log('===== Test 1: Webhook Connection Guide =====\n');
   const webhookGuide = ruleGenerator.generateNodeConnectionGuide(
     testNodes[0],
     matrix,
@@ -115,7 +115,7 @@ async function testRuleGenerator() {
   );
   console.log(webhookGuide);
 
-  console.log('\n\n===== 測試 2: AI Agent 的連接指南 =====\n');
+  console.log('\n\n===== Test 2: AI Agent Connection Guide =====\n');
   const agentGuide = ruleGenerator.generateNodeConnectionGuide(
     testNodes[3],
     matrix,
@@ -124,7 +124,7 @@ async function testRuleGenerator() {
   );
   console.log(agentGuide);
 
-  console.log('\n\n===== 測試 3: 相容性矩陣 =====\n');
+  console.log('\n\n===== Test 3: Compatibility Matrix =====\n');
   const matrixMd = ruleGenerator.generateCompatibilityMatrix(matrix, testNodes, 5);
   console.log(matrixMd);
 }

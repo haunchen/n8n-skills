@@ -39,12 +39,12 @@ class N8nDataUpdater {
 
   async run(): Promise<void> {
     try {
-      info('開始檢查 n8n 資料更新...');
+      info('Starting n8n data update check...');
       if (this.dryRun) {
-        warn('執行模式: 僅檢查，不實際更新');
+        warn('Execution mode: Check only, no actual update');
       }
 
-      // 載入設定檔
+      // Load config file
       await this.loadConfig();
 
       const result: UpdateResult = {
@@ -54,29 +54,29 @@ class N8nDataUpdater {
         timestamp: new Date().toISOString(),
       };
 
-      // 1. 檢查 npm 套件更新
-      info('\n[1/3] 檢查 npm 套件更新...');
+      // 1. Check npm package updates
+      info('\n[1/3] Checking npm package updates...');
       result.packages = await this.checkNpmPackages();
 
-      // 2. 檢查文件儲存庫更新
-      info('\n[2/3] 檢查 n8n-docs 儲存庫更新...');
+      // 2. Check docs repository updates
+      info('\n[2/3] Checking n8n-docs repository updates...');
       result.docsUpdated = await this.checkDocsRepository();
 
-      // 3. 檢查範本更新
-      info('\n[3/3] 檢查 n8n.io 範本更新...');
+      // 3. Check template updates
+      info('\n[3/3] Checking n8n.io template updates...');
       result.templatesUpdated = await this.checkTemplates();
 
-      // 顯示摘要
+      // Display summary
       this.printSummary(result);
 
-      // 如果不是 dry run，詢問是否更新
+      // If not dry run, apply updates
       if (!this.dryRun) {
         await this.applyUpdates(result);
       }
 
-      success('資料檢查完成');
+      success('Data check completed');
     } catch (err) {
-      error('資料更新失敗', err);
+      error('Data update failed', err);
       process.exit(1);
     }
   }
@@ -85,9 +85,9 @@ class N8nDataUpdater {
     try {
       const content = await fs.readFile(this.configPath, 'utf-8');
       this.config = JSON.parse(content);
-      info(`已載入設定檔 (n8n 版本: ${this.config?.n8n_version})`);
+      info(`Loaded config file (n8n version: ${this.config?.n8n_version})`);
     } catch (err) {
-      error('無法載入設定檔', err);
+      error('Failed to load config file', err);
       throw err;
     }
   }
@@ -98,12 +98,12 @@ class N8nDataUpdater {
 
     for (const pkgName of packages) {
       try {
-        info(`檢查套件: ${pkgName}...`);
+        info(`Checking package: ${pkgName}...`);
 
-        // 取得目前安裝的版本
+        // Get current installed version
         const currentVersion = this.getCurrentVersion(pkgName);
 
-        // 取得最新版本
+        // Get latest version
         const latestVersion = this.getLatestVersion(pkgName);
 
         const hasUpdate = currentVersion !== latestVersion;
@@ -118,10 +118,10 @@ class N8nDataUpdater {
         if (hasUpdate) {
           warn(`  ${pkgName}: ${currentVersion} -> ${latestVersion}`);
         } else {
-          info(`  ${pkgName}: ${currentVersion} (最新版本)`);
+          info(`  ${pkgName}: ${currentVersion} (latest)`);
         }
       } catch (err) {
-        error(`檢查套件 ${pkgName} 失敗`, err);
+        error(`Failed to check package ${pkgName}`, err);
       }
     }
 
@@ -134,7 +134,7 @@ class N8nDataUpdater {
       const packageJson = require(packageJsonPath);
       return packageJson.version;
     } catch {
-      return '未安裝';
+      return 'Not installed';
     }
   }
 
@@ -146,8 +146,8 @@ class N8nDataUpdater {
       });
       return output.trim();
     } catch (err) {
-      warn(`無法取得 ${packageName} 的最新版本`);
-      return '未知';
+      warn(`Failed to get latest version of ${packageName}`);
+      return 'Unknown';
     }
   }
 
@@ -156,28 +156,28 @@ class N8nDataUpdater {
       const exists = await this.pathExists(this.docsPath);
 
       if (!exists) {
-        info('n8n-docs 儲存庫尚未下載');
-        return true; // 需要下載
+        info('n8n-docs repository not yet downloaded');
+        return true; // Need to download
       }
 
-      // 檢查遠端是否有更新
+      // Check for remote updates
       const git = simpleGit(this.docsPath);
 
-      info('檢查遠端更新...');
+      info('Checking remote updates...');
       await git.fetch();
 
       const status = await git.status();
       const hasUpdates = status.behind > 0;
 
       if (hasUpdates) {
-        warn(`  n8n-docs: 遠端有 ${status.behind} 個新提交`);
+        warn(`  n8n-docs: ${status.behind} new commits on remote`);
       } else {
-        info('  n8n-docs: 已是最新版本');
+        info('  n8n-docs: already up to date');
       }
 
       return hasUpdates;
     } catch (err) {
-      error('檢查文件儲存庫失敗', err);
+      error('Failed to check docs repository', err);
       return false;
     }
   }
@@ -193,58 +193,58 @@ class N8nDataUpdater {
 
   private async checkTemplates(): Promise<boolean> {
     try {
-      // 檢查範本資料檔案是否存在
+      // Check if template data file exists
       const templateDataPath = path.join(process.cwd(), 'data', 'templates.json');
       const exists = await this.pathExists(templateDataPath);
 
       if (!exists) {
-        info('範本資料尚未下載');
+        info('Template data not yet downloaded');
         return true;
       }
 
-      // 檢查檔案修改時間
+      // Check file modification time
       const stats = await fs.stat(templateDataPath);
       const ageInDays = (Date.now() - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
 
       if (ageInDays > 7) {
-        warn(`  範本資料已超過 ${Math.floor(ageInDays)} 天未更新`);
+        warn(`  Template data not updated for ${Math.floor(ageInDays)} days`);
         return true;
       }
 
-      info(`  範本資料最後更新: ${Math.floor(ageInDays)} 天前`);
+      info(`  Template data last updated: ${Math.floor(ageInDays)} days ago`);
       return false;
     } catch (err) {
-      error('檢查範本資料失敗', err);
+      error('Failed to check template data', err);
       return false;
     }
   }
 
   private printSummary(result: UpdateResult): void {
     info('\n========================================');
-    info('更新檢查摘要');
+    info('Update Check Summary');
     info('========================================');
 
-    info('\nNPM 套件:');
+    info('\nNPM Packages:');
     for (const pkg of result.packages) {
       if (pkg.hasUpdate) {
-        warn(`  [更新] ${pkg.name}: ${pkg.currentVersion} -> ${pkg.latestVersion}`);
+        warn(`  [UPDATE] ${pkg.name}: ${pkg.currentVersion} -> ${pkg.latestVersion}`);
       } else {
-        info(`  [最新] ${pkg.name}: ${pkg.currentVersion}`);
+        info(`  [LATEST] ${pkg.name}: ${pkg.currentVersion}`);
       }
     }
 
-    info('\n文件儲存庫:');
+    info('\nDocs Repository:');
     if (result.docsUpdated) {
-      warn('  [更新] n8n-docs 有新的提交');
+      warn('  [UPDATE] n8n-docs has new commits');
     } else {
-      info('  [最新] n8n-docs 已是最新版本');
+      info('  [LATEST] n8n-docs is up to date');
     }
 
-    info('\n範本資料:');
+    info('\nTemplate Data:');
     if (result.templatesUpdated) {
-      warn('  [更新] 建議更新範本資料');
+      warn('  [UPDATE] Template data update recommended');
     } else {
-      info('  [最新] 範本資料為最新');
+      info('  [LATEST] Template data is up to date');
     }
 
     info('\n========================================');
@@ -257,38 +257,38 @@ class N8nDataUpdater {
       result.templatesUpdated;
 
     if (!hasUpdates) {
-      info('\n所有資料都是最新版本，無需更新');
+      info('\nAll data is up to date, no updates needed');
       return;
     }
 
-    info('\n開始套用更新...');
+    info('\nApplying updates...');
 
-    // 更新 npm 套件
+    // Update npm packages
     const packagesToUpdate = result.packages.filter((p) => p.hasUpdate);
     if (packagesToUpdate.length > 0) {
-      info('\n更新 npm 套件...');
+      info('\nUpdating npm packages...');
       for (const pkg of packagesToUpdate) {
         try {
-          info(`  安裝 ${pkg.name}@${pkg.latestVersion}...`);
+          info(`  Installing ${pkg.name}@${pkg.latestVersion}...`);
           execSync(`npm install ${pkg.name}@${pkg.latestVersion}`, {
             stdio: 'inherit',
           });
-          success(`  ${pkg.name} 更新完成`);
+          success(`  ${pkg.name} update completed`);
         } catch (err) {
-          error(`更新 ${pkg.name} 失敗`, err);
+          error(`Failed to update ${pkg.name}`, err);
         }
       }
     }
 
-    // 更新文件儲存庫
+    // Update docs repository
     if (result.docsUpdated) {
-      info('\n更新 n8n-docs 儲存庫...');
+      info('\nUpdating n8n-docs repository...');
       try {
         const exists = await this.pathExists(this.docsPath);
         if (exists) {
           const git = simpleGit(this.docsPath);
           await git.pull();
-          success('  n8n-docs 更新完成');
+          success('  n8n-docs update completed');
         } else {
           const git = simpleGit();
           await fs.mkdir(path.dirname(this.docsPath), { recursive: true });
@@ -297,18 +297,18 @@ class N8nDataUpdater {
             this.docsPath,
             ['--depth', '1']
           );
-          success('  n8n-docs 下載完成');
+          success('  n8n-docs download completed');
         }
       } catch (err) {
-        error('更新 n8n-docs 失敗', err);
+        error('Failed to update n8n-docs', err);
       }
     }
 
-    // 更新範本資料
+    // Update template data
     if (result.templatesUpdated) {
-      info('\n更新範本資料...');
+      info('\nUpdating template data...');
       try {
-        // 使用 ApiCollector 抓取最新範本
+        // Use ApiCollector to fetch latest templates
         const { ApiCollector } = await import('../src/collectors/api-collector');
         const collector = new ApiCollector({
           limit: this.config?.max_template_examples || 100,
@@ -316,7 +316,7 @@ class N8nDataUpdater {
 
         const templateResult = await collector.fetchTemplates();
 
-        // 儲存範本資料
+        // Save template data
         const dataPath = path.join(process.cwd(), 'data');
         await fs.mkdir(dataPath, { recursive: true });
 
@@ -327,33 +327,33 @@ class N8nDataUpdater {
           'utf-8'
         );
 
-        success(`  範本資料更新完成 (${templateResult.templates.length} 個範本)`);
+        success(`  Template data update completed (${templateResult.templates.length} templates)`);
       } catch (err) {
-        error('更新範本資料失敗', err);
+        error('Failed to update template data', err);
       }
     }
 
-    // 更新設定檔
+    // Update config file
     if (this.config && packagesToUpdate.some((p) => p.name === 'n8n-nodes-base')) {
       const latestN8nVersion = packagesToUpdate.find((p) => p.name === 'n8n-nodes-base')?.latestVersion;
       if (latestN8nVersion) {
         this.config.n8n_version = latestN8nVersion;
         this.config.build_date = new Date().toISOString();
         await fs.writeFile(this.configPath, JSON.stringify(this.config, null, 2), 'utf-8');
-        success('\n設定檔已更新');
+        success('\nConfig file updated');
       }
     }
   }
 }
 
-// CLI 執行
+// CLI execution
 if (require.main === module) {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
 
   const updater = new N8nDataUpdater(dryRun);
   updater.run().catch((err) => {
-    error('執行失敗', err);
+    error('Execution failed', err);
     process.exit(1);
   });
 }

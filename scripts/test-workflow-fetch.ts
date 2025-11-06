@@ -1,5 +1,5 @@
 /**
- * 測試 ApiCollector 的 workflow 獲取功能
+ * Test ApiCollector workflow fetching functionality
  */
 
 import { ApiCollector } from '../src/collectors/api-collector';
@@ -8,29 +8,29 @@ async function testWorkflowFetch() {
   const collector = new ApiCollector();
 
   try {
-    // 測試 1: 獲取單個 workflow
-    console.log('=== 測試 1: 獲取單個 workflow ===\n');
+    // Test 1: Fetch single workflow
+    console.log('=== Test 1: Fetch Single Workflow ===\n');
     const workflow = await collector.fetchWorkflowDefinition(1);
 
-    // 先查看完整結構
-    console.log('完整 workflow 結構:');
+    // View complete structure first
+    console.log('Complete workflow structure:');
     console.log(JSON.stringify(workflow, null, 2).substring(0, 500));
     console.log('...\n');
 
     console.log(`Workflow ID: ${workflow.id}`);
-    console.log(`名稱: ${workflow.name}`);
-    console.log(`描述: ${workflow.description}`);
-    console.log(`節點數量: ${workflow.nodes?.length || 0}`);
-    console.log(`連接數量: ${Object.keys(workflow.connections || {}).length}`);
+    console.log(`Name: ${workflow.name}`);
+    console.log(`Description: ${workflow.description}`);
+    console.log(`Node count: ${workflow.nodes?.length || 0}`);
+    console.log(`Connection count: ${Object.keys(workflow.connections || {}).length}`);
 
-    // 顯示節點列表
-    console.log('\n節點列表:');
+    // Display node list
+    console.log('\nNode list:');
     workflow.nodes.forEach(node => {
       console.log(`  - ${node.name} (${node.type})`);
     });
 
-    // 顯示連接
-    console.log('\n連接關係:');
+    // Display connections
+    console.log('\nConnection relationships:');
     Object.entries(workflow.connections).forEach(([source, targets]) => {
       Object.entries(targets).forEach(([type, connections]) => {
         connections.forEach(connGroup => {
@@ -41,17 +41,17 @@ async function testWorkflowFetch() {
       });
     });
 
-    // 測試 2: 批次獲取前 3 個 workflow
-    console.log('\n=== 測試 2: 批次獲取 3 個 workflow ===\n');
+    // Test 2: Batch fetch first 3 workflows
+    console.log('\n=== Test 2: Batch Fetch 3 Workflows ===\n');
     const workflows = await collector.fetchWorkflowDefinitions([1, 2, 3], 500);
 
-    console.log(`\n成功獲取 ${workflows.length} 個 workflow:`);
+    console.log(`\nSuccessfully fetched ${workflows.length} workflows:`);
     workflows.forEach(wf => {
-      console.log(`  - [${wf.id}] ${wf.name} (${wf.nodes.length} 個節點)`);
+      console.log(`  - [${wf.id}] ${wf.name} (${wf.nodes.length} nodes)`);
     });
 
   } catch (error) {
-    console.error('測試失敗:', error);
+    console.error('Test failed:', error);
   }
 }
 

@@ -8,7 +8,7 @@
 import fs from 'fs';
 
 /**
- * 類別定義介面
+ * Category definition interface
  */
 export interface CategoryDefinition {
   name: string;
@@ -20,14 +20,14 @@ export interface CategoryDefinition {
 }
 
 /**
- * 類別配置介面
+ * Category configuration interface
  */
 export interface CategoryConfig {
   categories: Record<string, CategoryDefinition>;
 }
 
 /**
- * 分類的節點介面
+ * Categorized node interface
  */
 export interface CategorizedNode {
   nodeType: string;
@@ -39,7 +39,7 @@ export interface CategorizedNode {
 }
 
 /**
- * 組織結果介面
+ * Organization result interface
  */
 export interface OrganizationResult {
   topNodes: CategorizedNode[];
@@ -48,7 +48,7 @@ export interface OrganizationResult {
 }
 
 /**
- * 節點資訊介面
+ * Node information interface
  */
 export interface NodeInfo {
   nodeType: string;
@@ -61,12 +61,12 @@ export interface NodeInfo {
 }
 
 /**
- * 類別組織器
+ * Category organizer
  *
- * 根據 config/categories.json 的定義，將節點分類為：
- * - 主要節點（Top 50）：進入主 Skill.md
- * - 次要節點：進入 resources/ 目錄
- * - 未分類節點：需要手動處理
+ * Based on config/categories.json definitions, categorizes nodes into:
+ * - Top nodes (Top 50): Goes into main Skill.md
+ * - Secondary nodes: Goes into resources/ directory
+ * - Uncategorized nodes: Requires manual processing
  */
 export class CategoryOrganizer {
   private categoryConfig!: CategoryConfig;
@@ -79,33 +79,33 @@ export class CategoryOrganizer {
   }
 
   /**
-   * 載入類別配置檔案
+   * Load category configuration file
    */
   private loadCategoryConfig(configPath: string): void {
     try {
       const configContent = fs.readFileSync(configPath, 'utf-8');
       this.categoryConfig = JSON.parse(configContent);
     } catch (error) {
-      throw new Error(`無法載入類別配置檔案 ${configPath}: ${(error as Error).message}`);
+      throw new Error(`Failed to load category configuration file ${configPath}: ${(error as Error).message}`);
     }
   }
 
   /**
-   * 建立類別對應映射
-   * 用於快速查詢節點所屬的類別和優先順序
+   * Build category mapping
+   * Used for quick lookup of node's category and priority
    */
   private buildCategoryMaps(): void {
     for (const [categoryKey, categoryDef] of Object.entries(this.categoryConfig.categories)) {
       this.categoryPriorityMap.set(categoryKey, categoryDef.priority);
 
-      // 處理直接定義的節點
+      // Process directly defined nodes
       if (categoryDef.nodes) {
         for (const nodeType of categoryDef.nodes) {
           this.nodeToCategory.set(nodeType, { category: categoryKey });
         }
       }
 
-      // 處理子分類
+      // Process subcategories
       if (categoryDef.subcategories) {
         for (const [subcategoryKey, nodes] of Object.entries(categoryDef.subcategories)) {
           for (const nodeType of nodes) {
@@ -120,17 +120,17 @@ export class CategoryOrganizer {
   }
 
   /**
-   * 組織所有節點
+   * Organize all nodes
    *
-   * @param nodes 所有節點資訊
-   * @param topNodesLimit 主要節點數量上限（預設 50）
-   * @returns 組織結果
+   * @param nodes All node information
+   * @param topNodesLimit Maximum number of top nodes (default 50)
+   * @returns Organization result
    */
   organize(nodes: NodeInfo[], topNodesLimit: number = 50): OrganizationResult {
     const categorizedNodes: CategorizedNode[] = [];
     const uncategorizedNodes: string[] = [];
 
-    // 將每個節點分配到對應的類別
+    // Assign each node to corresponding category
     for (const node of nodes) {
       const nodeTypeKey = this.extractNodeTypeKey(node.nodeType);
       const categoryInfo = this.nodeToCategory.get(nodeTypeKey);
@@ -143,14 +143,14 @@ export class CategoryOrganizer {
           category: categoryInfo.category,
           subcategory: categoryInfo.subcategory,
           priority,
-          isTopNode: false // 稍後決定
+          isTopNode: false // Decided later
         });
       } else {
         uncategorizedNodes.push(node.nodeType);
       }
     }
 
-    // 根據優先順序排序
+    // Sort by priority
     categorizedNodes.sort((a, b) => {
       if (a.priority !== b.priority) {
         return a.priority - b.priority;
@@ -158,7 +158,7 @@ export class CategoryOrganizer {
       return a.displayName.localeCompare(b.displayName);
     });
 
-    // 決定哪些是主要節點（Top N）
+    // Determine which are top nodes (Top N)
     const topNodes = categorizedNodes.slice(0, topNodesLimit).map(node => ({
       ...node,
       isTopNode: true
@@ -177,9 +177,9 @@ export class CategoryOrganizer {
   }
 
   /**
-   * 提取節點類型的關鍵字
-   * 例如：nodes-base.Slack -> Slack
-   *       n8n-nodes-langchain.OpenAI -> OpenAI
+   * Extract node type key
+   * Example: nodes-base.Slack -> Slack
+   *          n8n-nodes-langchain.OpenAI -> OpenAI
    */
   private extractNodeTypeKey(nodeType: string): string {
     const parts = nodeType.split('.');
@@ -190,10 +190,10 @@ export class CategoryOrganizer {
   }
 
   /**
-   * 根據類別分組節點
+   * Group nodes by category
    *
-   * @param nodes 已分類的節點
-   * @returns 按類別分組的節點映射
+   * @param nodes Categorized nodes
+   * @returns Map of nodes grouped by category
    */
   groupByCategory(nodes: CategorizedNode[]): Map<string, CategorizedNode[]> {
     const grouped = new Map<string, CategorizedNode[]>();
@@ -213,14 +213,14 @@ export class CategoryOrganizer {
   }
 
   /**
-   * 取得類別資訊
+   * Get category information
    */
   getCategoryInfo(categoryKey: string): CategoryDefinition | undefined {
     return this.categoryConfig.categories[categoryKey];
   }
 
   /**
-   * 取得所有類別按優先順序排序
+   * Get all categories sorted by priority
    */
   getCategoriesByPriority(): Array<{ key: string; definition: CategoryDefinition }> {
     return Object.entries(this.categoryConfig.categories)
@@ -229,7 +229,7 @@ export class CategoryOrganizer {
   }
 
   /**
-   * 產生統計資訊
+   * Generate statistics
    */
   generateStatistics(result: OrganizationResult): {
     totalNodes: number;

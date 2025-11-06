@@ -1,6 +1,6 @@
 /**
  * Parsers Module
- * 導出所有解析器
+ * Exports all parsers
  */
 
 export { NodeParser } from './node-parser';

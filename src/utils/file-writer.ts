@@ -45,6 +45,6 @@ export async function cleanDirectory(dirPath: string): Promise<void> {
       await ensureDir(dirPath);
     }
   } catch (error) {
-    throw new Error(`清理目錄失敗: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(`Failed to clean directory: ${error instanceof Error ? error.message : String(error)}`);
   }
 }

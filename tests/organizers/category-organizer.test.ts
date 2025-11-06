@@ -10,7 +10,7 @@ describe('CategoryOrganizer', () => {
   });
 
   describe('organize', () => {
-    it('應該正確組織節點為主要和次要節點', () => {
+    it('should correctly organize nodes into top and remaining nodes', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.httpRequest',
@@ -39,7 +39,7 @@ describe('CategoryOrganizer', () => {
       expect(result.uncategorizedNodes.length).toBe(1);
     });
 
-    it('應該根據優先順序排序節點', () => {
+    it('should sort nodes by priority', () => {
       const mockNodes = [
         {
           nodeType: 'nodes-base.slack',
@@ -63,7 +63,7 @@ describe('CategoryOrganizer', () => {
   });
 
   describe('groupByCategory', () => {
-    it('應該按類別分組節點', () => {
+    it('should group nodes by category', () => {
       const categorizedNodes = [
         {
           nodeType: 'nodes-base.httpRequest',
@@ -91,22 +91,22 @@ describe('CategoryOrganizer', () => {
   });
 
   describe('getCategoryInfo', () => {
-    it('應該回傳正確的類別資訊', () => {
+    it('should return correct category information', () => {
       const coreInfo = organizer.getCategoryInfo('core');
 
       expect(coreInfo).toBeDefined();
-      expect(coreInfo?.name).toBe('核心節點');
+      expect(coreInfo?.name).toBe('Core Nodes');
       expect(coreInfo?.priority).toBe(1);
     });
 
-    it('對於不存在的類別應該回傳 undefined', () => {
+    it('should return undefined for non-existent category', () => {
       const info = organizer.getCategoryInfo('nonexistent');
       expect(info).toBeUndefined();
     });
   });
 
   describe('generateStatistics', () => {
-    it('應該產生正確的統計資訊', () => {
+    it('should generate correct statistics', () => {
       const result = {
         topNodes: [
           {

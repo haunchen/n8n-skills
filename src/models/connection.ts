@@ -8,7 +8,7 @@
 import type { NodeConnectionType } from 'n8n-workflow';
 
 /**
- * 相容性條目
+ * Compatibility entry
  */
 export interface CompatibilityEntry {
   targetNode: string;
@@ -18,8 +18,8 @@ export interface CompatibilityEntry {
 }
 
 /**
- * 相容性矩陣
- * 記錄每個節點可以連接到哪些節點
+ * Compatibility matrix
+ * Records which nodes each node can connect to
  */
 export interface CompatibilityMatrix {
   [sourceNode: string]: {
@@ -29,8 +29,8 @@ export interface CompatibilityMatrix {
 }
 
 /**
- * 節點連接資訊
- * 用於分析節點間的連接相容性
+ * Node connection information
+ * Used for analyzing connection compatibility between nodes
  */
 export interface NodeConnectionInfo {
   nodeType: string;

@@ -14,7 +14,7 @@ import type { CompatibilityMatrix, NodeConnectionInfo } from '../models/connecti
 import { ConnectionRuleGenerator } from './connection-rule-generator';
 
 /**
- * 節點位置資訊（用於合併檔案中的節點）
+ * Node position information (for nodes in merged files)
  */
 export interface NodePositionInfo {
   nodeType: string;
@@ -28,7 +28,7 @@ export interface NodePositionInfo {
 }
 
 /**
- * 合併檔案資訊
+ * Merged file information
  */
 export interface MergedFileInfo {
   filename: string;
@@ -38,7 +38,7 @@ export interface MergedFileInfo {
 }
 
 /**
- * 資源生成器配置
+ * Resource generator configuration
  */
 export interface ResourceGeneratorConfig {
   outputDir: string;
@@ -46,7 +46,7 @@ export interface ResourceGeneratorConfig {
 }
 
 /**
- * 預設配置
+ * Default configuration
  */
 const DEFAULT_CONFIG: Required<ResourceGeneratorConfig> = {
   outputDir: path.join(process.cwd(), 'output/resources'),
@@ -54,8 +54,8 @@ const DEFAULT_CONFIG: Required<ResourceGeneratorConfig> = {
 };
 
 /**
- * 資源生成器
- * 為每個節點生成詳細的 Markdown 文件，按分類組織
+ * Resource generator
+ * Generate detailed Markdown files for each node, organized by category
  */
 export class ResourceGenerator {
   private config: Required<ResourceGeneratorConfig>;
@@ -68,8 +68,8 @@ export class ResourceGenerator {
   }
 
   /**
-   * 批次生成所有資源檔案
-   * 按分類組織節點並生成對應的文件和索引
+   * Batch generate all resource files
+   * Organize nodes by category and generate corresponding files and indexes
    */
   public async generateAll(
     nodes: EnrichedNodeInfo[],
@@ -83,10 +83,10 @@ export class ResourceGenerator {
     const categorizedNodes = new Map<string, EnrichedNodeInfo[]>();
     this.processedCount = 0;
 
-    // 確保輸出目錄存在
+    // Ensure output directory exists
     await this.ensureDirectory(this.config.outputDir);
 
-    // 按分類分組節點
+    // Group nodes by category
     for (const node of nodes) {
       const category = node.category || 'misc';
       if (!categorizedNodes.has(category)) {
@@ -95,12 +95,12 @@ export class ResourceGenerator {
       categorizedNodes.get(category)!.push(node);
     }
 
-    // 為每個分類生成檔案
+    // Generate files for each category
     for (const [category, categoryNodes] of categorizedNodes) {
       const categoryDir = path.join(this.config.outputDir, category);
       await this.ensureDirectory(categoryDir);
 
-      // 生成該分類的節點檔案
+      // Generate node files for this category
       for (const node of categoryNodes) {
         try {
           const filename = `${node.nodeType}.md`;
@@ -118,12 +118,12 @@ export class ResourceGenerator {
 
           this.processedCount++;
         } catch (error) {
-          // 忽略個別檔案生成錯誤，繼續處理其他檔案
-          console.warn(`生成資源檔案失敗: ${node.displayName}`, error);
+          // Ignore individual file generation errors, continue processing other files
+          console.warn(`Failed to generate resource file: ${node.displayName}`, error);
         }
       }
 
-      // 生成該分類的索引檔案
+      // Generate index file for this category
       await this.generateCategoryIndex(category, categoryNodes);
     }
 
@@ -131,8 +131,8 @@ export class ResourceGenerator {
   }
 
   /**
-   * 使用分層合併策略生成資源檔案
-   * 高優先級節點生成獨立檔案，低優先級節點合併到分類檔案中
+   * Generate resource files using tiered merge strategy
+   * High-priority nodes generate individual files, low-priority nodes are merged into category files
    */
   public async generateTiered(
     highPriorityNodes: EnrichedNodeInfo[],
@@ -146,13 +146,13 @@ export class ResourceGenerator {
     const resourceFiles: ResourceFile[] = [];
     this.processedCount = 0;
 
-    // 清理舊的節點資源檔案（保留 templates 目錄）
+    // Clean old node resource files (preserve templates directory)
     await this.cleanNodeResources();
 
-    // 確保輸出目錄存在
+    // Ensure output directory exists
     await this.ensureDirectory(this.config.outputDir);
 
-    // 為高優先級節點生成獨立檔案
+    // Generate individual files for high-priority nodes
     const highPriorityCategorized = new Map<string, EnrichedNodeInfo[]>();
     for (const node of highPriorityNodes) {
       const category = node.category || 'misc';
@@ -183,12 +183,12 @@ export class ResourceGenerator {
 
           this.processedCount++;
         } catch (error) {
-          console.warn(`生成高優先級資源檔案失敗: ${node.displayName}`, error);
+          console.warn(`Failed to generate high-priority resource file: ${node.displayName}`, error);
         }
       }
     }
 
-    // 為低優先級節點生成合併檔案
+    // Generate merged files for low-priority nodes
     const lowPriorityCategorized = new Map<string, EnrichedNodeInfo[]>();
     for (const node of lowPriorityNodes) {
       const category = node.category || 'misc';
@@ -198,7 +198,7 @@ export class ResourceGenerator {
       lowPriorityCategorized.get(category)!.push(node);
     }
 
-    // 收集所有合併檔案資訊
+    // Collect all merged file information
     const allMergedFileInfo: MergedFileInfo[] = [];
 
     for (const [category, categoryNodes] of lowPriorityCategorized) {
@@ -210,7 +210,7 @@ export class ResourceGenerator {
       allMergedFileInfo.push(...mergedFileInfo);
     }
 
-    // 為每個分類生成索引檔案（包含高優先級和低優先級節點）
+    // Generate index files for each category（including high-priority and low-priority nodes）
     const allCategorized = new Map<string, { high: EnrichedNodeInfo[]; low: EnrichedNodeInfo[] }>();
 
     for (const [category, nodes] of highPriorityCategorized) {
@@ -231,15 +231,15 @@ export class ResourceGenerator {
       await this.generateCategoryIndex(category, high, low);
     }
 
-    // 生成統一索引表
+    // Generate unified index
     await this.generateMasterIndex(highPriorityNodes, lowPriorityNodes, allMergedFileInfo);
 
     return resourceFiles;
   }
 
   /**
-   * 生成統一索引表 (INDEX.md)
-   * 提供所有節點的快速查找，包含行號定位資訊
+   * Generate unified index (INDEX.md)
+   * Provides quick access to all nodes, including line number location information
    */
   private async generateMasterIndex(
     highPriorityNodes: EnrichedNodeInfo[],
@@ -248,59 +248,59 @@ export class ResourceGenerator {
   ): Promise<void> {
     const lines: string[] = [];
 
-    // 分類名稱對照
+    // Category name mapping
     const categoryNames: Record<string, string> = {
-      transform: '資料轉換節點',
-      input: '輸入節點',
-      output: '輸出節點',
-      trigger: '觸發器節點',
-      organization: '組織節點',
-      misc: '其他節點',
+      transform: 'Data Transformation Nodes',
+      input: 'Input Nodes',
+      output: 'Output Nodes',
+      trigger: 'Trigger Nodes',
+      organization: 'Organization Nodes',
+      misc: 'Miscellaneous Nodes',
     };
 
-    // 標題
-    lines.push('# n8n 節點資源索引');
+    // Title
+    lines.push('# n8n Node Resource Index');
     lines.push('');
-    lines.push(`本索引提供所有 ${highPriorityNodes.length + lowPriorityNodes.length} 個 n8n 節點的快速查找。`);
+    lines.push(`This index provides quick access to all ${highPriorityNodes.length + lowPriorityNodes.length} n8n nodes.`);
     lines.push('');
 
-    // 使用指南
-    lines.push('## 使用指南');
+    // Usage guide
+    lines.push('## Usage Guide');
     lines.push('');
-    lines.push('本索引包含兩種查找方式：');
+    lines.push('This index contains two ways to search:');
     lines.push('');
-    lines.push('1. 按分類查找：依據節點功能分類瀏覽');
-    lines.push('2. 範本索引：瀏覽熱門工作流程範本');
+    lines.push('1. Find by Category: Browse nodes by functional category');
+    lines.push('2. Template Index: Browse popular workflow templates');
     lines.push('');
-    lines.push('### AI 助理使用說明');
+    lines.push('### Instructions for AI Assistants');
     lines.push('');
-    lines.push('對於合併檔案中的節點，可以使用行號範圍精準讀取：');
+    lines.push('For nodes in merged files, use line number ranges for precise reading:');
     lines.push('');
     lines.push('```');
-    lines.push('Read(file_path, offset=起始行號, limit=行數)');
+    lines.push('Read(file_path, offset=starting_line, limit=line_count)');
     lines.push('```');
     lines.push('');
-    lines.push('範例：讀取 Azure Cosmos DB 節點（開始行號 110，行數 64）');
+    lines.push('Example: Read Azure Cosmos DB node (starting line 110, line count 64)');
     lines.push('```');
     lines.push('Read("resources/transform/transform-merged-1.md", offset=110, limit=64)');
     lines.push('```');
     lines.push('');
 
-    // 快速導航
-    lines.push('## 快速導航');
+    // Quick navigation
+    lines.push('## Quick Navigation');
     lines.push('');
-    lines.push('- [按分類查找](#按分類查找)');
-    lines.push('- [範本索引](#範本索引)');
-    lines.push('- [統計資訊](#統計資訊)');
+    lines.push('- [Find by Category](#find-by-category)');
+    lines.push('- [Template Index](#template-index)');
+    lines.push('- [Statistics](#statistics)');
     lines.push('');
     lines.push('---');
     lines.push('');
 
-    // 按分類查找
-    lines.push('## 按分類查找');
+    // Find by category
+    lines.push('## Find by Category');
     lines.push('');
 
-    // 整理各分類的節點
+    // Organize nodes by category
     const categorizedHigh = new Map<string, EnrichedNodeInfo[]>();
     const categorizedLow = new Map<string, EnrichedNodeInfo[]>();
 
@@ -320,7 +320,7 @@ export class ResourceGenerator {
       categorizedLow.get(category)!.push(node);
     });
 
-    // 按分類順序輸出
+    // Output by category order
     const categories = ['transform', 'input', 'output', 'trigger', 'organization', 'misc'];
 
     for (const category of categories) {
@@ -331,14 +331,14 @@ export class ResourceGenerator {
       if (totalCount === 0) continue;
 
       const categoryName = categoryNames[category] || category;
-      lines.push(`### ${categoryName} - ${totalCount} 個節點`);
+      lines.push(`### ${categoryName} - ${totalCount} nodes`);
       lines.push('');
 
-      // 高優先級節點（獨立檔案）
+      // High-priority nodes (individual files)
       if (highNodes.length > 0) {
-        lines.push(`#### 高優先級節點（${highNodes.length} 個獨立檔案）`);
+        lines.push(`#### High-Priority Nodes (${highNodes.length} individual files)`);
         lines.push('');
-        lines.push('| 節點名稱 | nodeType | 檔案路徑 | 描述 |');
+        lines.push('| Node Name | nodeType | File Path | Description |');
         lines.push('|---------|---------|---------|------|');
 
         highNodes
@@ -353,20 +353,20 @@ export class ResourceGenerator {
         lines.push('');
       }
 
-      // 低優先級節點（合併檔案）
+      // Low-priority nodes (merged files)
       if (lowNodes.length > 0) {
-        lines.push(`#### 其他節點（${lowNodes.length} 個，位於合併檔案）`);
+        lines.push(`#### Other Nodes (${lowNodes.length} nodes in merged files)`);
         lines.push('');
-        lines.push('| 節點名稱 | nodeType | 檔案路徑 | 開始行號 | 行數 | 描述 |');
+        lines.push('| Node Name | nodeType | File Path | Start Line | Line Count | Description |');
         lines.push('|---------|---------|---------|---------|-----|------|');
 
-        // 找到該分類的合併檔案資訊
+        // Find merged file information for this category
         const categoryMergedFiles = mergedFileInfo.filter(f => f.category === category);
 
         lowNodes
-          .sort((a, b) => a.displayName.localeCompare(b.displayName, 'zh-TW'))
+          .sort((a, b) => a.displayName.localeCompare(b.displayName, 'en'))
           .forEach(node => {
-            // 在合併檔案中找到該節點的位置
+            // Find the position of this node in merged files
             let positionInfo: NodePositionInfo | undefined;
             let mergedFilename = '';
 
@@ -393,32 +393,32 @@ export class ResourceGenerator {
     lines.push('---');
     lines.push('');
 
-    // 範本索引
-    lines.push('## 範本索引');
+    // Template index
+    lines.push('## Template Index');
     lines.push('');
-    lines.push('熱門工作流程範本位於 `templates/` 目錄，依據功能分類：');
+    lines.push('Popular workflow templates are located in the `templates/` directory, categorized by functionality:');
     lines.push('');
-    lines.push('- [AI 與聊天機器人](templates/ai-chatbots/) - AI 代理、聊天機器人相關範本');
-    lines.push('- [社群媒體](templates/social-media/) - 社群媒體自動化範本');
-    lines.push('- [資料處理](templates/data-processing/) - 資料轉換與處理範本');
-    lines.push('- [通訊整合](templates/communication/) - 通訊工具整合範本');
+    lines.push('- [AI & Chatbots](templates/ai-chatbots/) - AI agents, chatbot-related templates');
+    lines.push('- [Social Media](templates/social-media/) - Social media automation templates');
+    lines.push('- [Data Processing](templates/data-processing/) - Data transformation and processing templates');
+    lines.push('- [Communication](templates/communication/) - Communication tool integration templates');
     lines.push('');
-    lines.push('詳細範本列表請參考各子目錄的 README.md 檔案。');
+    lines.push('For detailed template lists, please refer to the README.md file in each subdirectory.');
     lines.push('');
     lines.push('---');
     lines.push('');
 
-    // 統計資訊
-    lines.push('## 統計資訊');
+    // Statistics
+    lines.push('## Statistics');
     lines.push('');
-    lines.push(`- 總節點數：${highPriorityNodes.length + lowPriorityNodes.length}`);
-    lines.push(`- 高優先級節點：${highPriorityNodes.length}（獨立檔案）`);
-    lines.push(`- 低優先級節點：${lowPriorityNodes.length}（合併檔案）`);
-    lines.push(`- 合併檔案數：${mergedFileInfo.length}`);
+    lines.push(`- Total nodes: ${highPriorityNodes.length + lowPriorityNodes.length}`);
+    lines.push(`- High-priority nodes: ${highPriorityNodes.length} (individual files)`);
+    lines.push(`- Low-priority nodes: ${lowPriorityNodes.length} (merged files)`);
+    lines.push(`- Merged file count: ${mergedFileInfo.length}`);
     lines.push('');
 
-    // 各分類統計
-    lines.push('### 各分類節點數');
+    // Statistics by category
+    lines.push('### Nodes by Category');
     lines.push('');
     for (const category of categories) {
       const highNodes = categorizedHigh.get(category) || [];
@@ -426,26 +426,26 @@ export class ResourceGenerator {
       const total = highNodes.length + lowNodes.length;
       if (total > 0) {
         const categoryName = categoryNames[category] || category;
-        lines.push(`- ${categoryName}：${total} 個（高優先級 ${highNodes.length}，其他 ${lowNodes.length}）`);
+        lines.push(`- ${categoryName}: ${total} nodes (high-priority: ${highNodes.length}, other: ${lowNodes.length})`);
       }
     }
     lines.push('');
 
     const currentDate = new Date().toISOString().split('T')[0];
-    lines.push(`- 最後更新：${currentDate}`);
+    lines.push(`- Last updated: ${currentDate}`);
     lines.push('');
 
-    // 寫入檔案
+    // Write file
     const indexPath = path.join(this.config.outputDir, 'INDEX.md');
     await fs.writeFile(indexPath, lines.join('\n'), 'utf-8');
 
-    console.log(`✓ 已生成統一索引表: INDEX.md`);
+    console.log(`✓ Generated unified index: INDEX.md`);
   }
 
   /**
-   * 為一個分類的低優先級節點生成合併檔案
-   * 如果節點數超過 100，則分割成多個檔案
-   * 返回資源檔案列表和節點位置資訊
+   * Generate merged files for low-priority nodes in a category
+   * If node count exceeds 100, split into multiple files
+   * Return resource file list and node position information
    */
   private async generateMergedCategoryFile(
     category: string,
@@ -459,7 +459,7 @@ export class ResourceGenerator {
     const NODES_PER_FILE = 100;
 
     if (nodes.length > NODES_PER_FILE) {
-      // 分割成多個檔案
+      // Split into multiple files
       const numParts = Math.ceil(nodes.length / NODES_PER_FILE);
 
       for (let i = 0; i < numParts; i++) {
@@ -475,9 +475,9 @@ export class ResourceGenerator {
         await fs.writeFile(filepath, content, 'utf-8');
 
         resourceFiles.push({
-          name: `${category} - 節點合集 (Part ${partNumber})`,
+          name: `${category} - Node Collection (Part ${partNumber})`,
           path: `resources/${category}/${filename}`,
-          description: `包含 ${partNodes.length} 個節點`,
+          description: `Contains ${partNodes.length} nodes`,
           category,
         });
 
@@ -491,7 +491,7 @@ export class ResourceGenerator {
         this.processedCount += partNodes.length;
       }
     } else {
-      // 生成單一合併檔案
+      // Generate single merged file
       const filename = `${category}-merged.md`;
       const filepath = path.join(categoryDir, filename);
       const { content, nodePositions } = this.buildMergedContent(category, nodes);
@@ -499,9 +499,9 @@ export class ResourceGenerator {
       await fs.writeFile(filepath, content, 'utf-8');
 
       resourceFiles.push({
-        name: `${category} - 節點合集`,
+        name: `${category} - Node Collection`,
         path: `resources/${category}/${filename}`,
-        description: `包含 ${nodes.length} 個節點`,
+        description: `Contains ${nodes.length} nodes`,
         category,
       });
 
@@ -519,9 +519,9 @@ export class ResourceGenerator {
   }
 
   /**
-   * 建立合併檔案的內容
-   * 包含 TOC 和所有節點的完整內容
-   * 同時計算每個節點的行號位置
+   * Build content for merged file
+   * Includes TOC and complete content for all nodes
+   * Also calculates line number positions for each node
    */
   private buildMergedContent(
     category: string,
@@ -531,38 +531,38 @@ export class ResourceGenerator {
     const lines: string[] = [];
     const nodePositions: NodePositionInfo[] = [];
 
-    // 分類名稱對照
+    // Category name mapping
     const categoryNames: Record<string, string> = {
-      transform: '資料轉換節點',
-      input: '輸入節點',
-      output: '輸出節點',
-      trigger: '觸發器節點',
-      organization: '組織節點',
-      misc: '其他節點',
+      transform: 'Data Transformation Nodes',
+      input: 'Input Nodes',
+      output: 'Output Nodes',
+      trigger: 'Trigger Nodes',
+      organization: 'Organization Nodes',
+      misc: 'Miscellaneous Nodes',
     };
 
     const categoryName = categoryNames[category] || category;
     const title = partNumber
-      ? `${categoryName} - 節點合集 (Part ${partNumber})`
-      : `${categoryName} - 節點合集`;
+      ? `${categoryName} - Node Collection (Part ${partNumber})`
+      : `${categoryName} - Node Collection`;
 
-    // 標題
+    // Title
     lines.push(`# ${title}`);
     lines.push('');
-    lines.push(`本文件包含 ${nodes.length} 個節點的完整資訊。`);
+    lines.push(`This file contains complete information for ${nodes.length} nodes.`);
     lines.push('');
 
-    // 生成 TOC
-    lines.push('## 目錄');
+    // Generate TOC
+    lines.push('## Table of Contents');
     lines.push('');
 
-    // 按字母順序排序節點用於 TOC
+    // Sort nodes alphabetically for TOC
     const sortedNodes = [...nodes].sort((a, b) =>
-      a.displayName.localeCompare(b.displayName, 'zh-TW')
+      a.displayName.localeCompare(b.displayName, 'en')
     );
 
     sortedNodes.forEach(node => {
-      // 生成錨點：將節點名稱轉換為小寫，空格和特殊字元轉換為連字符
+      // Generate anchor: Convert node name to lowercase, spaces and special characters to hyphens
       const anchor = node.displayName
         .toLowerCase()
         .replace(/\s+/g, '-')
@@ -573,10 +573,10 @@ export class ResourceGenerator {
     lines.push('---');
     lines.push('');
 
-    // 記錄 TOC 結束後的當前行數（用於計算節點起始行號）
-    let currentLine = lines.length + 1; // +1 因為行號從 1 開始
+    // Record current line number after TOC ends (for calculating node starting line numbers)
+    let currentLine = lines.length + 1; // +1 because line numbers start from 1
 
-    // 為每個節點生成完整內容並記錄行號
+    // Generate complete content for each node and record line numbers
     sortedNodes.forEach((node, index) => {
       const nodeStartLine = currentLine;
       const nodeLinesStart = lines.length;
@@ -586,57 +586,57 @@ export class ResourceGenerator {
         lines.push('');
       }
 
-      // 使用二級標題作為節點標題
+      // Use secondary headings for node titles
       lines.push(`## ${node.displayName}`);
       lines.push('');
 
-      // 基本資訊
+      // Basic information
       this.appendBasicInfo(lines, node);
 
-      // 描述
+      // Description
       if (node.description) {
-        lines.push('### 描述');
+        lines.push('### Description');
         lines.push('');
         lines.push(escapeMarkdown(node.description));
         lines.push('');
       }
 
-      // 操作列表
+      // Operations list
       if (node.properties?.operations && node.properties.operations.length > 0) {
-        lines.push('### 可用操作');
+        lines.push('### Available Operations');
         lines.push('');
         this.appendOperations(lines, node.properties.operations);
       }
 
-      // 核心屬性
+      // Core properties
       if (node.properties?.coreProperties && node.properties.coreProperties.length > 0) {
         this.appendPropertiesForMerged(lines, node.properties.coreProperties);
       }
 
-      // 連接指南
+      // Connection guide
       if (this.compatibilityMatrix && this.nodeConnectionInfoList) {
         const connectionGuide = this.generateConnectionGuide(node);
         if (connectionGuide) {
-          // 將連接指南的標題層級調整為三級
+          // Adjust Connection guide heading level to three levels
           const adjustedGuide = connectionGuide.replace(/^## /gm, '### ');
           lines.push(adjustedGuide);
         }
       }
 
-      // JSON 配置範例
+      // JSON configuration examples
       this.appendExamplesForMerged(lines, node);
 
-      // 計算節點內容的行數
+      // Calculate line count for node content
       const nodeLineCount = lines.length - nodeLinesStart;
       const nodeEndLine = nodeStartLine + nodeLineCount - 1;
 
-      // 生成錨點
+      // Generate anchor
       const anchor = node.displayName
         .toLowerCase()
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9\u4e00-\u9fa5-]/g, '');
 
-      // 記錄節點位置
+      // Record node position
       nodePositions.push({
         nodeType: node.nodeType,
         displayName: node.displayName,
@@ -648,7 +648,7 @@ export class ResourceGenerator {
         usagePercentage: node.usagePercentage,
       });
 
-      // 更新當前行號
+      // Update current line number
       currentLine = nodeEndLine + 1;
     });
 
@@ -659,26 +659,26 @@ export class ResourceGenerator {
   }
 
   /**
-   * 為合併檔案附加屬性列表（調整標題層級）
+   * Append properties list for merged files (adjust heading levels)
    */
   private appendPropertiesForMerged(lines: string[], properties: CoreProperty[]): void {
-    lines.push('### 核心屬性');
+    lines.push('### Core Properties');
     lines.push('');
-    lines.push('| 屬性名稱 | 類型 | 必填 | 預設值 | 描述 |');
+    lines.push('| Property Name | Type | Required | Default | Description |');
     lines.push('|---------|------|------|--------|------|');
 
     properties.forEach(prop => {
       const defaultValue = prop.default !== undefined ? `\`${JSON.stringify(prop.default)}\`` : '-';
       const description = escapeTableCell(prop.description || '-');
-      const required = prop.required ? '是' : '否';
+      const required = prop.required ? 'Yes' : 'No';
       lines.push(`| \`${prop.name}\` | ${prop.type} | ${required} | ${defaultValue} | ${description} |`);
     });
     lines.push('');
 
-    // 詳細說明有選項的屬性
+    // Detail properties with options
     const propsWithOptions = properties.filter(p => p.options && p.options.length > 0);
     if (propsWithOptions.length > 0) {
-      lines.push('#### 屬性詳細說明');
+      lines.push('#### Property Details');
       lines.push('');
       propsWithOptions.forEach(prop => {
         lines.push(`##### ${prop.displayName} (\`${prop.name}\`)`);
@@ -687,7 +687,7 @@ export class ResourceGenerator {
           lines.push(escapeMarkdown(prop.description));
           lines.push('');
         }
-        lines.push('可選值:');
+        lines.push('Optional values:');
         prop.options!.forEach(opt => {
           const desc = opt.description ? ` - ${escapeMarkdown(opt.description)}` : '';
           lines.push(`- \`${opt.value}\`: ${opt.name}${desc}`);
@@ -698,27 +698,27 @@ export class ResourceGenerator {
   }
 
   /**
-   * 為合併檔案附加 JSON 範例（調整標題層級）
+   * Append JSON examples for merged files (adjust heading levels)
    */
   private appendExamplesForMerged(lines: string[], node: EnrichedNodeInfo): void {
-    lines.push('### JSON 配置範例');
+    lines.push('### JSON Configuration Examples');
     lines.push('');
 
     const operations = node.properties?.operations || [];
     const hasOperations = operations.length > 0;
 
-    // 總是生成基本範例
-    lines.push('#### 基本配置');
+    // Always generate basic example
+    lines.push('#### Basic Configuration');
     lines.push('```json');
     lines.push(JSON.stringify(this.generateBasicExample(node), null, 2));
     lines.push('```');
     lines.push('');
 
-    // 如果有操作，生成操作範例（最多 2 個）
+    // If operations exist, generate operation examples (up to 2)
     if (hasOperations) {
       const exampleOperations = operations.slice(0, 2);
       exampleOperations.forEach(operation => {
-        lines.push(`#### ${operation.name}範例`);
+        lines.push(`#### ${operation.name} Example`);
         lines.push('```json');
         lines.push(JSON.stringify(this.generateOperationExample(node, operation), null, 2));
         lines.push('```');
@@ -728,8 +728,8 @@ export class ResourceGenerator {
   }
 
   /**
-   * 生成分類索引檔案
-   * 支援區分高優先級獨立檔案和低優先級合併檔案
+   * Generate category index file
+   * Supports distinguishing high-priority individual files and low-priority merged files
    */
   private async generateCategoryIndex(
     category: string,
@@ -738,39 +738,39 @@ export class ResourceGenerator {
   ): Promise<void> {
     const lines: string[] = [];
 
-    // 分類名稱對照
+    // Category name mapping
     const categoryNames: Record<string, string> = {
-      transform: '資料轉換節點',
-      input: '輸入節點',
-      output: '輸出節點',
-      trigger: '觸發器節點',
-      organization: '組織節點',
-      misc: '其他節點',
+      transform: 'Data Transformation Nodes',
+      input: 'Input Nodes',
+      output: 'Output Nodes',
+      trigger: 'Trigger Nodes',
+      organization: 'Organization Nodes',
+      misc: 'Miscellaneous Nodes',
     };
 
     const categoryName = categoryNames[category] || category;
 
-    // 兼容舊的單一參數用法（generateAll 方法）
+    // Compatibility with old single-parameter usage (generateAll method)
     if (highPriorityNodes === undefined && lowPriorityNodes === undefined) {
-      // 這種情況不應該發生，但為了向後兼容，返回
+      // This should not happen, but return for backward compatibility
       return;
     }
 
-    // 如果只傳入 highPriorityNodes（當作所有節點），則是舊的 generateAll 用法
+    // If only highPriorityNodes passed (treated as all nodes), use old generateAll usage
     if (lowPriorityNodes === undefined && highPriorityNodes !== undefined) {
       const allNodes = highPriorityNodes;
       lines.push(`# ${categoryName}`);
       lines.push('');
-      lines.push(`共 ${allNodes.length} 個節點`);
+      lines.push(`Total: ${allNodes.length} nodes`);
       lines.push('');
 
-      // 按字母順序排序
+      // Sort alphabetically
       const sortedNodes = [...allNodes].sort((a, b) =>
-        a.displayName.localeCompare(b.displayName, 'zh-TW')
+        a.displayName.localeCompare(b.displayName, 'en')
       );
 
-      // 生成節點列表
-      lines.push('## 節點列表');
+      // Generate node list
+      lines.push('## Node List');
       lines.push('');
       sortedNodes.forEach(node => {
         const filename = `${node.nodeType}.md`;
@@ -779,25 +779,25 @@ export class ResourceGenerator {
       });
       lines.push('');
     } else {
-      // 新的分層用法（generateTiered 方法）
+      // New tiered usage (generateTiered method)
       const high = highPriorityNodes || [];
       const low = lowPriorityNodes || [];
       const totalCount = high.length + low.length;
 
       lines.push(`# ${categoryName}`);
       lines.push('');
-      lines.push(`共 ${totalCount} 個節點（高優先級: ${high.length}，其他: ${low.length}）`);
+      lines.push(`Total: ${totalCount} nodes (high-priority: ${high.length}, other: ${low.length})`);
       lines.push('');
 
-      // 高優先級節點（獨立檔案）
+      // High-priority nodes (individual files)
       if (high.length > 0) {
-        lines.push('## 高優先級節點');
+        lines.push('## High-Priority Nodes');
         lines.push('');
-        lines.push('以下節點具有獨立的詳細文件：');
+        lines.push('The following nodes have individual detailed documentation:');
         lines.push('');
 
         const sortedHigh = [...high].sort((a, b) =>
-          a.displayName.localeCompare(b.displayName, 'zh-TW')
+          a.displayName.localeCompare(b.displayName, 'en')
         );
 
         sortedHigh.forEach(node => {
@@ -808,16 +808,16 @@ export class ResourceGenerator {
         lines.push('');
       }
 
-      // 低優先級節點（合併檔案）
+      // Low-priority nodes (merged files)
       if (low.length > 0) {
-        lines.push('## 其他節點');
+        lines.push('## Other Nodes');
         lines.push('');
 
         const NODES_PER_FILE = 100;
         if (low.length > NODES_PER_FILE) {
-          // 多個合併檔案
+          // Multiple merged files
           const numParts = Math.ceil(low.length / NODES_PER_FILE);
-          lines.push(`以下 ${low.length} 個節點已合併到 ${numParts} 個文件中：`);
+          lines.push(`The following ${low.length} nodes are merged into ${numParts} files:`);
           lines.push('');
 
           for (let i = 0; i < numParts; i++) {
@@ -826,32 +826,32 @@ export class ResourceGenerator {
             const partNodes = low.slice(startIdx, endIdx);
             const partNumber = i + 1;
 
-            lines.push(`- [Part ${partNumber}](./${category}-merged-${partNumber}.md) - 包含 ${partNodes.length} 個節點`);
+            lines.push(`- [Part ${partNumber}](./${category}-merged-${partNumber}.md) - Contains ${partNodes.length} nodes`);
           }
           lines.push('');
 
-          // 列出所有節點名稱
-          lines.push('### 完整節點列表');
+          // List all node names
+          lines.push('### Complete Node List');
           lines.push('');
           const sortedLow = [...low].sort((a, b) =>
-            a.displayName.localeCompare(b.displayName, 'zh-TW')
+            a.displayName.localeCompare(b.displayName, 'en')
           );
           sortedLow.forEach(node => {
             lines.push(`- ${node.displayName}`);
           });
           lines.push('');
         } else {
-          // 單一合併檔案
-          lines.push('以下節點已合併到單一文件中：');
+          // Single merged file
+          lines.push('The following nodes are merged into a single file:');
           lines.push('');
-          lines.push(`- [查看完整列表](./${category}-merged.md) - 包含 ${low.length} 個節點`);
+          lines.push(`- [View Complete List](./${category}-merged.md) - Contains ${low.length} nodes`);
           lines.push('');
 
-          // 列出所有節點名稱
-          lines.push('### 完整節點列表');
+          // List all node names
+          lines.push('### Complete Node List');
           lines.push('');
           const sortedLow = [...low].sort((a, b) =>
-            a.displayName.localeCompare(b.displayName, 'zh-TW')
+            a.displayName.localeCompare(b.displayName, 'en')
           );
           sortedLow.forEach(node => {
             lines.push(`- ${node.displayName}`);
@@ -861,45 +861,45 @@ export class ResourceGenerator {
       }
     }
 
-    // 寫入索引檔案
+    // Write index file
     const indexPath = path.join(this.config.outputDir, category, 'README.md');
     await fs.writeFile(indexPath, lines.join('\n'), 'utf-8');
   }
 
   /**
-   * 建立完整資源檔案內容
+   * Build complete resource file content
    */
   private buildContent(node: EnrichedNodeInfo): string {
     const lines: string[] = [];
 
-    // 標題
+    // Title
     lines.push(`# ${node.displayName}`);
     lines.push('');
 
-    // 基本資訊
+    // Basic information
     this.appendBasicInfo(lines, node);
 
-    // 描述
+    // Description
     if (node.description) {
-      lines.push('## 描述');
+      lines.push('## Description');
       lines.push('');
       lines.push(escapeMarkdown(node.description));
       lines.push('');
     }
 
-    // 操作列表
+    // Operations list
     if (node.properties?.operations && node.properties.operations.length > 0) {
-      lines.push('## 可用操作');
+      lines.push('## Available Operations');
       lines.push('');
       this.appendOperations(lines, node.properties.operations);
     }
 
-    // 核心屬性
+    // Core properties
     if (node.properties?.coreProperties && node.properties.coreProperties.length > 0) {
       this.appendProperties(lines, node.properties.coreProperties);
     }
 
-    // 連接指南（如果有相容性資料）
+    // Connection guide (if compatibility data available)
     if (this.compatibilityMatrix && this.nodeConnectionInfoList) {
       const connectionGuide = this.generateConnectionGuide(node);
       if (connectionGuide) {
@@ -907,14 +907,14 @@ export class ResourceGenerator {
       }
     }
 
-    // JSON 配置範例（增強版：1-3 個範例）
+    // JSON configuration examples (enhanced: 1-3 examples)
     this.appendExamples(lines, node);
 
     return lines.join('\n');
   }
 
   /**
-   * 生成連接指南
+   * Generate connection guide
    */
   private generateConnectionGuide(node: EnrichedNodeInfo): string | null {
     if (!this.compatibilityMatrix || !this.nodeConnectionInfoList) {
@@ -936,30 +936,30 @@ export class ResourceGenerator {
   }
 
   /**
-   * 附加基本資訊
+   * Append basic information
    */
   private appendBasicInfo(lines: string[], node: EnrichedNodeInfo): void {
-    lines.push('## 基本資訊');
+    lines.push('## Basic Information');
     lines.push('');
-    lines.push(`- 節點類型: \`${node.nodeType}\``);
-    lines.push(`- 分類: ${node.category}`);
-    lines.push(`- 套件: ${node.packageName}`);
+    lines.push(`- Node Type: \`${node.nodeType}\``);
+    lines.push(`- Category: ${node.category}`);
+    lines.push(`- Package: ${node.packageName}`);
 
     if (node.usageCount !== undefined && node.usageCount > 0) {
-      lines.push(`- 使用次數: ${node.usageCount}`);
+      lines.push(`- Usage Count: ${node.usageCount}`);
     }
     if (node.usagePercentage !== undefined && node.usagePercentage > 0) {
-      lines.push(`- 使用率: ${node.usagePercentage.toFixed(2)}%`);
+      lines.push(`- Usage Rate: ${node.usagePercentage.toFixed(2)}%`);
     }
     if (node.properties?.hasCredentials) {
-      lines.push(`- 需要憑證: 是`);
+      lines.push(`- Requires Credentials: Yes`);
     }
 
     lines.push('');
   }
 
   /**
-   * 附加操作列表
+   * Append operations list
    */
   private appendOperations(lines: string[], operations: Operation[]): void {
     operations.forEach(op => {
@@ -967,35 +967,35 @@ export class ResourceGenerator {
       if (op.description) {
         lines.push(`${escapeMarkdown(op.description)}`);
       }
-      lines.push(`- 值: \`${op.value}\``);
+      lines.push(`- Value: \`${op.value}\``);
       if (op.resource) {
-        lines.push(`- 資源: \`${op.resource}\``);
+        lines.push(`- Resource: \`${op.resource}\``);
       }
       lines.push('');
     });
   }
 
   /**
-   * 附加屬性列表
+   * Append properties list
    */
   private appendProperties(lines: string[], properties: CoreProperty[]): void {
-    lines.push('## 核心屬性');
+    lines.push('## Core Properties');
     lines.push('');
-    lines.push('| 屬性名稱 | 類型 | 必填 | 預設值 | 描述 |');
+    lines.push('| Property Name | Type | Required | Default | Description |');
     lines.push('|---------|------|------|--------|------|');
 
     properties.forEach(prop => {
       const defaultValue = prop.default !== undefined ? `\`${JSON.stringify(prop.default)}\`` : '-';
       const description = escapeTableCell(prop.description || '-');
-      const required = prop.required ? '是' : '否';
+      const required = prop.required ? 'Yes' : 'No';
       lines.push(`| \`${prop.name}\` | ${prop.type} | ${required} | ${defaultValue} | ${description} |`);
     });
     lines.push('');
 
-    // 詳細說明有選項的屬性
+    // Detail properties with options
     const propsWithOptions = properties.filter(p => p.options && p.options.length > 0);
     if (propsWithOptions.length > 0) {
-      lines.push('### 屬性詳細說明');
+      lines.push('### Property Details');
       lines.push('');
       propsWithOptions.forEach(prop => {
         lines.push(`#### ${prop.displayName} (\`${prop.name}\`)`);
@@ -1004,7 +1004,7 @@ export class ResourceGenerator {
           lines.push(escapeMarkdown(prop.description));
           lines.push('');
         }
-        lines.push('可選值:');
+        lines.push('Optional values:');
         prop.options!.forEach(opt => {
           const desc = opt.description ? ` - ${escapeMarkdown(opt.description)}` : '';
           lines.push(`- \`${opt.value}\`: ${opt.name}${desc}`);
@@ -1015,27 +1015,27 @@ export class ResourceGenerator {
   }
 
   /**
-   * 附加增強的 JSON 範例（1-3 個）
+   * Append enhanced JSON examples (1-3 examples)
    */
   private appendExamples(lines: string[], node: EnrichedNodeInfo): void {
-    lines.push('## JSON 配置範例');
+    lines.push('## JSON Configuration Examples');
     lines.push('');
 
     const operations = node.properties?.operations || [];
     const hasOperations = operations.length > 0;
 
-    // 總是生成基本範例
-    lines.push('### 基本配置');
+    // Always generate basic example
+    lines.push('### Basic Configuration');
     lines.push('```json');
     lines.push(JSON.stringify(this.generateBasicExample(node), null, 2));
     lines.push('```');
     lines.push('');
 
-    // 如果有操作，生成操作範例（最多 2 個）
+    // If operations exist, generate operation examples (up to 2)
     if (hasOperations) {
       const exampleOperations = operations.slice(0, 2);
       exampleOperations.forEach(operation => {
-        lines.push(`### ${operation.name}範例`);
+        lines.push(`### ${operation.name} Example`);
         lines.push('```json');
         lines.push(JSON.stringify(this.generateOperationExample(node, operation), null, 2));
         lines.push('```');
@@ -1045,7 +1045,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 生成基本範例
+   * Generate basic example
    */
   private generateBasicExample(node: EnrichedNodeInfo): Record<string, any> {
     const example: Record<string, any> = {
@@ -1056,7 +1056,7 @@ export class ResourceGenerator {
       parameters: {}
     };
 
-    // 加入必填屬性的預設值
+    // Add default values for required properties
     if (node.properties?.coreProperties) {
       node.properties.coreProperties
         .filter(prop => prop.required)
@@ -1075,12 +1075,12 @@ export class ResourceGenerator {
   }
 
   /**
-   * 生成操作範例
+   * Generate operation example
    */
   private generateOperationExample(node: EnrichedNodeInfo, operation: Operation): Record<string, any> {
     const example = this.generateBasicExample(node);
 
-    // 設定操作
+    // Set operation
     if (operation.resource) {
       example.parameters.resource = operation.resource;
     }
@@ -1090,7 +1090,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 根據類型取得預設值
+   * Get default value by type
    */
   private getDefaultValueForType(type: string): any {
     switch (type) {
@@ -1111,7 +1111,7 @@ export class ResourceGenerator {
   }
 
   /**
-   * 確保目錄存在
+   * Ensure directory exists
    */
   private async ensureDirectory(dirPath: string): Promise<void> {
     try {
@@ -1124,21 +1124,21 @@ export class ResourceGenerator {
   }
 
   /**
-   * 取得已處理的檔案數量
+   * Get processed file count
    */
   public getProcessedCount(): number {
     return this.processedCount;
   }
 
   /**
-   * 取得輸出目錄
+   * Get output directory
    */
   public getOutputDir(): string {
     return this.config.outputDir;
   }
 
   /**
-   * 清理節點資源目錄（保留 templates 目錄）
+   * Clean node resource directory (preserve templates directory)
    */
   private async cleanNodeResources(): Promise<void> {
     const categories = ['transform', 'input', 'output', 'trigger', 'organization', 'misc'];
@@ -1147,25 +1147,25 @@ export class ResourceGenerator {
       try {
         await fs.rm(categoryDir, { recursive: true, force: true });
       } catch (error) {
-        // 忽略不存在的目錄
+        // Ignore non-existent directory
       }
     }
   }
 
   /**
-   * 清理所有生成的檔案
+   * Clean all generated files
    */
   public async cleanAll(): Promise<void> {
     try {
       await fs.rm(this.config.outputDir, { recursive: true, force: true });
     } catch (error) {
-      // 忽略不存在的目錄
+      // Ignore non-existent directory
     }
   }
 }
 
 /**
- * 建立資源生成器實例
+ * Create resource generator instance
  */
 export function createResourceGenerator(config: ResourceGeneratorConfig): ResourceGenerator {
   return new ResourceGenerator(config);

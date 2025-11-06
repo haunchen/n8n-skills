@@ -38,7 +38,7 @@ class OutputValidator {
   private issues: ValidationIssue[] = [];
   private fileStats: FileStats[] = [];
 
-  // 驗證規則設定
+  // Validation rule settings
   private readonly MAX_FILE_SIZE = 1024 * 1024; // 1MB
   private readonly REQUIRED_FILES = [
     'Skill.md',
@@ -51,35 +51,35 @@ class OutputValidator {
 
   async run(): Promise<void> {
     try {
-      info('開始驗證輸出檔案...\n');
+      info('Starting output file validation...\n');
 
-      // 載入設定檔
+      // Load config file
       await this.loadConfig();
 
-      // 執行各項驗證
+      // Execute validations
       await this.validateFileStructure();
       await this.validateMarkdownFiles();
       await this.validateInternalLinks();
       await this.collectStatistics();
 
-      // 生成報告
+      // Generate report
       const report = this.generateReport();
 
-      // 顯示報告
+      // Display report
       this.printReport(report);
 
-      // 儲存報告
+      // Save report
       await this.saveReport(report);
 
-      // 根據結果決定退出碼
+      // Determine exit code based on result
       if (!report.passed) {
-        error('驗證失敗，發現錯誤');
+        error('Validation failed, errors found');
         process.exit(1);
       } else {
-        success('驗證通過');
+        success('Validation passed');
       }
     } catch (err) {
-      error('驗證過程發生錯誤', err);
+      error('Error occurred during validation', err);
       process.exit(1);
     }
   }
@@ -88,45 +88,45 @@ class OutputValidator {
     try {
       const content = await fs.readFile(this.configPath, 'utf-8');
       this.config = JSON.parse(content);
-      info('已載入設定檔');
+      info('Config file loaded');
     } catch (err) {
-      this.addIssue('error', 'config', '無法載入設定檔');
+      this.addIssue('error', 'config', 'Failed to load config file');
       throw err;
     }
   }
 
   private async validateFileStructure(): Promise<void> {
-    info('[1/4] 驗證檔案結構...');
+    info('[1/4] Validating file structure...');
 
-    // 檢查輸出目錄是否存在
+    // Check if output directory exists
     const outputExists = await this.pathExists(this.outputPath);
     if (!outputExists) {
-      this.addIssue('error', 'output', '輸出目錄不存在');
+      this.addIssue('error', 'output', 'Output directory does not exist');
       return;
     }
 
-    // 檢查必要檔案
+    // Check required files
     for (const requiredFile of this.REQUIRED_FILES) {
       const filePath = path.join(this.outputPath, requiredFile);
       const exists = await this.pathExists(filePath);
 
       if (!exists) {
-        this.addIssue('error', requiredFile, '必要檔案不存在');
+        this.addIssue('error', requiredFile, 'Required file does not exist');
       } else {
-        info(`  找到: ${requiredFile}`);
+        info(`  Found: ${requiredFile}`);
       }
     }
 
-    // 檢查 resources 目錄下的節點檔案
+    // Check node files in resources directory
     const resourcesPath = path.join(this.outputPath, 'resources');
     if (await this.pathExists(resourcesPath)) {
       const files = await this.getAllMarkdownFiles(resourcesPath);
-      info(`  找到 ${files.length} 個資源檔案`);
+      info(`  Found ${files.length} resource files`);
     }
   }
 
   private async validateMarkdownFiles(): Promise<void> {
-    info('\n[2/4] 驗證 Markdown 格式...');
+    info('\n[2/4] Validating Markdown format...');
 
     const allFiles = await this.getAllMarkdownFiles(this.outputPath);
 
@@ -135,20 +135,20 @@ class OutputValidator {
         const content = await fs.readFile(filePath, 'utf-8');
         const relativePath = path.relative(this.outputPath, filePath);
 
-        // 檢查檔案大小
+        // Check file size
         const stats = await fs.stat(filePath);
         if (stats.size > this.MAX_FILE_SIZE) {
           this.addIssue(
             'warning',
             relativePath,
-            `檔案大小 ${this.formatSize(stats.size)} 超過建議上限 ${this.formatSize(this.MAX_FILE_SIZE)}`
+            `File size ${this.formatSize(stats.size)} exceeds recommended limit ${this.formatSize(this.MAX_FILE_SIZE)}`
           );
         }
 
-        // 檢查 Markdown 語法
+        // Check Markdown syntax
         this.validateMarkdownSyntax(content, relativePath);
 
-        // 收集檔案統計
+        // Collect file statistics
         const lines = content.split('\n');
         this.fileStats.push({
           path: relativePath,
@@ -156,9 +156,9 @@ class OutputValidator {
           lines: lines.length,
         });
 
-        info(`  已驗證: ${relativePath}`);
+        info(`  Validated: ${relativePath}`);
       } catch (err) {
-        this.addIssue('error', path.relative(this.outputPath, filePath), '無法讀取檔案');
+        this.addIssue('error', path.relative(this.outputPath, filePath), 'Failed to read file');
       }
     }
   }
@@ -166,19 +166,19 @@ class OutputValidator {
   private validateMarkdownSyntax(content: string, filePath: string): void {
     const lines = content.split('\n');
 
-    // 檢查標題層級
+    // Check heading levels
     let lastHeadingLevel = 0;
     lines.forEach((line, index) => {
       const headingMatch = line.match(/^(#{1,6})\s/);
       if (headingMatch) {
         const level = headingMatch[1].length;
 
-        // 檢查是否跳過標題層級
+        // Check if heading level is skipped
         if (level > lastHeadingLevel + 1 && lastHeadingLevel > 0) {
           this.addIssue(
             'warning',
             filePath,
-            `第 ${index + 1} 行: 標題層級跳躍 (從 ${lastHeadingLevel} 跳到 ${level})`,
+            `Line ${index + 1}: Heading level jump (from ${lastHeadingLevel} to ${level})`,
             index + 1
           );
         }
@@ -187,35 +187,35 @@ class OutputValidator {
       }
     });
 
-    // 檢查程式碼區塊是否正確關閉（排除 templates 目錄）
+    // Check if code blocks are properly closed (exclude templates directory)
     const isTemplateFile = filePath.includes('templates/');
     if (!isTemplateFile) {
       const codeBlockMatches = content.match(/```/g);
       if (codeBlockMatches && codeBlockMatches.length % 2 !== 0) {
-        this.addIssue('error', filePath, '程式碼區塊未正確關閉');
+        this.addIssue('error', filePath, 'Code block not properly closed');
       }
     }
 
-    // 檢查連結格式
+    // Check link format
     const brokenLinkPattern = /\[([^\]]+)\]\(\s*\)/g;
     const brokenLinks = content.match(brokenLinkPattern);
     if (brokenLinks) {
-      this.addIssue('warning', filePath, `發現 ${brokenLinks.length} 個空連結`);
+      this.addIssue('warning', filePath, `Found ${brokenLinks.length} empty links`);
     }
 
-    // 檢查是否有未轉義的特殊字元
+    // Check for unescaped special characters
     const unescapedChars = content.match(/(?<!\\)[<>]/g);
     if (unescapedChars && unescapedChars.length > 10) {
       this.addIssue(
         'info',
         filePath,
-        `發現 ${unescapedChars.length} 個可能未轉義的特殊字元`
+        `Found ${unescapedChars.length} potentially unescaped special characters`
       );
     }
   }
 
   private async validateInternalLinks(): Promise<void> {
-    info('\n[3/4] 驗證內部連結...');
+    info('\n[3/4] Validating internal links...');
 
     const allFiles = await this.getAllMarkdownFiles(this.outputPath);
     const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
@@ -229,56 +229,56 @@ class OutputValidator {
       while ((match = linkPattern.exec(content)) !== null) {
         const linkUrl = match[2];
 
-        // 檢查是否為特殊嵌入語法（前面有 @ 符號）
+        // Check if it's special embed syntax (preceded by @ symbol)
         const matchIndex = match.index;
         const beforeChar = matchIndex > 0 ? content[matchIndex - 1] : '';
         const isEmbedSyntax = beforeChar === '@';
 
-        // 如果是嵌入語法，跳過驗證
+        // Skip validation if it's embed syntax
         if (isEmbedSyntax) {
           continue;
         }
 
-        // 只檢查內部連結（排除 http/https）
+        // Only check internal links (exclude http/https)
         if (!linkUrl.startsWith('http://') && !linkUrl.startsWith('https://')) {
-          // 移除錨點
+          // Remove anchor
           const linkPath = linkUrl.split('#')[0];
 
           if (linkPath) {
-            // 解析相對路徑
+            // Resolve relative path
             const targetPath = path.resolve(fileDir, linkPath);
             const exists = await this.pathExists(targetPath);
 
             if (!exists) {
-              this.addIssue('error', relativePath, `找不到連結目標: ${linkUrl}`);
+              this.addIssue('error', relativePath, `Link target not found: ${linkUrl}`);
             }
           }
         }
       }
     }
 
-    info('  內部連結驗證完成');
+    info('  Internal link validation completed');
   }
 
   private async collectStatistics(): Promise<void> {
-    info('\n[4/4] 收集統計資訊...');
+    info('\n[4/4] Collecting statistics...');
 
-    // 統計節點數量
+    // Count nodes
     const resourcesPath = path.join(this.outputPath, 'resources');
     const nodeFiles = await this.getAllMarkdownFiles(resourcesPath);
     const nodeCount = nodeFiles.filter((f) => !f.includes('index.md')).length;
 
-    // 統計分類數量
+    // Count categories
     const categoryCount = this.config
       ? Object.keys(this.config.categories).length
       : 0;
 
-    info(`  節點數量: ${nodeCount}`);
-    info(`  分類數量: ${categoryCount}`);
+    info(`  Node count: ${nodeCount}`);
+    info(`  Category count: ${categoryCount}`);
 
-    // 不再驗證節點數量上限，僅作為資訊記錄
+    // No longer validate node count limit, just record as info
     if (this.config && nodeCount > this.config.max_nodes_in_main_skill) {
-      info(`  注意: 節點數量 (${nodeCount}) 超過設定建議值 (${this.config.max_nodes_in_main_skill})`);
+      info(`  Note: Node count (${nodeCount}) exceeds config recommendation (${this.config.max_nodes_in_main_skill})`);
     }
   }
 
@@ -300,84 +300,84 @@ class OutputValidator {
 
   private printReport(report: ValidationReport): void {
     info('\n========================================');
-    info('驗證報告');
+    info('Validation Report');
     info('========================================');
 
-    info(`\n時間: ${new Date(report.timestamp).toLocaleString('zh-TW')}`);
-    info(`總檔案數: ${report.totalFiles}`);
-    info(`總大小: ${this.formatSize(report.totalSize)}`);
-    info(`節點數量: ${report.nodeCount}`);
-    info(`分類數量: ${report.categoryCount}`);
+    info(`\nTime: ${new Date(report.timestamp).toLocaleString('en-US')}`);
+    info(`Total files: ${report.totalFiles}`);
+    info(`Total size: ${this.formatSize(report.totalSize)}`);
+    info(`Node count: ${report.nodeCount}`);
+    info(`Category count: ${report.categoryCount}`);
 
-    // 問題統計
+    // Issue statistics
     const errorCount = report.issues.filter((i) => i.severity === 'error').length;
     const warningCount = report.issues.filter((i) => i.severity === 'warning').length;
     const infoCount = report.issues.filter((i) => i.severity === 'info').length;
 
-    info('\n問題統計:');
+    info('\nIssue Statistics:');
     if (errorCount > 0) {
-      error(`  錯誤: ${errorCount}`);
+      error(`  Errors: ${errorCount}`);
     } else {
-      success('  錯誤: 0');
+      success('  Errors: 0');
     }
 
     if (warningCount > 0) {
-      warn(`  警告: ${warningCount}`);
+      warn(`  Warnings: ${warningCount}`);
     } else {
-      info(`  警告: ${warningCount}`);
+      info(`  Warnings: ${warningCount}`);
     }
 
-    info(`  資訊: ${infoCount}`);
+    info(`  Info: ${infoCount}`);
 
-    // 顯示問題詳情
+    // Display issue details
     if (report.issues.length > 0) {
-      info('\n問題詳情:');
+      info('\nIssue Details:');
       info('----------------------------------------');
 
-      // 按嚴重程度分組顯示
+      // Group by severity
       const errors = report.issues.filter((i) => i.severity === 'error');
       const warnings = report.issues.filter((i) => i.severity === 'warning');
       const infos = report.issues.filter((i) => i.severity === 'info');
 
-      // 優先顯示錯誤
+      // Display errors first
       if (errors.length > 0) {
-        info('\n錯誤 (必須修復):');
+        info('\nErrors (must fix):');
         for (const issue of errors) {
           const location = issue.line ? `:${issue.line}` : '';
-          error(`[錯誤] ${issue.file}${location} - ${issue.message}`);
+          error(`[ERROR] ${issue.file}${location} - ${issue.message}`);
         }
       }
 
-      // 顯示警告（限制顯示數量）
+      // Display warnings (limit display count)
       if (warnings.length > 0) {
-        info(`\n警告 (共 ${warnings.length} 個，顯示前 10 個):`);
+        info(`\nWarnings (${warnings.length} total, showing first 10):`);
         const displayWarnings = warnings.slice(0, 10);
         for (const issue of displayWarnings) {
           const location = issue.line ? `:${issue.line}` : '';
-          warn(`[警告] ${issue.file}${location} - ${issue.message}`);
+          warn(`[WARNING] ${issue.file}${location} - ${issue.message}`);
         }
         if (warnings.length > 10) {
-          info(`  ... 還有 ${warnings.length - 10} 個警告未顯示`);
+          info(`  ... ${warnings.length - 10} more warnings not shown`);
         }
       }
 
-      // 顯示資訊（限制顯示數量）
+      // Display info (limit display count)
       if (infos.length > 0) {
-        info(`\n資訊 (共 ${infos.length} 個，顯示前 10 個):`);
+        info(`\nInfo (${infos.length} total, showing first 10):`);
         const displayInfos = infos.slice(0, 10);
         for (const issue of displayInfos) {
           const location = issue.line ? `:${issue.line}` : '';
-          info(`[資訊] ${issue.file}${location} - ${issue.message}`);
+          info(`[INFO] ${issue.file}${location} - ${issue.message}`);
         }
         if (infos.length > 10) {
-          info(`  ... 還有 ${infos.length - 10} 個資訊未顯示`);
+          info(`  ... ${infos.length - 10} more info items not shown`);
         }
       }
     }
 
-    // 檔案大小排名（前 10）
+    // File size ranking (top 10)
     if (report.fileStats.length > 0) {
-      info('\n最大檔案 (前 10):');
+      info('\nLargest Files (top 10):');
       info('----------------------------------------');
 
       const sortedFiles = [...report.fileStats]
@@ -392,9 +392,9 @@ class OutputValidator {
     info('\n========================================');
 
     if (report.passed) {
-      success('驗證結果: 通過');
+      success('Validation Result: Passed');
     } else {
-      error('驗證結果: 失敗');
+      error('Validation Result: Failed');
     }
 
     info('========================================\n');
@@ -404,9 +404,9 @@ class OutputValidator {
     try {
       const reportPath = path.join(this.outputPath, 'validation-report.json');
       await fs.writeFile(reportPath, JSON.stringify(report, null, 2), 'utf-8');
-      success(`驗證報告已儲存至: ${reportPath}`);
+      success(`Validation report saved to: ${reportPath}`);
     } catch (err) {
-      warn('無法儲存驗證報告');
+      warn('Failed to save validation report');
     }
   }
 
@@ -427,7 +427,7 @@ class OutputValidator {
         }
       }
     } catch (err) {
-      // 忽略無法讀取的目錄
+      // Ignore directories that cannot be read
     }
 
     return files;
@@ -465,11 +465,11 @@ class OutputValidator {
   }
 }
 
-// CLI 執行
+// CLI execution
 if (require.main === module) {
   const validator = new OutputValidator();
   validator.run().catch((err) => {
-    error('執行失敗', err);
+    error('Execution failed', err);
     process.exit(1);
   });
 }

@@ -8,7 +8,7 @@
 import type { WorkflowDefinition, WorkflowNode, WorkflowConnections } from '../collectors/api-collector';
 
 /**
- * 連接資訊
+ * Connection information
  */
 export interface ConnectionInfo {
   from: string;
@@ -17,7 +17,7 @@ export interface ConnectionInfo {
 }
 
 /**
- * 節點分析資訊
+ * Node analysis information
  */
 export interface NodeAnalysis {
   name: string;
@@ -28,13 +28,13 @@ export interface NodeAnalysis {
 }
 
 /**
- * Workflow 分析結果
+ * Workflow analysis result
  */
 export interface WorkflowAnalysis {
   id?: number;
   name?: string;
   totalNodes: number;
-  activeNodes: number; // 排除 Sticky Notes
+  activeNodes: number; // Excluding Sticky Notes
   nodes: NodeAnalysis[];
   connections: ConnectionInfo[];
   keyNodes: {
@@ -46,26 +46,26 @@ export interface WorkflowAnalysis {
 }
 
 /**
- * Workflow 分析器
+ * Workflow Analyzer
  */
 export class WorkflowAnalyzer {
   /**
-   * 分析 workflow
+   * Analyze workflow
    */
   analyze(workflow: WorkflowDefinition & { id?: number; name?: string }): WorkflowAnalysis {
-    // 過濾掉 Sticky Notes
+    // Filter out Sticky Notes
     const activeNodes = workflow.nodes.filter(node => !this.isStickyNote(node));
 
-    // 分析節點
+    // Analyze nodes
     const nodeAnalyses = activeNodes.map(node => this.analyzeNode(node));
 
-    // 提取連接
+    // Extract connections
     const connections = this.extractConnections(workflow.connections);
 
-    // 識別關鍵節點
+    // Identify key nodes
     const keyNodes = this.identifyKeyNodes(nodeAnalyses);
 
-    // 生成結構化描述
+    // Generate structured description
     const structuredDescription = this.generateStructuredDescription(
       workflow,
       nodeAnalyses,
@@ -86,7 +86,7 @@ export class WorkflowAnalyzer {
   }
 
   /**
-   * 判斷是否為 Sticky Note
+   * Check if node is a Sticky Note
    */
   private isStickyNote(node: WorkflowNode): boolean {
     return node.type === 'n8n-nodes-base.stickyNote' ||
@@ -94,7 +94,7 @@ export class WorkflowAnalyzer {
   }
 
   /**
-   * 分析單一節點
+   * Analyze a single node
    */
   private analyzeNode(node: WorkflowNode): NodeAnalysis {
     const category = this.categorizeNode(node);
@@ -110,17 +110,17 @@ export class WorkflowAnalyzer {
   }
 
   /**
-   * 節點分類
+   * Categorize node
    */
   private categorizeNode(node: WorkflowNode): NodeAnalysis['category'] {
     const type = node.type.toLowerCase();
 
-    // 觸發器
+    // Triggers
     if (type.includes('trigger') || type.includes('webhook')) {
       return 'trigger';
     }
 
-    // AI 相關
+    // AI related
     if (type.includes('openai') ||
         type.includes('langchain') ||
         type.includes('agent') ||
@@ -129,12 +129,12 @@ export class WorkflowAnalyzer {
       return 'ai';
     }
 
-    // AI 工具
+    // AI tools
     if (type.includes('tool') && type.includes('langchain')) {
       return 'tool';
     }
 
-    // 資料轉換
+    // Data transformation
     if (type.includes('code') ||
         type.includes('function') ||
         type.includes('set') ||
@@ -144,7 +144,7 @@ export class WorkflowAnalyzer {
       return 'transform';
     }
 
-    // 輸入
+    // Input
     if (type.includes('mysql') ||
         type.includes('postgres') ||
         type.includes('mongodb') ||
@@ -154,7 +154,7 @@ export class WorkflowAnalyzer {
       return 'input';
     }
 
-    // 輸出
+    // Output
     if (type.includes('http') ||
         type.includes('slack') ||
         type.includes('discord') ||
@@ -168,14 +168,14 @@ export class WorkflowAnalyzer {
   }
 
   /**
-   * 判斷是否為關鍵節點
+   * Check if node is a key node
    */
   private isKeyNode(_node: WorkflowNode, category: NodeAnalysis['category']): boolean {
     return category === 'trigger' || category === 'ai' || category === 'tool';
   }
 
   /**
-   * 提取連接關係
+   * Extract connection relationships
    */
   private extractConnections(connections: WorkflowConnections): ConnectionInfo[] {
     const result: ConnectionInfo[] = [];
@@ -198,7 +198,7 @@ export class WorkflowAnalyzer {
   }
 
   /**
-   * 識別關鍵節點
+   * Identify key nodes
    */
   private identifyKeyNodes(nodes: NodeAnalysis[]) {
     return {
@@ -209,7 +209,7 @@ export class WorkflowAnalyzer {
   }
 
   /**
-   * 生成結構化描述
+   * Generate structured description
    */
   private generateStructuredDescription(
     workflow: WorkflowDefinition & { id?: number; name?: string },
@@ -219,26 +219,26 @@ export class WorkflowAnalyzer {
   ): string {
     const lines: string[] = [];
 
-    // 標題
+    // Title
     if (workflow.name) {
       lines.push(`# ${workflow.name}`);
       lines.push('');
     }
 
-    // 基本統計
-    lines.push('## 基本資訊');
+    // Basic statistics
+    lines.push('## Basic Information');
     lines.push('');
-    lines.push(`- 節點數量: ${nodes.length}`);
-    lines.push(`- 連接數量: ${connections.length}`);
+    lines.push(`- Node count: ${nodes.length}`);
+    lines.push(`- Connection count: ${connections.length}`);
     lines.push('');
 
-    // 關鍵節點
+    // Key nodes
     if (keyNodes.triggers.length > 0 || keyNodes.aiNodes.length > 0 || keyNodes.tools.length > 0) {
-      lines.push('## 關鍵節點');
+      lines.push('## Key Nodes');
       lines.push('');
 
       if (keyNodes.triggers.length > 0) {
-        lines.push('### 觸發器');
+        lines.push('### Triggers');
         keyNodes.triggers.forEach(node => {
           lines.push(`- ${node.name} (\`${node.type}\`)`);
         });
@@ -246,7 +246,7 @@ export class WorkflowAnalyzer {
       }
 
       if (keyNodes.aiNodes.length > 0) {
-        lines.push('### AI 節點');
+        lines.push('### AI Nodes');
         keyNodes.aiNodes.forEach(node => {
           lines.push(`- ${node.name} (\`${node.type}\`)`);
         });
@@ -254,7 +254,7 @@ export class WorkflowAnalyzer {
       }
 
       if (keyNodes.tools.length > 0) {
-        lines.push('### 工具節點');
+        lines.push('### Tool Nodes');
         keyNodes.tools.forEach(node => {
           lines.push(`- ${node.name} (\`${node.type}\`)`);
         });
@@ -262,20 +262,20 @@ export class WorkflowAnalyzer {
       }
     }
 
-    // 節點列表
-    lines.push('## 所有節點');
+    // Node list
+    lines.push('## All Nodes');
     lines.push('');
-    lines.push('| 節點名稱 | 類型 | 分類 |');
-    lines.push('|---------|------|------|');
+    lines.push('| Node Name | Type | Category |');
+    lines.push('|-----------|------|----------|');
     nodes.forEach(node => {
       const categoryName = this.getCategoryDisplayName(node.category);
       lines.push(`| ${node.name} | \`${node.type}\` | ${categoryName} |`);
     });
     lines.push('');
 
-    // 連接關係
+    // Connections
     if (connections.length > 0) {
-      lines.push('## 連接關係');
+      lines.push('## Connections');
       lines.push('');
       lines.push('```');
       connections.forEach(conn => {
@@ -285,8 +285,8 @@ export class WorkflowAnalyzer {
       lines.push('');
     }
 
-    // 工作流程摘要
-    lines.push('## 工作流程摘要');
+    // Workflow summary
+    lines.push('## Workflow Summary');
     lines.push('');
     lines.push(this.generateWorkflowSummary(nodes, connections, keyNodes));
 
@@ -294,24 +294,24 @@ export class WorkflowAnalyzer {
   }
 
   /**
-   * 取得分類顯示名稱
+   * Get category display name
    */
   private getCategoryDisplayName(category: NodeAnalysis['category']): string {
     const names: Record<NodeAnalysis['category'], string> = {
-      trigger: '觸發器',
-      action: '動作',
+      trigger: 'Trigger',
+      action: 'Action',
       ai: 'AI',
-      tool: '工具',
-      transform: '資料轉換',
-      input: '資料輸入',
-      output: '資料輸出',
-      other: '其他',
+      tool: 'Tool',
+      transform: 'Transform',
+      input: 'Input',
+      output: 'Output',
+      other: 'Other',
     };
     return names[category];
   }
 
   /**
-   * 生成工作流程摘要
+   * Generate workflow summary
    */
   private generateWorkflowSummary(
     nodes: NodeAnalysis[],
@@ -320,40 +320,40 @@ export class WorkflowAnalyzer {
   ): string {
     const parts: string[] = [];
 
-    // 觸發方式
+    // Trigger method
     if (keyNodes.triggers.length > 0) {
-      const triggerNames = keyNodes.triggers.map(t => t.name).join('、');
-      parts.push(`此工作流程由 ${triggerNames} 觸發`);
+      const triggerNames = keyNodes.triggers.map(t => t.name).join(', ');
+      parts.push(`This workflow is triggered by ${triggerNames}`);
     }
 
-    // AI 功能
+    // AI capabilities
     if (keyNodes.aiNodes.length > 0) {
-      const aiNames = keyNodes.aiNodes.map(n => n.name).join('、');
-      parts.push(`使用 ${aiNames} 進行 AI 處理`);
+      const aiNames = keyNodes.aiNodes.map(n => n.name).join(', ');
+      parts.push(`uses ${aiNames} for AI processing`);
     }
 
-    // 工具
+    // Tools
     if (keyNodes.tools.length > 0) {
-      parts.push(`配備 ${keyNodes.tools.length} 個工具節點`);
+      parts.push(`equipped with ${keyNodes.tools.length} tool node(s)`);
     }
 
-    // 資料流
+    // Data flow
     const transformNodes = nodes.filter(n => n.category === 'transform');
     const outputNodes = nodes.filter(n => n.category === 'output');
 
     if (transformNodes.length > 0) {
-      parts.push(`經過 ${transformNodes.length} 個轉換步驟`);
+      parts.push(`goes through ${transformNodes.length} transformation step(s)`);
     }
 
     if (outputNodes.length > 0) {
-      const outputNames = outputNodes.map(n => n.name).join('、');
-      parts.push(`最終輸出到 ${outputNames}`);
+      const outputNames = outputNodes.map(n => n.name).join(', ');
+      parts.push(`finally outputs to ${outputNames}`);
     }
 
     if (parts.length === 0) {
-      return `包含 ${nodes.length} 個節點的工作流程。`;
+      return `A workflow containing ${nodes.length} node(s).`;
     }
 
-    return parts.join('，') + '。';
+    return parts.join(', ') + '.';
   }
 }

@@ -2,7 +2,7 @@
   "priority_tiers": {
     "essential": {
       "tier": 1,
-      "description": "必須熟記的核心節點",
+      "description": "Core nodes that must be memorized",
       "max_nodes": 10,
       "nodes": [
         "httpRequest",
@@ -17,7 +17,7 @@
     },
     "common": {
       "tier": 2,
-      "description": "常用的應用整合節點",
+      "description": "Commonly used application integration nodes",
       "max_nodes": 40,
       "nodes": [
         "slack",
@@ -38,7 +38,7 @@
     },
     "specialized": {
       "tier": 3,
-      "description": "專業用途節點",
+      "description": "Specialized purpose nodes",
       "max_nodes": 491,
       "include_all_others": true
     }
@@ -46,23 +46,23 @@
   "ranking_criteria": {
     "usage_frequency": {
       "weight": 0.4,
-      "description": "基於範本使用頻率"
+      "description": "Based on template usage frequency"
     },
     "documentation_quality": {
       "weight": 0.2,
-      "description": "文件完整性"
+      "description": "Documentation completeness"
     },
     "community_popularity": {
       "weight": 0.2,
-      "description": "社群受歡迎程度"
+      "description": "Community popularity"
     },
     "versatility": {
       "weight": 0.2,
-      "description": "節點通用性"
+      "description": "Node versatility"
     }
   },
   "boosted_nodes": {
-    "description": "特別提升優先級的節點",
+    "description": "Nodes with specially boosted priority",
     "nodes": [
       "httpRequest",
       "webhook",

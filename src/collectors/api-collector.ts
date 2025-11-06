@@ -7,7 +7,7 @@
 
 import axios, { AxiosInstance, AxiosError } from 'axios';
 
-// API 回應型別定義
+// API response type definitions
 interface TemplateNode {
   id: number;
   name: string;
@@ -21,7 +21,7 @@ interface TemplateNode {
   };
 }
 
-// 完整的 Workflow 節點定義
+// Complete Workflow node definition
 export interface WorkflowNode {
   id: string;
   name: string;
@@ -35,7 +35,7 @@ export interface WorkflowNode {
   notesInFlow?: boolean;
 }
 
-// Workflow 連接定義
+// Workflow connection definition
 export interface WorkflowConnection {
   node: string;
   type: string;
@@ -48,7 +48,7 @@ export interface WorkflowConnections {
   };
 }
 
-// 完整的 Workflow 定義
+// Complete Workflow definition
 export interface WorkflowDefinition {
   nodes: WorkflowNode[];
   connections: WorkflowConnections;
@@ -61,7 +61,7 @@ export interface WorkflowDefinition {
     templateId?: string;
     instanceId?: string;
   };
-  // 這些屬性可能在 meta 或不存在
+  // These properties may be in meta or not exist
   id?: number;
   name?: string;
   description?: string;
@@ -89,7 +89,7 @@ interface TemplateApiResponse {
   totalWorkflows: number;
 }
 
-// 節點使用統計型別
+// Node usage statistics type
 export interface NodeUsageStats {
   [nodeType: string]: {
     count: number;
@@ -97,7 +97,7 @@ export interface NodeUsageStats {
   };
 }
 
-// 收集結果型別
+// Collection result type
 export interface TemplateCollectionResult {
   templates: Template[];
   nodeUsageStats: NodeUsageStats;
@@ -105,7 +105,7 @@ export interface TemplateCollectionResult {
   collectedAt: string;
 }
 
-// 配置選項
+// Configuration options
 export interface ApiCollectorConfig {
   baseUrl?: string;
   maxRetries?: number;
@@ -114,7 +114,7 @@ export interface ApiCollectorConfig {
   limit?: number;
 }
 
-// API 收集器類別
+// API collector class
 export class ApiCollector {
   private client: AxiosInstance;
   private maxRetries: number;
@@ -134,7 +134,7 @@ export class ApiCollector {
     this.retryDelay = retryDelay;
     this.limit = limit;
 
-    // 建立 axios 實例
+    // Create axios instance
     this.client = axios.create({
       baseURL: baseUrl,
       timeout,
@@ -144,30 +144,30 @@ export class ApiCollector {
       },
     });
 
-    // 設定回應攔截器處理錯誤
+    // Set up response interceptor to handle errors
     this.client.interceptors.response.use(
       (response) => response,
       (error) => this.handleAxiosError(error)
     );
   }
 
-  // 處理 Axios 錯誤
+  // Handle Axios errors
   private handleAxiosError(error: AxiosError): Promise<never> {
     if (error.response) {
-      // 伺服器回應錯誤狀態碼
+      // Server responded with error status code
       throw new Error(
-        `API 回應錯誤: ${error.response.status} - ${error.response.statusText}`
+        `API response error: ${error.response.status} - ${error.response.statusText}`
       );
     } else if (error.request) {
-      // 請求已發送但沒有收到回應
-      throw new Error('API 請求無回應，請檢查網路連線');
+      // Request was sent but no response received
+      throw new Error('No API response received, please check network connection');
     } else {
-      // 設定請求時發生錯誤
-      throw new Error(`API 請求設定錯誤: ${error.message}`);
+      // Error occurred while setting up the request
+      throw new Error(`API request configuration error: ${error.message}`);
     }
   }
 
-  // 重試機制包裝函數
+  // Retry mechanism wrapper function
   private async withRetry<T>(
     fn: () => Promise<T>,
     retries: number = this.maxRetries
@@ -176,7 +176,7 @@ export class ApiCollector {
       return await fn();
     } catch (error) {
       if (retries > 0) {
-        console.log(`請求失敗，${this.retryDelay}ms 後重試... (剩餘重試次數: ${retries})`);
+        console.log(`Request failed, retrying after ${this.retryDelay}ms... (retries remaining: ${retries})`);
         await this.delay(this.retryDelay);
         return this.withRetry(fn, retries - 1);
       }
@@ -184,15 +184,15 @@ export class ApiCollector {
     }
   }
 
-  // 延遲函數
+  // Delay function
   private delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  // 從 n8n.io API 抓取範本
+  // Fetch templates from n8n.io API
   public async fetchTemplates(): Promise<TemplateCollectionResult> {
     try {
-      console.log(`開始從 n8n.io API 抓取前 ${this.limit} 個熱門範本...`);
+      console.log(`Starting to fetch top ${this.limit} popular templates from n8n.io API...`);
 
       const response = await this.withRetry(async () => {
         const result = await this.client.get<TemplateApiResponse>('/templates/search', {
@@ -205,9 +205,9 @@ export class ApiCollector {
       });
 
       const templates = response.data.workflows || [];
-      console.log(`成功抓取 ${templates.length} 個範本`);
+      console.log(`Successfully fetched ${templates.length} templates`);
 
-      // 計算節點使用統計
+      // Calculate node usage statistics
       const nodeUsageStats = this.calculateNodeUsage(templates);
 
       return {
@@ -218,18 +218,18 @@ export class ApiCollector {
       };
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`抓取範本失敗: ${error.message}`);
+        throw new Error(`Failed to fetch templates: ${error.message}`);
       }
-      throw new Error('抓取範本時發生未知錯誤');
+      throw new Error('Unknown error occurred while fetching templates');
     }
   }
 
-  // 計算節點使用頻率統計
+  // Calculate node usage frequency statistics
   private calculateNodeUsage(templates: Template[]): NodeUsageStats {
     const nodeCount: Record<string, number> = {};
     let totalNodes = 0;
 
-    // 統計每個節點類型的使用次數
+    // Count usage of each node type
     templates.forEach((template) => {
       if (template.nodes && Array.isArray(template.nodes)) {
         template.nodes.forEach((node) => {
@@ -240,7 +240,7 @@ export class ApiCollector {
       }
     });
 
-    // 計算百分比並排序
+    // Calculate percentages and sort
     const stats: NodeUsageStats = {};
     Object.entries(nodeCount)
       .sort(([, a], [, b]) => b - a)
@@ -254,32 +254,32 @@ export class ApiCollector {
     return stats;
   }
 
-  // 取得特定範本詳細資訊
+  // Get specific template details
   public async fetchTemplateById(templateId: number): Promise<Template> {
     try {
-      console.log(`抓取範本 ID: ${templateId}...`);
+      console.log(`Fetching template ID: ${templateId}...`);
 
       const response = await this.withRetry(async () => {
         return await this.client.get<Template>(`/templates/${templateId}`);
       });
 
-      console.log(`成功抓取範本: ${response.data.name}`);
+      console.log(`Successfully fetched template: ${response.data.name}`);
       return response.data;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`抓取範本 ID ${templateId} 失敗: ${error.message}`);
+        throw new Error(`Failed to fetch template ID ${templateId}: ${error.message}`);
       }
-      throw new Error(`抓取範本 ID ${templateId} 時發生未知錯誤`);
+      throw new Error(`Unknown error occurred while fetching template ID ${templateId}`);
     }
   }
 
-  // 依分類抓取範本
+  // Fetch templates by category
   public async fetchTemplatesByCategory(
     category: string,
     limit: number = 50
   ): Promise<Template[]> {
     try {
-      console.log(`抓取分類「${category}」的範本 (限制: ${limit})...`);
+      console.log(`Fetching templates for category "${category}" (limit: ${limit})...`);
 
       const response = await this.withRetry(async () => {
         return await this.client.get<TemplateApiResponse>('/templates/search', {
@@ -292,20 +292,20 @@ export class ApiCollector {
       });
 
       const templates = response.data.workflows || [];
-      console.log(`成功抓取 ${templates.length} 個範本`);
+      console.log(`Successfully fetched ${templates.length} templates`);
       return templates;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`抓取分類「${category}」範本失敗: ${error.message}`);
+        throw new Error(`Failed to fetch templates for category "${category}": ${error.message}`);
       }
-      throw new Error(`抓取分類「${category}」範本時發生未知錯誤`);
+      throw new Error(`Unknown error occurred while fetching templates for category "${category}"`);
     }
   }
 
-  // 搜尋範本
+  // Search templates
   public async searchTemplates(query: string, limit: number = 50): Promise<Template[]> {
     try {
-      console.log(`搜尋範本: "${query}" (限制: ${limit})...`);
+      console.log(`Searching templates: "${query}" (limit: ${limit})...`);
 
       const response = await this.withRetry(async () => {
         return await this.client.get<TemplateApiResponse>('/templates/search', {
@@ -318,20 +318,20 @@ export class ApiCollector {
       });
 
       const templates = response.data.workflows || [];
-      console.log(`搜尋到 ${templates.length} 個範本`);
+      console.log(`Found ${templates.length} templates`);
       return templates;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`搜尋範本「${query}」失敗: ${error.message}`);
+        throw new Error(`Failed to search templates "${query}": ${error.message}`);
       }
-      throw new Error(`搜尋範本「${query}」時發生未知錯誤`);
+      throw new Error(`Unknown error occurred while searching templates "${query}"`);
     }
   }
 
-  // 獲取完整的 workflow 定義
+  // Get complete workflow definition
   public async fetchWorkflowDefinition(templateId: number): Promise<WorkflowDefinition & { id: number; name: string }> {
     try {
-      console.log(`抓取完整 workflow 定義: ${templateId}...`);
+      console.log(`Fetching complete workflow definition: ${templateId}...`);
 
       const response = await this.withRetry(async () => {
         return await this.client.get<{ id: number; name: string; workflow: WorkflowDefinition }>(
@@ -340,18 +340,18 @@ export class ApiCollector {
       });
 
       if (!response.data || !response.data.workflow) {
-        throw new Error('API 回應為空或格式不正確');
+        throw new Error('API response is empty or incorrectly formatted');
       }
 
       const { id, name, workflow } = response.data;
 
       if (!workflow.nodes || !Array.isArray(workflow.nodes)) {
-        throw new Error('Workflow 結構無效：缺少 nodes 陣列');
+        throw new Error('Invalid workflow structure: missing nodes array');
       }
 
-      console.log(`成功抓取 workflow: ${name} (${workflow.nodes.length} 個節點)`);
+      console.log(`Successfully fetched workflow: ${name} (${workflow.nodes.length} nodes)`);
 
-      // 合併 id 和 name 到 workflow
+      // Merge id and name into workflow
       return {
         ...workflow,
         id,
@@ -359,21 +359,21 @@ export class ApiCollector {
       };
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`抓取 workflow ${templateId} 失敗: ${error.message}`);
+        throw new Error(`Failed to fetch workflow ${templateId}: ${error.message}`);
       }
-      throw new Error(`抓取 workflow ${templateId} 時發生未知錯誤`);
+      throw new Error(`Unknown error occurred while fetching workflow ${templateId}`);
     }
   }
 
-  // 批次獲取多個 workflow 定義（帶延遲）
+  // Batch fetch multiple workflow definitions (with delay)
   public async fetchWorkflowDefinitions(
     templateIds: number[],
     delayMs: number = 500
   ): Promise<Array<WorkflowDefinition & { id: number; name: string }>> {
     const workflows: Array<WorkflowDefinition & { id: number; name: string }> = [];
 
-    console.log(`開始批次抓取 ${templateIds.length} 個 workflow 定義...`);
-    console.log(`每次請求間隔: ${delayMs}ms`);
+    console.log(`Starting batch fetch of ${templateIds.length} workflow definitions...`);
+    console.log(`Interval between requests: ${delayMs}ms`);
 
     for (let i = 0; i < templateIds.length; i++) {
       const templateId = templateIds[i];
@@ -381,26 +381,26 @@ export class ApiCollector {
         const workflow = await this.fetchWorkflowDefinition(templateId);
         workflows.push(workflow);
 
-        // 如果不是最後一個，加入延遲
+        // Add delay if not the last one
         if (i < templateIds.length - 1) {
           await this.delay(delayMs);
         }
       } catch (error) {
-        console.error(`跳過 template ${templateId}:`, error);
-        // 繼續處理下一個
+        console.error(`Skipping template ${templateId}:`, error);
+        // Continue with next one
       }
     }
 
-    console.log(`成功抓取 ${workflows.length}/${templateIds.length} 個 workflow`);
+    console.log(`Successfully fetched ${workflows.length}/${templateIds.length} workflows`);
     return workflows;
   }
 
-  // 顯示節點使用統計摘要
+  // Display node usage statistics summary
   public printNodeUsageStats(stats: NodeUsageStats, topN: number = 20): void {
-    console.log('\n節點使用頻率統計（前 ' + topN + ' 名）:');
+    console.log('\nNode Usage Frequency Statistics (Top ' + topN + '):');
     console.log('='.repeat(60));
     console.log(
-      `${'節點類型'.padEnd(40)} ${'次數'.padStart(8)} ${'百分比'.padStart(10)}`
+      `${'Node Type'.padEnd(40)} ${'Count'.padStart(8)} ${'Percentage'.padStart(10)}`
     );
     console.log('-'.repeat(60));
 
@@ -415,7 +415,7 @@ export class ApiCollector {
   }
 }
 
-// 便利函數：快速抓取熱門範本
+// Convenience function: quickly fetch popular templates
 export async function fetchPopularTemplates(
   limit: number = 100,
   config?: Omit<ApiCollectorConfig, 'limit'>
@@ -424,7 +424,7 @@ export async function fetchPopularTemplates(
   return await collector.fetchTemplates();
 }
 
-// 便利函數：取得節點使用統計
+// Convenience function: get node usage statistics
 export async function getNodeUsageStats(
   limit: number = 100
 ): Promise<NodeUsageStats> {

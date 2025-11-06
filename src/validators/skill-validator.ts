@@ -7,13 +7,13 @@
 
 /**
  * Skill Validator
- * 驗證 Skill.md 檔案格式和結構
+ * Validates Skill.md file format and structure
  */
 
 import * as logger from '../utils/logger';
 
 /**
- * 驗證結果介面
+ * Validation result interface
  */
 export interface ValidationResult {
   success: boolean;
@@ -23,7 +23,7 @@ export interface ValidationResult {
 }
 
 /**
- * 驗證錯誤
+ * Validation error
  */
 export interface ValidationError {
   type: string;
@@ -33,7 +33,7 @@ export interface ValidationError {
 }
 
 /**
- * 驗證警告
+ * Validation warning
  */
 export interface ValidationWarning {
   type: string;
@@ -43,7 +43,7 @@ export interface ValidationWarning {
 }
 
 /**
- * Skill 檔案統計資訊
+ * Skill file statistics
  */
 export interface SkillStats {
   totalLines: number;
@@ -54,7 +54,7 @@ export interface SkillStats {
 }
 
 /**
- * 必要的章節標題
+ * Required section headings
  */
 const REQUIRED_SECTIONS = [
   'n8n Workflow Automation',
@@ -65,7 +65,7 @@ const REQUIRED_SECTIONS = [
 ];
 
 /**
- * YAML frontmatter 必要欄位
+ * Required YAML frontmatter fields
  */
 const REQUIRED_FRONTMATTER_FIELDS = [
   'name',
@@ -74,63 +74,63 @@ const REQUIRED_FRONTMATTER_FIELDS = [
 ];
 
 /**
- * 驗證 Skill.md 檔案
+ * Validate Skill.md file
  */
 export function validate(content: string): ValidationResult {
-  logger.info('開始驗證 Skill.md 檔案格式');
+  logger.info('Starting Skill.md file format validation');
 
   const errors: ValidationError[] = [];
   const warnings: ValidationWarning[] = [];
   const lines = content.split('\n');
 
-  // 檢查檔案大小限制
+  // Check file size limit
   if (lines.length > 5000) {
     errors.push({
       type: 'FILE_SIZE',
-      message: `檔案行數超過限制：${lines.length} 行（最大 5000 行）`,
+      message: `File exceeds line limit: ${lines.length} lines (max 5000 lines)`,
     });
   }
 
   if (lines.length > 4500) {
     warnings.push({
       type: 'FILE_SIZE',
-      message: `檔案行數接近限制：${lines.length} 行（建議保持在 4500 行以下）`,
+      message: `File approaching line limit: ${lines.length} lines (recommended to keep below 4500 lines)`,
     });
   }
 
-  // 驗證 YAML frontmatter
+  // Validate YAML frontmatter
   const frontmatterResult = validateFrontmatter(lines);
   errors.push(...frontmatterResult.errors);
   warnings.push(...frontmatterResult.warnings);
 
-  // 驗證章節結構
+  // Validate section structure
   const sectionsResult = validateSections(lines);
   errors.push(...sectionsResult.errors);
   warnings.push(...sectionsResult.warnings);
 
-  // 驗證標題層級
+  // Validate heading levels
   const headingsResult = validateHeadings(lines);
   errors.push(...headingsResult.errors);
   warnings.push(...headingsResult.warnings);
 
-  // 驗證 Markdown 語法
+  // Validate Markdown syntax
   const markdownResult = validateMarkdownSyntax(lines);
   errors.push(...markdownResult.errors);
   warnings.push(...markdownResult.warnings);
 
-  // 收集統計資訊
+  // Collect statistics
   const stats = collectStats(lines, frontmatterResult.hasValidFrontmatter);
 
   const success = errors.length === 0;
 
   if (success) {
-    logger.success('Skill.md 檔案格式驗證通過');
+    logger.success('Skill.md file format validation passed');
   } else {
-    logger.error(`發現 ${errors.length} 個錯誤`);
+    logger.error(`Found ${errors.length} error(s)`);
   }
 
   if (warnings.length > 0) {
-    logger.warn(`發現 ${warnings.length} 個警告`);
+    logger.warn(`Found ${warnings.length} warning(s)`);
   }
 
   return {
@@ -142,7 +142,7 @@ export function validate(content: string): ValidationResult {
 }
 
 /**
- * 驗證 YAML frontmatter
+ * Validate YAML frontmatter
  */
 function validateFrontmatter(lines: string[]): {
   errors: ValidationError[];
@@ -153,17 +153,17 @@ function validateFrontmatter(lines: string[]): {
   const warnings: ValidationWarning[] = [];
   let hasValidFrontmatter = false;
 
-  // 檢查是否以 --- 開頭
+  // Check if file starts with ---
   if (lines.length === 0 || lines[0].trim() !== '---') {
     errors.push({
       type: 'FRONTMATTER',
-      message: '檔案必須以 YAML frontmatter 開頭（---）',
+      message: 'File must start with YAML frontmatter (---)',
       line: 1,
     });
     return { errors, warnings, hasValidFrontmatter };
   }
 
-  // 找到 frontmatter 結束位置
+  // Find frontmatter end position
   let frontmatterEnd = -1;
   for (let i = 1; i < Math.min(lines.length, 20); i++) {
     if (lines[i].trim() === '---') {
@@ -175,12 +175,12 @@ function validateFrontmatter(lines: string[]): {
   if (frontmatterEnd === -1) {
     errors.push({
       type: 'FRONTMATTER',
-      message: 'YAML frontmatter 未正確關閉（缺少結尾的 ---）',
+      message: 'YAML frontmatter not properly closed (missing closing ---)',
     });
     return { errors, warnings, hasValidFrontmatter };
   }
 
-  // 解析 frontmatter 內容
+  // Parse frontmatter content
   const frontmatterLines = lines.slice(1, frontmatterEnd);
   const frontmatterFields = new Map<string, string>();
 
@@ -192,7 +192,7 @@ function validateFrontmatter(lines: string[]): {
     if (colonIndex === -1) {
       warnings.push({
         type: 'FRONTMATTER',
-        message: `frontmatter 中的行格式不正確：${line}`,
+        message: `Incorrectly formatted line in frontmatter: ${line}`,
         line: i + 2,
       });
       continue;
@@ -203,23 +203,23 @@ function validateFrontmatter(lines: string[]): {
     frontmatterFields.set(key, value);
   }
 
-  // 檢查必要欄位
+  // Check required fields
   for (const field of REQUIRED_FRONTMATTER_FIELDS) {
     if (!frontmatterFields.has(field)) {
       errors.push({
         type: 'FRONTMATTER',
-        message: `frontmatter 缺少必要欄位：${field}`,
+        message: `Frontmatter missing required field: ${field}`,
         section: 'YAML frontmatter',
       });
     }
   }
 
-  // 驗證版本格式
+  // Validate version format
   const version = frontmatterFields.get('version');
   if (version && !/^\d+\.\d+\.\d+$/.test(version)) {
     warnings.push({
       type: 'FRONTMATTER',
-      message: `版本號格式不符合語義化版本規範：${version}（建議格式：1.0.0）`,
+      message: `Version format does not follow semantic versioning: ${version} (recommended format: 1.0.0)`,
       section: 'YAML frontmatter',
     });
   }
@@ -229,7 +229,7 @@ function validateFrontmatter(lines: string[]): {
 }
 
 /**
- * 驗證章節結構
+ * Validate section structure
  */
 function validateSections(lines: string[]): {
   errors: ValidationError[];
@@ -238,7 +238,7 @@ function validateSections(lines: string[]): {
   const errors: ValidationError[] = [];
   const warnings: ValidationWarning[] = [];
 
-  // 收集所有一級標題
+  // Collect all H1 headings
   const h1Sections: string[] = [];
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
@@ -248,7 +248,7 @@ function validateSections(lines: string[]): {
     }
   }
 
-  // 檢查必要章節
+  // Check required sections
   for (const requiredSection of REQUIRED_SECTIONS) {
     const found = h1Sections.some(section =>
       section.toLowerCase().includes(requiredSection.toLowerCase())
@@ -256,16 +256,16 @@ function validateSections(lines: string[]): {
     if (!found) {
       errors.push({
         type: 'SECTION',
-        message: `缺少必要章節：${requiredSection}`,
+        message: `Missing required section: ${requiredSection}`,
       });
     }
   }
 
-  // 檢查章節數量
+  // Check section count
   if (h1Sections.length < 3) {
     warnings.push({
       type: 'SECTION',
-      message: `章節數量過少：${h1Sections.length} 個（建議至少 3 個主要章節）`,
+      message: `Too few sections: ${h1Sections.length} (recommended at least 3 main sections)`,
     });
   }
 
@@ -273,7 +273,7 @@ function validateSections(lines: string[]): {
 }
 
 /**
- * 驗證標題層級
+ * Validate heading levels
  */
 function validateHeadings(lines: string[]): {
   errors: ValidationError[];
@@ -292,30 +292,30 @@ function validateHeadings(lines: string[]): {
       const level = headingMatch[1].length;
       const title = headingMatch[2].trim();
 
-      // 檢查標題是否為空
+      // Check if heading is empty
       if (!title) {
         errors.push({
           type: 'HEADING',
-          message: '標題不能為空',
+          message: 'Heading cannot be empty',
           line: i + 1,
         });
         continue;
       }
 
-      // 檢查標題層級跳躍（不能跳過層級）
+      // Check for heading level jumps (cannot skip levels)
       if (previousLevel > 0 && level > previousLevel + 1) {
         warnings.push({
           type: 'HEADING',
-          message: `標題層級跳躍：從 h${previousLevel} 跳到 h${level}（建議逐級遞增）`,
+          message: `Heading level jump: from h${previousLevel} to h${level} (recommended to increment gradually)`,
           line: i + 1,
         });
       }
 
-      // 檢查標題前後是否有空行
+      // Check if there are blank lines before headings
       if (i > 0 && lines[i - 1].trim() !== '') {
         warnings.push({
           type: 'HEADING',
-          message: '標題前應該有空行',
+          message: 'Heading should have a blank line before it',
           line: i + 1,
         });
       }
@@ -328,7 +328,7 @@ function validateHeadings(lines: string[]): {
 }
 
 /**
- * 驗證 Markdown 語法
+ * Validate Markdown syntax
  */
 function validateMarkdownSyntax(lines: string[]): {
   errors: ValidationError[];
@@ -344,7 +344,7 @@ function validateMarkdownSyntax(lines: string[]): {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // 檢查程式碼區塊標記
+    // Check code block markers
     if (trimmed.startsWith('```')) {
       if (inCodeBlock) {
         inCodeBlock = false;
@@ -356,12 +356,12 @@ function validateMarkdownSyntax(lines: string[]): {
       continue;
     }
 
-    // 跳過程式碼區塊內的行
+    // Skip lines inside code blocks
     if (inCodeBlock) {
       continue;
     }
 
-    // 檢查連結格式
+    // Check link format
     const linkMatches = line.matchAll(/\[([^\]]*)\]\(([^)]*)\)/g);
     for (const match of linkMatches) {
       const linkText = match[1];
@@ -370,7 +370,7 @@ function validateMarkdownSyntax(lines: string[]): {
       if (!linkText) {
         warnings.push({
           type: 'MARKDOWN',
-          message: '連結文字為空',
+          message: 'Link text is empty',
           line: i + 1,
         });
       }
@@ -378,22 +378,22 @@ function validateMarkdownSyntax(lines: string[]): {
       if (!linkUrl) {
         errors.push({
           type: 'MARKDOWN',
-          message: '連結 URL 為空',
+          message: 'Link URL is empty',
           line: i + 1,
         });
       }
     }
 
-    // 檢查表格格式
+    // Check table format
     if (trimmed.includes('|')) {
       const cells = trimmed.split('|').map(c => c.trim());
 
-      // 檢查是否為分隔線
+      // Check if it's a separator line
       if (cells.every(c => /^[-:]+$/.test(c) || c === '')) {
         continue;
       }
 
-      // 檢查表格行的欄位數量是否一致
+      // Check if table row column count is consistent
       if (i > 0 && lines[i - 1].includes('|')) {
         const prevCells = lines[i - 1].split('|').length;
         const currCells = cells.length;
@@ -401,32 +401,32 @@ function validateMarkdownSyntax(lines: string[]): {
         if (prevCells !== currCells) {
           warnings.push({
             type: 'MARKDOWN',
-            message: `表格欄位數量不一致：上一行 ${prevCells} 欄，本行 ${currCells} 欄`,
+            message: `Table column count inconsistent: previous row ${prevCells} columns, this row ${currCells} columns`,
             line: i + 1,
           });
         }
       }
     }
 
-    // 檢查列表格式
+    // Check list format
     const listMatch = trimmed.match(/^([-*+]|\d+\.)\s+/);
     if (listMatch) {
       const marker = listMatch[0];
       if (marker.length > 0 && trimmed.length === marker.length) {
         warnings.push({
           type: 'MARKDOWN',
-          message: '列表項目內容為空',
+          message: 'List item content is empty',
           line: i + 1,
         });
       }
     }
   }
 
-  // 檢查是否有未關閉的程式碼區塊
+  // Check for unclosed code blocks
   if (inCodeBlock) {
     errors.push({
       type: 'MARKDOWN',
-      message: '程式碼區塊未正確關閉',
+      message: 'Code block not properly closed',
       line: codeBlockStart,
     });
   }
@@ -435,7 +435,7 @@ function validateMarkdownSyntax(lines: string[]): {
 }
 
 /**
- * 收集統計資訊
+ * Collect statistics
  */
 function collectStats(lines: string[], hasValidFrontmatter: boolean): SkillStats {
   const headingLevels: number[] = [];
@@ -445,7 +445,7 @@ function collectStats(lines: string[], hasValidFrontmatter: boolean): SkillStats
   for (const line of lines) {
     const trimmed = line.trim();
 
-    // 統計標題
+    // Count headings
     const headingMatch = trimmed.match(/^(#{1,6})\s+/);
     if (headingMatch) {
       const level = headingMatch[1].length;
@@ -455,7 +455,7 @@ function collectStats(lines: string[], hasValidFrontmatter: boolean): SkillStats
       }
     }
 
-    // 統計連結
+    // Count links
     const linkMatches = line.matchAll(/\[([^\]]*)\]\(([^)]*)\)/g);
     linkCount += Array.from(linkMatches).length;
   }
@@ -470,51 +470,51 @@ function collectStats(lines: string[], hasValidFrontmatter: boolean): SkillStats
 }
 
 /**
- * 格式化驗證結果為易讀的文字
+ * Format validation result as readable text
  */
 export function formatValidationResult(result: ValidationResult): string {
   const output: string[] = [];
 
-  output.push('=== Skill.md 驗證結果 ===\n');
+  output.push('=== Skill.md Validation Result ===\n');
 
   if (result.stats) {
-    output.push('檔案統計：');
-    output.push(`  總行數：${result.stats.totalLines}`);
-    output.push(`  章節數：${result.stats.sectionCount}`);
-    output.push(`  連結數：${result.stats.linkCount}`);
-    output.push(`  Frontmatter：${result.stats.hasValidFrontmatter ? '有效' : '無效'}`);
+    output.push('File Statistics:');
+    output.push(`  Total lines: ${result.stats.totalLines}`);
+    output.push(`  Sections: ${result.stats.sectionCount}`);
+    output.push(`  Links: ${result.stats.linkCount}`);
+    output.push(`  Frontmatter: ${result.stats.hasValidFrontmatter ? 'Valid' : 'Invalid'}`);
     output.push('');
   }
 
   if (result.errors.length > 0) {
-    output.push(`錯誤（${result.errors.length}）：`);
+    output.push(`Errors (${result.errors.length}):`);
     result.errors.forEach((error, index) => {
       output.push(`  ${index + 1}. [${error.type}] ${error.message}`);
       if (error.line) {
-        output.push(`     位置：第 ${error.line} 行`);
+        output.push(`     Location: line ${error.line}`);
       }
       if (error.section) {
-        output.push(`     章節：${error.section}`);
+        output.push(`     Section: ${error.section}`);
       }
     });
     output.push('');
   }
 
   if (result.warnings.length > 0) {
-    output.push(`警告（${result.warnings.length}）：`);
+    output.push(`Warnings (${result.warnings.length}):`);
     result.warnings.forEach((warning, index) => {
       output.push(`  ${index + 1}. [${warning.type}] ${warning.message}`);
       if (warning.line) {
-        output.push(`     位置：第 ${warning.line} 行`);
+        output.push(`     Location: line ${warning.line}`);
       }
       if (warning.section) {
-        output.push(`     章節：${warning.section}`);
+        output.push(`     Section: ${warning.section}`);
       }
     });
     output.push('');
   }
 
-  output.push(result.success ? '驗證通過' : '驗證失敗');
+  output.push(result.success ? 'Validation passed' : 'Validation failed');
 
   return output.join('\n');
 }

@@ -9,12 +9,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 /**
- * 優先級層級定義
+ * Priority tier definition
  */
 export type PriorityTier = 'essential' | 'common' | 'specialized';
 
 /**
- * 節點評分因素
+ * Node scoring factors
  */
 interface ScoringFactors {
   usageFrequency: number;
@@ -24,7 +24,7 @@ interface ScoringFactors {
 }
 
 /**
- * 評分權重設定
+ * Scoring weights configuration
  */
 interface ScoringWeights {
   usage_frequency: number;
@@ -34,7 +34,7 @@ interface ScoringWeights {
 }
 
 /**
- * 優先級設定
+ * Priority configuration
  */
 interface PriorityConfig {
   priority_tiers: {
@@ -55,7 +55,7 @@ interface PriorityConfig {
 }
 
 /**
- * 層級設定
+ * Tier configuration
  */
 interface TierConfig {
   tier: number;
@@ -66,7 +66,7 @@ interface TierConfig {
 }
 
 /**
- * 待評分的節點資料
+ * Node data to be scored
  */
 export interface NodeData {
   nodeType: string;
@@ -81,7 +81,7 @@ export interface NodeData {
 }
 
 /**
- * 評分後的節點
+ * Scored node
  */
 export interface ScoredNode extends NodeData {
   score: number;
@@ -91,14 +91,14 @@ export interface ScoredNode extends NodeData {
 }
 
 /**
- * 節點優先級排序器
+ * Node priority ranker
  *
- * 根據多種因素計算節點的重要性分數並進行排序：
- * 1. 使用頻率（從範本統計）
- * 2. 文件完整性
- * 3. 是否在必備清單中
- * 4. 社群受歡迎程度
- * 5. 節點通用性
+ * Calculates importance scores for nodes based on multiple factors and ranks them:
+ * 1. Usage frequency (from template statistics)
+ * 2. Documentation completeness
+ * 3. Whether in essential list
+ * 4. Community popularity
+ * 5. Node versatility
  */
 export class PriorityRanker {
   private config: PriorityConfig;
@@ -116,7 +116,7 @@ export class PriorityRanker {
   }
 
   /**
-   * 載入優先級設定檔
+   * Load priority configuration file
    */
   private loadConfig(configPath: string): PriorityConfig {
     try {
@@ -124,13 +124,13 @@ export class PriorityRanker {
       return JSON.parse(content);
     } catch (error) {
       throw new Error(
-        `無法載入優先級設定檔: ${configPath}. 錯誤: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to load priority configuration file: ${configPath}. Error: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }
 
   /**
-   * 提取評分權重
+   * Extract scoring weights
    */
   private extractWeights(): ScoringWeights {
     const criteria = this.config.ranking_criteria;
@@ -143,31 +143,31 @@ export class PriorityRanker {
   }
 
   /**
-   * 計算節點的重要性分數
+   * Calculate importance score for a node
    *
-   * @param node 節點資料
-   * @param maxUsageCount 所有節點中的最大使用次數（用於正規化）
-   * @returns 評分因素和總分
+   * @param node Node data
+   * @param maxUsageCount Maximum usage count among all nodes (for normalization)
+   * @returns Scoring factors and total score
    */
   private calculateScore(
     node: NodeData,
     maxUsageCount: number
   ): { score: number; factors: ScoringFactors } {
-    // 1. 使用頻率分數（0-1）
+    // 1. Usage frequency score (0-1)
     const usageFrequency = maxUsageCount > 0
       ? (node.usageCount || 0) / maxUsageCount
       : 0;
 
-    // 2. 文件完整性分數（0-1）
+    // 2. Documentation quality score (0-1)
     const documentationQuality = this.calculateDocumentationQuality(node);
 
-    // 3. 社群受歡迎程度（0-1）
+    // 3. Community popularity (0-1)
     const communityPopularity = this.calculateCommunityPopularity(node);
 
-    // 4. 通用性分數（0-1）
+    // 4. Versatility score (0-1)
     const versatility = this.calculateVersatility(node);
 
-    // 加權總分
+    // Weighted total score
     const score =
       usageFrequency * this.weights.usage_frequency +
       documentationQuality * this.weights.documentation_quality +
@@ -186,22 +186,22 @@ export class PriorityRanker {
   }
 
   /**
-   * 計算文件完整性分數
+   * Calculate documentation quality score
    */
   private calculateDocumentationQuality(node: NodeData): number {
     let score = 0;
 
-    // 有描述 +0.3
+    // Has description +0.3
     if (node.description && node.description.length > 0) {
       score += 0.3;
     }
 
-    // 有完整文件 +0.5
+    // Has complete documentation +0.5
     if (node.hasDocumentation) {
       score += 0.5;
     }
 
-    // 有屬性定義 +0.2
+    // Has property definitions +0.2
     if (node.propertyCount && node.propertyCount > 0) {
       score += 0.2;
     }
@@ -210,13 +210,13 @@ export class PriorityRanker {
   }
 
   /**
-   * 計算社群受歡迎程度
-   * 基於節點是否在必備清單或加速清單中
+   * Calculate community popularity
+   * Based on whether node is in essential or boosted lists
    */
   private calculateCommunityPopularity(node: NodeData): number {
     const nodeTypeName = this.normalizeNodeName(node.nodeType);
 
-    // 檢查是否在必備清單中
+    // Check if in essential list
     const isEssential = this.config.priority_tiers.essential.nodes?.some(
       name => this.normalizeNodeName(name) === nodeTypeName
     );
@@ -225,7 +225,7 @@ export class PriorityRanker {
       return 1.0;
     }
 
-    // 檢查是否在常用清單中
+    // Check if in common list
     const isCommon = this.config.priority_tiers.common.nodes?.some(
       name => this.normalizeNodeName(name) === nodeTypeName
     );
@@ -234,7 +234,7 @@ export class PriorityRanker {
       return 0.7;
     }
 
-    // 檢查是否在加速清單中
+    // Check if in boosted list
     const isBoosted = this.config.boosted_nodes.nodes.some(
       name => this.normalizeNodeName(name) === nodeTypeName
     );
@@ -243,18 +243,18 @@ export class PriorityRanker {
       return 0.8;
     }
 
-    // 基於分類給予基礎分數
+    // Give base score based on category
     return this.getCategoryBaseScore(node.category || '');
   }
 
   /**
-   * 計算節點通用性
-   * 根據節點類型和屬性數量評估
+   * Calculate node versatility
+   * Evaluated based on node type and property count
    */
   private calculateVersatility(node: NodeData): number {
     let score = 0;
 
-    // 核心功能節點（HTTP、Code、Webhook等）通用性高
+    // Core function nodes (HTTP, Code, Webhook, etc.) have high versatility
     const coreNodes = ['httpRequest', 'code', 'webhook', 'function', 'set', 'if'];
     const nodeTypeName = this.normalizeNodeName(node.nodeType);
 
@@ -262,7 +262,7 @@ export class PriorityRanker {
       score += 0.5;
     }
 
-    // 根據屬性數量評估配置靈活性
+    // Evaluate configuration flexibility based on property count
     const propertyCount = node.propertyCount || 0;
     if (propertyCount > 10) {
       score += 0.3;
@@ -272,7 +272,7 @@ export class PriorityRanker {
       score += 0.1;
     }
 
-    // 觸發節點和 webhook 是工作流程的起點，重要性較高
+    // Trigger nodes and webhooks are workflow entry points, higher importance
     if (node.nodeCategory === 'trigger' || node.nodeCategory === 'webhook') {
       score += 0.2;
     }
@@ -281,7 +281,7 @@ export class PriorityRanker {
   }
 
   /**
-   * 根據分類給予基礎分數
+   * Give base score based on category
    */
   private getCategoryBaseScore(category: string): number {
     const categoryScores: { [key: string]: number } = {
@@ -298,8 +298,8 @@ export class PriorityRanker {
   }
 
   /**
-   * 正規化節點名稱以便比對
-   * 移除套件前綴，統一大小寫
+   * Normalize node name for comparison
+   * Remove package prefix, unify case
    */
   private normalizeNodeName(nodeName: string): string {
     return nodeName
@@ -309,19 +309,19 @@ export class PriorityRanker {
   }
 
   /**
-   * 排序節點並分配層級
+   * Rank nodes and assign tiers
    *
-   * @param nodes 待排序的節點陣列
-   * @returns 排序後的節點陣列（包含分數和層級）
+   * @param nodes Array of nodes to be ranked
+   * @returns Sorted array of nodes (with scores and tiers)
    */
   public rankNodes(nodes: NodeData[]): ScoredNode[] {
-    // 計算最大使用次數用於正規化
+    // Calculate maximum usage count for normalization
     const maxUsageCount = Math.max(
       ...nodes.map(node => node.usageCount || 0),
       1
     );
 
-    // 計算每個節點的分數
+    // Calculate score for each node
     const scoredNodes: ScoredNode[] = nodes.map(node => {
       const { score, factors } = this.calculateScore(node, maxUsageCount);
 
@@ -334,22 +334,22 @@ export class PriorityRanker {
       };
     });
 
-    // 依分數降序排序
+    // Sort by score in descending order
     scoredNodes.sort((a, b) => b.score - a.score);
 
-    // 分配排名
+    // Assign ranks
     scoredNodes.forEach((node, index) => {
       node.rank = index + 1;
     });
 
-    // 分配層級
+    // Assign tiers
     this.assignTiers(scoredNodes);
 
     return scoredNodes;
   }
 
   /**
-   * 根據排名和設定分配層級
+   * Assign tiers based on ranking and configuration
    */
   private assignTiers(scoredNodes: ScoredNode[]): void {
     const essentialMax = this.config.priority_tiers.essential.max_nodes;
@@ -367,10 +367,10 @@ export class PriorityRanker {
   }
 
   /**
-   * 依層級分組節點
+   * Group nodes by tier
    *
-   * @param scoredNodes 已評分的節點陣列
-   * @returns 依層級分組的節點
+   * @param scoredNodes Array of scored nodes
+   * @returns Nodes grouped by tier
    */
   public groupByTier(scoredNodes: ScoredNode[]): {
     essential: ScoredNode[];
@@ -385,11 +385,11 @@ export class PriorityRanker {
   }
 
   /**
-   * 取得指定層級的節點
+   * Get nodes by specified tier
    *
-   * @param scoredNodes 已評分的節點陣列
-   * @param tier 要篩選的層級
-   * @returns 該層級的節點陣列
+   * @param scoredNodes Array of scored nodes
+   * @param tier Tier to filter
+   * @returns Array of nodes in that tier
    */
   public getNodesByTier(
     scoredNodes: ScoredNode[],
@@ -399,10 +399,10 @@ export class PriorityRanker {
   }
 
   /**
-   * 產生排序報告
+   * Generate ranking report
    *
-   * @param scoredNodes 已評分的節點陣列
-   * @returns 排序統計資訊
+   * @param scoredNodes Array of scored nodes
+   * @returns Ranking statistics
    */
   public generateReport(scoredNodes: ScoredNode[]): {
     totalNodes: number;

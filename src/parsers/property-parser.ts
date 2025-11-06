@@ -8,8 +8,8 @@
 import type { NodeClass } from './node-parser';
 
 /**
- * 精簡的屬性資訊
- * 只包含核心欄位
+ * Simplified property information
+ * Contains only core fields
  */
 export interface CoreProperty {
   name: string;
@@ -22,7 +22,7 @@ export interface CoreProperty {
 }
 
 /**
- * 操作資訊
+ * Operation information
  */
 export interface Operation {
   name: string;
@@ -32,7 +32,7 @@ export interface Operation {
 }
 
 /**
- * 解析後的屬性資訊
+ * Parsed property information
  */
 export interface ParsedProperties {
   coreProperties: CoreProperty[];
@@ -42,16 +42,16 @@ export interface ParsedProperties {
 }
 
 /**
- * 屬性解析器
- * 提取節點的核心屬性（限制最多 10 個）和操作列表
+ * Property Parser
+ * Extracts node's core properties (maximum 10) and operation list
  */
 export class PropertyParser {
   private readonly MAX_CORE_PROPERTIES = 10;
 
   /**
-   * 解析節點屬性
-   * @param nodeClass 節點類別或實例
-   * @returns 解析後的屬性資訊
+   * Parse node properties
+   * @param nodeClass Node class or instance
+   * @returns Parsed property information
    */
   parse(nodeClass: NodeClass): ParsedProperties {
     const allProperties = this.extractAllProperties(nodeClass);
@@ -67,14 +67,14 @@ export class PropertyParser {
   }
 
   /**
-   * 提取所有屬性
-   * 處理版本化節點和一般節點
+   * Extract all properties
+   * Handles versioned nodes and regular nodes
    */
   private extractAllProperties(nodeClass: NodeClass): any[] {
     try {
       const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
 
-      // 處理版本化節點
+      // Handle versioned nodes
       if (instance.nodeVersions) {
         const versions = Object.keys(instance.nodeVersions).map(Number);
         if (versions.length > 0) {
@@ -86,7 +86,7 @@ export class PropertyParser {
         }
       }
 
-      // 一般節點
+      // Regular nodes
       const description = instance.description || instance.baseDescription;
       return description?.properties || [];
     } catch (e) {
@@ -95,42 +95,42 @@ export class PropertyParser {
   }
 
   /**
-   * 選擇核心屬性
-   * 優先選擇必填屬性和重要屬性，最多 10 個
+   * Select core properties
+   * Prioritize required and important properties, maximum 10
    */
   private selectCoreProperties(properties: any[]): CoreProperty[] {
     if (properties.length === 0) {
       return [];
     }
 
-    // 屬性優先順序評分
+    // Score properties by priority
     const scoredProperties = properties.map(prop => ({
       property: prop,
       score: this.calculatePropertyScore(prop)
     }));
 
-    // 按分數排序
+    // Sort by score
     scoredProperties.sort((a, b) => b.score - a.score);
 
-    // 取前 10 個
+    // Take top 10
     return scoredProperties
       .slice(0, this.MAX_CORE_PROPERTIES)
       .map(({ property }) => this.normalizeProperty(property));
   }
 
   /**
-   * 計算屬性重要性分數
-   * 必填屬性和特定名稱的屬性有較高分數
+   * Calculate property importance score
+   * Required properties and properties with specific names have higher scores
    */
   private calculatePropertyScore(property: any): number {
     let score = 0;
 
-    // 必填屬性 +10 分
+    // Required property +10 points
     if (property.required === true) {
       score += 10;
     }
 
-    // 重要的屬性名稱
+    // Important property names
     const importantNames = [
       'resource',
       'operation',
@@ -150,12 +150,12 @@ export class PropertyParser {
       score += 5;
     }
 
-    // 有選項的屬性 +3 分（通常是重要的選擇）
+    // Properties with options +3 points (usually important selections)
     if (property.options?.length > 0) {
       score += 3;
     }
 
-    // 有描述的屬性 +1 分
+    // Properties with description +1 point
     if (property.description) {
       score += 1;
     }
@@ -164,7 +164,7 @@ export class PropertyParser {
   }
 
   /**
-   * 正規化屬性為統一格式
+   * Normalize property to unified format
    */
   private normalizeProperty(property: any): CoreProperty {
     return {
@@ -183,14 +183,14 @@ export class PropertyParser {
   }
 
   /**
-   * 提取操作列表
-   * 支援宣告式和程式化節點
+   * Extract operation list
+   * Supports declarative and programmatic nodes
    */
   private extractOperations(nodeClass: NodeClass): Operation[] {
     try {
       const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
 
-      // 處理版本化節點
+      // Handle versioned nodes
       let description;
       if (instance.nodeVersions) {
         const versions = Object.keys(instance.nodeVersions).map(Number);
@@ -206,12 +206,12 @@ export class PropertyParser {
         return [];
       }
 
-      // 宣告式節點（有 routing）
+      // Declarative node (has routing)
       if (description.routing) {
         return this.extractDeclarativeOperations(description);
       }
 
-      // 程式化節點（從 properties 中找 operation）
+      // Programmatic node (find operation from properties)
       return this.extractProgrammaticOperations(description);
     } catch (e) {
       return [];
@@ -219,7 +219,7 @@ export class PropertyParser {
   }
 
   /**
-   * 提取宣告式節點的操作
+   * Extract operations from declarative node
    */
   private extractDeclarativeOperations(description: any): Operation[] {
     const operations: Operation[] = [];
@@ -248,7 +248,7 @@ export class PropertyParser {
   }
 
   /**
-   * 提取程式化節點的操作
+   * Extract operations from programmatic node
    */
   private extractProgrammaticOperations(description: any): Operation[] {
     const operations: Operation[] = [];
@@ -257,7 +257,7 @@ export class PropertyParser {
       return operations;
     }
 
-    // 尋找名為 'operation' 或 'action' 的屬性
+    // Find property named 'operation' or 'action'
     const operationProp = description.properties.find(
       (p: any) => p.name === 'operation' || p.name === 'action'
     );
@@ -276,13 +276,13 @@ export class PropertyParser {
   }
 
   /**
-   * 提取憑證資訊
+   * Extract credential information
    */
   private extractCredentials(nodeClass: NodeClass): any[] {
     try {
       const instance = typeof nodeClass === 'function' ? new nodeClass() : nodeClass;
 
-      // 處理版本化節點
+      // Handle versioned nodes
       if (instance.nodeVersions) {
         const versions = Object.keys(instance.nodeVersions).map(Number);
         if (versions.length > 0) {
@@ -294,7 +294,7 @@ export class PropertyParser {
         }
       }
 
-      // 一般節點
+      // Regular nodes
       const description = instance.description || instance.baseDescription;
       return description?.credentials || [];
     } catch (e) {

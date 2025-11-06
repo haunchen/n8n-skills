@@ -13,7 +13,7 @@ async function testCompatibilityAnalyzer() {
   const parser = new InputOutputParser();
   const analyzer = new CompatibilityAnalyzer();
 
-  // 收集測試節點的 I/O 資訊
+  // Collect I/O information for test nodes
   const testNodes: NodeConnectionInfo[] = [];
 
   // 1. Webhook (Trigger)
@@ -34,7 +34,7 @@ async function testCompatibilityAnalyzer() {
       isDynamicOutput: webhookIO.isDynamicOutput
     });
   } catch (error) {
-    console.error('載入 Webhook 失敗');
+    console.error('Failed to load Webhook');
   }
 
   // 2. HTTP Request
@@ -55,7 +55,7 @@ async function testCompatibilityAnalyzer() {
       isDynamicOutput: httpIO.isDynamicOutput
     });
   } catch (error) {
-    console.error('載入 HTTP Request 失敗');
+    console.error('Failed to load HTTP Request');
   }
 
   // 3. Slack
@@ -76,7 +76,7 @@ async function testCompatibilityAnalyzer() {
       isDynamicOutput: slackIO.isDynamicOutput
     });
   } catch (error) {
-    console.error('載入 Slack 失敗');
+    console.error('Failed to load Slack');
   }
 
   // 4. AI Agent
@@ -97,7 +97,7 @@ async function testCompatibilityAnalyzer() {
       isDynamicOutput: agentIO.isDynamicOutput
     });
   } catch (error) {
-    console.error('載入 AI Agent 失敗');
+    console.error('Failed to load AI Agent');
   }
 
   // 5. OpenAI Chat Model
@@ -118,55 +118,55 @@ async function testCompatibilityAnalyzer() {
       isDynamicOutput: openaiIO.isDynamicOutput
     });
   } catch (error) {
-    console.error('載入 OpenAI Chat Model 失敗');
+    console.error('Failed to load OpenAI Chat Model');
   }
 
-  console.log(`\n收集了 ${testNodes.length} 個節點\n`);
+  console.log(`\nCollected ${testNodes.length} nodes\n`);
 
-  // 建立相容性矩陣
-  console.log('===== 建立相容性矩陣 =====\n');
+  // Build compatibility matrix
+  console.log('===== Building Compatibility Matrix =====\n');
   const matrix = analyzer.buildCompatibilityMatrix(testNodes);
 
-  // 顯示每個節點的相容連接
+  // Display compatible connections for each node
   for (const node of testNodes) {
     console.log(`\n【${node.displayName}】`);
-    console.log(`  輸入類型: ${node.inputTypes.join(', ') || '無'}`);
-    console.log(`  輸出類型: ${node.outputTypes.join(', ')}`);
+    console.log(`  Input types: ${node.inputTypes.join(', ') || 'None'}`);
+    console.log(`  Output types: ${node.outputTypes.join(', ')}`);
 
     const recommended = analyzer.getRecommendedConnections(node.nodeType, matrix, 3);
     if (recommended.length > 0) {
-      console.log('  推薦連接:');
+      console.log('  Recommended connections:');
       recommended.forEach((rec, idx) => {
         const targetNode = testNodes.find(n => n.nodeType === rec.targetNode);
-        console.log(`    ${idx + 1}. ${targetNode?.displayName || rec.targetNode} (分數: ${rec.score})`);
-        console.log(`       原因: ${rec.reason}`);
+        console.log(`    ${idx + 1}. ${targetNode?.displayName || rec.targetNode} (Score: ${rec.score})`);
+        console.log(`       Reason: ${rec.reason}`);
       });
     } else {
-      console.log('  推薦連接: 無');
+      console.log('  Recommended connections: None');
     }
   }
 
-  // 測試特定連接
-  console.log('\n\n===== 測試特定連接 =====');
+  // Test specific connections
+  console.log('\n\n===== Testing Specific Connections =====');
   console.log('\n1. Webhook → HTTP Request');
   const webhookToHttp = analyzer.isCompatible('webhook', 'httpRequest', matrix);
   const score1 = analyzer.getCompatibilityScore('webhook', 'httpRequest', matrix);
-  console.log(`   相容: ${webhookToHttp}, 分數: ${score1}`);
+  console.log(`   Compatible: ${webhookToHttp}, Score: ${score1}`);
 
   console.log('\n2. HTTP Request → Slack');
   const httpToSlack = analyzer.isCompatible('httpRequest', 'slack', matrix);
   const score2 = analyzer.getCompatibilityScore('httpRequest', 'slack', matrix);
-  console.log(`   相容: ${httpToSlack}, 分數: ${score2}`);
+  console.log(`   Compatible: ${httpToSlack}, Score: ${score2}`);
 
   console.log('\n3. AI Agent → Slack');
   const agentToSlack = analyzer.isCompatible('agent', 'slack', matrix);
   const score3 = analyzer.getCompatibilityScore('agent', 'slack', matrix);
-  console.log(`   相容: ${agentToSlack}, 分數: ${score3}`);
+  console.log(`   Compatible: ${agentToSlack}, Score: ${score3}`);
 
   console.log('\n4. OpenAI Chat Model → AI Agent');
   const openaiToAgent = analyzer.isCompatible('lmChatOpenAi', 'agent', matrix);
   const score4 = analyzer.getCompatibilityScore('lmChatOpenAi', 'agent', matrix);
-  console.log(`   相容: ${openaiToAgent}, 分數: ${score4}`);
+  console.log(`   Compatible: ${openaiToAgent}, Score: ${score4}`);
 }
 
 testCompatibilityAnalyzer().catch(console.error);

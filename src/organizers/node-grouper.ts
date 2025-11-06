@@ -6,32 +6,32 @@
  */
 
 /**
- * 節點使用頻率等級
+ * Node usage frequency level
  */
 export enum UsageFrequency {
-  ESSENTIAL = 'essential',    // 必備節點（核心功能）
-  COMMON = 'common',          // 常用節點（經常使用）
-  SPECIALIZED = 'specialized' // 專業節點（特定場景）
+  ESSENTIAL = 'essential',    // Essential nodes (core functionality)
+  COMMON = 'common',          // Common nodes (frequently used)
+  SPECIALIZED = 'specialized' // Specialized nodes (specific scenarios)
 }
 
 /**
- * 節點功能群組
+ * Node functional group
  */
 export enum FunctionalGroup {
-  COMMUNICATION = 'communication',   // 通訊工具
-  PRODUCTIVITY = 'productivity',     // 生產力工具
-  DEVELOPMENT = 'development',       // 開發工具
-  MARKETING = 'marketing',           // 行銷工具
-  DATABASE = 'database',             // 資料庫
-  STORAGE = 'storage',               // 儲存服務
-  AI_ML = 'ai_ml',                   // AI/機器學習
-  AUTOMATION = 'automation',         // 自動化工具
-  ANALYTICS = 'analytics',           // 分析工具
-  UTILITY = 'utility'                // 實用工具
+  COMMUNICATION = 'communication',   // Communication tools
+  PRODUCTIVITY = 'productivity',     // Productivity tools
+  DEVELOPMENT = 'development',       // Development tools
+  MARKETING = 'marketing',           // Marketing tools
+  DATABASE = 'database',             // Database
+  STORAGE = 'storage',               // Storage services
+  AI_ML = 'ai_ml',                   // AI/Machine Learning
+  AUTOMATION = 'automation',         // Automation tools
+  ANALYTICS = 'analytics',           // Analytics tools
+  UTILITY = 'utility'                // Utility tools
 }
 
 /**
- * 分組的節點資訊
+ * Grouped node information
  */
 export interface GroupedNode {
   nodeType: string;
@@ -44,7 +44,7 @@ export interface GroupedNode {
 }
 
 /**
- * 節點關係
+ * Node relationship
  */
 export interface NodeRelationship {
   sourceNode: string;
@@ -54,7 +54,7 @@ export interface NodeRelationship {
 }
 
 /**
- * 分組結果
+ * Grouping result
  */
 export interface GroupingResult {
   byFrequency: Map<UsageFrequency, GroupedNode[]>;
@@ -63,7 +63,7 @@ export interface GroupingResult {
 }
 
 /**
- * 節點基本資訊介面
+ * Node basic information interface
  */
 export interface NodeInfo {
   nodeType: string;
@@ -78,12 +78,12 @@ export interface NodeInfo {
 }
 
 /**
- * 節點分組器
+ * Node grouper
  *
- * 提供多種分組邏輯：
- * 1. 按使用頻率分組（必備/常用/專業）
- * 2. 按功能相似性分組（通訊/生產力/開發等）
- * 3. 建立節點間的關係映射
+ * Provides multiple grouping logics:
+ * 1. Group by usage frequency (essential/common/specialized)
+ * 2. Group by functional similarity (communication/productivity/development, etc.)
+ * 3. Build relationship mapping between nodes
  */
 export class NodeGrouper {
   private frequencyRules: Map<UsageFrequency, (node: NodeInfo) => boolean> = new Map();
@@ -97,10 +97,10 @@ export class NodeGrouper {
   }
 
   /**
-   * 初始化使用頻率規則
+   * Initialize usage frequency rules
    */
   private initializeFrequencyRules(): void {
-    // 必備節點：核心功能，幾乎每個工作流程都會用到
+    // Essential nodes: core functionality, used in almost every workflow
     this.frequencyRules.set(UsageFrequency.ESSENTIAL, (node) => {
       const essentialKeywords = [
         'httpRequest', 'webhook', 'code', 'set', 'if', 'merge', 'split',
@@ -111,7 +111,7 @@ export class NodeGrouper {
       );
     });
 
-    // 常用節點：流行的第三方整合
+    // Common nodes: popular third-party integrations
     this.frequencyRules.set(UsageFrequency.COMMON, (node) => {
       const commonKeywords = [
         'slack', 'gmail', 'googlesheets', 'notion', 'airtable',
@@ -122,51 +122,51 @@ export class NodeGrouper {
       );
     });
 
-    // 專業節點：預設為專業節點
+    // Specialized nodes: default to specialized
     this.frequencyRules.set(UsageFrequency.SPECIALIZED, () => true);
   }
 
   /**
-   * 初始化功能群組規則
+   * Initialize functional group rules
    */
   private initializeFunctionalRules(): void {
-    // 通訊工具
+    // Communication tools
     this.functionalRules.set(FunctionalGroup.COMMUNICATION, (node) => {
       const keywords = ['slack', 'discord', 'telegram', 'teams', 'email', 'sms', 'whatsapp'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
     });
 
-    // 生產力工具
+    // Productivity tools
     this.functionalRules.set(FunctionalGroup.PRODUCTIVITY, (node) => {
       const keywords = ['sheets', 'notion', 'airtable', 'monday', 'asana', 'trello', 'calendar'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
     });
 
-    // 開發工具
+    // Development tools
     this.functionalRules.set(FunctionalGroup.DEVELOPMENT, (node) => {
       const keywords = ['github', 'gitlab', 'jira', 'linear', 'jenkins', 'docker'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
     });
 
-    // 行銷工具
+    // Marketing tools
     this.functionalRules.set(FunctionalGroup.MARKETING, (node) => {
       const keywords = ['mailchimp', 'sendgrid', 'hubspot', 'salesforce', 'mailgun'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
     });
 
-    // 資料庫
+    // Database
     this.functionalRules.set(FunctionalGroup.DATABASE, (node) => {
       const keywords = ['postgres', 'mysql', 'mongodb', 'redis', 'sqlite', 'firebase', 'supabase'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
     });
 
-    // 儲存服務
+    // Storage services
     this.functionalRules.set(FunctionalGroup.STORAGE, (node) => {
       const keywords = ['drive', 'dropbox', 's3', 'box', 'onedrive', 'storage'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
     });
 
-    // AI/機器學習
+    // AI/Machine Learning
     this.functionalRules.set(FunctionalGroup.AI_ML, (node) => {
       return node.isAITool === true ||
              ['openai', 'anthropic', 'huggingface', 'langchain', 'ai'].some(k =>
@@ -174,7 +174,7 @@ export class NodeGrouper {
              );
     });
 
-    // 自動化工具
+    // Automation tools
     this.functionalRules.set(FunctionalGroup.AUTOMATION, (node) => {
       return node.isTrigger === true ||
              node.isWebhook === true ||
@@ -183,13 +183,13 @@ export class NodeGrouper {
              );
     });
 
-    // 分析工具
+    // Analytics tools
     this.functionalRules.set(FunctionalGroup.ANALYTICS, (node) => {
       const keywords = ['analytics', 'segment', 'mixpanel', 'amplitude'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
     });
 
-    // 實用工具
+    // Utility tools
     this.functionalRules.set(FunctionalGroup.UTILITY, (node) => {
       const keywords = ['datetime', 'crypto', 'xml', 'json', 'compress', 'pdf', 'html'];
       return keywords.some(k => node.nodeType.toLowerCase().includes(k));
@@ -197,84 +197,84 @@ export class NodeGrouper {
   }
 
   /**
-   * 初始化節點關係規則
+   * Initialize node relationship rules
    */
   private initializeRelationshipRules(): void {
-    // 替代關係：相似功能的不同實作
+    // Alternative relationship: different implementations of similar functionality
     this.relationshipRules.push(
       {
         sourceNode: 'Gmail',
         targetNode: 'EmailSend',
         relationshipType: 'alternative',
-        description: '兩者都可以發送電子郵件'
+        description: 'Both can send emails'
       },
       {
         sourceNode: 'PostgresQL',
         targetNode: 'MySQL',
         relationshipType: 'alternative',
-        description: '都是關聯式資料庫'
+        description: 'Both are relational databases'
       },
       {
         sourceNode: 'OpenAI',
         targetNode: 'Anthropic',
         relationshipType: 'alternative',
-        description: '都是大型語言模型服務'
+        description: 'Both are large language model services'
       }
     );
 
-    // 互補關係：經常一起使用
+    // Complement relationship: frequently used together
     this.relationshipRules.push(
       {
         sourceNode: 'Webhook',
         targetNode: 'HTTP Request',
         relationshipType: 'complement',
-        description: 'Webhook 接收請求，HTTP Request 發送請求'
+        description: 'Webhook receives requests, HTTP Request sends requests'
       },
       {
         sourceNode: 'Code',
         targetNode: 'Set',
         relationshipType: 'complement',
-        description: 'Code 處理複雜邏輯，Set 設定簡單值'
+        description: 'Code handles complex logic, Set sets simple values'
       },
       {
         sourceNode: 'If',
         targetNode: 'Switch',
         relationshipType: 'complement',
-        description: '都用於條件判斷和流程分支'
+        description: 'Both used for conditional branching and flow control'
       }
     );
 
-    // 前置關係：一個是另一個的前提
+    // Prerequisite relationship: one is a prerequisite for another
     this.relationshipRules.push(
       {
         sourceNode: 'Trigger',
         targetNode: 'HTTP Request',
         relationshipType: 'prerequisite',
-        description: '工作流程需要觸發器才能啟動'
+        description: 'Workflows need triggers to start'
       }
     );
 
-    // 後繼關係：通常在某節點之後使用
+    // Successor relationship: typically used after certain nodes
     this.relationshipRules.push(
       {
         sourceNode: 'HTTP Request',
         targetNode: 'Set',
         relationshipType: 'successor',
-        description: '從 API 取得資料後通常需要轉換'
+        description: 'Data fetched from API usually needs transformation'
       }
     );
   }
 
   /**
-   * 對節點進行分組
+   * Group nodes
    *
-   * @param nodes 所有節點資訊
-   * @returns 分組結果
+   * @param nodes All node information
+   * @returns Grouping result
    */
   group(nodes: NodeInfo[]): GroupingResult {
     const groupedNodes: GroupedNode[] = nodes.map(node => this.classifyNode(node));
 
-    // 按使用頻率分組
+    // Group by usage frequency
     const byFrequency = new Map<UsageFrequency, GroupedNode[]>();
     for (const freq of Object.values(UsageFrequency)) {
       byFrequency.set(freq, []);
@@ -283,7 +283,7 @@ export class NodeGrouper {
       byFrequency.get(node.usageFrequency)!.push(node);
     }
 
-    // 按功能分組
+    // Group by function
     const byFunction = new Map<FunctionalGroup, GroupedNode[]>();
     for (const func of Object.values(FunctionalGroup)) {
       byFunction.set(func, []);
@@ -294,7 +294,7 @@ export class NodeGrouper {
       }
     }
 
-    // 建立關係映射
+    // Build relationship mapping
     const relationships = this.buildRelationships(groupedNodes);
 
     return {
@@ -305,10 +305,10 @@ export class NodeGrouper {
   }
 
   /**
-   * 分類單一節點
+   * Classify a single node
    */
   private classifyNode(node: NodeInfo): GroupedNode {
-    // 判斷使用頻率
+    // Determine usage frequency
     let usageFrequency = UsageFrequency.SPECIALIZED;
     for (const [freq, rule] of this.frequencyRules.entries()) {
       if (rule(node)) {
@@ -317,7 +317,7 @@ export class NodeGrouper {
       }
     }
 
-    // 判斷功能群組
+    // Determine functional groups
     const functionalGroups: FunctionalGroup[] = [];
     for (const [group, rule] of this.functionalRules.entries()) {
       if (rule(node)) {
@@ -325,12 +325,12 @@ export class NodeGrouper {
       }
     }
 
-    // 如果沒有匹配任何功能群組，歸類為實用工具
+    // If no functional group matches, categorize as utility
     if (functionalGroups.length === 0) {
       functionalGroups.push(FunctionalGroup.UTILITY);
     }
 
-    // 產生標籤
+    // Generate tags
     const tags = this.generateTags(node);
 
     return {
@@ -345,13 +345,13 @@ export class NodeGrouper {
   }
 
   /**
-   * 建立節點關係映射
+   * Build node relationship mapping
    */
   private buildRelationships(nodes: GroupedNode[]): NodeRelationship[] {
     const relationships: NodeRelationship[] = [];
     const nodeMap = new Map(nodes.map(n => [this.normalizeNodeType(n.nodeType), n]));
 
-    // 套用預定義規則
+    // Apply predefined rules
     for (const rule of this.relationshipRules) {
       const sourceExists = Array.from(nodeMap.keys()).some(k =>
         k.includes(rule.sourceNode.toLowerCase())
@@ -365,7 +365,7 @@ export class NodeGrouper {
       }
     }
 
-    // 自動發現相似節點關係
+    // Automatically discover similar node relationships
     for (const node of nodes) {
       const related = this.findRelatedNodes(node, nodes);
       node.relatedNodes = related;
@@ -375,7 +375,7 @@ export class NodeGrouper {
   }
 
   /**
-   * 尋找相關節點
+   * Find related nodes
    */
   private findRelatedNodes(node: GroupedNode, allNodes: GroupedNode[]): string[] {
     const related: string[] = [];
@@ -383,7 +383,7 @@ export class NodeGrouper {
     for (const other of allNodes) {
       if (other.nodeType === node.nodeType) continue;
 
-      // 相同功能群組
+      // Same functional group
       const sharedGroups = node.functionalGroups.filter(g =>
         other.functionalGroups.includes(g)
       );
@@ -393,11 +393,11 @@ export class NodeGrouper {
       }
     }
 
-    return related.slice(0, 5); // 最多回傳 5 個相關節點
+    return related.slice(0, 5); // Return at most 5 related nodes
   }
 
   /**
-   * 產生節點標籤
+   * Generate node tags
    */
   private generateTags(node: NodeInfo): string[] {
     const tags: string[] = [];
@@ -412,28 +412,28 @@ export class NodeGrouper {
   }
 
   /**
-   * 標準化節點類型以便比較
+   * Normalize node type for comparison
    */
   private normalizeNodeType(nodeType: string): string {
     return nodeType.toLowerCase().split('.').pop() || nodeType.toLowerCase();
   }
 
   /**
-   * 取得特定頻率等級的節點
+   * Get nodes by specific frequency level
    */
   getNodesByFrequency(result: GroupingResult, frequency: UsageFrequency): GroupedNode[] {
     return result.byFrequency.get(frequency) || [];
   }
 
   /**
-   * 取得特定功能群組的節點
+   * Get nodes by specific functional group
    */
   getNodesByFunction(result: GroupingResult, group: FunctionalGroup): GroupedNode[] {
     return result.byFunction.get(group) || [];
   }
 
   /**
-   * 產生分組統計
+   * Generate grouping statistics
    */
   generateStatistics(result: GroupingResult): {
     totalNodes: number;

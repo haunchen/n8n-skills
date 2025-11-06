@@ -8,32 +8,32 @@
   "max_nodes_per_merged_file": 100,
   "categories": {
     "core": {
-      "name": "核心節點",
+      "name": "Core Nodes",
       "priority": 1,
       "max_nodes": 10
     },
     "app": {
-      "name": "應用整合",
+      "name": "Application Integration",
       "priority": 2,
       "max_nodes": 30
     },
     "trigger": {
-      "name": "觸發器",
+      "name": "Triggers",
       "priority": 3,
       "max_nodes": 10
     },
     "ai": {
-      "name": "AI 節點",
+      "name": "AI Nodes",
       "priority": 4,
       "max_nodes": 20
     },
     "database": {
-      "name": "資料庫",
+      "name": "Databases",
       "priority": 5,
       "max_nodes": 10
     },
     "utility": {
-      "name": "工具節點",
+      "name": "Utility Nodes",
       "priority": 6,
       "max_nodes": 10
     }
