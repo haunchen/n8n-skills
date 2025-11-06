@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2025-11-07
+
 ### Changed
 - Refactor website update script to support full bilingual auto-update
   - Add auto-update functionality for README.md and README.zh-TW.md

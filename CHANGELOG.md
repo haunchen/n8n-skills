@@ -7,6 +7,8 @@
 
 ## [Unreleased]
 
+## [1.2.1] - 2025-11-07
+
 ### Changed
 - 重構網站更新腳本以支援完整雙語自動更新
   - 新增 README.md 和 README.zh-TW.md 自動更新功能
