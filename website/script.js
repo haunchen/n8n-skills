@@ -1,26 +1,23 @@
-// Global i18n instance
-let i18n = null;
-
 // Scroll-based navbar control
 document.addEventListener('DOMContentLoaded', async function() {
     const navbar = document.getElementById('navbar');
     const heroButtons = document.querySelector('.hero-buttons');
     const heroTitle = document.querySelector('.hero-title');
 
-    // Initialize i18n
-    i18n = new I18n();
-    await i18n.init();
+    // Initialize i18n as global variable
+    window.i18n = new I18n();
+    await window.i18n.init();
 
     // Update language toggle button text
-    updateLangToggleButton(i18n.getCurrentLanguage());
+    updateLangToggleButton(window.i18n.getCurrentLanguage());
 
     // Setup language toggle
     const langToggle = document.getElementById('lang-toggle');
     if (langToggle) {
         langToggle.addEventListener('click', async function() {
-            const currentLang = i18n.getCurrentLanguage();
+            const currentLang = window.i18n.getCurrentLanguage();
             const newLang = currentLang === 'zh-TW' ? 'en' : 'zh-TW';
-            await i18n.switchLanguage(newLang);
+            await window.i18n.switchLanguage(newLang);
             updateLangToggleButton(newLang);
         });
     }
