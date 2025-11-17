@@ -124,6 +124,10 @@ jobs:
         if: steps.check_version.outputs.version_changed == 'true'
         run: npm run build:full
 
+      - name: Validate output files
+        if: steps.check_version.outputs.version_changed == 'true'
+        run: npm run validate
+
       - name: Update website data
         if: steps.check_version.outputs.version_changed == 'true'
         run: npm run update:website
