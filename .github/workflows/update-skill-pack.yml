@@ -40,8 +40,34 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Update npm packages to latest
-        run: npm update
+      - name: Update n8n to latest
+        id: update_n8n
+        run: |
+          # 記錄更新前的版本
+          OLD_N8N=$(jq -r '.dependencies["n8n"]' package.json | sed 's/\^//')
+
+          # 更新 n8n 主套件到最新版本
+          npm install n8n@latest
+
+          # 記錄更新後的版本
+          NEW_N8N=$(jq -r '.dependencies["n8n"]' package.json | sed 's/\^//')
+
+          echo "old_version=$OLD_N8N" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_N8N" >> $GITHUB_OUTPUT
+
+          if [ "$OLD_N8N" != "$NEW_N8N" ]; then
+            echo "n8n_updated=true" >> $GITHUB_OUTPUT
+            echo "n8n updated: v$OLD_N8N → v$NEW_N8N"
+          else
+            echo "n8n_updated=false" >> $GITHUB_OUTPUT
+            echo "n8n is already up to date: v$NEW_N8N"
+          fi
+
+      - name: Update other n8n packages if n8n was updated
+        if: steps.update_n8n.outputs.n8n_updated == 'true'
+        run: |
+          echo "n8n was updated, updating related packages..."
+          npm install n8n-core@latest n8n-workflow@latest n8n-nodes-base@latest @n8n/n8n-nodes-langchain@latest
 
       - name: Check n8n packages version changes
         id: check_version
