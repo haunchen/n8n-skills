@@ -275,7 +275,7 @@ Project Statistics
 
 - Node Coverage: 542 nodes
 - Curated Templates: 20 templates
-- Output Files: 92 files
+- Output Files: 102 files
 - Total Documentation Size: 2.7 MB
 - Supported Platforms: Claude Code, Claude.ai Web, Claude Desktop
 

@@ -19,7 +19,20 @@
   "stats": {
     "nodes": "n8n 節點",
     "categories": "主要分類",
-    "templates": "工作流程範本"
+    "templates": "工作流程範本",
+    "communityPackages": "社群套件",
+    "clickToExpand": "點擊展開"
+  },
+  "community": {
+    "title": "社群套件推薦",
+    "categories": {
+      "communication": "通訊",
+      "ai-tools": "AI 工具",
+      "web-scraping": "網頁爬蟲",
+      "document": "文件處理",
+      "data-processing": "資料處理",
+      "utilities": "實用工具"
+    }
   },
   "features": {
     "title": "核心特色",

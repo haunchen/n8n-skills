@@ -19,7 +19,20 @@
   "stats": {
     "nodes": "n8n Nodes",
     "categories": "Main Categories",
-    "templates": "Workflow Templates"
+    "templates": "Workflow Templates",
+    "communityPackages": "Community Packages",
+    "clickToExpand": "Click to expand"
+  },
+  "community": {
+    "title": "Recommended Community Packages",
+    "categories": {
+      "communication": "Communication",
+      "ai-tools": "AI Tools",
+      "web-scraping": "Web Scraping",
+      "document": "Document",
+      "data-processing": "Data Processing",
+      "utilities": "Utilities"
+    }
   },
   "features": {
     "title": "Features",

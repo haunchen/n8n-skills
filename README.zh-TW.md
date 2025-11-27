@@ -275,7 +275,7 @@ npm run typecheck
 
 - 涵蓋節點數：542 個
 - 精選範本數：20 個
-- 輸出檔案數：92 個
+- 輸出檔案數：102 個
 - 總文件大小：2.7 MB
 - 支援平台：Claude Code、Claude.ai Web、Claude Desktop
 
