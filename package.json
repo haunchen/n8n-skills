@@ -18,6 +18,8 @@
     "prepare": "npm run build",
     "update": "npm run build && node dist/scripts/update-n8n-data.js",
     "update:check": "npm run build && node dist/scripts/update-n8n-data.js --dry-run",
+    "update:community": "npm run build && node dist/scripts/update-community.js",
+    "update:community:check": "npm run build && node dist/scripts/update-community.js --dry-run",
     "update:website": "npm run build && node dist/scripts/update-website.js",
     "validate": "npm run build && node dist/scripts/validate-output.js",
     "start": "npm run build:full"

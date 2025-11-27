@@ -120,24 +120,68 @@ jobs:
             echo "No n8n package version changes detected, skipping build"
           fi
 
+      - name: Check if should update community packages
+        id: check_community
+        run: |
+          # Update community packages on the first Sunday of each month (day 1-7)
+          DAY_OF_MONTH=$(date +%d)
+          if [ "$DAY_OF_MONTH" -le 7 ]; then
+            echo "should_update=true" >> $GITHUB_OUTPUT
+            echo "First Sunday of the month, will update community packages"
+          else
+            echo "should_update=false" >> $GITHUB_OUTPUT
+            echo "Not the first Sunday of the month, skipping community packages update"
+          fi
+
+      - name: Update community packages
+        if: steps.check_community.outputs.should_update == 'true'
+        id: update_community
+        run: |
+          echo "Updating community packages from npm..."
+          npm run update:community
+
+          # Check if community packages changed
+          if [[ -n $(git diff config/community-packages.json) ]]; then
+            echo "community_updated=true" >> $GITHUB_OUTPUT
+            echo "Community packages updated"
+          else
+            echo "community_updated=false" >> $GITHUB_OUTPUT
+            echo "No community packages changes"
+          fi
+
+      - name: Determine if build is needed
+        id: need_build
+        run: |
+          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+          COMMUNITY_UPDATED="${{ steps.update_community.outputs.community_updated }}"
+
+          if [ "$VERSION_CHANGED" == "true" ] || [ "$COMMUNITY_UPDATED" == "true" ]; then
+            echo "need_build=true" >> $GITHUB_OUTPUT
+            echo "Build needed: n8n_changed=$VERSION_CHANGED, community_updated=$COMMUNITY_UPDATED"
+          else
+            echo "need_build=false" >> $GITHUB_OUTPUT
+            echo "No build needed"
+          fi
+
       - name: Run full build
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.need_build.outputs.need_build == 'true'
         run: npm run build:full
 
       - name: Validate output files
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.need_build.outputs.need_build == 'true'
         run: npm run validate
 
       - name: Update website data
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.need_build.outputs.need_build == 'true'
         run: npm run update:website
 
       - name: Determine version bump type
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.need_build.outputs.need_build == 'true'
         id: determine_bump
         run: |
           MANUAL_BUMP="${{ github.event.inputs.version-bump }}"
           N8N_CHANGED="${{ steps.check_version.outputs.n8n_changed }}"
+          COMMUNITY_UPDATED="${{ steps.update_community.outputs.community_updated }}"
 
           if [ "$MANUAL_BUMP" != "" ] && [ "$MANUAL_BUMP" != "auto" ]; then
             # Manual trigger with specified version type
@@ -166,6 +210,10 @@ jobs:
               echo "bump_type=patch" >> $GITHUB_OUTPUT
               echo "n8n version unchanged: v$NEW_N8N, using patch version bump"
             fi
+          elif [ "$COMMUNITY_UPDATED" == "true" ]; then
+            # Only community packages updated, use patch
+            echo "bump_type=patch" >> $GITHUB_OUTPUT
+            echo "Community packages updated, using patch version bump"
           else
             # Only other n8n packages changed, use patch
             echo "bump_type=patch" >> $GITHUB_OUTPUT
@@ -173,7 +221,7 @@ jobs:
           fi
 
       - name: Update package.json version
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.need_build.outputs.need_build == 'true'
         id: bump_version
         run: |
           CURRENT_VERSION=$(jq -r '.version' package.json)
@@ -212,14 +260,14 @@ jobs:
           echo "Version updated: $CURRENT_VERSION → $NEW_VERSION"
 
       - name: Update README.md version statement
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.check_version.outputs.n8n_changed == 'true'
         run: |
           N8N_VERSION="${{ steps.check_version.outputs.new_n8n_version }}"
           sed -i "s/支援 n8n 版本：v[0-9.]\+/支援 n8n 版本：v${N8N_VERSION}/" README.md
           echo "README.md updated with n8n version v${N8N_VERSION}"
 
       - name: Check for changes
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.need_build.outputs.need_build == 'true'
         id: check_changes
         run: |
           if [[ -n $(git status --porcelain) ]]; then
@@ -240,15 +288,18 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Generate PR title
-        if: steps.check_version.outputs.version_changed == 'true'
+        if: steps.need_build.outputs.need_build == 'true'
         id: pr_title
         run: |
           OLD_N8N="${{ steps.check_version.outputs.old_n8n_version }}"
           NEW_N8N="${{ steps.check_version.outputs.new_n8n_version }}"
-          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+          N8N_CHANGED="${{ steps.check_version.outputs.n8n_changed }}"
+          COMMUNITY_UPDATED="${{ steps.update_community.outputs.community_updated }}"
 
-          if [ "$VERSION_CHANGED" == "true" ]; then
+          if [ "$N8N_CHANGED" == "true" ]; then
             PR_TITLE="Auto update: n8n v${OLD_N8N} → v${NEW_N8N}"
+          elif [ "$COMMUNITY_UPDATED" == "true" ]; then
+            PR_TITLE="Auto update: community packages refresh"
           else
             PR_TITLE="Auto update: n8n v${NEW_N8N} data refresh"
           fi
@@ -267,6 +318,7 @@ jobs:
 
             - n8n version: v${{ steps.check_version.outputs.new_n8n_version }}
             - Skill pack version: ${{ steps.bump_version.outputs.old_version }} → ${{ steps.bump_version.outputs.new_version }}
+            - Community packages: ${{ steps.update_community.outputs.community_updated == 'true' && 'updated' || 'unchanged' }}
             - Website data synchronized
 
             Changed files:
@@ -284,13 +336,15 @@ jobs:
             - n8n version: v${{ steps.check_version.outputs.new_n8n_version }}
             - Skill pack version: ${{ steps.bump_version.outputs.old_version }} → ${{ steps.bump_version.outputs.new_version }}
             - Version bump type: ${{ steps.determine_bump.outputs.bump_type }}
+            - Community packages updated: ${{ steps.update_community.outputs.community_updated == 'true' && 'Yes' || 'No' }}
 
-            ### Website Updates
+            ### Updates
 
-            The following website data has been automatically synchronized:
+            The following data has been automatically synchronized:
             - Node count updated
             - n8n version number updated
             - Template count updated
+            - Community packages (top 30 from npm, monthly)
             - Last update date refreshed
 
             ### Changes
@@ -313,13 +367,21 @@ jobs:
       - name: Update result notification
         if: always()
         run: |
-          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+          NEED_BUILD="${{ steps.need_build.outputs.need_build }}"
           HAS_CHANGES="${{ steps.check_changes.outputs.has_changes }}"
+          VERSION_CHANGED="${{ steps.check_version.outputs.version_changed }}"
+          COMMUNITY_UPDATED="${{ steps.update_community.outputs.community_updated }}"
 
-          if [[ "$VERSION_CHANGED" == "false" ]]; then
-            echo "No n8n package version changes detected, no update needed"
+          echo "=== Update Summary ==="
+          echo "n8n packages changed: $VERSION_CHANGED"
+          echo "Community packages updated: $COMMUNITY_UPDATED"
+          echo "Build needed: $NEED_BUILD"
+          echo "Has changes: $HAS_CHANGES"
+
+          if [[ "$NEED_BUILD" == "false" ]]; then
+            echo "No updates needed"
           elif [[ "$HAS_CHANGES" == "true" ]]; then
             echo "Pull Request created, awaiting review"
           else
-            echo "Version changed but no file changes detected"
+            echo "Build ran but no file changes detected"
           fi

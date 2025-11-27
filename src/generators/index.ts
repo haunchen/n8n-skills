@@ -35,3 +35,9 @@ export {
   type CategoryInfo,
   type TemplateGeneratorConfig,
 } from './template-generator';
+
+export {
+  CommunityGenerator,
+  generateCommunityDocs,
+  type CommunityGeneratorConfig,
+} from './community-generator';
