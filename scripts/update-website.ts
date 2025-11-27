@@ -14,9 +14,27 @@ interface UpdateData {
   actualNodeCount: number;  // Real node count from nodes.json
   outputFileCount: number;   // Output file count from validation report
   templateCount: number;
+  communityPackageCount: number;  // Community packages count
   n8nVersion: string;
   timestamp: string;
   totalSize: string;         // Formatted as "X.X MB"
+}
+
+interface CommunityPackage {
+  name: string;
+  description: string;
+  category: string;
+  npmUrl: string;
+  version?: string;
+  maintainer?: string;
+  repository?: string;
+}
+
+interface CommunityPackagesConfig {
+  version: string;
+  lastUpdated: string;
+  limit: number;
+  packages: CommunityPackage[];
 }
 
 interface PackageJson {
@@ -45,6 +63,7 @@ class WebsiteUpdater {
       info(`Actual node count: ${data.actualNodeCount}`);
       info(`Output file count: ${data.outputFileCount}`);
       info(`Template count: ${data.templateCount}`);
+      info(`Community package count: ${data.communityPackageCount}`);
       info(`n8n version: ${data.n8nVersion}`);
       info(`Total size: ${data.totalSize}`);
       info(`Update time: ${data.timestamp}`);
@@ -65,6 +84,9 @@ class WebsiteUpdater {
       info('Updating website/index.html...');
       await this.updateIndexHtml(data);
 
+      info('Updating community packages list...');
+      await this.updateCommunityPackages();
+
       info('Updating website/sitemap.xml...');
       await this.updateSitemap(data.timestamp);
 
@@ -80,6 +102,7 @@ class WebsiteUpdater {
     const actualNodeCount = await this.readActualNodeCount();
     const n8nVersion = await this.readN8nVersion();
     const templateCount = await this.countTemplateFiles();
+    const communityConfig = await this.readCommunityPackages();
 
     // Format total size as MB with 1 decimal place
     const totalSizeMB = (report.totalSize / (1024 * 1024)).toFixed(1);
@@ -88,6 +111,7 @@ class WebsiteUpdater {
       actualNodeCount,
       outputFileCount: report.totalFiles,
       templateCount,
+      communityPackageCount: communityConfig.packages.length,
       n8nVersion,
       timestamp: report.timestamp,
       totalSize: `${totalSizeMB} MB`,
@@ -489,6 +513,85 @@ class WebsiteUpdater {
       info('sitemap.xml update completed');
     } catch (err) {
       throw new Error(`Failed to update sitemap.xml: ${err}`);
+    }
+  }
+
+  private async readCommunityPackages(): Promise<CommunityPackagesConfig> {
+    try {
+      const configPath = path.join(process.cwd(), 'config', 'community-packages.json');
+      const content = await fs.readFile(configPath, 'utf-8');
+      return JSON.parse(content);
+    } catch (err) {
+      throw new Error(`Failed to read community-packages.json: ${err}`);
+    }
+  }
+
+  private escapeHtml(text: string): string {
+    const htmlEntities: { [key: string]: string } = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    };
+    return text.replace(/[&<>"']/g, char => htmlEntities[char]);
+  }
+
+  private generatePackageCardHtml(pkg: CommunityPackage): string {
+    // Truncate description if too long
+    const maxDescLength = 120;
+    const description = pkg.description.length > maxDescLength
+      ? pkg.description.substring(0, maxDescLength) + '...'
+      : pkg.description;
+
+    return `            <div class="community-package-card" data-category="${pkg.category}">
+                <div class="package-header">
+                    <span class="package-name">${this.escapeHtml(pkg.name)}</span>
+                    <span class="package-category" data-category="${pkg.category}">${pkg.category}</span>
+                </div>
+                <p class="package-description">${this.escapeHtml(description)}</p>
+                <a href="${pkg.npmUrl}" class="package-npm-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="npm-icon" viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="currentColor" d="M0 0v24h24V0H0zm19.2 19.2H12V7.2h3.6v8.4h3.6V4.8H4.8v14.4h14.4v-4.8z"/>
+                    </svg>
+                    npm
+                </a>
+            </div>`;
+  }
+
+  private async updateCommunityPackages(): Promise<void> {
+    try {
+      const indexPath = path.join(this.websiteDir, 'index.html');
+      let content = await fs.readFile(indexPath, 'utf-8');
+
+      const communityConfig = await this.readCommunityPackages();
+      const packages = communityConfig.packages;
+
+      // Generate package cards HTML
+      const packagesHtml = packages
+        .map(pkg => this.generatePackageCardHtml(pkg))
+        .join('\n');
+
+      const gridHtml = `        <div class="community-packages-grid">
+${packagesHtml}
+        </div>`;
+
+      // Replace content between markers
+      const listPattern = /<!-- BEGIN COMMUNITY_PACKAGES_LIST -->[\s\S]*?<!-- END COMMUNITY_PACKAGES_LIST -->/;
+      const replacement = `<!-- BEGIN COMMUNITY_PACKAGES_LIST -->\n${gridHtml}\n                    <!-- END COMMUNITY_PACKAGES_LIST -->`;
+
+      content = content.replace(listPattern, replacement);
+
+      // Update community packages count in stats card
+      content = content.replace(
+        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label"[^>]*data-i18n="stats\.communityPackages")/s,
+        `$1${packages.length}$2`
+      );
+
+      await fs.writeFile(indexPath, content, 'utf-8');
+      info('Community packages list update completed');
+    } catch (err) {
+      throw new Error(`Failed to update community packages: ${err}`);
     }
   }
 }
