@@ -256,12 +256,37 @@ export class ResourceGenerator {
       trigger: 'Trigger Nodes',
       organization: 'Organization Nodes',
       misc: 'Miscellaneous Nodes',
+      community: 'Community Packages',
     };
+
+    // Load community packages config
+    let communityPackages: Array<{
+      name: string;
+      description: string;
+      category: string;
+      npmUrl?: string;
+      version?: string;
+      maintainer?: string;
+    }> = [];
+    try {
+      const communityConfigPath = path.resolve(process.cwd(), 'config/community-packages.json');
+      const communityConfigContent = await fs.readFile(communityConfigPath, 'utf-8');
+      const communityConfig = JSON.parse(communityConfigContent);
+      communityPackages = communityConfig.packages || [];
+    } catch {
+      // Community packages config not found, skip
+    }
 
     // Title
     lines.push('# n8n Node Resource Index');
     lines.push('');
-    lines.push(`This index provides quick access to all ${highPriorityNodes.length + lowPriorityNodes.length} n8n nodes.`);
+    const builtInNodeCount = highPriorityNodes.length + lowPriorityNodes.length;
+    const communityPackageCount = communityPackages.length;
+    if (communityPackageCount > 0) {
+      lines.push(`This index provides quick access to all ${builtInNodeCount} built-in n8n nodes and ${communityPackageCount} community packages.`);
+    } else {
+      lines.push(`This index provides quick access to all ${builtInNodeCount} n8n nodes.`);
+    }
     lines.push('');
 
     // Usage guide
@@ -290,6 +315,9 @@ export class ResourceGenerator {
     lines.push('## Quick Navigation');
     lines.push('');
     lines.push('- [Find by Category](#find-by-category)');
+    if (communityPackageCount > 0) {
+      lines.push('- [Community Packages](#community-packages)');
+    }
     lines.push('- [Template Index](#template-index)');
     lines.push('- [Statistics](#statistics)');
     lines.push('');
@@ -393,6 +421,42 @@ export class ResourceGenerator {
     lines.push('---');
     lines.push('');
 
+    // Community packages section
+    if (communityPackageCount > 0) {
+      lines.push('## Community Packages');
+      lines.push('');
+      lines.push(`Popular community-developed node packages (${communityPackageCount} packages).`);
+      lines.push('');
+      lines.push('| Package Name | Category | File Path | Description |');
+      lines.push('|--------------|----------|-----------|-------------|');
+
+      // Community package category mapping
+      const communityCategoryNames: Record<string, string> = {
+        'communication': 'Communication',
+        'ai-tools': 'AI Tools',
+        'utilities': 'Utilities',
+        'document': 'Document',
+        'data-processing': 'Data Processing',
+        'web-scraping': 'Web Scraping',
+      };
+
+      communityPackages.forEach(pkg => {
+        const categoryDisplay = communityCategoryNames[pkg.category] || pkg.category;
+        const desc = (pkg.description || '').substring(0, 50);
+        const descEscaped = escapeTableCell(desc);
+        // Generate filename from package name (remove @ and / characters)
+        const filename = pkg.name.replace(/^@/, '').replace(/\//g, '-') + '.md';
+        lines.push(
+          `| ${pkg.name} | ${categoryDisplay} | community/${filename} | ${descEscaped} |`
+        );
+      });
+      lines.push('');
+      lines.push('For detailed information, see [community/README.md](community/README.md).');
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+    }
+
     // Template index
     lines.push('## Template Index');
     lines.push('');
@@ -411,10 +475,13 @@ export class ResourceGenerator {
     // Statistics
     lines.push('## Statistics');
     lines.push('');
-    lines.push(`- Total nodes: ${highPriorityNodes.length + lowPriorityNodes.length}`);
+    lines.push(`- Total built-in nodes: ${builtInNodeCount}`);
     lines.push(`- High-priority nodes: ${highPriorityNodes.length} (individual files)`);
     lines.push(`- Low-priority nodes: ${lowPriorityNodes.length} (merged files)`);
     lines.push(`- Merged file count: ${mergedFileInfo.length}`);
+    if (communityPackageCount > 0) {
+      lines.push(`- Community packages: ${communityPackageCount}`);
+    }
     lines.push('');
 
     // Statistics by category
