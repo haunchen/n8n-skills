@@ -51,6 +51,8 @@ This package provides AI assistants with the ability to access n8n node informat
 - Supports node search and exploration
 - Node configuration validation
 - Workflow structure analysis
+- Support for 30+ popular community packages
+- Community packages organized by category (AI tools, communication, web scraping, etc.)
 
 ### Technical Architecture
 
@@ -74,7 +76,9 @@ This project generates the n8n Skills automation skill pack, allowing you to use
        ├── transform/        # Transform category nodes
        ├── trigger/          # Trigger category nodes
        ├── organization/     # Organization category nodes
-       └── misc/             # Miscellaneous nodes
+       ├── misc/             # Miscellaneous nodes
+       ├── community/        # Community package nodes
+       └── templates/        # Workflow templates
    ```
 
 ### Installation Methods
@@ -273,7 +277,8 @@ Version Information
 
 Project Statistics
 
-- Node Coverage: 542 nodes
+- Node Coverage: 542 built-in nodes
+- Community Packages: 30+ packages
 - Curated Templates: 20 templates
 - Output Files: 102 files
 - Total Documentation Size: 2.7 MB
