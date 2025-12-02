@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-27T07:38:21.363Z",
+  "lastUpdated": "2025-12-02T02:02:34.791Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -6669,6 +6669,938 @@
           },
           "ioInfo": {
             "nodeType": "braveSearch",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-mtai-zalo-test-trial": {
+      "packageName": "n8n-nodes-mtai-zalo-test-trial",
+      "packageVersion": "1.2.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-mtai-zalo-test-trial.zaloLoginByQr",
+          "displayName": "Zalo Login Via QR Code",
+          "description": "Đăng nhập Zalo bằng QR code và lưu thông tin vào Credential",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "proxy",
+                "displayName": "Proxy",
+                "type": "string",
+                "description": "HTTP proxy to use for Zalo API requests",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 1
+          },
+          "ioInfo": {
+            "nodeType": "zaloLoginByQr",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-mtai-zalo-test-trial.zaloSendMessage",
+          "displayName": "Zalo Send Message",
+          "description": "Gửi tin nhắn qua API Zalo sử dụng kết nối đăng nhập bằng cookie",
+          "version": "4",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "threadId",
+                "displayName": "Thread ID",
+                "type": "string",
+                "description": "ID của thread để gửi tin nhắn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "Nội dung tin nhắn cần gửi",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "threadId",
+                "displayName": "Thread ID",
+                "type": "string",
+                "description": "ID của thread để gửi tin nhắn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "threadId",
+                "displayName": "Thread ID",
+                "type": "string",
+                "description": "ID của thread để gửi tin nhắn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "Nội dung tin nhắn cần gửi (sẽ được chuyển thành voice)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "threadId",
+                "displayName": "Thread ID",
+                "type": "string",
+                "description": "ID của thread để gửi tin nhắn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "Nội dung tin nhắn cần gửi",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "videoUrl",
+                "displayName": "Video URL",
+                "type": "string",
+                "description": "URL của video để gửi",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "zaloSendMessage",
+                "options": [
+                  {
+                    "name": "Zalo Send Message",
+                    "value": "zaloSendMessage"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "sendMessage",
+                "options": [
+                  {
+                    "name": "Gửi tin nhắn",
+                    "value": "sendMessage",
+                    "description": "Gửi tin nhắn"
+                  },
+                  {
+                    "name": "Gửi video tin nhắn",
+                    "value": "sendMessageVideo",
+                    "description": "Gửi video tin nhắn"
+                  },
+                  {
+                    "name": "Gửi voice tin nhắn",
+                    "value": "sendMessageVoice",
+                    "description": "Gửi voice tin nhắn"
+                  },
+                  {
+                    "name": "Gửi trạng thái tin nhắn",
+                    "value": "sendMessageStatus",
+                    "description": "Gửi trạng thái tin nhắn"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Gửi tin nhắn",
+                "value": "sendMessage",
+                "description": "Gửi tin nhắn"
+              },
+              {
+                "name": "Gửi video tin nhắn",
+                "value": "sendMessageVideo",
+                "description": "Gửi video tin nhắn"
+              },
+              {
+                "name": "Gửi voice tin nhắn",
+                "value": "sendMessageVoice",
+                "description": "Gửi voice tin nhắn"
+              },
+              {
+                "name": "Gửi trạng thái tin nhắn",
+                "value": "sendMessageStatus",
+                "description": "Gửi trạng thái tin nhắn"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 20
+          },
+          "ioInfo": {
+            "nodeType": "zaloSendMessage",
+            "version": "4",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-mtai-zalo-test-trial.zaloUser",
+          "displayName": "Zalo User",
+          "description": "Quản lý người dùng Zalo",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "gender",
+                "displayName": "Gender",
+                "type": "options",
+                "description": "Giới tính",
+                "required": true,
+                "default": 1,
+                "options": [
+                  {
+                    "name": "Male",
+                    "value": 1
+                  },
+                  {
+                    "name": "Female",
+                    "value": 2
+                  },
+                  {
+                    "name": "Other",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần chấp nhận lời mời kết bạn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần gửi lời mời kết bạn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "Tin nhắn kèm theo lời mời kết bạn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần chặn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần bỏ chặn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần đổi ảnh đại diện",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "filePath",
+                "displayName": "File Path",
+                "type": "string",
+                "description": "Đường dẫn đến file ảnh đại diện",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "name",
+                "displayName": "Name",
+                "type": "string",
+                "description": "Tên hiển thị",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "dob",
+                "displayName": "Date of Birth",
+                "type": "string",
+                "description": "Ngày sinh (YYYY-MM-DD)",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Chấp nhận lời mời kết bạn",
+                "value": "acceptFriendRequest"
+              },
+              {
+                "name": "Gửi lời mời kết bạn",
+                "value": "sendFriendRequest",
+                "description": "Gửi lời mời kết bạn"
+              },
+              {
+                "name": "Chặn người dùng",
+                "value": "blockUser",
+                "description": "Chặn người dùng"
+              },
+              {
+                "name": "Bỏ chặn người dùng",
+                "value": "unblockUser",
+                "description": "Bỏ chặn người dùng"
+              },
+              {
+                "name": "Đổi ảnh đại diện",
+                "value": "changeAccountAvatar",
+                "description": "Đổi ảnh đại diện"
+              },
+              {
+                "name": "Thay đổi cài đặt tài khoản",
+                "value": "changeAccountSetting",
+                "description": "Thay đổi cài đặt tài khoản"
+              },
+              {
+                "name": "Lấy thông tin người dùng",
+                "value": "getUserInfo",
+                "description": "Lấy thông tin người dùng"
+              },
+              {
+                "name": "Lấy danh sách bạn bè",
+                "value": "getAllFriends",
+                "description": "Lấy danh sách bạn bè"
+              },
+              {
+                "name": "Tìm kiếm người dùng",
+                "value": "findUser",
+                "description": "Tìm kiếm người dùng"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 17
+          },
+          "ioInfo": {
+            "nodeType": "zaloUser",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-mtai-zalo-test-trial.zaloGroup",
+          "displayName": "Zalo Group",
+          "description": "Quản lý nhóm Zalo",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "groupName",
+                "displayName": "Tên Nhóm",
+                "type": "string",
+                "description": "Tên của nhóm mới",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userIds",
+                "displayName": "Danh Sách ID Thành Viên (nếu nhiều người dùng vui lòng phân cách bằng dấu phẩy)",
+                "type": "string",
+                "description": "Danh sách ID thành viên, phân cách bằng dấu phẩy",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm cần lấy thông tin",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "ID Người Dùng",
+                "type": "string",
+                "description": "ID của người dùng cần thêm làm phó nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userIds",
+                "displayName": "Danh Sách ID Thành Viên (nếu nhiều người dùng vui lòng phân cách bằng dấu phẩy)",
+                "type": "string",
+                "description": "Danh sách ID thành viên, phân cách bằng dấu phẩy",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "imageUrl",
+                "displayName": "URL Ảnh",
+                "type": "string",
+                "description": "URL của ảnh đại diện mới",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Tạo Nhóm",
+                "value": "createGroup",
+                "description": "Tạo một nhóm mới"
+              },
+              {
+                "name": "Lấy Thông Tin Nhóm",
+                "value": "getGroupInfo",
+                "description": "Lấy thông tin của một nhóm"
+              },
+              {
+                "name": "Thêm Phó Nhóm",
+                "value": "addGroupDeputy",
+                "description": "Thêm phó nhóm cho một nhóm"
+              },
+              {
+                "name": "Thêm Thành Viên Vào Nhóm",
+                "value": "addUserToGroup",
+                "description": "Thêm thành viên vào nhóm"
+              },
+              {
+                "name": "Đổi Avatar Nhóm",
+                "value": "changeGroupAvatar",
+                "description": "Đổi avatar của nhóm"
+              },
+              {
+                "name": "Đổi Tên Nhóm",
+                "value": "changeGroupName",
+                "description": "Đổi tên của nhóm"
+              },
+              {
+                "name": "Lấy Danh Sách Thành Viên",
+                "value": "getGroupMembers",
+                "description": "Lấy danh sách thành viên của nhóm"
+              },
+              {
+                "name": "Lấy Tất Cả Nhóm",
+                "value": "getAllGroups",
+                "description": "Lấy danh sách tất cả các nhóm"
+              },
+              {
+                "name": "Xóa Thành Viên Khỏi Nhóm",
+                "value": "removeUserFromGroup",
+                "description": "Xóa thành viên khỏi nhóm"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 18
+          },
+          "ioInfo": {
+            "nodeType": "zaloGroup",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-mtai-zalo-test-trial.zaloMessageTrigger",
+          "displayName": "Zalo Message Trigger",
+          "description": "Sự kiện lắng nghe tin nhắn trên Zalo",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "eventTypes",
+                "displayName": "Event Types",
+                "type": "multiOptions",
+                "description": "Types of messages to listen for",
+                "required": true,
+                "default": [
+                  0,
+                  1
+                ],
+                "options": [
+                  {
+                    "name": "User Messages",
+                    "value": 0,
+                    "description": "Lắng nghe tin nhắn từ người dùng"
+                  },
+                  {
+                    "name": "Group Messages",
+                    "value": 1,
+                    "description": "Lắng nghe tin nhắn từ nhóm"
+                  }
+                ]
+              },
+              {
+                "name": "selfListen",
+                "displayName": "Self Listen",
+                "type": "boolean",
+                "description": "Whether to allow listening to messages sent by yourself",
+                "required": true,
+                "default": false
+              },
+              {
+                "name": "voiceProcessingMode",
+                "displayName": "Voice Processing Mode",
+                "type": "options",
+                "description": "Chế độ xử lý voice message",
+                "required": false,
+                "default": "auto",
+                "options": [
+                  {
+                    "name": "Tự động nhận diện ngôn ngữ",
+                    "value": "auto"
+                  },
+                  {
+                    "name": "Chọn thủ công",
+                    "value": "manual"
+                  }
+                ]
+              },
+              {
+                "name": "manualLanguage",
+                "displayName": "Manual Language Selection",
+                "type": "options",
+                "description": "Chọn ngôn ngữ thủ công cho voice processing",
+                "required": false,
+                "default": "vi",
+                "options": [
+                  {
+                    "name": "Tiếng Việt",
+                    "value": "vi"
+                  },
+                  {
+                    "name": "Tiếng Anh",
+                    "value": "en"
+                  },
+                  {
+                    "name": "Tiếng Trung",
+                    "value": "zh"
+                  },
+                  {
+                    "name": "Tiếng Nhật",
+                    "value": "ja"
+                  }
+                ]
+              },
+              {
+                "name": "enableVoiceRecognition",
+                "displayName": "Enable Voice Recognition",
+                "type": "boolean",
+                "description": "Whether to enable voice-to-text recognition for voice messages using Wit.ai",
+                "required": false,
+                "default": true
+              },
+              {
+                "name": "witCredentialsInfo",
+                "displayName": "Wit.ai Credentials Required",
+                "type": "notice",
+                "description": "⚠️ Wit.ai credentials are required when voice recognition is enabled",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 6
+          },
+          "ioInfo": {
+            "nodeType": "zaloMessageTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-mtai-zalo-test-trial.zaloFriendTrigger",
+          "displayName": "Zalo Friend Trigger",
+          "description": "Lắng nghe sự kiện kết bạn trên Zalo",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "eventTypes",
+                "displayName": "Event Types",
+                "type": "multiOptions",
+                "description": "Friend events to listen for",
+                "required": true,
+                "default": [
+                  2
+                ],
+                "options": [
+                  {
+                    "name": "Friend Requests",
+                    "value": 2,
+                    "description": "Nghe sự kiện yêu cầu kết bạn"
+                  }
+                ]
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 1
+          },
+          "ioInfo": {
+            "nodeType": "zaloFriendTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-pdforge": {
+      "packageName": "n8n-nodes-pdforge",
+      "packageVersion": "2.3.2",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-pdforge.pdforge",
+          "displayName": "PDF Noodle",
+          "description": "Generate PDF from HTML or reusable templates with PDF Noodle (previously pdforge).",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "templateId",
+                "displayName": "Template Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "html",
+                "displayName": "HTML String",
+                "type": "string",
+                "description": "The HTML string you want to convert to a PDF file. Send the whole &lt;html&gt; tag.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "pdf",
+                "options": [
+                  {
+                    "name": "Generate PDF",
+                    "value": "pdf"
+                  },
+                  {
+                    "name": "Generate Image",
+                    "value": "image"
+                  },
+                  {
+                    "name": "Convert HTML to PDF",
+                    "value": "html-to-pdf"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "sync",
+                "options": [
+                  {
+                    "name": "Generate Syncronously",
+                    "value": "sync",
+                    "description": "Generate PDF syncronously"
+                  },
+                  {
+                    "name": "Generate Asynchronously",
+                    "value": "async",
+                    "description": "Generate PDF asynchronously"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "sync",
+                "options": [
+                  {
+                    "name": "Generate Syncronously",
+                    "value": "sync",
+                    "description": "Generate Image syncronously"
+                  },
+                  {
+                    "name": "Generate Asynchronously",
+                    "value": "async",
+                    "description": "Generate Image asynchronously"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "sync",
+                "options": [
+                  {
+                    "name": "Convert HTML to PDF Syncronously",
+                    "value": "sync",
+                    "description": "Convert your HTML data into a PDF file syncronously"
+                  },
+                  {
+                    "name": "Convert HTML to PDF Asynchronously",
+                    "value": "async",
+                    "description": "Convert your HTML data into a PDF file asynchronously"
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "s3_bucket",
+                    "description": "Set this to the ID of an active S3 connection created on pdf noodle to override the default storage location"
+                  },
+                  {
+                    "name": "s3_key",
+                    "description": "Define the path (folders and filename, without extension) where your file will be saved inside your S3 bucket"
+                  },
+                  {
+                    "name": "hasCover",
+                    "description": "Whether the PDF have a cover page, so we can hide default footers and headers"
+                  },
+                  {
+                    "name": "debug",
+                    "description": "Whether you will have access to the additional debug information, like the rendered HTML and the variables validation errors"
+                  }
+                ]
+              },
+              {
+                "name": "variables",
+                "displayName": "Variables",
+                "type": "json",
+                "description": "To see the variables in your template, access pdf noodle interface and click on the template you want to use",
+                "required": false,
+                "default": "{}"
+              },
+              {
+                "name": "pdfParams",
+                "displayName": "Print Parameters",
+                "type": "json",
+                "description": "The parameters for printing the PDF file. You can find the available parameters on <a href=\"https://docs.pdforge.com/options/pdf-params\"> this documentation</a>.",
+                "required": false,
+                "default": "{}"
+              },
+              {
+                "name": "webhook",
+                "displayName": "Webhook URL",
+                "type": "string",
+                "description": "A URL to POST the rendered file upon completion",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Generate Syncronously",
+                "value": "sync",
+                "description": "Generate PDF syncronously"
+              },
+              {
+                "name": "Generate Asynchronously",
+                "value": "async",
+                "description": "Generate PDF asynchronously"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 10
+          },
+          "ioInfo": {
+            "nodeType": "pdforge",
             "version": "1",
             "inputs": [
               "main"

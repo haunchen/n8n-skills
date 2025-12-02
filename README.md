@@ -272,7 +272,7 @@ Version Information
 
 - Current Version: 1.2.0
 - Supported n8n Version: v1.121.3
-- Last Updated: November 2025
+- Last Updated: December 2025
 - Release Frequency: Follows n8n major version updates
 
 Project Statistics
@@ -280,7 +280,7 @@ Project Statistics
 - Node Coverage: 542 built-in nodes
 - Community Packages: 30+ packages
 - Curated Templates: 20 templates
-- Output Files: 102 files
+- Output Files: 134 files
 - Total Documentation Size: 2.7 MB
 - Supported Platforms: Claude Code, Claude.ai Web, Claude Desktop
 
