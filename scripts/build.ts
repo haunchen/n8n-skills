@@ -25,6 +25,7 @@ import type { EnrichedNodeInfo, SkillConfig, ResourceFile } from '../src/generat
 import { TemplateGenerator } from '../src/generators/template-generator';
 import { ResourceGenerator } from '../src/generators/resource-generator';
 import { ConnectionRuleGenerator } from '../src/generators/connection-rule-generator';
+import { CommunityGenerator } from '../src/generators/community-generator';
 
 // Import analyzers
 import { CompatibilityAnalyzer } from '../src/analyzers/compatibility-analyzer';
@@ -38,7 +39,6 @@ import { TemplateCacheManager } from '../src/utils/template-cache-manager';
  * Build configuration interface
  */
 interface BuildConfig {
-  version: string;
   n8n_version: string;
   max_nodes_in_main_skill: number;
   high_priority_node_count?: number;
@@ -98,6 +98,20 @@ class SkillBuilder {
     } catch (error) {
       logger.error('Failed to load config file', error);
       throw error;
+    }
+  }
+
+  /**
+   * Get project version from package.json
+   */
+  private getProjectVersion(): string {
+    try {
+      const packagePath = path.resolve(this.projectRoot, 'package.json');
+      const packageJson = require(packagePath);
+      return packageJson.version || '1.0.0';
+    } catch (error) {
+      logger.error('Failed to read package.json version', error);
+      return '1.0.0';
     }
   }
 
@@ -309,7 +323,7 @@ class SkillBuilder {
 
     const skillConfig: SkillConfig = {
       name: 'n8n-skills',
-      version: this.config.version,
+      version: this.getProjectVersion(),
       description: 'n8n workflow automation knowledge base. Use this skill to find n8n node information, understand node functionality and usage, learn workflow patterns, and get node configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
       topNodesCount: this.config.max_nodes_in_main_skill,
     };
@@ -579,6 +593,58 @@ class SkillBuilder {
 
 
   /**
+   * Step 5.5: Generate community node documentation
+   * Reads from cache (generated during update:community) and generates detailed docs
+   */
+  private async generateCommunityDocs(): Promise<void> {
+    logger.info('===== Step 5.5: Generating community node documentation =====');
+
+    try {
+      const configPath = path.resolve(this.projectRoot, 'config/community-packages.json');
+      const cachePath = path.resolve(this.projectRoot, 'data/cache/community-nodes.json');
+
+      // Check if community packages config exists and has packages
+      try {
+        const content = await fs.readFile(configPath, 'utf-8');
+        const config = JSON.parse(content);
+
+        if (!config.packages || config.packages.length === 0) {
+          logger.warn('No community packages configured, skipping generation');
+          return;
+        }
+
+        logger.info(`Found ${config.packages.length} community packages`);
+      } catch {
+        logger.warn('Community packages config not found, skipping generation');
+        return;
+      }
+
+      // Check if cache exists (generated during update:community)
+      try {
+        const cacheContent = await fs.readFile(cachePath, 'utf-8');
+        const cache = JSON.parse(cacheContent);
+        const cachedNodeCount = Object.keys(cache.nodes || {}).length;
+        logger.info(`Using cached node data (${cachedNodeCount} packages with details)`);
+      } catch {
+        logger.warn('Community nodes cache not found, will generate basic documentation only');
+        logger.info('Run "npm run update:community" to fetch detailed node information');
+      }
+
+      const generator = new CommunityGenerator({
+        outputDir: path.resolve(this.projectRoot, 'output/resources/community'),
+        configPath,
+        cachePath,
+      });
+
+      await generator.generate();
+      logger.success('Community node documentation generated');
+    } catch (error) {
+      logger.warn(`Failed to generate community docs, continuing build: ${error}`);
+      // Don't throw - this is optional and shouldn't fail the build
+    }
+  }
+
+  /**
    * Display build statistics
    */
   private printStats(): void {
@@ -739,6 +805,9 @@ class SkillBuilder {
 
       // Step 5: Generate template files
       await this.generateTemplates();
+
+      // Step 5.5: Generate community node documentation
+      await this.generateCommunityDocs();
 
       // Step 6: Generate main Skill document
       await this.generateMainSkill(topNodes, usageStats, resourceFiles);

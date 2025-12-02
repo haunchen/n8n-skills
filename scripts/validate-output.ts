@@ -21,6 +21,7 @@ interface ValidationReport {
   totalSize: number;
   nodeCount: number;
   categoryCount: number;
+  communityPackageCount: number;
   issues: ValidationIssue[];
   fileStats: FileStats[];
   passed: boolean;
@@ -273,8 +274,24 @@ class OutputValidator {
       ? Object.keys(this.config.categories).length
       : 0;
 
+    // Count community packages
+    const communityPath = path.join(resourcesPath, 'community');
+    let communityPackageCount = 0;
+    if (await this.pathExists(communityPath)) {
+      const communityFiles = await this.getAllMarkdownFiles(communityPath);
+      // Exclude README.md and category summary files
+      communityPackageCount = communityFiles.filter((f) => {
+        const filename = path.basename(f);
+        return !filename.includes('README') && !['ai-tools.md', 'communication.md', 'utilities.md', 'document.md', 'data-processing.md', 'web-scraping.md'].includes(filename);
+      }).length;
+      info(`  Community packages: ${communityPackageCount}`);
+    }
+
     info(`  Node count: ${nodeCount}`);
     info(`  Category count: ${categoryCount}`);
+
+    // Store community package count for report
+    (this as any).communityPackageCount = communityPackageCount;
 
     // No longer validate node count limit, just record as info
     if (this.config && nodeCount > this.config.max_nodes_in_main_skill) {
@@ -292,6 +309,7 @@ class OutputValidator {
       totalSize,
       nodeCount: this.fileStats.filter((f) => !f.path.includes('index.md')).length,
       categoryCount: this.config ? Object.keys(this.config.categories).length : 0,
+      communityPackageCount: (this as any).communityPackageCount || 0,
       issues: this.issues,
       fileStats: this.fileStats,
       passed: !hasErrors,
@@ -308,6 +326,9 @@ class OutputValidator {
     info(`Total size: ${this.formatSize(report.totalSize)}`);
     info(`Node count: ${report.nodeCount}`);
     info(`Category count: ${report.categoryCount}`);
+    if (report.communityPackageCount > 0) {
+      info(`Community packages: ${report.communityPackageCount}`);
+    }
 
     // Issue statistics
     const errorCount = report.issues.filter((i) => i.severity === 'error').length;

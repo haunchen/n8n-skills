@@ -51,6 +51,8 @@ This package provides AI assistants with the ability to access n8n node informat
 - Supports node search and exploration
 - Node configuration validation
 - Workflow structure analysis
+- Support for 30+ popular community packages
+- Community packages organized by category (AI tools, communication, web scraping, etc.)
 
 ### Technical Architecture
 
@@ -74,7 +76,9 @@ This project generates the n8n Skills automation skill pack, allowing you to use
        ├── transform/        # Transform category nodes
        ├── trigger/          # Trigger category nodes
        ├── organization/     # Organization category nodes
-       └── misc/             # Miscellaneous nodes
+       ├── misc/             # Miscellaneous nodes
+       ├── community/        # Community package nodes
+       └── templates/        # Workflow templates
    ```
 
 ### Installation Methods
@@ -268,14 +272,15 @@ Version Information
 
 - Current Version: 1.2.0
 - Supported n8n Version: v1.121.3
-- Last Updated: November 2025
+- Last Updated: December 2025
 - Release Frequency: Follows n8n major version updates
 
 Project Statistics
 
-- Node Coverage: 542 nodes
+- Node Coverage: 542 built-in nodes
+- Community Packages: 30+ packages
 - Curated Templates: 20 templates
-- Output Files: 92 files
+- Output Files: 134 files
 - Total Documentation Size: 2.7 MB
 - Supported Platforms: Claude Code, Claude.ai Web, Claude Desktop
 

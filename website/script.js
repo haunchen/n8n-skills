@@ -65,4 +65,68 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (heroButtons) {
         observer.observe(heroButtons);
     }
+
+    // Initialize community packages section
+    initCommunityPackages();
 });
+
+// Community packages section toggle
+function initCommunityPackages() {
+    const section = document.getElementById('community-packages-section');
+    const toggle = document.getElementById('community-packages-toggle');
+    const statsCard = document.getElementById('community-stats-card');
+
+    if (!section || !toggle) return;
+
+    // Toggle on header click
+    toggle.addEventListener('click', () => {
+        section.classList.toggle('expanded');
+    });
+
+    // Toggle on stats card click
+    if (statsCard) {
+        statsCard.addEventListener('click', () => {
+            section.classList.add('expanded');
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    // Update category labels based on current language
+    if (window.i18n) {
+        updateCategoryLabels();
+        // Listen for language changes
+        document.addEventListener('languageChanged', updateCategoryLabels);
+    }
+}
+
+// Update category labels with translations
+function updateCategoryLabels() {
+    const categoryLabels = {
+        'en': {
+            'communication': 'Communication',
+            'ai-tools': 'AI Tools',
+            'web-scraping': 'Web Scraping',
+            'document': 'Document',
+            'data-processing': 'Data Processing',
+            'utilities': 'Utilities'
+        },
+        'zh-TW': {
+            'communication': '通訊',
+            'ai-tools': 'AI 工具',
+            'web-scraping': '網頁爬蟲',
+            'document': '文件處理',
+            'data-processing': '資料處理',
+            'utilities': '實用工具'
+        }
+    };
+
+    const currentLang = window.i18n ? window.i18n.getCurrentLanguage() : 'zh-TW';
+    const labels = categoryLabels[currentLang] || categoryLabels['en'];
+
+    document.querySelectorAll('.package-category[data-category]').forEach(el => {
+        const category = el.getAttribute('data-category');
+        if (labels[category]) {
+            el.textContent = labels[category];
+        }
+    });
+}

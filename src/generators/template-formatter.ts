@@ -535,9 +535,8 @@ export class TemplateFormatter {
     const fs = await import('fs/promises');
     const path = await import('path');
     const results = new Map<string, boolean>();
-    const formatter = this;
 
-    async function processDirectory(dir: string): Promise<void> {
+    const processDirectory = async (dir: string): Promise<void> => {
       const entries = await fs.readdir(dir, { withFileTypes: true });
 
       for (const entry of entries) {
@@ -548,7 +547,7 @@ export class TemplateFormatter {
         } else if (entry.isFile() && entry.name.endsWith('.md')) {
           try {
             const content = await fs.readFile(fullPath, 'utf-8');
-            const formatted = formatter.format(content);
+            const formatted = this.format(content);
             await fs.writeFile(fullPath, formatted, 'utf-8');
             results.set(fullPath, true);
           } catch (error) {
@@ -557,7 +556,7 @@ export class TemplateFormatter {
           }
         }
       }
-    }
+    };
 
     await processDirectory(dirPath);
     return results;

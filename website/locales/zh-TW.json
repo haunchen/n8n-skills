@@ -19,7 +19,20 @@
   "stats": {
     "nodes": "n8n 節點",
     "categories": "主要分類",
-    "templates": "工作流程範本"
+    "templates": "工作流程範本",
+    "communityPackages": "社群套件",
+    "clickToExpand": "點擊展開"
+  },
+  "community": {
+    "title": "社群套件推薦",
+    "categories": {
+      "communication": "通訊",
+      "ai-tools": "AI 工具",
+      "web-scraping": "網頁爬蟲",
+      "document": "文件處理",
+      "data-processing": "資料處理",
+      "utilities": "實用工具"
+    }
   },
   "features": {
     "title": "核心特色",
@@ -100,7 +113,7 @@
     "n8nWebsite": "n8n 官方網站",
     "n8nDocs": "n8n 文件",
     "license": "開源專案，採用 MIT License",
-    "version": "支援 n8n v1.121.3 | 最後更新：2025-11-30",
+    "version": "支援 n8n v1.121.3 | 最後更新：2025-12-02",
     "madeBy": "Made by"
   }
 }
