@@ -102,6 +102,7 @@ export class NpmCollector {
    */
   private async loadPackageNodes(packageName: string, packagePath: string): Promise<LoadedNode[]> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const packageJson = require(`${packagePath}/package.json`);
       const nodes: LoadedNode[] = [];
 
@@ -174,7 +175,7 @@ export class NpmCollector {
       }
 
       // Extract node name from path (e.g., "dist/nodes/Slack/Slack.node.js" -> "Slack")
-      const nodeNameMatch = nodePath.match(/\/([^\/]+)\.node\.(js|ts)$/);
+      const nodeNameMatch = nodePath.match(/\/([^/]+)\.node\.(js|ts)$/);
       const nodeName = nodeNameHint || (nodeNameMatch ? nodeNameMatch[1] : path.basename(nodePath, '.node.js'));
 
       // Handle different export modes

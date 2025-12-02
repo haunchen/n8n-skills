@@ -471,6 +471,7 @@ export class CommunityCollector {
     try {
       // Try to load package.json to get node list
       const packageJsonPath = require.resolve(`${packageName}/package.json`);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const packageJson = require(packageJsonPath);
       const n8nConfig = packageJson.n8n || {};
       const nodesList = n8nConfig.nodes || [];
@@ -520,10 +521,11 @@ export class CommunityCollector {
   ): Promise<CommunityNodeInfo | null> {
     try {
       const fullPath = require.resolve(`${packageName}/${nodePath}`);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const nodeModule = require(fullPath);
 
       // Extract node name from path
-      const nodeNameMatch = nodePath.match(/\/([^\/]+)\.node\.(js|ts)$/);
+      const nodeNameMatch = nodePath.match(/\/([^/]+)\.node\.(js|ts)$/);
       const nodeName = nodeNameMatch ? nodeNameMatch[1] : path.basename(nodePath, '.node.js');
 
       // Handle different export modes

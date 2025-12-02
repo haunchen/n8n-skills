@@ -273,10 +273,14 @@ export class TemplateCacheManager {
   async clearCache(): Promise<void> {
     try {
       await fs.unlink(this.rankingSnapshotPath);
-    } catch {}
+    } catch {
+      // Ignore: file may not exist
+    }
     try {
       await fs.unlink(this.workflowCachePath);
-    } catch {}
+    } catch {
+      // Ignore: file may not exist
+    }
   }
 
   /**
@@ -307,7 +311,9 @@ export class TemplateCacheManager {
     try {
       const stats = await fs.stat(this.workflowCachePath);
       totalSize = stats.size;
-    } catch {}
+    } catch {
+      // Ignore: file may not exist
+    }
 
     return {
       totalCached: cache.size,
