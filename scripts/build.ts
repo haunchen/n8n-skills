@@ -39,7 +39,6 @@ import { TemplateCacheManager } from '../src/utils/template-cache-manager';
  * Build configuration interface
  */
 interface BuildConfig {
-  version: string;
   n8n_version: string;
   max_nodes_in_main_skill: number;
   high_priority_node_count?: number;
@@ -99,6 +98,20 @@ class SkillBuilder {
     } catch (error) {
       logger.error('Failed to load config file', error);
       throw error;
+    }
+  }
+
+  /**
+   * Get project version from package.json
+   */
+  private getProjectVersion(): string {
+    try {
+      const packagePath = path.resolve(this.projectRoot, 'package.json');
+      const packageJson = require(packagePath);
+      return packageJson.version || '1.0.0';
+    } catch (error) {
+      logger.error('Failed to read package.json version', error);
+      return '1.0.0';
     }
   }
 
@@ -310,7 +323,7 @@ class SkillBuilder {
 
     const skillConfig: SkillConfig = {
       name: 'n8n-skills',
-      version: this.config.version,
+      version: this.getProjectVersion(),
       description: 'n8n workflow automation knowledge base. Use this skill to find n8n node information, understand node functionality and usage, learn workflow patterns, and get node configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
       topNodesCount: this.config.max_nodes_in_main_skill,
     };

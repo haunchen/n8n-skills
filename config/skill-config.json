@@ -1,7 +1,6 @@
 {
-  "version": "1.2.0",
-  "n8n_version": "1.117.2",
-  "build_date": "",
+  "n8n_version": "1.121.0",
+  "build_date": "2025-12-02T02:28:51.790Z",
   "max_nodes_in_main_skill": 10,
   "high_priority_node_count": 50,
   "merge_remaining_nodes": true,
