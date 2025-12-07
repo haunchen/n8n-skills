@@ -38,7 +38,7 @@
     "title": "核心特色",
     "comprehensive": {
       "title": "全面的節點知識庫",
-      "description": "包含 542 個 n8n 節點的詳細文件，按照 6 個主要分類組織，支援最新的 n8n v1.121.3"
+      "description": "包含 542 個 n8n 節點的詳細文件，按照 6 個主要分類組織，支援最新的 n8n v1.122.5"
     },
     "multiPlatform": {
       "title": "多平台 AI 整合",
@@ -113,7 +113,7 @@
     "n8nWebsite": "n8n 官方網站",
     "n8nDocs": "n8n 文件",
     "license": "開源專案，採用 MIT License",
-    "version": "支援 n8n v1.121.3 | 最後更新：2025-12-02",
+    "version": "支援 n8n v1.122.5 | 最後更新：2025-12-07",
     "madeBy": "Made by"
   }
 }

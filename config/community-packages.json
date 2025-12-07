@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-12-02T02:02:34.789Z",
+  "lastUpdated": "2025-12-07T00:40:55.047Z",
   "limit": 30,
   "packages": [
     {
@@ -11,6 +11,15 @@
       "version": "1.0.4",
       "maintainer": "oriondesign",
       "repository": "git+https://github.com/oriondesign2015/n8n-nodes-evolution-api.git"
+    },
+    {
+      "name": "n8n-nodes-kommo",
+      "description": "n8n node for Kommo Api",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kommo",
+      "version": "0.0.16",
+      "maintainer": "yatolstoy",
+      "repository": "git+https://github.com/yatolstoy/n8n-node-kommo.git"
     },
     {
       "name": "n8n-nodes-mcp",
@@ -31,15 +40,6 @@
       "repository": "git+https://github.com/n8n-ninja/n8n-nodes-elevenlabs.git"
     },
     {
-      "name": "n8n-nodes-kommo",
-      "description": "n8n node for Kommo Api",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kommo",
-      "version": "0.0.16",
-      "maintainer": "yatolstoy",
-      "repository": "git+https://github.com/yatolstoy/n8n-node-kommo.git"
-    },
-    {
       "name": "n8n-nodes-pdfkit",
       "description": "Node for using PDFKit to tranform images into PDF, more functionality may be added later.",
       "category": "document",
@@ -47,24 +47,6 @@
       "version": "0.1.2",
       "maintainer": "bramknuever",
       "repository": "git+https://github.com/bramkn/n8n-nodes-pdfkit.git"
-    },
-    {
-      "name": "n8n-nodes-zohozeptomail",
-      "description": "This is an n8n community node. It lets you use Zoho ZeptoMail in your n8n workflows.",
-      "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-zohozeptomail",
-      "version": "1.0.3",
-      "maintainer": "zohomail",
-      "repository": "git+https://github.com/zohomail/zoho_zeptomail_n8n.git"
-    },
-    {
-      "name": "n8n-nodes-powerbi",
-      "description": "n8n nodes for integration with Power BI APIs",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-powerbi",
-      "version": "2.3.8",
-      "maintainer": "androcha",
-      "repository": "git+https://github.com/And-Rochaa/n8n-nodes-powerbi.git"
     },
     {
       "name": "n8n-nodes-chatwoot",
@@ -76,15 +58,6 @@
       "repository": "git+https://github.com/sufficit/n8n-nodes-chatwoot.git"
     },
     {
-      "name": "n8n-nodes-notificame-hub",
-      "description": "A NotificaMe Hub automatiza a comunicação em múltiplos canais, oferecendo soluções integradas e escaláveis.",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-notificame-hub",
-      "version": "0.3.3",
-      "maintainer": "oriondesign",
-      "repository": "git+https://github.com/oriondesign2015/n8n-nodes-notificame-hub.git"
-    },
-    {
       "name": "@elevenlabs/n8n-nodes-elevenlabs",
       "description": "Official ElevenLabs node for n8n",
       "category": "ai-tools",
@@ -92,15 +65,6 @@
       "version": "0.2.2",
       "maintainer": "angelogiacco11labs",
       "repository": "git+https://github.com/elevenlabs/elevenlabs-n8n.git"
-    },
-    {
-      "name": "@watzon/n8n-nodes-perplexity",
-      "description": "n8n node to interact with the Perplexity AI API",
-      "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/@watzon/n8n-nodes-perplexity",
-      "version": "0.5.2",
-      "maintainer": "watzon",
-      "repository": "git+https://github.com/watzon/n8n-nodes-perplexity.git"
     },
     {
       "name": "n8n-nodes-globals",
@@ -112,13 +76,13 @@
       "repository": "git+https://github.com/umanamente/n8n-nodes-globals.git"
     },
     {
-      "name": "n8n-nodes-text-manipulation",
-      "description": "This node allows to modify texts.",
-      "category": "data-processing",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-text-manipulation",
-      "version": "1.4.0",
-      "maintainer": "lublak",
-      "repository": "git+https://github.com/lublak/n8n-nodes-text-manipulation.git"
+      "name": "n8n-nodes-powerbi",
+      "description": "n8n nodes for integration with Power BI APIs",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-powerbi",
+      "version": "2.3.8",
+      "maintainer": "androcha",
+      "repository": "git+https://github.com/And-Rochaa/n8n-nodes-powerbi.git"
     },
     {
       "name": "n8n-nodes-evolution-api-media-downloader",
@@ -130,40 +94,13 @@
       "repository": "git+https://github.com/betorcs/n8n-nodes-evolution-api-media-downloader.git"
     },
     {
-      "name": "@reportei/n8n-nodes-reportei",
-      "description": "n8n nodes for integrating with Reportei",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@reportei/n8n-nodes-reportei",
-      "version": "0.1.5",
-      "maintainer": "eduardo_lelis",
-      "repository": "git+https://github.com/reportei/reportei-n8n-node.git"
-    },
-    {
-      "name": "@tavily/core",
-      "description": "Official JavaScript library for Tavily.",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@tavily/core",
-      "version": "0.5.13",
-      "maintainer": "michael_griff",
-      "repository": "git+https://github.com/tavily-ai/tavily-js.git"
-    },
-    {
-      "name": "@apify/n8n-nodes-apify",
-      "description": "n8n nodes for Apify",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@apify/n8n-nodes-apify",
-      "version": "0.6.4",
-      "maintainer": "apify-service-account",
-      "repository": "git+https://github.com/apify/n8n-nodes-apify.git"
-    },
-    {
-      "name": "n8n-nodes-cronlytic",
-      "description": "n8n community node for Cronlytic advanced cron scheduling",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-cronlytic",
-      "version": "0.1.4",
-      "maintainer": "cronlytic",
-      "repository": "git+https://github.com/Cronlytic/n8n-nodes-cronlytic.git"
+      "name": "n8n-nodes-text-manipulation",
+      "description": "This node allows to modify texts.",
+      "category": "data-processing",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-text-manipulation",
+      "version": "1.4.0",
+      "maintainer": "lublak",
+      "repository": "git+https://github.com/lublak/n8n-nodes-text-manipulation.git"
     },
     {
       "name": "n8n-nodes-datastore",
@@ -175,6 +112,15 @@
       "repository": "git+https://github.com/korotovsky/n8n-nodes-datastore.git"
     },
     {
+      "name": "@apify/n8n-nodes-apify",
+      "description": "n8n nodes for Apify",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/@apify/n8n-nodes-apify",
+      "version": "0.6.4",
+      "maintainer": "apify-service-account",
+      "repository": "git+https://github.com/apify/n8n-nodes-apify.git"
+    },
+    {
       "name": "@mendable/n8n-nodes-firecrawl",
       "description": "Firecrawl node for n8n",
       "category": "web-scraping",
@@ -184,13 +130,31 @@
       "repository": "git+https://github.com/mendableai/n8n-nodes-firecrawl.git"
     },
     {
-      "name": "n8n-nodes-tavily",
-      "description": "Tavily is a search engine tailored for AI agents, delivering real-time, accurate results, intelligent query suggestions, and in-depth research capabilities.",
+      "name": "n8n-nodes-zohozeptomail",
+      "description": "This is an n8n community node. It lets you use Zoho ZeptoMail in your n8n workflows.",
       "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-tavily",
-      "version": "0.1.5",
-      "maintainer": "musalabs",
-      "repository": "git+https://github.com/musa-labs/n8n-nodes-tavily.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-zohozeptomail",
+      "version": "1.0.3",
+      "maintainer": "zohomail",
+      "repository": "git+https://github.com/zohomail/zoho_zeptomail_n8n.git"
+    },
+    {
+      "name": "@tavily/core",
+      "description": "Official JavaScript library for Tavily.",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/@tavily/core",
+      "version": "0.5.14",
+      "maintainer": "michael_griff",
+      "repository": "git+https://github.com/tavily-ai/tavily-js.git"
+    },
+    {
+      "name": "n8n-nodes-cronlytic",
+      "description": "n8n community node for Cronlytic advanced cron scheduling",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-cronlytic",
+      "version": "0.1.4",
+      "maintainer": "cronlytic",
+      "repository": "git+https://github.com/Cronlytic/n8n-nodes-cronlytic.git"
     },
     {
       "name": "@splainez/n8n-nodes-phonenumber-parser",
@@ -220,20 +184,29 @@
       "repository": "git+https://github.com/paulocmbraga/n8ntools.git"
     },
     {
-      "name": "n8n-nodes-mtai-zalo-test-trial",
-      "description": "Các node hỗ trợ Zalo cho n8n",
-      "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-mtai-zalo-test-trial",
-      "version": "1.2.1",
-      "maintainer": "dangminhtaivietinsoft",
-      "repository": ""
+      "name": "@reportei/n8n-nodes-reportei",
+      "description": "n8n nodes for integrating with Reportei",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/@reportei/n8n-nodes-reportei",
+      "version": "0.1.5",
+      "maintainer": "eduardo_lelis",
+      "repository": "git+https://github.com/reportei/reportei-n8n-node.git"
+    },
+    {
+      "name": "@devlikeapro/n8n-nodes-chatwoot",
+      "description": "n8n node to connect with ChatWoot",
+      "category": "communication",
+      "npmUrl": "https://www.npmjs.com/package/@devlikeapro/n8n-nodes-chatwoot",
+      "version": "1.0.2",
+      "maintainer": "devlikeapro",
+      "repository": "git+https://github.com/devlikeapro/n8n-nodes-chatwoot.git"
     },
     {
       "name": "n8n-nodes-instagram-integrations",
       "description": "N8N nodes for Instagram API integration with OAuth2 authentication",
       "category": "utilities",
       "npmUrl": "https://www.npmjs.com/package/n8n-nodes-instagram-integrations",
-      "version": "1.5.6",
+      "version": "1.6.0",
       "maintainer": "msameim181",
       "repository": "git+https://github.com/Msameim181/n8n-nodes-instagram-integrations.git"
     },
@@ -247,22 +220,22 @@
       "repository": "git+https://github.com/megaapi/n8n-nodes-megaapi.git"
     },
     {
-      "name": "@devlikeapro/n8n-nodes-chatwoot",
-      "description": "n8n node to connect with ChatWoot",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/@devlikeapro/n8n-nodes-chatwoot",
-      "version": "1.0.2",
-      "maintainer": "devlikeapro",
-      "repository": "git+https://github.com/devlikeapro/n8n-nodes-chatwoot.git"
+      "name": "n8n-nodes-tavily",
+      "description": "Tavily is a search engine tailored for AI agents, delivering real-time, accurate results, intelligent query suggestions, and in-depth research capabilities.",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-tavily",
+      "version": "0.1.5",
+      "maintainer": "musalabs",
+      "repository": "git+https://github.com/musa-labs/n8n-nodes-tavily.git"
     },
     {
-      "name": "n8n-nodes-pdforge",
-      "description": "pdf noodle (previously pdforge) automates PDF Generation in minutes using AI.Create custom PDF templates in seconds using our AI Agents, fine tune the design with our PDF builder and automate the PDF delivery with our native pdforge node inside n8n. No co",
+      "name": "@watzon/n8n-nodes-perplexity",
+      "description": "n8n node to interact with the Perplexity AI API",
       "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdforge",
-      "version": "2.3.2",
-      "maintainer": "mabreum",
-      "repository": "git+https://github.com/pdforge/n8n-nodes-pdforge.git"
+      "npmUrl": "https://www.npmjs.com/package/@watzon/n8n-nodes-perplexity",
+      "version": "0.5.2",
+      "maintainer": "watzon",
+      "repository": "git+https://github.com/watzon/n8n-nodes-perplexity.git"
     },
     {
       "name": "@brave/n8n-nodes-brave-search",
@@ -272,6 +245,33 @@
       "version": "1.0.25",
       "maintainer": "brave.com",
       "repository": "git+https://github.com/brave/n8n-nodes-brave-search.git"
+    },
+    {
+      "name": "n8n-nodes-youtube-transcription-kasha",
+      "description": "A custom n8n node for fetching YouTube video transcripts using the youtube-transcript library.",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-youtube-transcription-kasha",
+      "version": "1.0.1",
+      "maintainer": "briananderson2793",
+      "repository": "git+https://github.com/leonardogrig/n8n-nodes-youtube-transcript.git"
+    },
+    {
+      "name": "@tavily/n8n-nodes-tavily",
+      "description": "A community node for n8n to integrate Tavily API for web search and content extraction.",
+      "category": "web-scraping",
+      "npmUrl": "https://www.npmjs.com/package/@tavily/n8n-nodes-tavily",
+      "version": "0.2.6",
+      "maintainer": "mayramati",
+      "repository": "git+https://github.com/tavily-ai/tavily-n8n-node.git"
+    },
+    {
+      "name": "n8n-nodes-pdforge",
+      "description": "pdf noodle (previously pdforge) automates PDF Generation in minutes using AI.Create custom PDF templates in seconds using our AI Agents, fine tune the design with our PDF builder and automate the PDF delivery with our native pdforge node inside n8n. No co",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdforge",
+      "version": "2.3.3",
+      "maintainer": "mabreum",
+      "repository": "git+https://github.com/pdfnoodle/n8n-nodes-pdforge.git"
     }
   ]
 }
