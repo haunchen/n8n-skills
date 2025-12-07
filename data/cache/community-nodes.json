@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-02T02:02:34.791Z",
+  "lastUpdated": "2025-12-07T00:40:55.050Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -4607,7 +4607,7 @@
     },
     "n8n-nodes-instagram-integrations": {
       "packageName": "n8n-nodes-instagram-integrations",
-      "packageVersion": "1.5.6",
+      "packageVersion": "1.6.0",
       "nodes": [
         {
           "nodeType": "n8n-nodes-instagram-integrations.instagram",
@@ -4616,6 +4616,26 @@
           "version": "1",
           "properties": {
             "coreProperties": [
+              {
+                "name": "hideAction",
+                "displayName": "Action",
+                "type": "options",
+                "description": "Whether to hide or unhide the comment",
+                "required": true,
+                "default": "hide",
+                "options": [
+                  {
+                    "name": "Hide",
+                    "value": "hide",
+                    "description": "Hide the comment from public view"
+                  },
+                  {
+                    "name": "Unhide",
+                    "value": "unhide",
+                    "description": "Make the comment visible again"
+                  }
+                ]
+              },
               {
                 "name": "postMediaType",
                 "displayName": "Media Type",
@@ -4666,106 +4686,88 @@
                 ]
               },
               {
-                "name": "recipientId",
-                "displayName": "Recipient ID",
+                "name": "commentMediaId",
+                "displayName": "Media ID",
                 "type": "string",
-                "description": "Instagram-scoped user ID (IGSID) of the recipient",
+                "description": "ID of the media post to get comments from",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "messageText",
-                "displayName": "Message",
+                "name": "commentId",
+                "displayName": "Comment ID",
                 "type": "string",
-                "description": "Text message to send (max 1000 characters)",
+                "description": "ID of the comment to get replies from",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "recipientId",
-                "displayName": "Recipient ID",
+                "name": "commentId",
+                "displayName": "Comment ID",
                 "type": "string",
-                "description": "Instagram-scoped user ID (IGSID) of the recipient",
+                "description": "ID of the comment to reply to",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "imageUrl",
-                "displayName": "Image URL",
+                "name": "replyMessage",
+                "displayName": "Reply Message",
                 "type": "string",
-                "description": "Public HTTPS URL of the image (JPG, PNG)",
+                "description": "The message to post as a reply to the comment",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "recipientId",
-                "displayName": "Recipient ID",
+                "name": "commentId",
+                "displayName": "Comment ID",
                 "type": "string",
-                "description": "Instagram-scoped user ID (IGSID) of the recipient",
+                "description": "ID of the comment to reply to privately. The commenter will receive a DM.",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "audioUrl",
-                "displayName": "Audio URL",
+                "name": "privateMessage",
+                "displayName": "Private Message",
                 "type": "string",
-                "description": "Public HTTPS URL of the audio file",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "recipientId",
-                "displayName": "Recipient ID",
-                "type": "string",
-                "description": "Instagram-scoped user ID (IGSID) of the recipient",
+                "description": "The private message to send to the commenter via DM. Must be sent within 7 days of the comment.",
                 "required": true,
                 "default": ""
               }
             ],
             "operations": [
               {
-                "name": "Send Audio",
-                "value": "sendAudio",
-                "description": "Send an audio message"
+                "name": "Delete",
+                "value": "deleteComment",
+                "description": "Delete a comment on your media"
               },
               {
-                "name": "Send Button Template",
-                "value": "sendButtonTemplate",
-                "description": "Send a message with buttons"
+                "name": "Get Comments",
+                "value": "getComments",
+                "description": "Get comments on a media post"
               },
               {
-                "name": "Send Generic Template",
-                "value": "sendGenericTemplate",
-                "description": "Send a carousel of cards"
+                "name": "Get Replies",
+                "value": "getReplies",
+                "description": "Get replies to a comment"
               },
               {
-                "name": "Send Image",
-                "value": "sendImage",
-                "description": "Send an image message"
+                "name": "Hide/Unhide",
+                "value": "toggleVisibility",
+                "description": "Hide or unhide a comment"
               },
               {
-                "name": "Send Quick Replies",
-                "value": "sendQuickReplies",
-                "description": "Send a message with quick reply options"
+                "name": "Reply",
+                "value": "replyToComment",
+                "description": "Reply to a comment publicly"
               },
               {
-                "name": "Send Text",
-                "value": "sendText",
-                "description": "Send a text message"
-              },
-              {
-                "name": "Send Video",
-                "value": "sendVideo",
-                "description": "Send a video message"
-              },
-              {
-                "name": "Upload Media",
-                "value": "uploadMedia",
-                "description": "Upload media to Instagram"
+                "name": "Send Private Reply",
+                "value": "sendPrivateReply",
+                "description": "Send a private DM to a commenter"
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 52
+            "totalPropertyCount": 64
           },
           "ioInfo": {
             "nodeType": "instagram",
@@ -7431,7 +7433,7 @@
     },
     "n8n-nodes-pdforge": {
       "packageName": "n8n-nodes-pdforge",
-      "packageVersion": "2.3.2",
+      "packageVersion": "2.3.3",
       "nodes": [
         {
           "nodeType": "n8n-nodes-pdforge.pdforge",
@@ -7623,6 +7625,302 @@
               "main"
             ],
             "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@tavily/n8n-nodes-tavily": {
+      "packageName": "@tavily/n8n-nodes-tavily",
+      "packageVersion": "0.2.6",
+      "nodes": [
+        {
+          "nodeType": "@tavily/n8n-nodes-tavily.tavily",
+          "displayName": "Tavily",
+          "description": "Tavily API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "string",
+                "description": "Type your query",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The root URL to begin the crawl",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "urls",
+                "displayName": "URLs",
+                "type": "string",
+                "description": "A list of URLs to extract content from",
+                "required": true,
+                "default": []
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "search",
+                "options": [
+                  {
+                    "name": "Search",
+                    "value": "search"
+                  },
+                  {
+                    "name": "Extract",
+                    "value": "extract"
+                  },
+                  {
+                    "name": "Crawl",
+                    "value": "crawl"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "urls",
+                "options": [
+                  {
+                    "name": "URLs",
+                    "value": "urls",
+                    "description": "Extract raw content from URLs"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "query",
+                "options": [
+                  {
+                    "name": "Query",
+                    "value": "query",
+                    "description": "Search query"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "url",
+                "options": [
+                  {
+                    "name": "URL",
+                    "value": "url",
+                    "description": "The root URL to begin the crawl"
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "include_images",
+                    "description": "Whether to include a list of images extracted from the URLs. Default is false."
+                  },
+                  {
+                    "name": "extract_depth",
+                    "description": "The depth of the extraction process. advanced extraction retrieves more data, including tables and embedded content, with higher success but may increase latency."
+                  },
+                  {
+                    "name": "format",
+                    "description": "The format of the extracted web page content. markdown returns content in markdown format. text returns plain text and may increase latency."
+                  },
+                  {
+                    "name": "include_favicon",
+                    "description": "Whether to include the favicon URL for each result"
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "topic",
+                    "description": "The category of the search"
+                  },
+                  {
+                    "name": "search_depth",
+                    "description": "The depth of the search. advanced search is tailored to retrieve the most relevant sources and content snippets for your query, while basic search provides generic content snippets from each source."
+                  },
+                  {
+                    "name": "chunks_per_source",
+                    "description": "The number of content chunks to retrieve from each source. Each chunk's length is maximum 500 characters. Available only when search_depth is advanced."
+                  },
+                  {
+                    "name": "max_results",
+                    "description": "The maximum number of search results to return"
+                  },
+                  {
+                    "name": "time_range",
+                    "description": "The time range back from the current date to filter results. Useful when looking for sources that have published data."
+                  },
+                  {
+                    "name": "days",
+                    "description": "Number of days back from the current date to include. Available only if topic is news."
+                  },
+                  {
+                    "name": "include_answer",
+                    "description": "Include an LLM-generated answer to the provided query"
+                  },
+                  {
+                    "name": "include_raw_content",
+                    "description": "Whether to include the cleaned and parsed HTML content of each search result"
+                  },
+                  {
+                    "name": "include_images",
+                    "description": "Whether to perform an image search and include the results in the response"
+                  },
+                  {
+                    "name": "include_image_descriptions",
+                    "description": "Whether to add a descriptive text for each image when include_images is true"
+                  },
+                  {
+                    "name": "include_domains",
+                    "description": "A list of domains to specifically include in the search results"
+                  },
+                  {
+                    "name": "exclude_domains",
+                    "description": "A list of domains to exclude from the search results"
+                  },
+                  {
+                    "name": "include_favicon",
+                    "description": "Whether to include the favicon URL for each result"
+                  },
+                  {
+                    "name": "auto_parameters",
+                    "description": "Whether auto_parameters is enabled, Tavily automatically configures search parameters based on your query's content and intent"
+                  },
+                  {
+                    "name": "start_date",
+                    "description": "Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD."
+                  },
+                  {
+                    "name": "end_date",
+                    "description": "Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD."
+                  },
+                  {
+                    "name": "country",
+                    "description": "Boost search results from a specific country. This will prioritize content from the selected country in the search results. Available only if topic is general. Full available options: https://docs.tavily.com/documentation/api-reference/endpoint/search#body-country"
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "instructions",
+                    "description": "Natural language instructions for the crawler"
+                  },
+                  {
+                    "name": "max_depth",
+                    "description": "Max depth of the crawl"
+                  },
+                  {
+                    "name": "max_breadth",
+                    "description": "Max number of links to follow per level"
+                  },
+                  {
+                    "name": "limit",
+                    "description": "Max number of results to return"
+                  },
+                  {
+                    "name": "select_paths",
+                    "description": "Regex patterns to select only URLs with specific path patterns"
+                  },
+                  {
+                    "name": "select_domains",
+                    "description": "Regex patterns to select crawling to specific domains or subdomains"
+                  },
+                  {
+                    "name": "exclude_paths",
+                    "description": "Regex patterns to exclude URLs with specific path patterns"
+                  },
+                  {
+                    "name": "exclude_domains",
+                    "description": "Regex patterns to exclude specific domains or subdomains from crawling"
+                  },
+                  {
+                    "name": "allow_external",
+                    "description": "Whether to allow following links that go to external domains"
+                  },
+                  {
+                    "name": "include_images",
+                    "description": "Whether to include images in the crawl results"
+                  },
+                  {
+                    "name": "extract_depth",
+                    "description": "Extraction depth"
+                  },
+                  {
+                    "name": "format",
+                    "description": "Format of the extracted web page content"
+                  },
+                  {
+                    "name": "include_favicon",
+                    "description": "Whether to include the favicon URL for each result"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "URLs",
+                "value": "urls",
+                "description": "Extract raw content from URLs"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 10
+          },
+          "ioInfo": {
+            "nodeType": "tavily",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 0,
+            "outputNames": [],
+            "isDynamicOutput": true
           }
         }
       ]
