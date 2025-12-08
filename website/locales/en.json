@@ -108,12 +108,16 @@
     }
   },
   "footer": {
-    "github": "GitHub",
-    "releases": "Releases",
-    "n8nWebsite": "n8n Official Website",
-    "n8nDocs": "n8n Documentation",
-    "license": "Open source project, MIT License",
-    "version": "Supports n8n v1.122.5 | Last updated: 2025-12-07",
-    "madeBy": "Made by"
+    "brandName": "n8n Skills",
+    "slogan": "Turn your AI assistant into an n8n workflow expert",
+    "productInfo": "n8n Skills Info",
+    "features": "Features",
+    "howToUse": "How to Use",
+    "otherResources": "More from Frank",
+    "home": "Home",
+    "n8nTutorial": "n8n Tutorial",
+    "aboutMe": "About Me",
+    "contactMe": "Contact Me",
+    "copyright": "© 2025 Frank Chen. All rights reserved."
   }
 }

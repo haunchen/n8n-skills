@@ -500,48 +500,94 @@ body {
 
 /* Footer */
 .footer {
-    padding: 3rem 0;
+    padding: 3rem 0 2rem;
     background-color: var(--color-secondary-2);
     border-top: 1px solid var(--color-border);
 }
 
-.footer-content {
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-brand-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.footer-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.footer-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.footer-slogan {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.footer-links-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer-group-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-links-list li a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links-list li a:hover {
+    color: var(--color-accent-1);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.5rem;
     text-align: center;
 }
 
-.footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.footer-links a {
+.footer-copyright {
     color: var(--color-text-secondary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-    color: var(--color-accent-1);
-}
-
-.footer-text {
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
-    margin: 0.5rem 0;
-}
-
-.footer-author {
-    color: var(--color-accent-1);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.footer-author:hover {
-    color: var(--color-accent-3);
+    font-size: 0.85rem;
+    margin: 0;
 }
 
 /* 動畫 */
@@ -581,8 +627,26 @@ body {
     .stats-grid,
     .features-grid,
     .steps-grid,
-    .categories-grid {
+    .categories-grid,
+    .footer-grid {
         grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .footer-brand {
+        align-items: center;
+    }
+
+    .footer-brand-header {
+        justify-content: center;
+    }
+
+    .footer-links-group {
+        align-items: center;
     }
 
     .community-packages-grid {

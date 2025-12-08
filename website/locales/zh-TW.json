@@ -108,12 +108,16 @@
     }
   },
   "footer": {
-    "github": "GitHub",
-    "releases": "Releases",
-    "n8nWebsite": "n8n 官方網站",
-    "n8nDocs": "n8n 文件",
-    "license": "開源專案，採用 MIT License",
-    "version": "支援 n8n v1.122.5 | 最後更新：2025-12-07",
-    "madeBy": "Made by"
+    "brandName": "n8n Skills",
+    "slogan": "讓 AI 助理成為你的 n8n 工作流程專家",
+    "productInfo": "n8n Skills 的資訊",
+    "features": "功能介紹",
+    "howToUse": "如何使用",
+    "otherResources": "法蘭克的其他資源",
+    "home": "首頁",
+    "n8nTutorial": "n8n 教學",
+    "aboutMe": "關於我",
+    "contactMe": "聯絡我",
+    "copyright": "© 2025 法蘭克 All rights reserved."
   }
 }
