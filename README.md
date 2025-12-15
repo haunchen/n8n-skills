@@ -380,3 +380,7 @@ n8n Skills is an open source project, and we welcome all forms of contribution:
 - Share your use cases
 
 Visit [GitHub](https://github.com/haunchen/n8n-skill) now and start your n8n automation skills journey!
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=haunchen/n8n-skill&type=Date)](https://star-history.com/#haunchen/n8n-skill&Date)
