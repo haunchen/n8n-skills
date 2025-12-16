@@ -1,0 +1,154 @@
+name: Sync to n8n-skills-pack
+
+on:
+  # Trigger when update-skill-pack workflow completes
+  workflow_run:
+    workflows: ["Update n8n Skill Pack"]
+    types:
+      - completed
+    branches:
+      - main
+  # Allow manual trigger
+  workflow_dispatch:
+  # Trigger on push to main when output/ changes
+  push:
+    branches:
+      - main
+    paths:
+      - 'output/**'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # Only run if workflow_run succeeded or if triggered manually/by push
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+
+    steps:
+      - name: Checkout n8n-skills
+        uses: actions/checkout@v4
+        with:
+          path: n8n-skills
+
+      - name: Checkout n8n-skills-pack
+        uses: actions/checkout@v4
+        with:
+          repository: haunchen/n8n-skills-pack
+          token: ${{ secrets.PACK_REPO_TOKEN }}
+          path: n8n-skills-pack
+
+      - name: Get version info
+        id: version
+        run: |
+          VERSION=$(jq -r '.version' n8n-skills/package.json)
+          N8N_VERSION=$(jq -r '.n8n_version' n8n-skills/config/skill-config.json)
+          BUILD_DATE=$(jq -r '.build_date' n8n-skills/config/skill-config.json)
+          SOURCE_COMMIT=$(cd n8n-skills && git rev-parse --short HEAD)
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "n8n_version=$N8N_VERSION" >> $GITHUB_OUTPUT
+          echo "build_date=$BUILD_DATE" >> $GITHUB_OUTPUT
+          echo "source_commit=$SOURCE_COMMIT" >> $GITHUB_OUTPUT
+
+          echo "Version: $VERSION"
+          echo "n8n Version: $N8N_VERSION"
+          echo "Build Date: $BUILD_DATE"
+          echo "Source Commit: $SOURCE_COMMIT"
+
+      - name: Sync output content
+        run: |
+          # Remove old content
+          rm -rf n8n-skills-pack/n8n-skills/skills/n8n-skills/SKILL.md
+          rm -rf n8n-skills-pack/n8n-skills/skills/n8n-skills/resources/*
+
+          # Copy new content
+          cp n8n-skills/output/Skill.md n8n-skills-pack/n8n-skills/skills/n8n-skills/SKILL.md
+          cp -r n8n-skills/output/resources/* n8n-skills-pack/n8n-skills/skills/n8n-skills/resources/
+
+          echo "Content synced successfully"
+
+      - name: Update marketplace.json
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          N8N_VERSION="${{ steps.version.outputs.n8n_version }}"
+          BUILD_DATE="${{ steps.version.outputs.build_date }}"
+          SOURCE_COMMIT="${{ steps.version.outputs.source_commit }}"
+
+          # Update marketplace.json with new version info
+          jq \
+            --arg version "$VERSION" \
+            --arg n8n_version "$N8N_VERSION" \
+            --arg build_date "$BUILD_DATE" \
+            --arg source_commit "$SOURCE_COMMIT" \
+            '.version = $version | .metadata.n8n_version = $n8n_version | .metadata.build_date = $build_date | .metadata.source_commit = $source_commit' \
+            n8n-skills-pack/.claude-plugin/marketplace.json > n8n-skills-pack/.claude-plugin/marketplace.json.tmp
+
+          mv n8n-skills-pack/.claude-plugin/marketplace.json.tmp n8n-skills-pack/.claude-plugin/marketplace.json
+
+          echo "marketplace.json updated"
+
+      - name: Update README.md
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          N8N_VERSION="${{ steps.version.outputs.n8n_version }}"
+          BUILD_DATE=$(echo "${{ steps.version.outputs.build_date }}" | cut -d'T' -f1)
+
+          # Update version table in README.md
+          sed -i "s/| Skill Pack | [0-9.]* |/| Skill Pack | $VERSION |/" n8n-skills-pack/README.md
+          sed -i "s/| n8n | [0-9.]* |/| n8n | $N8N_VERSION |/" n8n-skills-pack/README.md
+          sed -i "s/| Last Updated | [0-9-]* |/| Last Updated | $BUILD_DATE |/" n8n-skills-pack/README.md
+
+          echo "README.md updated"
+
+      - name: Check for changes
+        id: check_changes
+        working-directory: n8n-skills-pack
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+            git status --short
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        working-directory: n8n-skills-pack
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          SOURCE_COMMIT="${{ steps.version.outputs.source_commit }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          git commit -m "chore: sync from n8n-skills@${SOURCE_COMMIT}
+
+          Version: $VERSION
+          Source: https://github.com/haunchen/n8n-skills/commit/${SOURCE_COMMIT}"
+
+          git push
+
+          echo "Changes pushed to n8n-skills-pack"
+
+      - name: Summary
+        run: |
+          echo "=== Sync Summary ==="
+          echo "Version: ${{ steps.version.outputs.version }}"
+          echo "n8n Version: ${{ steps.version.outputs.n8n_version }}"
+          echo "Source Commit: ${{ steps.version.outputs.source_commit }}"
+          echo "Has Changes: ${{ steps.check_changes.outputs.has_changes }}"
+
+          if [[ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]]; then
+            echo "Successfully synced to n8n-skills-pack"
+          else
+            echo "No changes to sync"
+          fi

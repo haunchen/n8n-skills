@@ -76,6 +76,26 @@
       "description": "Ask your AI assistant questions about n8n nodes and workflows"
     }
   },
+  "installation": {
+    "title": "Quick Install",
+    "subtitle": "Choose the installation method that works best for you",
+    "plugin": {
+      "title": "Claude Code Plugin",
+      "description": "Two-step install",
+      "badge": "Recommended"
+    },
+    "marketplace": {
+      "title": "Skills Marketplace",
+      "description": "Browse and install from skillsmp.com",
+      "button": "Go to Marketplace"
+    },
+    "manual": {
+      "title": "Manual Install",
+      "description": "Download and copy to skills directory",
+      "button": "Download ZIP"
+    },
+    "copied": "Copied!"
+  },
   "categories": {
     "title": "Node Categories",
     "core": {

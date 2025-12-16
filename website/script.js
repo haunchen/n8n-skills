@@ -130,3 +130,38 @@ function updateCategoryLabels() {
         }
     });
 }
+
+// Copy button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    initCopyButtons();
+});
+
+function initCopyButtons() {
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const textToCopy = this.getAttribute('data-copy');
+            if (!textToCopy) return;
+
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+
+                // Show copied state
+                this.classList.add('copied');
+
+                // Change icon to checkmark
+                const originalSvg = this.innerHTML;
+                this.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>`;
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    this.classList.remove('copied');
+                    this.innerHTML = originalSvg;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+            }
+        });
+    });
+}

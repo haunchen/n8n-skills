@@ -616,6 +616,66 @@
         </div>
     </section>
 
+    <!-- Installation Section -->
+    <section class="installation" id="installation">
+        <div class="container">
+            <h2 class="section-title" data-i18n="installation.title">快速安裝</h2>
+            <p class="section-subtitle" data-i18n="installation.subtitle">選擇最適合你的安裝方式</p>
+            <div class="installation-grid">
+                <!-- Claude Code Plugin -->
+                <div class="install-card install-card-primary">
+                    <div class="install-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 17l6-6-6-6M12 19h8"/>
+                        </svg>
+                    </div>
+                    <h3 class="install-title" data-i18n="installation.plugin.title">Claude Code Plugin</h3>
+                    <p class="install-description" data-i18n="installation.plugin.description">兩步驟安裝</p>
+                    <div class="install-command">
+                        <code>/plugin marketplace add haunchen/n8n-skills-pack</code>
+                        <button class="copy-btn" data-copy="/plugin marketplace add haunchen/n8n-skills-pack" aria-label="Copy command">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="install-command">
+                        <code>/plugin install n8n-skills@n8n-skills-pack</code>
+                        <button class="copy-btn" data-copy="/plugin install n8n-skills@n8n-skills-pack" aria-label="Copy command">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="install-badge" data-i18n="installation.plugin.badge">推薦</span>
+                </div>
+
+                <!-- Manual Install -->
+                <div class="install-card">
+                    <div class="install-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="install-title" data-i18n="installation.manual.title">手動安裝</h3>
+                    <p class="install-description" data-i18n="installation.manual.description">下載並複製到 skills 目錄</p>
+                    <a href="https://github.com/haunchen/n8n-skills/releases" class="btn btn-secondary install-btn" target="_blank" rel="noopener noreferrer">
+                        <span data-i18n="installation.manual.button">下載 ZIP</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Categories Section -->
     <section class="categories">
         <div class="container">

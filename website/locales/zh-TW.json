@@ -76,6 +76,26 @@
       "description": "詢問 AI 助理關於 n8n 節點和工作流程的問題"
     }
   },
+  "installation": {
+    "title": "快速安裝",
+    "subtitle": "選擇最適合你的安裝方式",
+    "plugin": {
+      "title": "Claude Code Plugin",
+      "description": "兩步驟安裝",
+      "badge": "推薦"
+    },
+    "marketplace": {
+      "title": "Skills Marketplace",
+      "description": "在 skillsmp.com 瀏覽和安裝",
+      "button": "前往 Marketplace"
+    },
+    "manual": {
+      "title": "手動安裝",
+      "description": "下載並複製到 skills 目錄",
+      "button": "下載 ZIP"
+    },
+    "copied": "已複製！"
+  },
   "categories": {
     "title": "節點分類",
     "core": {
