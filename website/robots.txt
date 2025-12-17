@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://n8n-skills.zeabur.app/sitemap.xml
+Sitemap: https://www.frankchen.tw/n8n-skills/sitemap.xml
