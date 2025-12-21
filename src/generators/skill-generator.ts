@@ -67,6 +67,7 @@ export interface SkillGeneratorInput {
   nodeUsageStats: NodeUsageStats;
   resourceFiles: ResourceFile[];
   config: SkillConfig;
+  templateCount?: number;
 }
 
 /**
@@ -75,7 +76,7 @@ export interface SkillGeneratorInput {
 const DEFAULT_CONFIG: Required<SkillConfig> = {
   name: 'n8n-skills',
   version: '1.0.0',
-  description: 'n8n workflow automation knowledge base. Use this skill to find n8n node information, understand node functionality and usage, learn workflow patterns, and get node configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
+  description: 'n8n workflow automation knowledge base. Provides n8n node information, node functionality details, workflow patterns, and configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
   author: 'n8n-skill',
   license: 'MIT',
   maxLines: 5000,
@@ -139,12 +140,12 @@ export class SkillGenerator {
    */
   generate(input: SkillGeneratorInput): string {
     const totalNodes = input.nodes.length;
+    const templateCount = input.templateCount || 20;
     const sections: string[] = [
       this.generateFrontmatter(totalNodes),
       this.generateOverview(),
-      this.generateHowToFindNodes(input.nodes, input.nodeUsageStats),
-      this.generateWorkflowPatterns(),
-      this.generateAIUsageGuide(input.resourceFiles),
+      this.generateTableOfContents(),
+      this.generateWorkflowPatterns(templateCount),
       this.generateLicense(),
     ];
 
@@ -186,29 +187,14 @@ export class SkillGenerator {
     return [
       '# n8n Workflow Automation Skill Pack',
       '',
-      '## What is n8n?',
+      '## Overview',
       '',
-      'n8n is an extensible workflow automation tool that allows you to connect any application and automate workflows.',
-      'It provides over 400 built-in integrations (nodes), supports visual workflow design, and is highly customizable.',
-      '',
-      'Key Features:',
-      '- Visual workflow editor',
-      '- 400+ built-in integration nodes',
-      '- Custom code execution (JavaScript/Python)',
-      '- AI tool integration (OpenAI, Anthropic, Hugging Face, etc.)',
-      '- Data transformation and processing',
-      '- Conditional logic and branching',
-      '- Scheduling and triggers',
-      '- Error handling and retry mechanisms',
-      '',
-      '## When to Use This Skill',
-      '',
-      'Use this skill to:',
-      '- Understand n8n node functionality and usage',
-      '- Find nodes suitable for specific tasks',
-      '- Learn common workflow patterns',
-      '- Get node configuration examples',
-      '- Solve workflow design problems',
+      'This skill helps with:',
+      '- Understanding n8n node functionality and usage',
+      '- Finding nodes suitable for specific tasks',
+      '- Learning common workflow patterns',
+      '- Getting node configuration examples',
+      '- Solving workflow design problems',
       '',
       'This skill includes:',
       `- Detailed information on the ${this.config.topNodesCount} most commonly used built-in n8n nodes`,
@@ -219,11 +205,26 @@ export class SkillGenerator {
     ].join('\n');
   }
 
+  /**
+   * Generate table of contents
+   */
+  private generateTableOfContents(): string {
+    return [
+      '## Table of Contents',
+      '',
+      '- [Overview](#overview)',
+      '- [Common Workflow Patterns](#common-workflow-patterns)',
+      '- [How to Find Nodes](resources/guides/how-to-find-nodes.md)',
+      '- [Usage Guide](resources/guides/usage-guide.md)',
+      '- [License and Attribution](#license-and-attribution)',
+    ].join('\n');
+  }
+
 
   /**
-   * Generate node finding guide (tool-usage oriented)
+   * Generate node finding guide file (for separate file)
    */
-  private generateHowToFindNodes(
+  generateHowToFindNodesFile(
     _nodes: EnrichedNodeInfo[],
     _stats: NodeUsageStats
   ): string {
@@ -244,7 +245,7 @@ export class SkillGenerator {
       'Index contents include:',
       '- Find by category: 6 built-in categories (Transform, Input, Output, Trigger, Organization, Misc)',
       '- Community packages: 30+ popular community node packages',
-      '- Template index: 100 workflow templates',
+      '- Template index: workflow templates',
       '',
       '### Read Specific Sections of the Index',
       '',
@@ -373,7 +374,7 @@ export class SkillGenerator {
   /**
    * Generate workflow patterns section
    */
-  private generateWorkflowPatterns(): string {
+  private generateWorkflowPatterns(templateCount: number): string {
     const sections = [
       '# Common Workflow Patterns',
       '',
@@ -398,7 +399,7 @@ export class SkillGenerator {
     sections.push(
       '## Complete Template Library',
       '',
-      'We have collected 100 popular workflow templates from n8n.io, categorized by use case:',
+      `We have collected ${templateCount} popular workflow templates from n8n.io, categorized by use case:`,
       '',
       '- [AI & Chatbots](resources/templates/ai-chatbots/README.md) - AI Agents, RAG systems, intelligent conversations',
       '- [Social Media & Video](resources/templates/social-media/README.md) - TikTok, Instagram, YouTube automation',
@@ -413,9 +414,9 @@ export class SkillGenerator {
   }
 
   /**
-   * Generate AI assistant usage guide
+   * Generate usage guide file (for separate file)
    */
-  private generateAIUsageGuide(resourceFiles: ResourceFile[]): string {
+  generateUsageGuideFile(resourceFiles: ResourceFile[]): string {
     const categoryCounts = new Map<string, number>();
 
     resourceFiles.forEach(file => {
@@ -460,7 +461,7 @@ export class SkillGenerator {
       '│   ├── communication.md         # Communication category',
       '│   └── *.md                     # Individual package files',
       '└── templates/                   # Workflow templates',
-      '    ├── README.md                # 100 templates overview',
+      '    ├── README.md                # Templates overview',
       '    ├── ai-chatbots/             # AI & chatbot templates',
       '    ├── social-media/            # Social media templates',
       '    ├── data-processing/         # Data processing templates',
@@ -656,7 +657,7 @@ export class SkillGenerator {
       '   - Or check the "Connection Guide" section in node documentation',
       '',
       '3. Reference actual templates',
-      '   - The templates/ directory contains 100 real-world use cases',
+      '   - The templates/ directory contains real-world use cases',
       '   - Learn how nodes are combined',
       '',
       '### Common Pitfalls',
