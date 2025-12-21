@@ -1,290 +1,290 @@
 {
   "@n8n/n8n-nodes-langchain.agent": {
-    "count": 64,
-    "percentage": 12.284069097888676
+    "count": 59,
+    "percentage": 11.45631067961165
   },
   "n8n-nodes-base.httpRequest": {
-    "count": 52,
-    "percentage": 9.980806142034549
+    "count": 55,
+    "percentage": 10.679611650485436
   },
   "n8n-nodes-base.googleSheets": {
     "count": 45,
-    "percentage": 8.637236084452974
+    "percentage": 8.737864077669903
   },
   "@n8n/n8n-nodes-langchain.lmChatOpenAi": {
-    "count": 42,
-    "percentage": 8.061420345489443
+    "count": 40,
+    "percentage": 7.766990291262135
   },
   "n8n-nodes-base.code": {
-    "count": 36,
-    "percentage": 6.90978886756238
-  },
-  "@n8n/n8n-nodes-langchain.outputParserStructured": {
-    "count": 25,
-    "percentage": 4.798464491362764
+    "count": 40,
+    "percentage": 7.766990291262135
   },
   "@n8n/n8n-nodes-langchain.openAi": {
     "count": 24,
-    "percentage": 4.606525911708253
+    "percentage": 4.660194174757281
   },
-  "@n8n/n8n-nodes-langchain.memoryBufferWindow": {
-    "count": 23,
-    "percentage": 4.414587332053743
+  "@n8n/n8n-nodes-langchain.outputParserStructured": {
+    "count": 24,
+    "percentage": 4.660194174757281
   },
   "@n8n/n8n-nodes-langchain.lmChatGoogleGemini": {
     "count": 23,
-    "percentage": 4.414587332053743
+    "percentage": 4.466019417475728
+  },
+  "@n8n/n8n-nodes-langchain.memoryBufferWindow": {
+    "count": 22,
+    "percentage": 4.271844660194175
   },
   "n8n-nodes-base.googleDrive": {
-    "count": 16,
-    "percentage": 3.071017274472169
+    "count": 15,
+    "percentage": 2.912621359223301
   },
   "n8n-nodes-base.telegram": {
-    "count": 15,
-    "percentage": 2.8790786948176583
+    "count": 14,
+    "percentage": 2.7184466019417477
   },
   "@n8n/n8n-nodes-langchain.toolThink": {
-    "count": 11,
-    "percentage": 2.111324376199616
+    "count": 12,
+    "percentage": 2.3300970873786406
   },
   "n8n-nodes-base.gmail": {
     "count": 11,
-    "percentage": 2.111324376199616
+    "percentage": 2.1359223300970873
   },
   "@n8n/n8n-nodes-langchain.documentDefaultDataLoader": {
     "count": 8,
-    "percentage": 1.5355086372360844
-  },
-  "@n8n/n8n-nodes-langchain.chainLlm": {
-    "count": 8,
-    "percentage": 1.5355086372360844
+    "percentage": 1.5533980582524272
   },
   "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter": {
     "count": 7,
-    "percentage": 1.3435700575815739
+    "percentage": 1.3592233009708738
+  },
+  "@n8n/n8n-nodes-langchain.chainLlm": {
+    "count": 7,
+    "percentage": 1.3592233009708738
+  },
+  "@n8n/n8n-nodes-langchain.lmChatOpenRouter": {
+    "count": 7,
+    "percentage": 1.3592233009708738
   },
   "@n8n/n8n-nodes-langchain.embeddingsOpenAi": {
     "count": 6,
-    "percentage": 1.1516314779270633
+    "percentage": 1.1650485436893203
   },
   "@n8n/n8n-nodes-langchain.lmChatAnthropic": {
-    "count": 6,
-    "percentage": 1.1516314779270633
+    "count": 5,
+    "percentage": 0.9708737864077669
   },
-  "@n8n/n8n-nodes-langchain.lmChatOpenRouter": {
-    "count": 6,
-    "percentage": 1.1516314779270633
+  "n8n-nodes-base.emailSend": {
+    "count": 5,
+    "percentage": 0.9708737864077669
+  },
+  "n8n-nodes-base.html": {
+    "count": 4,
+    "percentage": 0.7766990291262136
   },
   "n8n-nodes-base.whatsApp": {
-    "count": 5,
-    "percentage": 0.9596928982725527
+    "count": 4,
+    "percentage": 0.7766990291262136
   },
   "n8n-nodes-base.linkedIn": {
     "count": 4,
-    "percentage": 0.7677543186180422
+    "percentage": 0.7766990291262136
   },
   "n8n-nodes-base.facebookGraphApi": {
     "count": 4,
-    "percentage": 0.7677543186180422
-  },
-  "n8n-nodes-base.html": {
-    "count": 3,
-    "percentage": 0.5758157389635317
+    "percentage": 0.7766990291262136
   },
   "@n8n/n8n-nodes-langchain.vectorStoreInMemory": {
     "count": 3,
-    "percentage": 0.5758157389635317
+    "percentage": 0.5825242718446602
   },
-  "@n8n/n8n-nodes-langchain.lmChatOllama": {
+  "@n8n/n8n-nodes-langchain.googleGemini": {
     "count": 3,
-    "percentage": 0.5758157389635317
+    "percentage": 0.5825242718446602
   },
   "n8n-nodes-base.googleDocs": {
     "count": 3,
-    "percentage": 0.5758157389635317
-  },
-  "@n8n/n8n-nodes-langchain.lmChatGroq": {
-    "count": 3,
-    "percentage": 0.5758157389635317
-  },
-  "n8n-nodes-base.emailSend": {
-    "count": 3,
-    "percentage": 0.5758157389635317
+    "percentage": 0.5825242718446602
   },
   "n8n-nodes-base.slack": {
     "count": 3,
-    "percentage": 0.5758157389635317
+    "percentage": 0.5825242718446602
   },
   "n8n-nodes-base.twitter": {
     "count": 3,
-    "percentage": 0.5758157389635317
+    "percentage": 0.5825242718446602
   },
   "@n8n/n8n-nodes-langchain.mcpClientTool": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.toolWorkflow": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
-  "@n8n/n8n-nodes-langchain.googleGemini": {
+  "@n8n/n8n-nodes-langchain.lmChatOllama": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.vectorStoreQdrant": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.outputParserAutofixing": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "n8n-nodes-base.supabase": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.vectorStoreSupabase": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
-  "n8n-nodes-base.airtable": {
+  "@n8n/n8n-nodes-langchain.lmChatGroq": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
+  },
+  "n8n-nodes-base.nocoDb": {
+    "count": 2,
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.memoryPostgresChat": {
     "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.informationExtractor": {
     "count": 2,
-    "percentage": 0.3838771593090211
-  },
-  "@n8n/n8n-nodes-langchain.toolSerpApi": {
-    "count": 2,
-    "percentage": 0.3838771593090211
-  },
-  "@n8n/n8n-nodes-langchain.lmChatDeepSeek": {
-    "count": 2,
-    "percentage": 0.3838771593090211
-  },
-  "@n8n/n8n-nodes-langchain.lmChatMistralCloud": {
-    "count": 2,
-    "percentage": 0.3838771593090211
+    "percentage": 0.3883495145631068
   },
   "@n8n/n8n-nodes-langchain.toolCode": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "@n8n/n8n-nodes-langchain.toolWikipedia": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "n8n-nodes-base.perplexity": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "@n8n/n8n-nodes-langchain.embeddingsOllama": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "n8n-nodes-base.youTube": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "n8n-nodes-base.mistralAi": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.microsoftExcel": {
+    "count": 1,
+    "percentage": 0.1941747572815534
   },
   "@n8n/n8n-nodes-langchain.vectorStoreMongoDBAtlas": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "n8n-nodes-base.wooCommerce": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "n8n-nodes-base.hackerNews": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "n8n-nodes-base.googleAds": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "@n8n/n8n-nodes-langchain.rerankerCohere": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "@n8n/n8n-nodes-langchain.memoryRedisChat": {
     "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.notion": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.apiTemplateIo": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "@n8n/n8n-nodes-langchain.lmOpenHuggingFaceInference": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "@n8n/n8n-nodes-langchain.lmChatXAiGrok": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "@n8n/n8n-nodes-langchain.agentTool": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "@n8n/n8n-nodes-langchain.toolCalculator": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.evaluation": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.microsoftOutlook": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.phantombuster": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.microsoftSharePoint": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "@n8n/n8n-nodes-langchain.vectorStoreWeaviate": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.discord": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "n8n-nodes-base.microsoftOneDrive": {
-    "count": 1,
-    "percentage": 0.19193857965451055
-  },
-  "@n8n/n8n-nodes-langchain.memoryManager": {
-    "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
   },
   "n8n-nodes-base.postgres": {
     "count": 1,
-    "percentage": 0.19193857965451055
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.airtable": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.notion": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.apiTemplateIo": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.lmOpenHuggingFaceInference": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.lmChatMistralCloud": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.lmChatDeepSeek": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.lmChatXAiGrok": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.agentTool": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.toolCalculator": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.evaluation": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.toolSerpApi": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.microsoftOutlook": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.phantombuster": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "n8n-nodes-base.microsoftSharePoint": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.vectorStoreWeaviate": {
+    "count": 1,
+    "percentage": 0.1941747572815534
+  },
+  "@n8n/n8n-nodes-langchain.memoryManager": {
+    "count": 1,
+    "percentage": 0.1941747572815534
   }
 }

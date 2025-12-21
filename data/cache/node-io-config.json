@@ -8960,6 +8960,25 @@
     "isDynamicOutput": false
   },
   {
+    "nodeType": "nodes-langchain.mcpClient",
+    "displayName": "MCP Client",
+    "inputTypes": [
+      "main"
+    ],
+    "outputTypes": [
+      "main"
+    ],
+    "isMultiInput": false,
+    "isMultiOutput": false,
+    "requiresSpecialInputs": false,
+    "category": "transform",
+    "outputCount": 1,
+    "outputNames": [
+      "main"
+    ],
+    "isDynamicOutput": false
+  },
+  {
     "nodeType": "nodes-langchain.mcpClientTool",
     "displayName": "MCP Client Tool",
     "inputTypes": [],
@@ -9577,6 +9596,23 @@
     "isDynamicOutput": false
   },
   {
+    "nodeType": "nodes-langchain.vectorStoreAzureAISearch",
+    "displayName": "Azure AI Search Vector Store",
+    "inputTypes": [
+      "main"
+    ],
+    "outputTypes": [
+      "main"
+    ],
+    "isMultiInput": false,
+    "isMultiOutput": false,
+    "requiresSpecialInputs": false,
+    "category": "transform",
+    "outputCount": 0,
+    "outputNames": [],
+    "isDynamicOutput": true
+  },
+  {
     "nodeType": "nodes-langchain.vectorStoreInMemory",
     "displayName": "Simple Vector Store",
     "inputTypes": [
@@ -9944,5 +9980,22 @@
       "ai_languageModel"
     ],
     "isDynamicOutput": false
+  },
+  {
+    "nodeType": "nodes-langchain.guardrails",
+    "displayName": "Guardrails",
+    "inputTypes": [
+      "main"
+    ],
+    "outputTypes": [
+      "main"
+    ],
+    "isMultiInput": false,
+    "isMultiOutput": false,
+    "requiresSpecialInputs": false,
+    "category": "transform",
+    "outputCount": 0,
+    "outputNames": [],
+    "isDynamicOutput": true
   }
 ]
