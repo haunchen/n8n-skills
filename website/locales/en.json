@@ -38,7 +38,7 @@
     "title": "Features",
     "comprehensive": {
       "title": "Comprehensive Node Knowledge Base",
-      "description": "Detailed documentation for 542 n8n nodes, organized into 6 main categories, supports the latest n8n v1.123.5"
+      "description": "Detailed documentation for 542 n8n nodes, organized into 6 main categories, supports the latest n8n v2.0.3"
     },
     "multiPlatform": {
       "title": "Multi-Platform AI Integration",
@@ -139,6 +139,6 @@
     "aboutMe": "About Me",
     "contactMe": "Contact Me",
     "copyright": "© 2025 Frank Chen. All rights reserved.",
-    "version": "Supports n8n v1.123.5 | Last updated: 2025-12-14"
+    "version": "Supports n8n v2.0.3 | Last updated: 2025-12-21"
   }
 }

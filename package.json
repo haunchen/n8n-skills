@@ -1,6 +1,6 @@
 {
   "name": "n8n-skills",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "description": "n8n workflow automation skill pack for AI assistants",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -43,11 +43,11 @@
   },
   "homepage": "https://github.com/haunchen/n8n-skill#readme",
   "dependencies": {
-    "@n8n/n8n-nodes-langchain": "^2.0.1",
-    "n8n": "^1.123.5",
-    "n8n-core": "^2.0.1",
-    "n8n-nodes-base": "^2.0.1",
-    "n8n-workflow": "^2.0.1",
+    "@n8n/n8n-nodes-langchain": "^2.1.1",
+    "n8n": "^2.0.3",
+    "n8n-core": "^2.1.1",
+    "n8n-nodes-base": "^2.1.1",
+    "n8n-workflow": "^2.1.0",
     "simple-git": "^3.29.0"
   },
   "devDependencies": {
