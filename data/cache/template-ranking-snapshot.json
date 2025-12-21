@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "fetchedAt": "2025-11-04T09:18:01.520Z",
+  "fetchedAt": "2025-12-21T15:00:14.835Z",
   "rankings": [
     {
       "id": 5338,
@@ -18,89 +18,89 @@
       "totalViews": 155914
     },
     {
-      "id": 3442,
-      "rank": 4,
-      "totalViews": 123870
-    },
-    {
       "id": 6270,
-      "rank": 5,
+      "rank": 4,
       "totalViews": 99862
     },
     {
       "id": 4110,
-      "rank": 6,
+      "rank": 5,
       "totalViews": 84076
     },
     {
       "id": 5170,
-      "rank": 7,
+      "rank": 6,
       "totalViews": 74178
     },
     {
       "id": 5035,
-      "rank": 8,
+      "rank": 7,
       "totalViews": 71279
     },
     {
-      "id": 4568,
-      "rank": 9,
-      "totalViews": 49609
-    },
-    {
       "id": 4827,
-      "rank": 10,
+      "rank": 8,
       "totalViews": 46989
     },
     {
       "id": 4352,
-      "rank": 11,
+      "rank": 9,
       "totalViews": 41440
     },
     {
       "id": 8237,
-      "rank": 12,
+      "rank": 10,
       "totalViews": 34342
     },
     {
       "id": 4484,
-      "rank": 13,
+      "rank": 11,
       "totalViews": 31420
     },
     {
       "id": 4722,
-      "rank": 14,
+      "rank": 12,
       "totalViews": 29066
     },
     {
       "id": 5148,
-      "rank": 15,
+      "rank": 13,
       "totalViews": 28717
     },
     {
       "id": 5271,
-      "rank": 16,
+      "rank": 14,
       "totalViews": 27902
     },
     {
       "id": 5171,
-      "rank": 17,
+      "rank": 15,
       "totalViews": 27067
     },
     {
       "id": 4600,
-      "rank": 18,
+      "rank": 16,
       "totalViews": 26664
     },
     {
       "id": 5110,
-      "rank": 19,
+      "rank": 17,
       "totalViews": 24339
     },
     {
       "id": 5449,
-      "rank": 20,
+      "rank": 18,
       "totalViews": 21581
+    },
+    {
+      "id": 4557,
+      "rank": 19,
+      "totalViews": 20908
+    },
+    {
+      "id": 4968,
+      "rank": 20,
+      "totalViews": 20561
     }
   ]
 }

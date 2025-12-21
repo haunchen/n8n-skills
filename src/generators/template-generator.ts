@@ -64,37 +64,37 @@ export const CATEGORY_INFO: Record<TemplateCategory, CategoryInfo> = {
     id: TemplateCategory.AI_CHATBOTS,
     name: 'AI & Chatbots',
     description: 'AI Agents, RAG systems, intelligent conversational bots',
-    icon: '🤖',
+    icon: '',
   },
   [TemplateCategory.SOCIAL_MEDIA]: {
     id: TemplateCategory.SOCIAL_MEDIA,
     name: 'Social Media & Video',
     description: 'TikTok, Instagram, YouTube automation and AI video generation',
-    icon: '📱',
+    icon: '',
   },
   [TemplateCategory.DATA_PROCESSING]: {
     id: TemplateCategory.DATA_PROCESSING,
     name: 'Data Processing & Analysis',
     description: 'Google Sheets, database integration, data analysis workflows',
-    icon: '📊',
+    icon: '',
   },
   [TemplateCategory.COMMUNICATION]: {
     id: TemplateCategory.COMMUNICATION,
     name: 'Communication & Collaboration',
     description: 'Email, WhatsApp, Telegram, Slack automation',
-    icon: '💬',
+    icon: '',
   },
   [TemplateCategory.AUTOMATION]: {
     id: TemplateCategory.AUTOMATION,
     name: 'Automation & Integration',
     description: 'Workflow automation, API integration, scheduled tasks',
-    icon: '⚡',
+    icon: '',
   },
   [TemplateCategory.LEARNING]: {
     id: TemplateCategory.LEARNING,
     name: 'Learning & Teaching',
     description: 'n8n introductory tutorials, interactive lessons',
-    icon: '📚',
+    icon: '',
   },
 };
 
@@ -212,9 +212,9 @@ export class TemplateGenerator {
     const sections = [
       `# ${template.name}`,
       '',
-      `> ${CATEGORY_INFO[category].icon} **Category**: ${CATEGORY_INFO[category].name}`,
-      `> 👁️ **Views**: ${template.totalViews.toLocaleString()}`,
-      `> 📅 **Created**: ${new Date(template.createdAt).toLocaleDateString('en-US')}`,
+      `> **Category**: ${CATEGORY_INFO[category].name}`,
+      `> **Views**: ${template.totalViews.toLocaleString()}`,
+      `> **Created**: ${new Date(template.createdAt).toLocaleDateString('en-US')}`,
       '',
       '## Description',
       '',
@@ -250,7 +250,7 @@ export class TemplateGenerator {
       '',
       `- **Name**: ${template.user.name}`,
       `- **Username**: @${template.user.username}`,
-      template.user.verified ? `- ✓ Verified user` : '',
+      template.user.verified ? `- Verified user` : '',
       '',
       '## Related Links',
       '',
@@ -288,7 +288,7 @@ export class TemplateGenerator {
     const info = CATEGORY_INFO[category];
 
     const sections = [
-      `# ${info.icon} ${info.name}`,
+      `# ${info.name}`,
       '',
       info.description,
       '',
@@ -318,10 +318,11 @@ export class TemplateGenerator {
    * Generate main index
    */
   generateMainIndex(categorizedTemplates: Map<TemplateCategory, Template[]>): string {
+    const totalCount = Array.from(categorizedTemplates.values()).reduce((sum, arr) => sum + arr.length, 0);
     const sections = [
       '# n8n Workflow Templates',
       '',
-      'We have collected 100 popular workflow templates from n8n.io, organized by use case categories.',
+      `We have collected ${totalCount} popular workflow templates from n8n.io, organized by use case categories.`,
       '',
       '## Category Navigation',
       '',
@@ -344,7 +345,7 @@ export class TemplateGenerator {
       // Only display categories with templates
       if (templates.length > 0) {
         sections.push(
-          `### ${info.icon} [${info.name}](${category}/README.md)`,
+          `### [${info.name}](${category}/README.md)`,
           '',
           info.description,
           '',

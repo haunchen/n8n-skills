@@ -1,6 +1,6 @@
 {
   "name": "n8n-skills",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "n8n workflow automation skill pack for AI assistants",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
     "build": "tsc",
     "build:full": "npm run build && node dist/scripts/build.js",
     "dev": "tsc --watch",
-    "clean": "rm -rf dist output data/cache",
+    "clean": "rm -rf dist output && find data/cache -type f ! -name 'community-nodes.json' -delete 2>/dev/null || true",
     "rebuild": "npm run clean && npm run build",
     "test": "jest",
     "test:watch": "jest --watch",

@@ -315,7 +315,8 @@ class SkillBuilder {
   private async generateMainSkill(
     topNodes: EnrichedNodeInfo[],
     usageStats: NodeUsageStats,
-    resourceFiles: ResourceFile[]
+    resourceFiles: ResourceFile[],
+    templateCount: number = 20
   ): Promise<void> {
     logger.info('===== Step 5: Generating main Skill document =====');
 
@@ -324,7 +325,7 @@ class SkillBuilder {
     const skillConfig: SkillConfig = {
       name: 'n8n-skills',
       version: this.getProjectVersion(),
-      description: 'n8n workflow automation knowledge base. Use this skill to find n8n node information, understand node functionality and usage, learn workflow patterns, and get node configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
+      description: 'n8n workflow automation knowledge base. Provides n8n node information, node functionality details, workflow patterns, and configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
       topNodesCount: this.config.max_nodes_in_main_skill,
     };
 
@@ -334,6 +335,7 @@ class SkillBuilder {
       nodeUsageStats: usageStats,
       resourceFiles,
       config: skillConfig,
+      templateCount,
     });
 
     const outputPath = path.resolve(this.projectRoot, 'output/Skill.md');
@@ -343,6 +345,42 @@ class SkillBuilder {
     const charCount = content.length;
     logger.success(`Main Skill document generated: ${outputPath}`);
     logger.info(`File size: ${lineCount} lines, ${charCount} characters`);
+
+    // Generate guide files
+    await this.generateGuideFiles(generator, topNodes, usageStats, resourceFiles);
+  }
+
+  /**
+   * Generate guide files (how-to-find-nodes.md and usage-guide.md)
+   */
+  private async generateGuideFiles(
+    generator: SkillGenerator,
+    topNodes: EnrichedNodeInfo[],
+    usageStats: NodeUsageStats,
+    resourceFiles: ResourceFile[]
+  ): Promise<void> {
+    logger.info('===== Step 5.5: Generating guide files =====');
+
+    const guidesDir = path.resolve(this.projectRoot, 'output/resources/guides');
+    await this.ensureDirectory('output/resources/guides');
+
+    // Generate how-to-find-nodes.md
+    const howToFindContent = generator.generateHowToFindNodesFile(topNodes, usageStats);
+    await fs.writeFile(
+      path.join(guidesDir, 'how-to-find-nodes.md'),
+      howToFindContent,
+      'utf-8'
+    );
+    logger.success('Generated: how-to-find-nodes.md');
+
+    // Generate usage-guide.md
+    const usageGuideContent = generator.generateUsageGuideFile(resourceFiles);
+    await fs.writeFile(
+      path.join(guidesDir, 'usage-guide.md'),
+      usageGuideContent,
+      'utf-8'
+    );
+    logger.success('Generated: usage-guide.md');
   }
 
   /**
@@ -468,15 +506,16 @@ class SkillBuilder {
 
   /**
    * Step 7: Generate template files
+   * @returns The number of templates generated
    */
-  private async generateTemplates(): Promise<void> {
+  private async generateTemplates(): Promise<number> {
     logger.info('===== Step 7: Generating template files =====');
 
     // Check for templates cache
     const templates = await this.loadCache('templates.json');
     if (!templates || !Array.isArray(templates) || templates.length === 0) {
       logger.warn('No templates cache found, skipping template generation');
-      return;
+      return 0;
     }
 
     logger.info(`Found ${templates.length} templates`);
@@ -589,6 +628,8 @@ class SkillBuilder {
     // Generate files
     await generator.generate(enhancedTemplates);
     logger.success('Template files generation completed');
+
+    return enhancedTemplates.length;
   }
 
 
@@ -804,13 +845,13 @@ class SkillBuilder {
       await this.generateCompatibilityMatrixFile(compatibilityMatrix, nodeConnectionInfoList.slice(0, 50));
 
       // Step 5: Generate template files
-      await this.generateTemplates();
+      const templateCount = await this.generateTemplates();
 
       // Step 5.5: Generate community node documentation
       await this.generateCommunityDocs();
 
       // Step 6: Generate main Skill document
-      await this.generateMainSkill(topNodes, usageStats, resourceFiles);
+      await this.generateMainSkill(topNodes, usageStats, resourceFiles, templateCount);
 
       // Display statistics
       this.printStats();

@@ -26,11 +26,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 更新 n8n 資料：
 - `npm run update` - 更新 n8n 節點資料
 - `npm run update:check` - 檢查更新但不實際執行（dry-run）
+- `npm run update:community` - 更新社群節點資料（從 npm 搜尋熱門社群套件並解析節點詳情）
+- `npm run update:community:check` - 檢查社群節點更新但不實際執行
 - `npm run update:website` - 更新網站資料（節點數量、n8n 版本、更新日期等）
 
 ## 核心架構
 
-專案採用模組化架構，分為五個主要層級：
+專案採用模組化架構，分為七個主要層級：
 
 ### 1. Collectors（收集器）- src/collectors/
 
@@ -38,7 +40,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - NpmCollector: 從 n8n NPM 套件載入節點類別和基本資訊
 - ApiCollector: 從 n8n.io API 收集範本和使用統計
-- DocsCollector: 從 n8n-docs GitHub 儲存庫收集節點文件
+- CommunityCollector: 從 npm registry 搜尋熱門社群節點套件，並動態安裝解析節點詳情
 
 ### 2. Parsers（解析器）- src/parsers/
 
@@ -61,18 +63,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 生成最終輸出檔案：
 
-- SkillGenerator: 生成主要的 Skill.md 檔案，包含前 N 個最重要的節點
-- ResourceGenerator: 為每個節點生成獨立的詳細文件到 resources/ 目錄
+- SkillGenerator: 生成主要的 Skill.md 檔案，包含前 N 個最重要的節點，以及 guides/ 目錄下的指南檔案
+- ResourceGenerator: 為每個節點生成獨立的詳細文件到 resources/ 目錄，採用分層合併策略
 - TemplateGenerator: 從收集的範本生成 templates/ 文件
 - ConnectionRuleGenerator: 生成節點相容性矩陣文件，說明節點間的連接規則
-- TemplateFormatter: 提供 Markdown 格式化工具
+- CommunityGenerator: 為社群節點生成 community/ 目錄下的文件
 
-### 5. Scripts（建置腳本）- scripts/
+### 5. Analyzers（分析器）- src/analyzers/
+
+分析節點和工作流程資料：
+
+- CompatibilityAnalyzer: 分析節點間的輸入輸出相容性，建立相容性矩陣
+- WorkflowAnalyzer: 分析工作流程結構和節點使用模式
+
+### 6. Validators（驗證器）- src/validators/
+
+驗證生成的輸出：
+
+- CompletenessChecker: 檢查輸出檔案的完整性
+- SkillValidator: 驗證 Skill Pack 格式正確性
+
+### 7. Scripts（建置腳本）- scripts/
 
 編排完整的建置流程：
 
 - build.ts: 主要建置編排腳本，依序執行收集、解析、組織和生成步驟，使用快取機制加速重複建置
 - update-n8n-data.ts: 更新 n8n 節點資料的腳本
+- update-community.ts: 更新社群節點資料，從 npm 搜尋熱門套件並解析節點詳情存入快取
 - update-website.ts: 更新專案網站的統計資料（節點數量、n8n 版本、更新時間等）
 - validate-output.ts: 驗證輸出檔案完整性和正確性
 
@@ -91,22 +108,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 3. 收集使用統計（api-collector）：從 n8n.io API 取得範本和使用次數
 4. 組織和排序（priority-ranker）：計算優先級分數，選出前 N 個主要節點
 5. 建立相容性矩陣（compatibility-analyzer）：分析節點間的輸入輸出相容性
-6. 生成資源檔案（resource-generator）：為每個節點生成詳細文件
+6. 生成資源檔案（resource-generator）：使用分層合併策略，高優先級節點生成獨立檔案，低優先級節點合併為分類檔案
 7. 生成相容性矩陣文件（connection-rule-generator）：生成節點連接規則說明
 8. 獲取並生成範本檔案（template-generator）：從 n8n.io API 獲取前 20 個熱門範本並生成文件
-9. 生成主 Skill 文件（skill-generator）：生成 Skill.md
+9. 生成社群節點文件（community-generator）：讀取快取生成社群節點文件
+10. 生成主 Skill 文件和指南（skill-generator）：生成 Skill.md 和 guides/ 目錄下的指南檔案
 
 快取機制：
 - 建置過程會將中間結果儲存到 data/cache/，加速後續建置
-- 快取檔案包括：nodes.json、properties.json、usage-stats.json、templates.json、node-io-config.json、compatibility-matrix.json
-- 使用 `npm run clean` 清除快取
+- 快取檔案包括：nodes.json、properties.json、usage-stats.json、templates.json、node-io-config.json、compatibility-matrix.json、community-nodes.json
+- 使用 `npm run clean` 清除快取（但會保留 community-nodes.json，因為社群節點解析耗時較長）
 - CI 環境會自動偵測並啟用記憶體優化模式，定期觸發垃圾回收
 
 ## 設定檔
 
-- config/skill-config.json: Skill Pack 主要配置（版本、節點數量限制、分類定義）
+- config/skill-config.json: Skill Pack 主要配置（版本、節點數量限制、分類定義、分層合併策略設定）
 - config/priorities.json: 優先級評分權重和類別重要性設定
 - config/categories.json: 節點類別定義和分類規則
+- config/community-packages.json: 社群節點套件清單（由 update:community 自動生成）
 
 ## 輸出結構
 
@@ -115,9 +134,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 output/
 ├── Skill.md                      # 主要技能檔案（包含前 10 個最重要節點）
-├── validation-report.json        # 驗證報告（節點數量、分類統計等）
 └── resources/                    # 詳細節點文件
+    ├── INDEX.md                  # 所有節點的完整索引
     ├── compatibility-matrix.md   # 節點相容性矩陣（說明節點間連接規則）
+    ├── guides/                   # 使用指南
+    │   ├── how-to-find-nodes.md  # 如何查找節點
+    │   └── usage-guide.md        # 使用指南
+    ├── community/                # 社群節點文件
+    │   ├── README.md             # 社群節點索引
+    │   └── [package-name].md     # 各社群套件詳細文件
     ├── input/                    # 輸入類節點
     ├── output/                   # 輸出類節點
     ├── transform/                # 轉換類節點
@@ -138,6 +163,7 @@ TypeScript 編譯：
 - 節點載入使用動態 require，需處理不同套件的載入方式
 - 部分節點可能缺少文件或統計資料，需要容錯處理
 - API 收集會從 n8n.io 獲取範本資料，每次請求間隔 0.5 秒以避免過載
+- 社群節點收集採用動態安裝策略：安裝 → 解析 → 卸載，避免依賴衝突
 
 相容性矩陣功能：
 - 解析每個節點的輸入輸出類型（main、ai_agent、ai_tool、ai_document 等）
@@ -151,6 +177,8 @@ CI/CD 最佳化：
 
 生成的 Skill Pack：
 - 主 Skill.md 包含前 10 個（可設定於 config/skill-config.json）最重要節點的簡要資訊
-- resources/ 下的詳細文件按類別組織，供 AI 按需載入
+- resources/ 下的詳細文件按類別組織，採用分層策略：高優先級節點獨立檔案，低優先級節點合併為分類檔案
 - 包含節點相容性矩陣和前 20 個熱門工作流程範本
+- 包含前 30 個熱門社群節點套件的詳細文件
+- 包含使用指南（how-to-find-nodes.md、usage-guide.md）
 - 支援 Claude Code、Claude.ai Web 和 Claude Desktop
