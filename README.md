@@ -383,4 +383,4 @@ Visit [GitHub](https://github.com/haunchen/n8n-skill) now and start your n8n aut
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=haunchen/n8n-skill&type=Date)](https://star-history.com/#haunchen/n8n-skill&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=haunchen/n8n-skills&type=date&legend=top-left)](https://www.star-history.com/#haunchen/n8n-skills&type=date&legend=top-left)
