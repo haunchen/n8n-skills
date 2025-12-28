@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "n8n Skills - AI 助理的 n8n 工作流程知識庫",
-    "description": "讓 AI 助理成為你的 n8n 工作流程專家。包含 542 個節點的完整知識庫，支援 Claude Code、Claude.ai Web 和 Claude Desktop。",
+    "description": "讓 AI 助理成為你的 n8n 工作流程專家。包含 545 個節點的完整知識庫，支援 Claude Code、Claude.ai Web 和 Claude Desktop。",
     "keywords": "n8n, workflow automation, AI assistant, Claude, skill pack, n8n nodes, 工作流程自動化, n8n 節點"
   },
   "nav": {
@@ -14,7 +14,7 @@
     "license": "Open Source MIT License",
     "title": "n8n Skills",
     "subtitle": "讓 AI 助理成為你的 n8n 工作流程專家",
-    "description": "542 個節點的完整知識庫，定期更新，智慧排序"
+    "description": "545 個節點的完整知識庫，定期更新，智慧排序"
   },
   "stats": {
     "nodes": "n8n 節點",
@@ -38,7 +38,7 @@
     "title": "核心特色",
     "comprehensive": {
       "title": "全面的節點知識庫",
-      "description": "包含 542 個 n8n 節點的詳細文件，按照 6 個主要分類組織，支援最新的 n8n v2.0.3"
+      "description": "包含 545 個 n8n 節點的詳細文件，按照 6 個主要分類組織，支援最新的 n8n v2.1.4"
     },
     "multiPlatform": {
       "title": "多平台 AI 整合",
@@ -139,6 +139,6 @@
     "aboutMe": "關於我",
     "contactMe": "聯絡我",
     "copyright": "© 2025 法蘭克 All rights reserved.",
-    "version": "支援 n8n v2.0.3 | 最後更新：2025-12-21"
+    "version": "支援 n8n v2.1.4 | 最後更新：2025-12-28"
   }
 }

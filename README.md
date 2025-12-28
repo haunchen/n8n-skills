@@ -2,15 +2,15 @@
 
 [English](README.md) | [繁體中文](README.zh-TW.md)
 
-> Supported n8n version: v2.0.3
+> Supported n8n version: v2.1.4
 
-n8n Skills is an automation skill pack that enables AI assistants to directly understand and operate n8n workflows, covering comprehensive information on 542 nodes and 20 curated templates. Through n8n Skills, AI assistants can help you quickly design workflows and explore node functionalities, making workflow automation more intuitive, intelligent, and saving significant development time.
+n8n Skills is an automation skill pack that enables AI assistants to directly understand and operate n8n workflows, covering comprehensive information on 545 nodes and 20 curated templates. Through n8n Skills, AI assistants can help you quickly design workflows and explore node functionalities, making workflow automation more intuitive, intelligent, and saving significant development time.
 
 ## Why Choose n8n Skills
 
 n8n Skills provides a complete n8n Skill Pack solution for AI assistant workflow integration:
 
-- Covers detailed documentation and usage guides for 542 n8n nodes
+- Covers detailed documentation and usage guides for 545 n8n nodes
 - Provides 20 curated workflow templates covering common scenarios like AI chatbots, data processing, and communications
 - Multi-dimensional priority ranking system ensuring the most useful information is presented first
 - Node compatibility analysis to help design correct workflow connections
@@ -21,7 +21,7 @@ With n8n Skills, you can:
 - Quickly query any node's features, parameters, and configuration methods
 - Have AI assistants recommend suitable node combinations for specific tasks
 - Learn workflow design best practices and common patterns
-- Explore unlimited application possibilities with 542 nodes
+- Explore unlimited application possibilities with 545 nodes
 
 ## Who Should Use
 
@@ -271,7 +271,7 @@ Maintainer
 Version Information
 
 - Current Version: 1.2.0
-- Supported n8n Version: v2.0.3
+- Supported n8n Version: v2.1.4
 - Last Updated: December 2025
 - Release Frequency: Follows n8n major version updates
 
@@ -280,8 +280,8 @@ Project Statistics
 - Node Coverage: 542 built-in nodes
 - Community Packages: 30+ packages
 - Curated Templates: 20 templates
-- Output Files: 123 files
-- Total Documentation Size: 2.7 MB
+- Output Files: 125 files
+- Total Documentation Size: 2.6 MB
 - Supported Platforms: Claude Code, Claude.ai Web, Claude Desktop
 
 Technical Features
