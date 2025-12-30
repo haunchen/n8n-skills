@@ -696,7 +696,7 @@ export class SkillGenerator {
       '## This Skill Pack License',
       '',
       'This skill pack project is licensed under the MIT License.',
-      'See: https://github.com/haunchen/n8n-skill/blob/main/LICENSE',
+      'See: https://github.com/haunchen/n8n-skills/blob/main/LICENSE',
       '',
       '## Important Notice',
       '',

@@ -64,7 +64,7 @@ n8n 工作流程使用者
 
 ### 下載 n8n Skill Pack
 
-1. 前往本專案的 [GitHub Releases](https://github.com/haunc/n8n-skill/releases) 頁面
+1. 前往本專案的 [GitHub Releases](https://github.com/haunchen/n8n-skills/releases) 頁面
 2. 下載最新版本的 `n8n-skills-{版本號}.zip` 檔案
 3. 解壓縮後會得到以下檔案結構：
    ```
@@ -232,7 +232,7 @@ Skill 無法載入怎麼辦？
 
 - [Claude Skills 官方文件](https://support.claude.com/en/articles/12580051-teach-claude-your-way-of-working-using-skills)
 - [n8n 官方文件](https://docs.n8n.io)
-- [問題回報](https://github.com/haunc/n8n-skill/issues)
+- [問題回報](https://github.com/haunchen/n8n-skills/issues)
 
 ## 開發環境安裝
 
@@ -315,7 +315,7 @@ npm run typecheck
 
 問題回報與功能建議
 
-- 遇到問題？請到 [GitHub Issues](https://github.com/haunchen/n8n-skill/issues) 回報
+- 遇到問題？請到 [GitHub Issues](https://github.com/haunchen/n8n-skills/issues) 回報
 - 有功能建議？歡迎開啟新的 Issue 討論
 - 發現錯誤？請提供詳細的重現步驟
 
@@ -328,7 +328,7 @@ npm run typecheck
 
 保持聯繫
 
-- 追蹤專案的 [GitHub Releases](https://github.com/haunchen/n8n-skill/releases) 獲得最新版本通知
+- 追蹤專案的 [GitHub Releases](https://github.com/haunchen/n8n-skills/releases) 獲得最新版本通知
 - Star 本專案以支持我們的開發工作
 - 分享給需要的朋友和同事
 
@@ -363,13 +363,13 @@ MIT License - 詳見 [LICENSE](./LICENSE)
 
 立即下載
 
-前往 [GitHub Releases](https://github.com/haunchen/n8n-skill/releases) 下載最新版本的 n8n Skills，開始體驗 AI 輔助的工作流程設計！
+前往 [GitHub Releases](https://github.com/haunchen/n8n-skills/releases) 下載最新版本的 n8n Skills，開始體驗 AI 輔助的工作流程設計！
 
 加入社群
 
-- 在 [GitHub](https://github.com/haunchen/n8n-skill) 上 Star 本專案，支持我們的開發
-- 追蹤 [Releases](https://github.com/haunchen/n8n-skill/releases) 獲得最新版本通知
-- 到 [Issues](https://github.com/haunchen/n8n-skill/issues) 分享你的使用經驗或提出建議
+- 在 [GitHub](https://github.com/haunchen/n8n-skills) 上 Star 本專案，支持我們的開發
+- 追蹤 [Releases](https://github.com/haunchen/n8n-skills/releases) 獲得最新版本通知
+- 到 [Issues](https://github.com/haunchen/n8n-skills/issues) 分享你的使用經驗或提出建議
 
 貢獻你的想法
 
@@ -379,8 +379,8 @@ n8n Skills 是開源專案，我們歡迎任何形式的貢獻：
 - 提交程式碼改進
 - 分享你的使用案例
 
-立即前往 [GitHub](https://github.com/haunchen/n8n-skill)，開始你的 n8n 自動化技能之旅！
+立即前往 [GitHub](https://github.com/haunchen/n8n-skills)，開始你的 n8n 自動化技能之旅！
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=haunchen/n8n-skill&type=Date)](https://star-history.com/#haunchen/n8n-skill&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=haunchen/n8n-skills&type=Date)](https://star-history.com/#haunchen/n8n-skills&Date)

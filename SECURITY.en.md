@@ -23,7 +23,7 @@ Please do not report security vulnerabilities in public GitHub Issues.
 
 Please report security vulnerabilities privately through:
 
-1. Use the [Security Advisories](https://github.com/haunchen/n8n-skill/security/advisories/new) feature on GitHub
+1. Use the [Security Advisories](https://github.com/haunchen/n8n-skills/security/advisories/new) feature on GitHub
 2. Or contact project maintainers directly
 
 ### What to Include in Your Report

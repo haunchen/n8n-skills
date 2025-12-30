@@ -21,7 +21,7 @@
 
 請透過以下方式私下回報安全漏洞：
 
-1. 在 GitHub 上使用 [Security Advisories](https://github.com/haunchen/n8n-skill/security/advisories/new) 功能
+1. 在 GitHub 上使用 [Security Advisories](https://github.com/haunchen/n8n-skills/security/advisories/new) 功能
 2. 或是直接聯繫專案維護者
 
 ### 回報內容應包含
