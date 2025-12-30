@@ -54,7 +54,7 @@
     },
     "structure": {
       "title": "Complete Resource Structure",
-      "description": "Main Skill.md provides quick reference, resources/ directory contains detailed documentation and templates organized by category"
+      "description": "Main SKILL.md provides quick reference, resources/ directory contains detailed documentation and templates organized by category"
     },
     "integration": {
       "title": "Multi-Platform AI Integration",
@@ -139,6 +139,6 @@
     "aboutMe": "About Me",
     "contactMe": "Contact Me",
     "copyright": "© 2025 Frank Chen. All rights reserved.",
-    "version": "Supports n8n v2.1.4 | Last updated: 2025-12-28"
+    "version": "Supports n8n v2.1.4 | Last updated: 2025-12-30"
   }
 }

@@ -74,8 +74,8 @@ jobs:
       - name: Check file size
         run: |
           echo "Checking main skill pack file size..."
-          if [ -f "output/Skill.md" ]; then
-            SIZE=$(wc -c < output/Skill.md)
+          if [ -f "output/SKILL.md" ]; then
+            SIZE=$(wc -c < output/SKILL.md)
             SIZE_MB=$((SIZE / 1024 / 1024))
             echo "Main skill pack size: ${SIZE_MB} MB"
             if [ $SIZE_MB -gt 5 ]; then

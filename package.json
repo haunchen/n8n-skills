@@ -1,6 +1,6 @@
 {
   "name": "n8n-skills",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "n8n workflow automation skill pack for AI assistants",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

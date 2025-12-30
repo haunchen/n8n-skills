@@ -83,7 +83,7 @@ jobs:
           rm -rf n8n-skills-pack/n8n-skills/skills/n8n-skills/resources/*
 
           # Copy new content
-          cp n8n-skills/output/Skill.md n8n-skills-pack/n8n-skills/skills/n8n-skills/SKILL.md
+          cp n8n-skills/output/SKILL.md n8n-skills-pack/n8n-skills/skills/n8n-skills/SKILL.md
           cp -r n8n-skills/output/resources/* n8n-skills-pack/n8n-skills/skills/n8n-skills/resources/
 
           echo "Content synced successfully"

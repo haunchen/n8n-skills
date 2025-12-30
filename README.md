@@ -69,7 +69,7 @@ This project generates the n8n Skills automation skill pack, allowing you to use
 3. After extraction, you will get the following file structure:
    ```
    n8n-skills/
-   ├── Skill.md              # Main skill file
+   ├── SKILL.md              # Main skill file
    └── resources/            # Detailed node documentation
        ├── input/            # Input category nodes
        ├── output/           # Output category nodes
@@ -94,7 +94,7 @@ Suitable for developers using Claude Code in the terminal, loading n8n Skills th
    mkdir -p .claude/skills/n8n-skills
    ```
 
-2. Copy the extracted `Skill.md` and `resources/` directory to that directory:
+2. Copy the extracted `SKILL.md` and `resources/` directory to that directory:
    ```bash
    cp -r n8n-skills/* .claude/skills/n8n-skills/
    ```
@@ -105,7 +105,7 @@ Suitable for developers using Claude Code in the terminal, loading n8n Skills th
    └── .claude/
        └── skills/
            └── n8n-skills/
-               ├── Skill.md
+               ├── SKILL.md
                └── resources/
    ```
 
@@ -205,14 +205,14 @@ Accelerated Learning: From zero foundation to mastering best practices, systemat
 
 Skill won't load?
 
-- Confirm the `Skill.md` file is in the correct location
+- Confirm the `SKILL.md` file is in the correct location
 - Check if the file name is correct (case-sensitive)
 - Verify the `resources/` directory structure is complete
 - Restart the Claude application or refresh the webpage
 
 File structure errors
 
-- Ensure `Skill.md` and `resources/` are in the same directory level
+- Ensure `SKILL.md` and `resources/` are in the same directory level
 - Do not modify the file structure inside the `resources/` directory
 - If there are multiple directory levels after extraction, move the contents to the correct location
 

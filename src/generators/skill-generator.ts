@@ -7,7 +7,7 @@
 
 /**
  * Skill Generator
- * Generate the main Skill.md file
+ * Generate the main SKILL.md file
  *
  * This generator combines all collected and processed data to generate a structured Markdown file
  */
@@ -126,7 +126,7 @@ const COMMON_PATTERNS = [
 ];
 
 /**
- * Skill.md generator
+ * SKILL.md generator
  */
 export class SkillGenerator {
   private config: Required<SkillConfig>;
@@ -136,7 +136,7 @@ export class SkillGenerator {
   }
 
   /**
-   * Generate complete Skill.md content
+   * Generate complete SKILL.md content
    */
   generate(input: SkillGeneratorInput): string {
     const totalNodes = input.nodes.length;
@@ -171,11 +171,24 @@ export class SkillGenerator {
       `covering ${totalNodes} nodes`
     );
 
+    // Escape double quotes in description for valid YAML
+    const escapedDescription = description.replace(/"/g, '\\"');
+
+    // Read package.json for version and license
+    // Path is relative to compiled dist/src/generators/
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const packageJson = require('../../../package.json');
+    const version = packageJson.version;
+    const license = packageJson.license;
+
     return [
       '---',
       `name: ${this.config.name}`,
-      `description: ${description}`,
-      `allowed-tools: Read, Glob, Grep`,
+      `description: "${escapedDescription}"`,
+      `license: ${license}`,
+      'metadata:',
+      '  author: Frank Chen',
+      `  version: "${version}"`,
       '---',
     ].join('\n');
   }
@@ -724,7 +737,7 @@ export class SkillGenerator {
 }
 
 /**
- * Convenience function: quickly generate Skill.md
+ * Convenience function: quickly generate SKILL.md
  */
 export function generateSkillMarkdown(
   input: SkillGeneratorInput
@@ -743,6 +756,6 @@ export async function generateSkillFile(
   const { writeFile } = await import('fs/promises');
   const content = generateSkillMarkdown(input);
   await writeFile(outputPath, content, 'utf-8');
-  console.log(`Skill.md generated: ${outputPath}`);
+  console.log(`SKILL.md generated: ${outputPath}`);
   console.log(`Total lines: ${content.split('\n').length}`);
 }

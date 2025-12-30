@@ -42,7 +42,7 @@ class OutputValidator {
   // Validation rule settings
   private readonly MAX_FILE_SIZE = 1024 * 1024; // 1MB
   private readonly REQUIRED_FILES = [
-    'Skill.md',
+    'SKILL.md',
   ];
 
   constructor() {

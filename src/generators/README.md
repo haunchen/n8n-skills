@@ -7,7 +7,7 @@
 ```
 generators/
 ├── index.ts                    # 模組導出
-├── skill-generator.ts          # 主要 Skill.md 生成器
+├── skill-generator.ts          # 主要 SKILL.md 生成器
 ├── skill-generator.test.ts     # Skill 生成器測試
 ├── resource-generator.ts       # 資源檔案生成器
 ├── template-formatter.ts       # 範本格式化器
@@ -18,7 +18,7 @@ generators/
 
 ### skill-generator.ts
 
-生成主要的 Skill.md 文件，包含：
+生成主要的 SKILL.md 文件，包含：
 - YAML frontmatter
 - n8n 概述
 - 快速開始指南
@@ -47,7 +47,7 @@ await generateSkillFile({
     version: '1.0.0',
     topNodesCount: 50,
   }
-}, './output/Skill.md');
+}, './output/SKILL.md');
 ```
 
 ### resource-generator.ts
@@ -142,7 +142,7 @@ ApiCollector → NodeUsageStats
       ↓
 組合 → EnrichedNodeInfo[]
       ↓
-SkillGenerator → Skill.md
+SkillGenerator → SKILL.md
       ↓
 ResourceGenerator → resources/*.md
 ```

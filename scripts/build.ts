@@ -338,7 +338,7 @@ class SkillBuilder {
       templateCount,
     });
 
-    const outputPath = path.resolve(this.projectRoot, 'output/Skill.md');
+    const outputPath = path.resolve(this.projectRoot, 'output/SKILL.md');
     await fs.writeFile(outputPath, content, 'utf-8');
 
     const lineCount = content.split('\n').length;

@@ -63,7 +63,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 生成最終輸出檔案：
 
-- SkillGenerator: 生成主要的 Skill.md 檔案，包含前 N 個最重要的節點，以及 guides/ 目錄下的指南檔案
+- SkillGenerator: 生成主要的 SKILL.md 檔案，包含前 N 個最重要的節點，以及 guides/ 目錄下的指南檔案
 - ResourceGenerator: 為每個節點生成獨立的詳細文件到 resources/ 目錄，採用分層合併策略
 - TemplateGenerator: 從收集的範本生成 templates/ 文件
 - ConnectionRuleGenerator: 生成節點相容性矩陣文件，說明節點間的連接規則
@@ -112,7 +112,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 7. 生成相容性矩陣文件（connection-rule-generator）：生成節點連接規則說明
 8. 獲取並生成範本檔案（template-generator）：從 n8n.io API 獲取前 20 個熱門範本並生成文件
 9. 生成社群節點文件（community-generator）：讀取快取生成社群節點文件
-10. 生成主 Skill 文件和指南（skill-generator）：生成 Skill.md 和 guides/ 目錄下的指南檔案
+10. 生成主 Skill 文件和指南（skill-generator）：生成 SKILL.md 和 guides/ 目錄下的指南檔案
 
 快取機制：
 - 建置過程會將中間結果儲存到 data/cache/，加速後續建置
@@ -133,7 +133,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 output/
-├── Skill.md                      # 主要技能檔案（包含前 10 個最重要節點）
+├── SKILL.md                      # 主要技能檔案（包含前 10 個最重要節點）
 └── resources/                    # 詳細節點文件
     ├── INDEX.md                  # 所有節點的完整索引
     ├── compatibility-matrix.md   # 節點相容性矩陣（說明節點間連接規則）
@@ -176,7 +176,7 @@ CI/CD 最佳化：
 - 建置失敗時會嘗試從快取恢復，提高容錯性
 
 生成的 Skill Pack：
-- 主 Skill.md 包含前 10 個（可設定於 config/skill-config.json）最重要節點的簡要資訊
+- 主 SKILL.md 包含前 10 個（可設定於 config/skill-config.json）最重要節點的簡要資訊
 - resources/ 下的詳細文件按類別組織，採用分層策略：高優先級節點獨立檔案，低優先級節點合併為分類檔案
 - 包含節點相容性矩陣和前 20 個熱門工作流程範本
 - 包含前 30 個熱門社群節點套件的詳細文件

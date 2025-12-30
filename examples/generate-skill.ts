@@ -1,7 +1,7 @@
 /**
- * Skill.md 生成範例
+ * SKILL.md 生成範例
  *
- * 此腳本示範如何使用 SkillGenerator 生成完整的 Skill.md 文件
+ * 此腳本示範如何使用 SkillGenerator 生成完整的 SKILL.md 文件
  *
  * 使用方式:
  *   npm run build
@@ -14,7 +14,7 @@ import { ApiCollector } from '../src/collectors/api-collector';
 import { generateSkillFile, type SkillGeneratorInput } from '../src/generators';
 
 async function main() {
-  console.log('開始生成 Skill.md...\n');
+  console.log('開始生成 SKILL.md...\n');
 
   // 步驟 1: 從 npm 套件收集節點資訊
   console.log('1. 從 npm 套件收集節點資訊...');
@@ -45,8 +45,8 @@ async function main() {
   }));
   console.log(`   準備 ${resourceFiles.length} 個資源檔案索引\n`);
 
-  // 步驟 4: 生成 Skill.md
-  console.log('4. 生成 Skill.md...');
+  // 步驟 4: 生成 SKILL.md
+  console.log('4. 生成 SKILL.md...');
   const input: SkillGeneratorInput = {
     nodes: nodes.map(node => ({
       ...node,
@@ -66,11 +66,11 @@ async function main() {
     },
   };
 
-  const outputPath = resolve(__dirname, '../../output/Skill.md');
+  const outputPath = resolve(__dirname, '../../output/SKILL.md');
   await generateSkillFile(input, outputPath);
 
   console.log('\n完成！');
-  console.log(`Skill.md 已生成至: ${outputPath}`);
+  console.log(`SKILL.md 已生成至: ${outputPath}`);
 }
 
 // 執行主函數

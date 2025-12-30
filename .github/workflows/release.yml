@@ -97,8 +97,8 @@ jobs:
             exit 1
           fi
 
-          if [ ! -f "output/Skill.md" ]; then
-            echo "Error: output/Skill.md file does not exist"
+          if [ ! -f "output/SKILL.md" ]; then
+            echo "Error: output/SKILL.md file does not exist"
             exit 1
           fi
 
@@ -109,7 +109,7 @@ jobs:
         if: steps.check_tag.outputs.exists == 'false'
         working-directory: output
         run: |
-          # Create zip file, Skill.md will be in root
+          # Create zip file, SKILL.md will be in root
           zip -r n8n-skills-${{ steps.version.outputs.version }}.zip .
 
           # Display zip contents
@@ -161,7 +161,7 @@ jobs:
 
           1. Download \`n8n-skills-${{ steps.version.outputs.version }}.zip\`
           2. Extract to your project directory
-          3. Load the \`Skill.md\` file in your AI assistant
+          3. Load the \`SKILL.md\` file in your AI assistant
           4. Start exploring n8n node information
 
           ### Contents

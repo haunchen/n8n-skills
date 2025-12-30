@@ -64,7 +64,7 @@ export interface NodeInfo {
  * Category organizer
  *
  * Based on config/categories.json definitions, categorizes nodes into:
- * - Top nodes (Top 50): Goes into main Skill.md
+ * - Top nodes (Top 50): Goes into main SKILL.md
  * - Secondary nodes: Goes into resources/ directory
  * - Uncategorized nodes: Requires manual processing
  */

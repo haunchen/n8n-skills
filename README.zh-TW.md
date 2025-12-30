@@ -69,7 +69,7 @@ n8n 工作流程使用者
 3. 解壓縮後會得到以下檔案結構：
    ```
    n8n-skills/
-   ├── Skill.md              # 主要技能檔案
+   ├── SKILL.md              # 主要技能檔案
    └── resources/            # 詳細節點文件
        ├── input/            # 輸入類節點
        ├── output/           # 輸出類節點
@@ -94,7 +94,7 @@ n8n 工作流程使用者
    mkdir -p .claude/skills/n8n-skills
    ```
 
-2. 將解壓縮的 `Skill.md` 和 `resources/` 目錄複製到該目錄：
+2. 將解壓縮的 `SKILL.md` 和 `resources/` 目錄複製到該目錄：
    ```bash
    cp -r n8n-skills/* .claude/skills/n8n-skills/
    ```
@@ -105,7 +105,7 @@ n8n 工作流程使用者
    └── .claude/
        └── skills/
            └── n8n-skills/
-               ├── Skill.md
+               ├── SKILL.md
                └── resources/
    ```
 
@@ -205,14 +205,14 @@ n8n 工作流程使用者
 
 Skill 無法載入怎麼辦？
 
-- 確認 `Skill.md` 檔案在正確的位置
+- 確認 `SKILL.md` 檔案在正確的位置
 - 檢查檔案名稱是否正確（區分大小寫）
 - 確認 `resources/` 目錄結構完整
 - 重新啟動 Claude 應用程式或重新整理網頁
 
 檔案結構錯誤
 
-- 確保 `Skill.md` 和 `resources/` 在同一層目錄
+- 確保 `SKILL.md` 和 `resources/` 在同一層目錄
 - 不要修改 `resources/` 目錄內的檔案結構
 - 如果解壓縮後有多層目錄，請將內容物移到正確位置
 

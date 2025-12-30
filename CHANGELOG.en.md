@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Implemented node layered merging strategy, significantly reducing output file count
-- Optimized Skill.md content for better Claude understanding and file searching
+- Optimized SKILL.md content for better Claude understanding and file searching
 
 ## [1.1.0] - 2025-11-03
 
@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Priority ranking system (based on usage frequency, documentation completeness, community popularity)
 - Category organizer (core, app, trigger, ai, database, utility)
 - Node grouper (by functional groups and usage frequency)
-- Skill.md main file generator
+- SKILL.md main file generator
 - Resource file generator (resources/*.md)
 - Validators (Skill format validation, completeness checking)
 - Support for n8n v1.117.2

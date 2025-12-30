@@ -77,7 +77,7 @@ describe('SkillGenerator', () => {
   };
 
   describe('generate', () => {
-    it('should generate valid Skill.md content', () => {
+    it('should generate valid SKILL.md content', () => {
       const generator = new SkillGenerator(mockInput.config);
       const content = generator.generate(mockInput);
 

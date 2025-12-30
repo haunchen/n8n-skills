@@ -7,7 +7,7 @@
 
 /**
  * Skill Validator
- * Validates Skill.md file format and structure
+ * Validates SKILL.md file format and structure
  */
 
 import * as logger from '../utils/logger';
@@ -70,14 +70,13 @@ const REQUIRED_SECTIONS = [
 const REQUIRED_FRONTMATTER_FIELDS = [
   'name',
   'description',
-  'version',
 ];
 
 /**
- * Validate Skill.md file
+ * Validate SKILL.md file
  */
 export function validate(content: string): ValidationResult {
-  logger.info('Starting Skill.md file format validation');
+  logger.info('Starting SKILL.md file format validation');
 
   const errors: ValidationError[] = [];
   const warnings: ValidationWarning[] = [];
@@ -124,7 +123,7 @@ export function validate(content: string): ValidationResult {
   const success = errors.length === 0;
 
   if (success) {
-    logger.success('Skill.md file format validation passed');
+    logger.success('SKILL.md file format validation passed');
   } else {
     logger.error(`Found ${errors.length} error(s)`);
   }
@@ -475,7 +474,7 @@ function collectStats(lines: string[], hasValidFrontmatter: boolean): SkillStats
 export function formatValidationResult(result: ValidationResult): string {
   const output: string[] = [];
 
-  output.push('=== Skill.md Validation Result ===\n');
+  output.push('=== SKILL.md Validation Result ===\n');
 
   if (result.stats) {
     output.push('File Statistics:');
