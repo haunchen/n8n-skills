@@ -64,7 +64,7 @@ This project generates the n8n Skills automation skill pack, allowing you to use
 
 ### Download n8n Skill Pack
 
-1. Go to the [GitHub Releases](https://github.com/haunc/n8n-skill/releases) page of this project
+1. Go to the [GitHub Releases](https://github.com/haunchen/n8n-skills/releases) page of this project
 2. Download the latest version of the `n8n-skills-{version}.zip` file
 3. After extraction, you will get the following file structure:
    ```
@@ -232,7 +232,7 @@ How to update to a new version
 
 - [Claude Skills Official Documentation](https://support.claude.com/en/articles/12580051-teach-claude-your-way-of-working-using-skills)
 - [n8n Official Documentation](https://docs.n8n.io)
-- [Issue Reporting](https://github.com/haunc/n8n-skill/issues)
+- [Issue Reporting](https://github.com/haunchen/n8n-skills/issues)
 
 ## Development Environment Setup
 
@@ -266,7 +266,7 @@ npm run typecheck
 Maintainer
 
 - Frank Chen ([@haunchen](https://github.com/haunchen))
-- Project Homepage: https://github.com/haunchen/n8n-skill
+- Project Homepage: https://github.com/haunchen/n8n-skills
 
 Version Information
 
@@ -315,20 +315,20 @@ We welcome your participation and feedback!
 
 Issue Reporting and Feature Suggestions
 
-- Encountered a problem? Please report it at [GitHub Issues](https://github.com/haunchen/n8n-skill/issues)
+- Encountered a problem? Please report it at [GitHub Issues](https://github.com/haunchen/n8n-skills/issues)
 - Have a feature suggestion? Feel free to open a new Issue for discussion
 - Found a bug? Please provide detailed reproduction steps
 
 Contributing
 
-- Check [CONTRIBUTING.md](./CONTRIBUTING.md) to learn how to contribute
+- Check [CONTRIBUTING.md](./CONTRIBUTING.en.md) to learn how to contribute
 - Fork the project and submit a Pull Request
 - Improvements to documentation, bug fixes, and new features are all welcome
 - Help translate into other languages
 
 Stay Connected
 
-- Follow [GitHub Releases](https://github.com/haunchen/n8n-skill/releases) for notifications about new versions
+- Follow [GitHub Releases](https://github.com/haunchen/n8n-skills/releases) for notifications about new versions
 - Star this project to support our development work
 - Share with friends and colleagues who might need it
 
@@ -363,13 +363,13 @@ Ready to let AI assistants help you design n8n workflows?
 
 Download Now
 
-Visit [GitHub Releases](https://github.com/haunchen/n8n-skill/releases) to download the latest version of n8n Skills and start experiencing AI-assisted workflow design!
+Visit [GitHub Releases](https://github.com/haunchen/n8n-skills/releases) to download the latest version of n8n Skills and start experiencing AI-assisted workflow design!
 
 Join the Community
 
-- Star this project on [GitHub](https://github.com/haunchen/n8n-skill) to support our development
-- Follow [Releases](https://github.com/haunchen/n8n-skill/releases) for notifications about new versions
-- Share your experience or suggestions at [Issues](https://github.com/haunchen/n8n-skill/issues)
+- Star this project on [GitHub](https://github.com/haunchen/n8n-skills) to support our development
+- Follow [Releases](https://github.com/haunchen/n8n-skills/releases) for notifications about new versions
+- Share your experience or suggestions at [Issues](https://github.com/haunchen/n8n-skills/issues)
 
 Contribute Your Ideas
 
@@ -379,7 +379,7 @@ n8n Skills is an open source project, and we welcome all forms of contribution:
 - Submit code improvements
 - Share your use cases
 
-Visit [GitHub](https://github.com/haunchen/n8n-skill) now and start your n8n automation skills journey!
+Visit [GitHub](https://github.com/haunchen/n8n-skills) now and start your n8n automation skills journey!
 
 ## Star History
 

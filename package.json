@@ -36,12 +36,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haunchen/n8n-skill.git"
+    "url": "https://github.com/haunchen/n8n-skills.git"
   },
   "bugs": {
-    "url": "https://github.com/haunchen/n8n-skill/issues"
+    "url": "https://github.com/haunchen/n8n-skills/issues"
   },
-  "homepage": "https://github.com/haunchen/n8n-skill#readme",
+  "homepage": "https://github.com/haunchen/n8n-skills#readme",
   "dependencies": {
     "@n8n/n8n-nodes-langchain": "^2.2.1",
     "n8n": "^2.1.4",
