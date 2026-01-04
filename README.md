@@ -2,7 +2,7 @@
 
 [English](README.md) | [繁體中文](README.zh-TW.md)
 
-> Supported n8n version: v2.1.4
+> Supported n8n version: v2.1.5
 
 n8n Skills is an automation skill pack that enables AI assistants to directly understand and operate n8n workflows, covering comprehensive information on 545 nodes and 20 curated templates. Through n8n Skills, AI assistants can help you quickly design workflows and explore node functionalities, making workflow automation more intuitive, intelligent, and saving significant development time.
 
@@ -271,8 +271,8 @@ Maintainer
 Version Information
 
 - Current Version: 1.2.0
-- Supported n8n Version: v2.1.4
-- Last Updated: December 2025
+- Supported n8n Version: v2.1.5
+- Last Updated: January 2026
 - Release Frequency: Follows n8n major version updates
 
 Project Statistics
@@ -281,7 +281,7 @@ Project Statistics
 - Community Packages: 30+ packages
 - Curated Templates: 20 templates
 - Output Files: 125 files
-- Total Documentation Size: 2.6 MB
+- Total Documentation Size: 2.7 MB
 - Supported Platforms: Claude Code, Claude.ai Web, Claude Desktop
 
 Technical Features

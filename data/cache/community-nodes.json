@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-07T00:40:55.050Z",
+  "lastUpdated": "2026-01-04T00:43:35.675Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -466,7 +466,7 @@
     },
     "n8n-nodes-mcp": {
       "packageName": "n8n-nodes-mcp",
-      "packageVersion": "0.1.33",
+      "packageVersion": "0.1.37",
       "nodes": [
         {
           "nodeType": "n8n-nodes-mcp.mcpClient",
@@ -582,6 +582,14 @@
                 "description": "Override the URL from credentials with a custom URL",
                 "required": false,
                 "default": ""
+              },
+              {
+                "name": "headersOverride",
+                "displayName": "Headers Override",
+                "type": "string",
+                "description": "Additional headers to send in the request in NAME=VALUE format, separated by newlines (e.g., Authorization=Bearer token). These will be merged with headers from credentials, with override headers taking precedence.",
+                "required": false,
+                "default": ""
               }
             ],
             "operations": [
@@ -622,7 +630,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 7
+            "totalPropertyCount": 8
           },
           "ioInfo": {
             "nodeType": "mcpClient",
@@ -2272,20 +2280,60 @@
     },
     "@mendable/n8n-nodes-firecrawl": {
       "packageName": "@mendable/n8n-nodes-firecrawl",
-      "packageVersion": "1.0.6",
+      "packageVersion": "2.0.0",
       "nodes": [
         {
           "nodeType": "@mendable/n8n-nodes-firecrawl.firecrawl",
           "displayName": "Firecrawl",
-          "description": "Get data from Firecrawl API",
+          "description": "Scrape, crawl, map, search, and extract structured data from websites using Firecrawl API",
           "version": "1",
           "properties": {
             "coreProperties": [
               {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The target webpage URL to scrape or crawl. Must be a valid HTTP/HTTPS URL (e.g., https://example.com). The URL should be publicly accessible or behind authentication configured in headers.",
+                "required": true,
+                "default": "https://firecrawl.dev"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The target webpage URL to scrape or crawl. Must be a valid HTTP/HTTPS URL (e.g., https://example.com). The URL should be publicly accessible or behind authentication configured in headers.",
+                "required": true,
+                "default": "https://firecrawl.dev"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The target webpage URL to scrape or crawl. Must be a valid HTTP/HTTPS URL (e.g., https://example.com). The URL should be publicly accessible or behind authentication configured in headers.",
+                "required": true,
+                "default": "https://firecrawl.dev"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The target webpage URL to scrape or crawl. Must be a valid HTTP/HTTPS URL (e.g., https://example.com). The URL should be publicly accessible or behind authentication configured in headers.",
+                "required": true,
+                "default": "https://firecrawl.dev"
+              },
+              {
                 "name": "query",
                 "displayName": "Query",
                 "type": "string",
-                "description": "The search query",
+                "description": "The search query to find relevant web pages. Use natural language like you would in a search engine. Results are scraped and returned with their content.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "urls",
+                "displayName": "URLs",
+                "type": "string",
+                "description": "URLs to scrape in batch. Accepts multiple formats: a single URL, multiple URLs separated by commas or newlines, a JSON array like [\"url1\", \"url2\"], or an array expression from a previous node. Each URL is scraped independently with the same settings. Example: \"https://example.com/page1, https://example.com/page2\" or paste one URL per line.",
                 "required": true,
                 "default": ""
               },
@@ -2302,30 +2350,6 @@
                 "displayName": "Batch ID",
                 "type": "string",
                 "description": "ID of the batch scrape job",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "prompt",
-                "displayName": "Prompt",
-                "type": "string",
-                "description": "Natural language prompt describing crawl behavior",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "crawlId",
-                "displayName": "Crawl ID",
-                "type": "string",
-                "description": "ID of the crawl job to cancel",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "crawlId",
-                "displayName": "Crawl ID",
-                "type": "string",
-                "description": "ID of the crawl job",
                 "required": true,
                 "default": ""
               },
@@ -2344,48 +2368,15 @@
                 "description": "ID of the crawl job to get status for",
                 "required": true,
                 "default": ""
-              },
-              {
-                "name": "extractId",
-                "displayName": "Extract ID",
-                "type": "string",
-                "description": "ID of the extract job to get status for",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "resource",
-                "displayName": "Resource",
-                "type": "hidden",
-                "required": false,
-                "default": "Default",
-                "options": [
-                  {
-                    "name": "Default",
-                    "value": "Default"
-                  }
-                ]
               }
             ],
             "operations": [
               {
-                "name": "Search and optionally scrape search results",
-                "value": "search"
-              },
-              {
-                "name": "Map a website and get urls",
-                "value": "map"
-              },
-              {
-                "name": "Scrape a url and get its content",
+                "name": "Scrape a URL and get its content as markdown, summary, or other formats",
                 "value": "scrape"
               },
               {
-                "name": "Crawl a website",
-                "value": "crawl"
-              },
-              {
-                "name": "Batch scrape multiple URLs",
+                "name": "Batch scrape multiple URLs simultaneously",
                 "value": "batchScrape"
               },
               {
@@ -2397,60 +2388,12 @@
                 "value": "batchScrapeErrors"
               },
               {
-                "name": "List active crawls",
-                "value": "crawlActive"
-              },
-              {
-                "name": "Preview crawl params from prompt",
-                "value": "crawlParamsPreview"
-              },
-              {
-                "name": "Cancel a crawl job",
-                "value": "cancelCrawl"
-              },
-              {
-                "name": "Get crawl errors",
-                "value": "getCrawlErrors"
-              },
-              {
                 "name": "Cancel batch scrape job",
                 "value": "cancelBatchScrape"
-              },
-              {
-                "name": "Get crawl status",
-                "value": "getCrawlStatus"
-              },
-              {
-                "name": "Extract Data",
-                "value": "extract"
-              },
-              {
-                "name": "Get Extract Status",
-                "value": "getExtractStatus"
-              },
-              {
-                "name": "Get team token usage",
-                "value": "teamTokenUsage"
-              },
-              {
-                "name": "Get team credit usage",
-                "value": "teamCreditUsage"
-              },
-              {
-                "name": "Get historical token usage",
-                "value": "teamTokenUsageHistorical"
-              },
-              {
-                "name": "Get team queue status",
-                "value": "teamQueueStatus"
-              },
-              {
-                "name": "Get historical credit usage",
-                "value": "creditUsageHistorical"
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 77
+            "totalPropertyCount": 98
           },
           "ioInfo": {
             "nodeType": "firecrawl",
@@ -7631,7 +7574,7 @@
     },
     "@tavily/n8n-nodes-tavily": {
       "packageName": "@tavily/n8n-nodes-tavily",
-      "packageVersion": "0.2.6",
+      "packageVersion": "0.4.0",
       "nodes": [
         {
           "nodeType": "@tavily/n8n-nodes-tavily.tavily",
@@ -7653,6 +7596,14 @@
                 "displayName": "URL",
                 "type": "string",
                 "description": "The root URL to begin the crawl",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The root URL to begin mapping",
                 "required": true,
                 "default": ""
               },
@@ -7682,6 +7633,10 @@
                   {
                     "name": "Crawl",
                     "value": "crawl"
+                  },
+                  {
+                    "name": "Map",
+                    "value": "map"
                   }
                 ]
               },
@@ -7728,12 +7683,34 @@
                 ]
               },
               {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "url",
+                "options": [
+                  {
+                    "name": "URL",
+                    "value": "url",
+                    "description": "Discover all internal links starting from a base URL"
+                  }
+                ]
+              },
+              {
                 "name": "options",
                 "displayName": "Options",
                 "type": "collection",
                 "required": false,
                 "default": {},
                 "options": [
+                  {
+                    "name": "query",
+                    "description": "A natural language query describing the information you want to extract from the provided URLs"
+                  },
+                  {
+                    "name": "chunks_per_source",
+                    "description": "The number of content chunks to retrieve from each source. Each chunk's length is maximum 500 characters. Available when query is provided."
+                  },
                   {
                     "name": "include_images",
                     "description": "Whether to include a list of images extracted from the URLs. Default is false."
@@ -7749,144 +7726,10 @@
                   {
                     "name": "include_favicon",
                     "description": "Whether to include the favicon URL for each result"
-                  }
-                ]
-              },
-              {
-                "name": "options",
-                "displayName": "Options",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "topic",
-                    "description": "The category of the search"
                   },
                   {
-                    "name": "search_depth",
-                    "description": "The depth of the search. advanced search is tailored to retrieve the most relevant sources and content snippets for your query, while basic search provides generic content snippets from each source."
-                  },
-                  {
-                    "name": "chunks_per_source",
-                    "description": "The number of content chunks to retrieve from each source. Each chunk's length is maximum 500 characters. Available only when search_depth is advanced."
-                  },
-                  {
-                    "name": "max_results",
-                    "description": "The maximum number of search results to return"
-                  },
-                  {
-                    "name": "time_range",
-                    "description": "The time range back from the current date to filter results. Useful when looking for sources that have published data."
-                  },
-                  {
-                    "name": "days",
-                    "description": "Number of days back from the current date to include. Available only if topic is news."
-                  },
-                  {
-                    "name": "include_answer",
-                    "description": "Include an LLM-generated answer to the provided query"
-                  },
-                  {
-                    "name": "include_raw_content",
-                    "description": "Whether to include the cleaned and parsed HTML content of each search result"
-                  },
-                  {
-                    "name": "include_images",
-                    "description": "Whether to perform an image search and include the results in the response"
-                  },
-                  {
-                    "name": "include_image_descriptions",
-                    "description": "Whether to add a descriptive text for each image when include_images is true"
-                  },
-                  {
-                    "name": "include_domains",
-                    "description": "A list of domains to specifically include in the search results"
-                  },
-                  {
-                    "name": "exclude_domains",
-                    "description": "A list of domains to exclude from the search results"
-                  },
-                  {
-                    "name": "include_favicon",
-                    "description": "Whether to include the favicon URL for each result"
-                  },
-                  {
-                    "name": "auto_parameters",
-                    "description": "Whether auto_parameters is enabled, Tavily automatically configures search parameters based on your query's content and intent"
-                  },
-                  {
-                    "name": "start_date",
-                    "description": "Will return all results after the specified start date (publish date). Required to be written in the format YYYY-MM-DD."
-                  },
-                  {
-                    "name": "end_date",
-                    "description": "Will return all results before the specified end date (publish date). Required to be written in the format YYYY-MM-DD."
-                  },
-                  {
-                    "name": "country",
-                    "description": "Boost search results from a specific country. This will prioritize content from the selected country in the search results. Available only if topic is general. Full available options: https://docs.tavily.com/documentation/api-reference/endpoint/search#body-country"
-                  }
-                ]
-              },
-              {
-                "name": "options",
-                "displayName": "Options",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "instructions",
-                    "description": "Natural language instructions for the crawler"
-                  },
-                  {
-                    "name": "max_depth",
-                    "description": "Max depth of the crawl"
-                  },
-                  {
-                    "name": "max_breadth",
-                    "description": "Max number of links to follow per level"
-                  },
-                  {
-                    "name": "limit",
-                    "description": "Max number of results to return"
-                  },
-                  {
-                    "name": "select_paths",
-                    "description": "Regex patterns to select only URLs with specific path patterns"
-                  },
-                  {
-                    "name": "select_domains",
-                    "description": "Regex patterns to select crawling to specific domains or subdomains"
-                  },
-                  {
-                    "name": "exclude_paths",
-                    "description": "Regex patterns to exclude URLs with specific path patterns"
-                  },
-                  {
-                    "name": "exclude_domains",
-                    "description": "Regex patterns to exclude specific domains or subdomains from crawling"
-                  },
-                  {
-                    "name": "allow_external",
-                    "description": "Whether to allow following links that go to external domains"
-                  },
-                  {
-                    "name": "include_images",
-                    "description": "Whether to include images in the crawl results"
-                  },
-                  {
-                    "name": "extract_depth",
-                    "description": "Extraction depth"
-                  },
-                  {
-                    "name": "format",
-                    "description": "Format of the extracted web page content"
-                  },
-                  {
-                    "name": "include_favicon",
-                    "description": "Whether to include the favicon URL for each result"
+                    "name": "include_usage",
+                    "description": "Whether to include credit usage information in the response"
                   }
                 ]
               }
@@ -7899,7 +7742,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 10
+            "totalPropertyCount": 13
           },
           "ioInfo": {
             "nodeType": "tavily",
@@ -7921,6 +7764,3737 @@
             "outputCount": 0,
             "outputNames": [],
             "isDynamicOutput": true
+          }
+        }
+      ]
+    },
+    "n8n-nodes-deepseek": {
+      "packageName": "n8n-nodes-deepseek",
+      "packageVersion": "1.0.6",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-deepseek.deepSeek",
+          "displayName": "DeepSeek",
+          "description": "Consume DeepSeek AI",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "prompt",
+                "displayName": "Prompt",
+                "type": "string",
+                "description": "The prompt to generate completions for",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "chat",
+                "options": [
+                  {
+                    "name": "Chat",
+                    "value": "chat"
+                  },
+                  {
+                    "name": "FIM",
+                    "value": "fim"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "complete",
+                "options": [
+                  {
+                    "name": "Complete",
+                    "value": "complete",
+                    "description": "Creates a model response for the given chat conversation"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "complete",
+                "options": [
+                  {
+                    "name": "Complete",
+                    "value": "complete",
+                    "description": "The FIM (Fill-In-the-Middle) Completion API"
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "description": "Additional options to add",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "frequency_penalty",
+                    "description": "Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim"
+                  },
+                  {
+                    "name": "maxTokens",
+                    "description": "The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 32,768)."
+                  },
+                  {
+                    "name": "presence_penalty",
+                    "description": "Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics"
+                  },
+                  {
+                    "name": "temperature",
+                    "description": "Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive."
+                  },
+                  {
+                    "name": "topP",
+                    "description": "Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered. We generally recommend altering this or temperature but not both."
+                  },
+                  {
+                    "name": "response_format",
+                    "description": "An object specifying the format that the model must output"
+                  },
+                  {
+                    "name": "logprobs",
+                    "description": "Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message."
+                  },
+                  {
+                    "name": "top_logprobs",
+                    "description": "An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used."
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "description": "Additional options to add",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "frequency_penalty",
+                    "description": "Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim"
+                  },
+                  {
+                    "name": "maxTokens",
+                    "description": "The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 32,768)."
+                  },
+                  {
+                    "name": "presence_penalty",
+                    "description": "Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics"
+                  },
+                  {
+                    "name": "temperature",
+                    "description": "Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive."
+                  },
+                  {
+                    "name": "topP",
+                    "description": "Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered. We generally recommend altering this or temperature but not both."
+                  },
+                  {
+                    "name": "echo",
+                    "description": "Whether the prompt should be echo back in addition to the completion"
+                  },
+                  {
+                    "name": "logprobs",
+                    "description": "Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message."
+                  },
+                  {
+                    "name": "suffix",
+                    "description": "The suffix that comes after a completion of inserted text"
+                  }
+                ]
+              },
+              {
+                "name": "prompt",
+                "displayName": "Prompt",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "messages"
+                  }
+                ]
+              },
+              {
+                "name": "model",
+                "displayName": "Model",
+                "type": "options",
+                "description": "The model which will generate the completion. <a href=\"https://platform.deepseek.com/api-docs/pricing/\">Learn more</a>.",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "simplifyOutput",
+                "displayName": "Simplify",
+                "type": "boolean",
+                "description": "Whether to return a simplified version of the response instead of the raw data",
+                "required": false,
+                "default": true
+              },
+              {
+                "name": "model",
+                "displayName": "Model",
+                "type": "options",
+                "description": "The model which will generate the completion. <a href=\"https://platform.deepseek.com/api-docs/pricing/\">Learn more</a>.",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Complete",
+                "value": "complete",
+                "description": "Creates a model response for the given chat conversation"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 11
+          },
+          "ioInfo": {
+            "nodeType": "deepSeek",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-imap": {
+      "packageName": "n8n-nodes-imap",
+      "packageVersion": "2.15.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-imap.imap",
+          "displayName": "IMAP",
+          "description": "Retrieve emails via IMAP",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "flags",
+                "displayName": "Flags",
+                "type": "collection",
+                "required": true,
+                "default": [],
+                "options": [
+                  {
+                    "name": "\\Answered",
+                    "description": "Whether email is answered"
+                  },
+                  {
+                    "name": "\\Deleted",
+                    "description": "Whether email is deleted"
+                  },
+                  {
+                    "name": "\\Draft",
+                    "description": "Whether email is draft"
+                  },
+                  {
+                    "name": "\\Flagged",
+                    "description": "Whether email is flagged"
+                  },
+                  {
+                    "name": "\\Seen",
+                    "description": "Whether email is seen"
+                  },
+                  {
+                    "name": "setFlags",
+                    "description": "Custom IMAP flags to set, space-separated"
+                  },
+                  {
+                    "name": "removeFlags",
+                    "description": "Custom IMAP flags to remove, space-separated"
+                  }
+                ]
+              },
+              {
+                "name": "mailboxPath",
+                "displayName": "Mailbox",
+                "type": "resourceLocator",
+                "description": "Select the mailbox",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": "INBOX"
+                }
+              },
+              {
+                "name": "mailboxPath",
+                "displayName": "Mailbox",
+                "type": "resourceLocator",
+                "description": "Select the mailbox",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": "INBOX"
+                }
+              },
+              {
+                "name": "topLevelMailbox",
+                "displayName": "Top Level Mailbox",
+                "type": "boolean",
+                "description": "Whether the mailbox is a top level mailbox or a child mailbox",
+                "required": true,
+                "default": true
+              },
+              {
+                "name": "mailboxName",
+                "displayName": "Mailbox Name",
+                "type": "string",
+                "description": "Name of the mailbox to create",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "mailboxPath",
+                "displayName": "Mailbox",
+                "type": "resourceLocator",
+                "description": "Select the mailbox",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": "INBOX"
+                }
+              },
+              {
+                "name": "newMailboxName",
+                "displayName": "New Mailbox Name",
+                "type": "string",
+                "description": "New name of the mailbox",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "mailboxPath",
+                "displayName": "Mailbox",
+                "type": "resourceLocator",
+                "description": "Select the mailbox",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": "INBOX"
+                }
+              },
+              {
+                "name": "mailboxPath",
+                "displayName": "Mailbox",
+                "type": "resourceLocator",
+                "description": "Select the mailbox",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": "INBOX"
+                }
+              },
+              {
+                "name": "mailboxPath",
+                "displayName": "Mailbox",
+                "type": "resourceLocator",
+                "description": "Select the mailbox",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": "INBOX"
+                }
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get Many",
+                "value": "loadMailboxList",
+                "description": "Get a list of mailboxes"
+              },
+              {
+                "name": "Get Quota",
+                "value": "getMailboxQuota",
+                "description": "Get quota (space usage) of an account"
+              },
+              {
+                "name": "Get Status",
+                "value": "getMailboxStatus",
+                "description": "Get status of a single mailbox"
+              },
+              {
+                "name": "Create",
+                "value": "createMailbox",
+                "description": "Create a new mailbox"
+              },
+              {
+                "name": "Rename",
+                "value": "renameMailbox",
+                "description": "Rename a mailbox"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 48
+          },
+          "ioInfo": {
+            "nodeType": "imap",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@devlikeapro/n8n-nodes-waha": {
+      "packageName": "@devlikeapro/n8n-nodes-waha",
+      "packageVersion": "2025.2.9",
+      "nodes": [
+        {
+          "nodeType": "@devlikeapro/n8n-nodes-waha.WAHA",
+          "displayName": "WAHA",
+          "description": "Connect with Whatsapp HTTP API",
+          "version": "202502",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "Url",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "format",
+                "displayName": "Format",
+                "type": "options",
+                "required": true,
+                "default": "image",
+                "options": [
+                  {
+                    "name": "Image",
+                    "value": "image"
+                  },
+                  {
+                    "name": "Raw",
+                    "value": "raw"
+                  }
+                ]
+              },
+              {
+                "name": "presence",
+                "displayName": "Presence",
+                "type": "options",
+                "required": true,
+                "default": "offline",
+                "options": [
+                  {
+                    "name": "Offline",
+                    "value": "offline"
+                  },
+                  {
+                    "name": "Online",
+                    "value": "online"
+                  },
+                  {
+                    "name": "Typing",
+                    "value": "typing"
+                  },
+                  {
+                    "name": "Recording",
+                    "value": "recording"
+                  },
+                  {
+                    "name": "Paused",
+                    "value": "paused"
+                  }
+                ]
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "phoneNumber",
+                "displayName": "Phone Number",
+                "type": "string",
+                "description": "Mobile phone number in international format",
+                "required": true,
+                "default": "12132132130"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get QR",
+                "value": "Get QR",
+                "description": "Get QR code for pairing WhatsApp API."
+              },
+              {
+                "name": "Request Code",
+                "value": "Request Code",
+                "description": "Request authentication code."
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 435
+          },
+          "ioInfo": {
+            "nodeType": "WAHA",
+            "version": "202502",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "@devlikeapro/n8n-nodes-waha.wahaTrigger",
+          "displayName": "WAHA Trigger",
+          "description": "Handle WAHA events via webhooks",
+          "version": "202502",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "operation",
+                "displayName": "Remember to configure WAHA instance (session or server) to send events to <b>Webhook URL</b>. <br/>Check <b>Docs</b> link above☝️",
+                "type": "notice",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "<b>Events</b>:<br>- session.status<br>- message<br>- message.reaction<br>- message.any<br>- message.ack<br>- message.waiting<br>- message.revoked<br>- state.change<br>- group.join<br>- group.leave<br>- group.v2.join<br>- group.v2.leave<br>- group.v2.update<br>- group.v2.participants<br>- presence.update<br>- poll.vote<br>- poll.vote.failed<br>- chat.archive<br>- call.received<br>- call.accepted<br>- call.rejected<br>- label.upsert<br>- label.deleted<br>- label.chat.added<br>- label.chat.deleted<br>- engine.event",
+                "type": "notice",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 2
+          },
+          "ioInfo": {
+            "nodeType": "wahaTrigger",
+            "version": "202502",
+            "inputs": [],
+            "outputs": [
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": true,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 26,
+            "outputNames": [
+              "session.status",
+              "message",
+              "message.reaction",
+              "message.any",
+              "message.ack",
+              "message.waiting",
+              "message.revoked",
+              "state.change",
+              "group.join",
+              "group.leave",
+              "group.v2.join",
+              "group.v2.leave",
+              "group.v2.update",
+              "group.v2.participants",
+              "presence.update",
+              "poll.vote",
+              "poll.vote.failed",
+              "chat.archive",
+              "call.received",
+              "call.accepted",
+              "call.rejected",
+              "label.upsert",
+              "label.deleted",
+              "label.chat.added",
+              "label.chat.deleted",
+              "engine.event"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-rd-station-crm": {
+      "packageName": "n8n-nodes-rd-station-crm",
+      "packageVersion": "1.3.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmContacts",
+          "displayName": "RD Station CRM Contatos",
+          "description": "Operações com contatos no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "contact",
+                "options": [
+                  {
+                    "name": "Contato",
+                    "value": "contact"
+                  }
+                ]
+              },
+              {
+                "name": "contact_id",
+                "displayName": "ID do Contato",
+                "type": "string",
+                "description": "ID do contato",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "name",
+                "displayName": "Nome",
+                "type": "string",
+                "description": "Nome do contato (obrigatório, mínimo 2 caracteres)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Criar",
+                    "value": "create",
+                    "description": "Criar um novo contato"
+                  },
+                  {
+                    "name": "Atualizar",
+                    "value": "update",
+                    "description": "Atualizar um contato existente"
+                  },
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar contatos"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter um contato pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "filters",
+                "displayName": "Filtros",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "page",
+                    "description": "Número da página listada. Valor padrão é 1"
+                  },
+                  {
+                    "name": "limit",
+                    "description": "Limite de contatos que virão por listagem. Valor padrão é 20. Valor máximo é 200"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo para ordenação"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Ordenação da lista. \"asc\" ou \"desc\", padrão é \"asc\""
+                  },
+                  {
+                    "name": "q",
+                    "description": "Busca por nome do contato"
+                  },
+                  {
+                    "name": "email",
+                    "description": "Filtrar por e-mail do contato"
+                  },
+                  {
+                    "name": "phone",
+                    "description": "Filtrar por telefone do contato"
+                  },
+                  {
+                    "name": "title",
+                    "description": "Filtrar por cargo do contato"
+                  },
+                  {
+                    "name": "organization_id",
+                    "description": "ID da organização à qual o contato pertence"
+                  },
+                  {
+                    "name": "user_id",
+                    "description": "ID do usuário responsável pelo contato"
+                  }
+                ]
+              },
+              {
+                "name": "contactData",
+                "displayName": "Dados do Contato",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "name",
+                    "description": "Nome do contato (mínimo 2 caracteres)"
+                  },
+                  {
+                    "name": "title",
+                    "description": "Cargo do contato"
+                  },
+                  {
+                    "name": "birthday",
+                    "description": "Data de aniversário (formato: yyyy-mm-dd)"
+                  },
+                  {
+                    "name": "organization_id",
+                    "description": "ID da organização à qual o contato pertence"
+                  },
+                  {
+                    "name": "deal_ids",
+                    "description": "IDs das negociações separados por vírgula (ex: id1,id2,id3)"
+                  },
+                  {
+                    "name": "facebook",
+                    "description": "Perfil do Facebook"
+                  },
+                  {
+                    "name": "linkedin",
+                    "description": "Perfil do LinkedIn"
+                  },
+                  {
+                    "name": "skype",
+                    "description": "Usuário do Skype"
+                  }
+                ]
+              },
+              {
+                "name": "emails",
+                "displayName": "E-mails",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "emailValues"
+                  }
+                ]
+              },
+              {
+                "name": "phones",
+                "displayName": "Telefones",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "phoneValues"
+                  }
+                ]
+              },
+              {
+                "name": "contact_custom_fields",
+                "displayName": "Campos Customizados",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "customFieldValues"
+                  }
+                ]
+              },
+              {
+                "name": "legal_bases",
+                "displayName": "Base Legal",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "legalBaseValues"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Criar",
+                "value": "create",
+                "description": "Criar um novo contato"
+              },
+              {
+                "name": "Atualizar",
+                "value": "update",
+                "description": "Atualizar um contato existente"
+              },
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar contatos"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter um contato pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 10
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmContacts",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmDeals",
+          "displayName": "RD Station CRM Negociações",
+          "description": "Operações com negociações no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "deal",
+                "options": [
+                  {
+                    "name": "Negociação",
+                    "value": "deal"
+                  }
+                ]
+              },
+              {
+                "name": "deal_id",
+                "displayName": "ID da Negociação",
+                "type": "string",
+                "description": "ID da negociação",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "name",
+                "displayName": "Nome da Negociação",
+                "type": "string",
+                "description": "Nome da negociação (obrigatório, mínimo 2 caracteres)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Criar",
+                    "value": "create",
+                    "description": "Criar uma nova negociação"
+                  },
+                  {
+                    "name": "Atualizar",
+                    "value": "update",
+                    "description": "Atualizar uma negociação existente"
+                  },
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar negociações"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter uma negociação pelo ID"
+                  },
+                  {
+                    "name": "Listar Contatos",
+                    "value": "getContacts",
+                    "description": "Listar contatos associados a uma negociação"
+                  }
+                ]
+              },
+              {
+                "name": "contacts",
+                "displayName": "Novos Contatos",
+                "type": "fixedCollection",
+                "description": "Criar novos contatos e associá-los à negociação",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "contactValues"
+                  }
+                ]
+              },
+              {
+                "name": "set_contacts",
+                "displayName": "Contatos Existentes",
+                "type": "fixedCollection",
+                "description": "Associar contatos existentes à negociação",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "contactIds"
+                  }
+                ]
+              },
+              {
+                "name": "filters",
+                "displayName": "Filtros",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "page",
+                    "description": "Número da página listada"
+                  },
+                  {
+                    "name": "limit",
+                    "description": "Limite de negociações por página. Máximo: 200"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo para ordenação. Padrão: created_at"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação"
+                  },
+                  {
+                    "name": "name",
+                    "description": "Nome da negociação"
+                  },
+                  {
+                    "name": "exact_name",
+                    "description": "Para buscas com nome exato"
+                  },
+                  {
+                    "name": "win",
+                    "description": "Status da negociação: ganhas, perdidas ou em aberto"
+                  },
+                  {
+                    "name": "closed_at",
+                    "description": "Filtrar por negociações fechadas ou abertas"
+                  },
+                  {
+                    "name": "hold",
+                    "description": "Se marcado como true, retorna apenas negociações pausadas"
+                  },
+                  {
+                    "name": "user_id",
+                    "description": "ID do usuário responsável pela negociação"
+                  },
+                  {
+                    "name": "deal_stage_id",
+                    "description": "ID da etapa do funil"
+                  },
+                  {
+                    "name": "deal_pipeline_id",
+                    "description": "ID do funil de vendas"
+                  },
+                  {
+                    "name": "organization",
+                    "description": "ID da empresa associada"
+                  },
+                  {
+                    "name": "deal_lost_reason_id",
+                    "description": "ID do motivo de perda"
+                  },
+                  {
+                    "name": "campaign_id",
+                    "description": "ID da campanha"
+                  },
+                  {
+                    "name": "closed_by_id",
+                    "description": "ID do usuário que fechou a venda"
+                  },
+                  {
+                    "name": "product_presence",
+                    "description": "false (sem produtos), true (com produtos) ou lista de IDs separados por vírgula"
+                  },
+                  {
+                    "name": "next_page",
+                    "description": "Token para consultar a próxima página de resultados"
+                  }
+                ]
+              },
+              {
+                "name": "periodFilters",
+                "displayName": "Filtros de Período",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "closed_at_period",
+                    "description": "Filtrar por data de fechamento"
+                  },
+                  {
+                    "name": "created_at_period",
+                    "description": "Filtrar por data de criação"
+                  },
+                  {
+                    "name": "prediction_date_period",
+                    "description": "Filtrar por data de previsão de fechamento"
+                  },
+                  {
+                    "name": "start_date",
+                    "description": "Data/hora inicial do período. Ex: 2020-12-14T15:00:00"
+                  },
+                  {
+                    "name": "end_date",
+                    "description": "Data/hora final do período. Ex: 2020-12-14T15:00:00"
+                  }
+                ]
+              },
+              {
+                "name": "dealData",
+                "displayName": "Dados da Negociação",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "name",
+                    "description": "Nome da negociação (mínimo 2 caracteres)"
+                  },
+                  {
+                    "name": "deal_stage_id",
+                    "description": "ID da etapa do funil"
+                  },
+                  {
+                    "name": "user_id",
+                    "description": "ID do usuário responsável. Se não enviado, o dono do token será atribuído"
+                  },
+                  {
+                    "name": "rating",
+                    "description": "Avaliação da negociação"
+                  },
+                  {
+                    "name": "prediction_date",
+                    "description": "Data de previsão de fechamento (formato: yyyy-mm-dd)"
+                  },
+                  {
+                    "name": "win",
+                    "description": "Status da negociação"
+                  },
+                  {
+                    "name": "hold",
+                    "description": "Status de pausa da negociação"
+                  },
+                  {
+                    "name": "deal_lost_reason_id",
+                    "description": "ID do motivo da perda (quando negociação é perdida)"
+                  },
+                  {
+                    "name": "deal_lost_note",
+                    "description": "Nota explicativa sobre a perda da negociação"
+                  },
+                  {
+                    "name": "organization_id",
+                    "description": "ID da empresa à qual a negociação pertence"
+                  }
+                ]
+              },
+              {
+                "name": "deal_custom_fields",
+                "displayName": "Campos Customizados",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "customFieldValues"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Criar",
+                "value": "create",
+                "description": "Criar uma nova negociação"
+              },
+              {
+                "name": "Atualizar",
+                "value": "update",
+                "description": "Atualizar uma negociação existente"
+              },
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar negociações"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter uma negociação pelo ID"
+              },
+              {
+                "name": "Listar Contatos",
+                "value": "getContacts",
+                "description": "Listar contatos associados a uma negociação"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 15
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmDeals",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmTasks",
+          "displayName": "RD Station CRM Tarefas",
+          "description": "Operações com tarefas no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "task",
+                "options": [
+                  {
+                    "name": "Tarefa",
+                    "value": "task"
+                  }
+                ]
+              },
+              {
+                "name": "taskId",
+                "displayName": "ID da Tarefa",
+                "type": "string",
+                "description": "ID da tarefa a ser consultada/atualizada",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "dealId",
+                "displayName": "ID do Negócio",
+                "type": "string",
+                "description": "ID do negócio ao qual a tarefa está ligada (obrigatório)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Criar",
+                    "value": "create",
+                    "description": "Criar uma nova tarefa"
+                  },
+                  {
+                    "name": "Atualizar",
+                    "value": "update",
+                    "description": "Atualizar uma tarefa existente"
+                  },
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar tarefas"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter uma tarefa pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de tarefas a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "deal_id",
+                    "description": "Filtrar tarefas por negócio específico"
+                  },
+                  {
+                    "name": "user_id",
+                    "description": "Filtrar tarefas por usuário responsável"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Status das tarefas a serem filtradas"
+                  },
+                  {
+                    "name": "start_date",
+                    "description": "Data inicial para filtrar tarefas (formato YYYY-MM-DD)"
+                  },
+                  {
+                    "name": "end_date",
+                    "description": "Data final para filtrar tarefas (formato YYYY-MM-DD)"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  }
+                ]
+              },
+              {
+                "name": "taskData",
+                "displayName": "Dados da Tarefa",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "title",
+                    "description": "Título ou assunto da tarefa (obrigatório para criação)"
+                  },
+                  {
+                    "name": "type",
+                    "description": "Tipo da tarefa (obrigatório para criação)"
+                  },
+                  {
+                    "name": "due_date",
+                    "description": "Data de vencimento/realização (formato YYYY-MM-DD)"
+                  },
+                  {
+                    "name": "due_time",
+                    "description": "Horário da tarefa (formato HH:MM)"
+                  },
+                  {
+                    "name": "user_id",
+                    "description": "ID do usuário atribuído à tarefa"
+                  },
+                  {
+                    "name": "description",
+                    "description": "Descrição/detalhes adicionais da tarefa"
+                  },
+                  {
+                    "name": "done",
+                    "description": "Se verdadeiro, marca a tarefa como concluída (apenas para atualização)"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Criar",
+                "value": "create",
+                "description": "Criar uma nova tarefa"
+              },
+              {
+                "name": "Atualizar",
+                "value": "update",
+                "description": "Atualizar uma tarefa existente"
+              },
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar tarefas"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter uma tarefa pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 6
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmTasks",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmNotes",
+          "displayName": "RD Station CRM Notas",
+          "description": "Operações com anotações no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "note",
+                "options": [
+                  {
+                    "name": "Nota",
+                    "value": "note"
+                  }
+                ]
+              },
+              {
+                "name": "dealId",
+                "displayName": "ID do Negócio",
+                "type": "string",
+                "description": "ID do negócio ao qual a nota está ligada (obrigatório)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "ID do Usuário",
+                "type": "string",
+                "description": "ID do usuário autor da nota (obrigatório)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "text",
+                "displayName": "Texto da Nota",
+                "type": "string",
+                "description": "Conteúdo da anotação a ser registrada (obrigatório)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Criar",
+                    "value": "create",
+                    "description": "Criar uma nova anotação para um negócio"
+                  },
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar anotações"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de notas a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "deal_id",
+                    "description": "Filtrar notas por negócio específico"
+                  },
+                  {
+                    "name": "user_id",
+                    "description": "Filtrar notas por usuário autor"
+                  },
+                  {
+                    "name": "start_date",
+                    "description": "Data inicial para filtrar notas (formato YYYY-MM-DD)"
+                  },
+                  {
+                    "name": "end_date",
+                    "description": "Data final para filtrar notas (formato YYYY-MM-DD)"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Criar",
+                "value": "create",
+                "description": "Criar uma nova anotação para um negócio"
+              },
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar anotações"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 6
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmNotes",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmCompanies",
+          "displayName": "RD Station CRM Organizações",
+          "description": "Operações com organizações no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "organization",
+                "options": [
+                  {
+                    "name": "Organização",
+                    "value": "organization"
+                  }
+                ]
+              },
+              {
+                "name": "organization_id",
+                "displayName": "ID da Organização",
+                "type": "string",
+                "description": "ID da organização",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "name",
+                "displayName": "Nome",
+                "type": "string",
+                "description": "Nome da organização (obrigatório, mínimo 2 caracteres, deve ser único)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Criar",
+                    "value": "create",
+                    "description": "Criar uma nova organização"
+                  },
+                  {
+                    "name": "Atualizar",
+                    "value": "update",
+                    "description": "Atualizar uma organização existente"
+                  },
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar organizações"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter uma organização pelo ID"
+                  },
+                  {
+                    "name": "Listar Contatos",
+                    "value": "getContacts",
+                    "description": "Listar contatos associados a uma organização"
+                  }
+                ]
+              },
+              {
+                "name": "filters",
+                "displayName": "Filtros",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "page",
+                    "description": "Número da página listada. Valor padrão é 1"
+                  },
+                  {
+                    "name": "limit",
+                    "description": "Limite de organizações que virão por listagem. Valor padrão é 20. Valor máximo é 200"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo para ordenação. Valor padrão é \"name\""
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Ordenação da lista. \"asc\" ou \"desc\", padrão é \"asc\""
+                  },
+                  {
+                    "name": "q",
+                    "description": "Busca por nome da organização"
+                  },
+                  {
+                    "name": "organization_segment_id",
+                    "description": "ID do segmento da organização"
+                  },
+                  {
+                    "name": "user_id",
+                    "description": "ID do usuário responsável pela organização"
+                  }
+                ]
+              },
+              {
+                "name": "organizationData",
+                "displayName": "Dados da Organização",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "name",
+                    "description": "Nome da organização (mínimo 2 caracteres, deve ser único)"
+                  },
+                  {
+                    "name": "organization_segment_id",
+                    "description": "ID do segmento da organização"
+                  },
+                  {
+                    "name": "website",
+                    "description": "URL do site da organização"
+                  },
+                  {
+                    "name": "email",
+                    "description": "E-mail de contato geral da organização"
+                  },
+                  {
+                    "name": "address",
+                    "description": "Endereço da organização"
+                  }
+                ]
+              },
+              {
+                "name": "phones",
+                "displayName": "Telefones",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "phoneValues"
+                  }
+                ]
+              },
+              {
+                "name": "organization_custom_fields",
+                "displayName": "Campos Customizados",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "customFieldValues"
+                  }
+                ]
+              },
+              {
+                "name": "contactListParams",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "page",
+                    "description": "Página da listagem de contatos. Valor padrão é 1"
+                  },
+                  {
+                    "name": "limit",
+                    "description": "Limite de contatos que virão por listagem. Valor padrão é 20. Valor máximo é 200"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Criar",
+                "value": "create",
+                "description": "Criar uma nova organização"
+              },
+              {
+                "name": "Atualizar",
+                "value": "update",
+                "description": "Atualizar uma organização existente"
+              },
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar organizações"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter uma organização pelo ID"
+              },
+              {
+                "name": "Listar Contatos",
+                "value": "getContacts",
+                "description": "Listar contatos associados a uma organização"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 9
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmCompanies",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmDealProducts",
+          "displayName": "RD Station CRM Produtos em Negócios",
+          "description": "Gerenciar produtos em negociações no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "dealProduct",
+                "options": [
+                  {
+                    "name": "Produto em Negócio",
+                    "value": "dealProduct"
+                  }
+                ]
+              },
+              {
+                "name": "dealId",
+                "displayName": "ID do Negócio",
+                "type": "string",
+                "description": "ID do negócio ao qual os produtos estão ou serão vinculados",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Adicionar",
+                    "value": "add",
+                    "description": "Adicionar produtos a uma negociação"
+                  },
+                  {
+                    "name": "Atualizar",
+                    "value": "update",
+                    "description": "Atualizar produtos em uma negociação"
+                  },
+                  {
+                    "name": "Remover",
+                    "value": "remove",
+                    "description": "Remover produtos de uma negociação"
+                  },
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todos os produtos de uma negociação"
+                  }
+                ]
+              },
+              {
+                "name": "productIds",
+                "displayName": "IDs dos Produtos",
+                "type": "fixedCollection",
+                "description": "IDs dos produtos a serem removidos da negociação",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "productIdValues"
+                  }
+                ]
+              },
+              {
+                "name": "products",
+                "displayName": "Produtos",
+                "type": "fixedCollection",
+                "description": "Produtos a serem adicionados ou atualizados na negociação",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "productValues"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Adicionar",
+                "value": "add",
+                "description": "Adicionar produtos a uma negociação"
+              },
+              {
+                "name": "Atualizar",
+                "value": "update",
+                "description": "Atualizar produtos em uma negociação"
+              },
+              {
+                "name": "Remover",
+                "value": "remove",
+                "description": "Remover produtos de uma negociação"
+              },
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todos os produtos de uma negociação"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 5
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmDealProducts",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmUsers",
+          "displayName": "RD Station CRM Usuários",
+          "description": "Consultar usuários no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "user",
+                "options": [
+                  {
+                    "name": "Usuário",
+                    "value": "user"
+                  }
+                ]
+              },
+              {
+                "name": "userId",
+                "displayName": "ID do Usuário",
+                "type": "string",
+                "description": "ID do usuário a ser consultado",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todos os usuários"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter um usuário pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de usuários a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  },
+                  {
+                    "name": "team_id",
+                    "description": "Filtrar usuários por equipe específica"
+                  },
+                  {
+                    "name": "role",
+                    "description": "Filtrar usuários por papel/função no sistema"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Filtrar usuários por status da conta"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todos os usuários"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter um usuário pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmUsers",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmTeams",
+          "displayName": "RD Station CRM Equipes",
+          "description": "Consultar equipes no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "team",
+                "options": [
+                  {
+                    "name": "Equipe",
+                    "value": "team"
+                  }
+                ]
+              },
+              {
+                "name": "teamId",
+                "displayName": "ID da Equipe",
+                "type": "string",
+                "description": "ID da equipe a ser consultada",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todas as equipes"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter uma equipe pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de equipes a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Filtrar equipes por status"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todas as equipes"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter uma equipe pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmTeams",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmPipelines",
+          "displayName": "RD Station CRM Funis",
+          "description": "Consultar funis e etapas no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "pipeline",
+                "options": [
+                  {
+                    "name": "Funil",
+                    "value": "pipeline"
+                  },
+                  {
+                    "name": "Etapa",
+                    "value": "stage"
+                  }
+                ]
+              },
+              {
+                "name": "pipelineId",
+                "displayName": "ID do Funil",
+                "type": "string",
+                "description": "ID do funil a ser consultado",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "pipelineId",
+                "displayName": "ID do Funil",
+                "type": "string",
+                "description": "ID do funil para listar suas etapas",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "stageId",
+                "displayName": "ID da Etapa",
+                "type": "string",
+                "description": "ID da etapa a ser consultada",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todos os funis"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter um funil pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todas as etapas de um funil"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter uma etapa pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "listPipelineParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de funis a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Filtrar funis por status"
+                  }
+                ]
+              },
+              {
+                "name": "listStageParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de etapas a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todos os funis"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter um funil pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 8
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmPipelines",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmCampaigns",
+          "displayName": "RD Station CRM Campanhas",
+          "description": "Consultar campanhas no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "campaign",
+                "options": [
+                  {
+                    "name": "Campanha",
+                    "value": "campaign"
+                  }
+                ]
+              },
+              {
+                "name": "campaignId",
+                "displayName": "ID da Campanha",
+                "type": "string",
+                "description": "ID da campanha a ser consultada",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todas as campanhas"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter uma campanha pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de campanhas a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Filtrar campanhas por status"
+                  },
+                  {
+                    "name": "query",
+                    "description": "Termo para buscar no nome da campanha"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todas as campanhas"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter uma campanha pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmCampaigns",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmSources",
+          "displayName": "RD Station CRM Fontes",
+          "description": "Consultar fontes de leads no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "source",
+                "options": [
+                  {
+                    "name": "Fonte",
+                    "value": "source"
+                  }
+                ]
+              },
+              {
+                "name": "sourceId",
+                "displayName": "ID da Fonte",
+                "type": "string",
+                "description": "ID da fonte a ser consultada",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todas as fontes"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter uma fonte pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de fontes a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Filtrar fontes por status"
+                  },
+                  {
+                    "name": "query",
+                    "description": "Termo para buscar no nome da fonte"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todas as fontes"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter uma fonte pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmSources",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmLossReasons",
+          "displayName": "RD Station CRM Motivos de Perda",
+          "description": "Consultar motivos de perda no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "lossReason",
+                "options": [
+                  {
+                    "name": "Motivo de Perda",
+                    "value": "lossReason"
+                  }
+                ]
+              },
+              {
+                "name": "lossReasonId",
+                "displayName": "ID do Motivo de Perda",
+                "type": "string",
+                "description": "ID do motivo de perda a ser consultado",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todos os motivos de perda"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter um motivo de perda pelo ID"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de motivos de perda a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Filtrar motivos de perda por status"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todos os motivos de perda"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter um motivo de perda pelo ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmLossReasons",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmWebhooks",
+          "displayName": "RD Station CRM Webhooks",
+          "description": "Gerenciar webhooks no RD Station CRM",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Recurso",
+                "type": "options",
+                "required": true,
+                "default": "webhook",
+                "options": [
+                  {
+                    "name": "Webhook",
+                    "value": "webhook"
+                  }
+                ]
+              },
+              {
+                "name": "webhookId",
+                "displayName": "ID do Webhook",
+                "type": "string",
+                "description": "ID do webhook a ser consultado, atualizado ou deletado",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operação",
+                "type": "options",
+                "required": false,
+                "default": "getAll",
+                "options": [
+                  {
+                    "name": "Listar",
+                    "value": "getAll",
+                    "description": "Listar todos os webhooks"
+                  },
+                  {
+                    "name": "Obter",
+                    "value": "get",
+                    "description": "Obter um webhook pelo ID"
+                  },
+                  {
+                    "name": "Criar",
+                    "value": "create",
+                    "description": "Criar um novo webhook"
+                  },
+                  {
+                    "name": "Atualizar",
+                    "value": "update",
+                    "description": "Atualizar um webhook existente"
+                  },
+                  {
+                    "name": "Deletar",
+                    "value": "delete",
+                    "description": "Deletar um webhook"
+                  }
+                ]
+              },
+              {
+                "name": "listParameters",
+                "displayName": "Parâmetros de Listagem",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "limit",
+                    "description": "Número máximo de webhooks a retornar"
+                  },
+                  {
+                    "name": "page",
+                    "description": "Número da página para retornar"
+                  },
+                  {
+                    "name": "order",
+                    "description": "Campo pelo qual ordenar os resultados"
+                  },
+                  {
+                    "name": "direction",
+                    "description": "Direção da ordenação (crescente ou decrescente)"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Filtrar webhooks por status"
+                  },
+                  {
+                    "name": "event",
+                    "description": "Filtrar webhooks por tipo de evento que dispara a notificação"
+                  }
+                ]
+              },
+              {
+                "name": "webhookData",
+                "displayName": "Dados do Webhook",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "url",
+                    "description": "URL para onde as notificações serão enviadas quando o evento ocorrer"
+                  },
+                  {
+                    "name": "events",
+                    "description": "Eventos que dispararão o webhook"
+                  },
+                  {
+                    "name": "status",
+                    "description": "Status do webhook (ativo enviará notificações, inativo não)"
+                  },
+                  {
+                    "name": "format",
+                    "description": "Formato dos dados que serão enviados para a URL de callback"
+                  },
+                  {
+                    "name": "headers",
+                    "description": "Cabeçalhos HTTP personalizados para enviar junto com a requisição de webhook"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Listar",
+                "value": "getAll",
+                "description": "Listar todos os webhooks"
+              },
+              {
+                "name": "Obter",
+                "value": "get",
+                "description": "Obter um webhook pelo ID"
+              },
+              {
+                "name": "Criar",
+                "value": "create",
+                "description": "Criar um novo webhook"
+              },
+              {
+                "name": "Atualizar",
+                "value": "update",
+                "description": "Atualizar um webhook existente"
+              },
+              {
+                "name": "Deletar",
+                "value": "delete",
+                "description": "Deletar um webhook"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 5
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmWebhooks",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-apify": {
+      "packageName": "n8n-nodes-apify",
+      "packageVersion": "0.1.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-apify.apify",
+          "displayName": "Apify",
+          "description": "Apify API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "versions",
+                "displayName": "Versions",
+                "type": "fixedCollection",
+                "description": "",
+                "required": true,
+                "default": [],
+                "options": [
+                  {
+                    "name": "items"
+                  }
+                ]
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "actorId",
+                "displayName": "Actor ID",
+                "type": "resourceLocator",
+                "description": "Actor ID or a tilde-separated owner's username and Actor name.",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get list of actors",
+                "value": "Get list of actors",
+                "description": "Gets the list of all Actors that the user created or used  The response is a list of objects  where each object contains a basic information about a single Actor  To only get Actors created by the user  add the  my 1  query parameter  The endpoint supports pagination using the  limit  and  offset  parameters and it will not return more than 1000 records  By default  the records are sorted by the  createdAt  field in ascending order  therefore you can use pagination to incrementally fetch all Actors while new ones are still being created  To sort the records in descending order  use the  desc 1  parameter"
+              },
+              {
+                "name": "Create actor",
+                "value": "Create actor",
+                "description": "Creates a new Actor with settings specified in an Actor object passed as JSON in the POST payload  The response is the full Actor object as returned by the  Get Actor    reference actors actor object get actor  endpoint  The HTTP request must have the  Content Type  application json  HTTP header  The Actor needs to define at least one version of the source code  For more information  see  Version object    reference actors version object   If you want to make your Actor  public  https   docs apify com platform actors publishing  using  isPublic  true   you will need to provide the Actor s  title  and the  categories  under which that Actor will be classified in Apify Store  For this  it s best to use the  constants from our  apify shared js  package  https   github com apify apify shared js blob 2d43ebc41ece9ad31cd6525bd523fb86939bf860 packages consts src consts ts L452 L471"
+              },
+              {
+                "name": "Get actor",
+                "value": "Get actor",
+                "description": "Gets an object that contains all the details about a specific Actor"
+              },
+              {
+                "name": "Update actor",
+                "value": "Update actor",
+                "description": "Updates settings of an Actor using values specified by an Actor object passed as JSON in the POST payload  If the object does not define a specific property  its value will not be updated  The response is the full Actor object as returned by the  Get Actor    reference actors actor object get actor  endpoint  The request needs to specify the  Content Type  application json  HTTP header  When providing your API authentication token  we recommend using the request s  Authorization  header  rather than the URL    More info    introduction authentication    If you want to make your Actor  public  https   docs apify com platform actors publishing  using  isPublic  true   you will need to provide the Actor s  title  and the  categories  under which that Actor will be classified in Apify Store  For this  it s best to use the  constants from our  apify shared js  package  https   github com apify apify shared js blob 2d43ebc41ece9ad31cd6525bd523fb86939bf860 packages consts src consts ts L452 L471"
+              },
+              {
+                "name": "Delete actor",
+                "value": "Delete actor",
+                "description": "Deletes an Actor"
+              },
+              {
+                "name": "Get list of runs",
+                "value": "Get list of runs",
+                "description": "Gets the list of runs of a specific actor  The response is a list of objects  where each object contains basic information about a single actor run  The endpoint supports pagination using the  limit  and  offset  parameters and it will not return more than 1000 array elements  By default  the records are sorted by the  startedAt  field in ascending order  therefore you can use pagination to incrementally fetch all records while new ones are still being created  To sort the records in descending order  use  desc 1  parameter  You can also filter runs by status   available statuses  https   docs apify com platform actors running runs and builds lifecycle"
+              },
+              {
+                "name": "Run actor",
+                "value": "Run actor",
+                "description": "Runs an Actor and immediately returns without waiting for the run to finish  The POST payload including its  Content Type  header is passed as  INPUT  to the Actor  usually  application json    The Actor is started with the default options  you can override them using various URL query parameters  The response is the Run object as returned by the  Get run    reference actor runs run object and its storages get run  API endpoint  If you want to wait for the run to finish and receive the actual output of the Actor as the response  please use one of the  Run Actor synchronously    reference actors run actor synchronously  API endpoints instead  To fetch the Actor run results that are typically stored in the default dataset  you ll need to pass the ID received in the  defaultDatasetId  field received in the response JSON to the  Get items    reference datasets item collection get items  API endpoint"
+              },
+              {
+                "name": "With input",
+                "value": "With input",
+                "description": "Runs a specific Actor and returns its output  The POST payload including its  Content Type  header is passed as  INPUT  to the Actor  usually  code application json  code    The HTTP response contains Actors  OUTPUT  record from its default key value store  The Actor is started with the default options  you can override them using various URL query parameters  If the Actor run exceeds 300     MAX ACTOR JOB SYNC WAIT SECS     seconds  the HTTP response will have status 408  Request Timeout   Beware that it might be impossible to maintain an idle HTTP connection for a long period of time  due to client timeout or network conditions  Make sure your HTTP client is configured to have a long enough connection timeout  If the connection breaks  you will not receive any information about the run and its status  To run the Actor asynchronously  use the  Run Actor    reference actors run collection run actor  API endpoint instead"
+              },
+              {
+                "name": "Without input",
+                "value": "Without input",
+                "description": "Runs a specific Actor and returns its output  The run must finish in 300     MAX ACTOR JOB SYNC WAIT SECS     seconds otherwise the API endpoint returns a timeout error  The Actor is not passed any input  Beware that it might be impossible to maintain an idle HTTP connection for a long period of time  due to client timeout or network conditions  Make sure your HTTP client is configured to have a long enough connection timeout  If the connection breaks  you will not receive any information about the run and its status  To run the Actor asynchronously  use the  Run Actor    reference actors run collection run actor  API endpoint instead"
+              },
+              {
+                "name": "Run actor synchronously with input and get dataset items",
+                "value": "Run actor synchronously with input and get dataset items",
+                "description": "Runs a specific Actor and returns its dataset items  The POST payload including its  Content Type  header is passed as  INPUT  to the Actor  usually  application json    The HTTP response contains the Actors dataset items  while the format of items depends on specifying dataset items   format  parameter  You can send all the same options in parameters as the  Get Dataset Items    reference datasets item collection get items  API endpoint  The Actor is started with the default options  you can override them using URL query parameters  If the Actor run exceeds 300     MAX ACTOR JOB SYNC WAIT SECS     seconds  the HTTP response will return the 408 status code  Request Timeout   Beware that it might be impossible to maintain an idle HTTP connection for a long period of time  due to client timeout or network conditions  Make sure your HTTP client is configured to have a long enough connection timeout  If the connection breaks  you will not receive any information about the run and its status  To run the Actor asynchronously  use the  Run Actor    reference actors run collection run actor  API endpoint instead"
+              },
+              {
+                "name": "Run actor synchronously without input and get dataset items",
+                "value": "Run actor synchronously without input and get dataset items",
+                "description": "Runs a specific actor and returns its dataset items  The run must finish in 300     MAX ACTOR JOB SYNC WAIT SECS     seconds otherwise the API endpoint returns a timeout error  The actor is not passed any input  It allows to send all possible options in parameters from  Get Dataset Items    reference datasets item collection get items  API endpoint  Beware that it might be impossible to maintain an idle HTTP connection for a long period of time  due to client timeout or network conditions  Make sure your HTTP client is configured to have a long enough connection timeout  If the connection breaks  you will not receive any information about the run and its status  To run the Actor asynchronously  use the  Run Actor    reference actors run collection run actor  API endpoint instead"
+              },
+              {
+                "name": "Get run",
+                "value": "Get run",
+                "description": "DEPRECATED    API endpoints related to run of the Actor were moved under new namespace   actor runs     reference actor runs     DEPRECATED    API endpoints related to run of the Actor were moved under new namespace   actor runs     reference actor runs   Gets an object that contains all the details about a specific run of an Actor  By passing the optional  waitForFinish  parameter the API endpoint will synchronously wait for the run to finish  This is useful to avoid periodic polling when waiting for Actor run to complete  This endpoint does not require the authentication token  Instead  calls are authenticated using a hard to guess ID of the run  However  if you access the endpoint without the token  certain attributes  such as  usageUsd  and  usageTotalUsd   will be hidden"
+              },
+              {
+                "name": "Abort run",
+                "value": "Abort run",
+                "description": "DEPRECATED    API endpoints related to run of the Actor were moved under new namespace   actor runs     reference actor runs  Aborts an Actor run and returns an object that contains all the details about the run  Only runs that are starting or running are aborted  For runs with status  FINISHED    FAILED    ABORTING  and  TIMED OUT  this call does nothing"
+              },
+              {
+                "name": "Metamorph run",
+                "value": "Metamorph run",
+                "description": "DEPRECATED    API endpoints related to run of the actor were moved under new namespace   actor runs     reference actor runs  Transforms an actor run into a run of another actor with a new input  This is useful if you want to use another actor to finish the work of your current actor run  without the need to create a completely new run and waiting for its finish  For the users of your actors  the metamorph operation is transparent  they will just see your actor got the work done  There is a limit on how many times you can metamorph a single run  You can check the limit in  the Actor runtime limits  https   docs apify com platform limits actor limits   Internally  the system stops the Docker container corresponding to the actor run and starts a new container using a different Docker image  All the default storages are preserved and the new input is stored under the  INPUT METAMORPH 1  key in the same default key value store  For more information  see the  Actor docs  https   docs apify com platform actors development programming interface metamorph"
+              },
+              {
+                "name": "Resurrect run",
+                "value": "Resurrect run",
+                "description": "DEPRECATED    API endpoints related to run of the Actor were moved under new namespace   actor runs     reference actor runs  Resurrects a finished Actor run and returns an object that contains all the details about the resurrected run  Only finished runs  i e  runs with status  FINISHED    FAILED    ABORTED  and  TIMED OUT  can be resurrected  Run status will be updated to RUNNING and its container will be restarted with the same storages  the same behaviour as when the run gets migrated to the new server   For more information  see the  Actor docs  https   docs apify com platform actors running runs and builds resurrection of finished run"
+              },
+              {
+                "name": "Get last run",
+                "value": "Get last run",
+                "description": "This is not a single endpoint  but an entire group of endpoints that lets you to retrieve and manage the last run of given Actor or any of its default storages"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 305
+          },
+          "ioInfo": {
+            "nodeType": "apify",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-thong-zalo-test-trial": {
+      "packageName": "n8n-nodes-thong-zalo-test-trial",
+      "packageVersion": "0.1.182",
+      "nodes": [],
+      "loadError": "Installation failed"
+    },
+    "n8n-nodes-qrcode": {
+      "packageName": "n8n-nodes-qrcode",
+      "packageVersion": "0.1.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-qrcode.qrCode",
+          "displayName": "QrCode",
+          "description": "Create a QR Code image",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "value",
+                "displayName": "Value",
+                "type": "string",
+                "description": "The value to encode",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "qrCodeOptions",
+                "displayName": "Options",
+                "type": "fixedCollection",
+                "description": "The events to be monitored",
+                "required": false,
+                "default": [],
+                "options": [
+                  {
+                    "name": "qrcodeSymbolVersion"
+                  },
+                  {
+                    "name": "qrcodeScale"
+                  },
+                  {
+                    "name": "qrcodeErrorCorrectionLevel"
+                  },
+                  {
+                    "name": "qrcodeMaskPattern"
+                  },
+                  {
+                    "name": "qrcodeColors"
+                  },
+                  {
+                    "name": "Attachment name"
+                  }
+                ]
+              },
+              {
+                "name": "width",
+                "displayName": "Width",
+                "type": "number",
+                "description": "The width of the image",
+                "required": false,
+                "default": 256
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 3
+          },
+          "ioInfo": {
+            "nodeType": "qrCode",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-firecrawl": {
+      "packageName": "n8n-nodes-firecrawl",
+      "packageVersion": "0.3.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-firecrawl.fireCrawl",
+          "displayName": "FireCrawl",
+          "description": "FireCrawl API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "Url",
+                "type": "string",
+                "description": "The URL to crawl",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "Url",
+                "type": "string",
+                "description": "The URL to crawl",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "crawl_id",
+                "displayName": "Crawl Id",
+                "type": "string",
+                "description": "The ID of the crawl job",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "hidden",
+                "required": false,
+                "default": "",
+                "options": [
+                  {
+                    "name": "Default",
+                    "value": "Default"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "Submit A Crawl Job",
+                "options": [
+                  {
+                    "name": "Submit A Crawl Job",
+                    "value": "Submit A Crawl Job",
+                    "description": "Submits a job to crawl a URL and all accessible subpages"
+                  },
+                  {
+                    "name": "Check Crawl Job Status",
+                    "value": "Check Crawl Job Status",
+                    "description": "Check the status of a crawl job by its ID and retrieve the result"
+                  },
+                  {
+                    "name": "Crawl Url With Websocket Monitoring",
+                    "value": "Crawl Url With Websocket Monitoring",
+                    "description": "Initiate a crawl and monitor progress in real-time using WebSocket"
+                  },
+                  {
+                    "name": "Submit A Crawl Job With A Webhook",
+                    "value": "Submit A Crawl Job With A Webhook",
+                    "description": "Submits a job to crawl a URL and sends webhook events during the crawl process"
+                  },
+                  {
+                    "name": "Scrape A Url And Get Its Content",
+                    "value": "Scrape A Url And Get Its Content",
+                    "description": "Scrape a given URL to retrieve content in markdown, HTML, or other formats. This endpoint supports structured data extraction and dynamic actions."
+                  },
+                  {
+                    "name": "Map A Website And Get Urls",
+                    "value": "Map A Website And Get Urls",
+                    "description": "Map a URL and retrieve most links present on the website. Optionally, use the `search` parameter to filter URLs by a specific keyword."
+                  }
+                ]
+              },
+              {
+                "name": "url",
+                "displayName": "Url",
+                "type": "string",
+                "description": "The URL to crawl",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "Url",
+                "type": "string",
+                "description": "The URL to scrape",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "Url",
+                "type": "string",
+                "description": "The URL of the website to map",
+                "required": false,
+                "default": "https://firecrawl.dev"
+              },
+              {
+                "name": "operation",
+                "displayName": "POST /crawl",
+                "type": "notice",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "GET /crawl/{crawl_id}",
+                "type": "notice",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Submit A Crawl Job",
+                "value": "Submit A Crawl Job",
+                "description": "Submits a job to crawl a URL and all accessible subpages"
+              },
+              {
+                "name": "Check Crawl Job Status",
+                "value": "Check Crawl Job Status",
+                "description": "Check the status of a crawl job by its ID and retrieve the result"
+              },
+              {
+                "name": "Crawl Url With Websocket Monitoring",
+                "value": "Crawl Url With Websocket Monitoring",
+                "description": "Initiate a crawl and monitor progress in real-time using WebSocket"
+              },
+              {
+                "name": "Submit A Crawl Job With A Webhook",
+                "value": "Submit A Crawl Job With A Webhook",
+                "description": "Submits a job to crawl a URL and sends webhook events during the crawl process"
+              },
+              {
+                "name": "Scrape A Url And Get Its Content",
+                "value": "Scrape A Url And Get Its Content",
+                "description": "Scrape a given URL to retrieve content in markdown, HTML, or other formats. This endpoint supports structured data extraction and dynamic actions."
+              },
+              {
+                "name": "Map A Website And Get Urls",
+                "value": "Map A Website And Get Urls",
+                "description": "Map a URL and retrieve most links present on the website. Optionally, use the `search` parameter to filter URLs by a specific keyword."
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 36
+          },
+          "ioInfo": {
+            "nodeType": "fireCrawl",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-puppeteer": {
+      "packageName": "n8n-nodes-puppeteer",
+      "packageVersion": "1.4.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-puppeteer.puppeteer",
+          "displayName": "Puppeteer",
+          "description": "Automate browser interactions using Puppeteer",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "scriptCode",
+                "displayName": "Script Code",
+                "type": "string",
+                "description": "JavaScript code to execute with Puppeteer. You have access to the $browser and $page objects, which represent the Puppeteer browser and page.",
+                "required": true,
+                "default": "// Navigate to an IP lookup service\nawait $page.goto('https://httpbin.org/ip');\n\n// Extract the IP address from the page content\nconst ipData = await $page.evaluate(() => {\n    const response = document.body.innerText;\n    const parsed = JSON.parse(response);\n    return parsed.origin;  // Extract the 'origin' field, which typically contains the IP address\n});\n\nconsole.log(\"Hello, world!\");\n\nconsole.log(\"IP Address\", ipData);\n\n// Return the result in the required format\nreturn [{ ip: ipData, ...$json }];"
+              },
+              {
+                "name": "dataPropertyName",
+                "displayName": "Property Name",
+                "type": "string",
+                "description": "Name of the binary property in which  to store the image or PDF data.",
+                "required": true,
+                "default": "data"
+              },
+              {
+                "name": "scale",
+                "displayName": "Scale",
+                "type": "number",
+                "description": "Scales the rendering of the web page. Amount must be between 0.1 and 2.",
+                "required": true,
+                "default": 1
+              },
+              {
+                "name": "preferCSSPageSize",
+                "displayName": "Prefer CSS Page Size",
+                "type": "boolean",
+                "description": "Give any CSS @page size declared in the page priority over what is declared in the width or height or format option.",
+                "required": true,
+                "default": true
+              },
+              {
+                "name": "landscape",
+                "displayName": "Landscape",
+                "type": "boolean",
+                "description": "Whether to show the header and footer.",
+                "required": true,
+                "default": true
+              },
+              {
+                "name": "displayHeaderFooter",
+                "displayName": "Display Header/Footer",
+                "type": "boolean",
+                "description": "Whether to show the header and footer.",
+                "required": true,
+                "default": false
+              },
+              {
+                "name": "omitBackground",
+                "displayName": "Transparent Background",
+                "type": "boolean",
+                "description": "Hides default white background and allows generating pdfs with transparency.",
+                "required": true,
+                "default": false
+              },
+              {
+                "name": "printBackground",
+                "displayName": "Background Graphics",
+                "type": "boolean",
+                "description": "Set to true to include background graphics.",
+                "required": true,
+                "default": false
+              },
+              {
+                "name": "fullPage",
+                "displayName": "Full Page",
+                "type": "boolean",
+                "description": "When true, takes a screenshot of the full scrollable page.",
+                "required": true,
+                "default": false
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get Page Content",
+                "value": "getPageContent",
+                "description": "Gets the full HTML contents of the page"
+              },
+              {
+                "name": "Get PDF",
+                "value": "getPDF",
+                "description": "Captures all or part of the page as a PDF"
+              },
+              {
+                "name": "Get Screenshot",
+                "value": "getScreenshot",
+                "description": "Captures all or part of the page as an image"
+              },
+              {
+                "name": "Run Custom Script",
+                "value": "runCustomScript",
+                "description": "Runs custom code to perform specific actions on the page"
+              }
+            ],
+            "hasCredentials": false,
+            "totalPropertyCount": 23
+          },
+          "ioInfo": {
+            "nodeType": "puppeteer",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-aistudio": {
+      "packageName": "n8n-nodes-aistudio",
+      "packageVersion": "1.0.11",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-aistudio.geminiIAStudio",
+          "displayName": "Gemini IA Studio [8links]",
+          "description": "Gera conteúdo usando a API do Gemini",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "prompt",
+                "displayName": "Prompt",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "responseMimeType",
+                "displayName": "Formato de Saída",
+                "type": "options",
+                "required": false,
+                "default": "text/plain",
+                "options": [
+                  {
+                    "name": "application/json",
+                    "value": "application/json"
+                  },
+                  {
+                    "name": "text/plain",
+                    "value": "text/plain"
+                  }
+                ]
+              },
+              {
+                "name": "model",
+                "displayName": "Modelo",
+                "type": "options",
+                "required": false,
+                "default": "gemini-1.5-flash",
+                "options": [
+                  {
+                    "name": "Gemini 1.5 Flash",
+                    "value": "gemini-1.5-flash"
+                  },
+                  {
+                    "name": "Gemini 1.5 Pro",
+                    "value": "gemini-1.5-pro"
+                  },
+                  {
+                    "name": "Gemini 1.0 Pro",
+                    "value": "gemini-1.0-pro"
+                  }
+                ]
+              },
+              {
+                "name": "topP",
+                "displayName": "Top-P",
+                "type": "number",
+                "required": false,
+                "default": 0.95
+              },
+              {
+                "name": "topK",
+                "displayName": "Top-K",
+                "type": "number",
+                "required": false,
+                "default": 40
+              },
+              {
+                "name": "temperature",
+                "displayName": "Temperatura",
+                "type": "number",
+                "required": false,
+                "default": 1
+              },
+              {
+                "name": "maxOutputTokens",
+                "displayName": "Tamanho Máximo da Saída",
+                "type": "number",
+                "required": false,
+                "default": 8192
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 7
+          },
+          "ioInfo": {
+            "nodeType": "geminiIAStudio",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
           }
         }
       ]
