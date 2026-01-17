@@ -314,12 +314,34 @@ export class ResourceGenerator {
     // Quick navigation
     lines.push('## Quick Navigation');
     lines.push('');
+    lines.push('- [Quick Task Reference](#quick-task-reference)');
     lines.push('- [Find by Category](#find-by-category)');
     if (communityPackageCount > 0) {
       lines.push('- [Community Packages](#community-packages)');
     }
     lines.push('- [Template Index](#template-index)');
     lines.push('- [Statistics](#statistics)');
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+
+    // Quick Task Reference
+    lines.push('## Quick Task Reference');
+    lines.push('');
+    lines.push('Find the right node for common tasks:');
+    lines.push('');
+    lines.push('| Task | Recommended Node | File Location |');
+    lines.push('|------|------------------|---------------|');
+    lines.push('| Send HTTP requests | HTTP Request | input/nodes-base.httpRequest.md |');
+    lines.push('| Conditional branching | IF | transform/nodes-base.if.md |');
+    lines.push('| Merge multiple data streams | Merge | transform/nodes-base.merge.md |');
+    lines.push('| Execute custom code | Code | transform/nodes-base.code.md |');
+    lines.push('| Send emails | Gmail | output/nodes-base.gmail.md |');
+    lines.push('| Receive webhooks | Webhook | trigger/nodes-base.webhook.md |');
+    lines.push('| Schedule workflows | Schedule Trigger | trigger/nodes-base.scheduleTrigger.md |');
+    lines.push('| AI conversation handling | AI Agent | transform/transform-merged-2.md (see INDEX for line) |');
+    lines.push('| Read/write Google Sheets | Google Sheets | output/nodes-base.googleSheets.md |');
+    lines.push('| Transform data format | Set | transform/nodes-base.set.md |');
     lines.push('');
     lines.push('---');
     lines.push('');

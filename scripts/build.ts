@@ -325,7 +325,7 @@ class SkillBuilder {
     const skillConfig: SkillConfig = {
       name: 'n8n-skills',
       version: this.getProjectVersion(),
-      description: 'n8n workflow automation knowledge base. Provides n8n node information, node functionality details, workflow patterns, and configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
+      description: 'Use when building or troubleshooting n8n workflows. Covers node discovery, configuration details, connection compatibility, and workflow patterns. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
       topNodesCount: this.config.max_nodes_in_main_skill,
     };
 
@@ -347,17 +347,18 @@ class SkillBuilder {
     logger.info(`File size: ${lineCount} lines, ${charCount} characters`);
 
     // Generate guide files
-    await this.generateGuideFiles(generator, topNodes, usageStats, resourceFiles);
+    await this.generateGuideFiles(generator, topNodes, usageStats, resourceFiles, templateCount);
   }
 
   /**
-   * Generate guide files (how-to-find-nodes.md and usage-guide.md)
+   * Generate guide files (how-to-find-nodes.md, usage-guide.md, workflow-patterns.md)
    */
   private async generateGuideFiles(
     generator: SkillGenerator,
     topNodes: EnrichedNodeInfo[],
     usageStats: NodeUsageStats,
-    resourceFiles: ResourceFile[]
+    resourceFiles: ResourceFile[],
+    templateCount: number = 20
   ): Promise<void> {
     logger.info('===== Step 5.5: Generating guide files =====');
 
@@ -381,6 +382,15 @@ class SkillBuilder {
       'utf-8'
     );
     logger.success('Generated: usage-guide.md');
+
+    // Generate workflow-patterns.md
+    const workflowPatternsContent = generator.generateWorkflowPatternsFile(templateCount);
+    await fs.writeFile(
+      path.join(guidesDir, 'workflow-patterns.md'),
+      workflowPatternsContent,
+      'utf-8'
+    );
+    logger.success('Generated: workflow-patterns.md');
   }
 
   /**
