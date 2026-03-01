@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-04T00:43:35.675Z",
+  "lastUpdated": "2026-03-01T00:54:54.558Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -1091,7 +1091,7 @@
     },
     "@elevenlabs/n8n-nodes-elevenlabs": {
       "packageName": "@elevenlabs/n8n-nodes-elevenlabs",
-      "packageVersion": "0.2.2",
+      "packageVersion": "0.2.3",
       "nodes": [
         {
           "nodeType": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
@@ -1306,7 +1306,7 @@
     },
     "n8n-nodes-powerbi": {
       "packageName": "n8n-nodes-powerbi",
-      "packageVersion": "2.3.8",
+      "packageVersion": "2.3.10",
       "nodes": [
         {
           "nodeType": "n8n-nodes-powerbi.powerBi",
@@ -1512,7 +1512,7 @@
     },
     "@apify/n8n-nodes-apify": {
       "packageName": "@apify/n8n-nodes-apify",
-      "packageVersion": "0.6.4",
+      "packageVersion": "0.6.5",
       "nodes": [
         {
           "nodeType": "@apify/n8n-nodes-apify.apify",
@@ -2280,7 +2280,7 @@
     },
     "@mendable/n8n-nodes-firecrawl": {
       "packageName": "@mendable/n8n-nodes-firecrawl",
-      "packageVersion": "2.0.0",
+      "packageVersion": "2.0.4",
       "nodes": [
         {
           "nodeType": "@mendable/n8n-nodes-firecrawl.firecrawl",
@@ -2372,7 +2372,7 @@
             ],
             "operations": [
               {
-                "name": "Scrape a URL and get its content as markdown, summary, or other formats",
+                "name": "Scrape a URL and get content as markdown or other formats",
                 "value": "scrape"
               },
               {
@@ -7574,7 +7574,7 @@
     },
     "@tavily/n8n-nodes-tavily": {
       "packageName": "@tavily/n8n-nodes-tavily",
-      "packageVersion": "0.4.0",
+      "packageVersion": "0.5.1",
       "nodes": [
         {
           "nodeType": "@tavily/n8n-nodes-tavily.tavily",
@@ -7616,6 +7616,22 @@
                 "default": []
               },
               {
+                "name": "input",
+                "displayName": "Input",
+                "type": "string",
+                "description": "The research task or question to investigate",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "requestId",
+                "displayName": "Request ID",
+                "type": "string",
+                "description": "The unique identifier of the research task",
+                "required": true,
+                "default": ""
+              },
+              {
                 "name": "resource",
                 "displayName": "Resource",
                 "type": "options",
@@ -7623,20 +7639,24 @@
                 "default": "search",
                 "options": [
                   {
-                    "name": "Search",
-                    "value": "search"
+                    "name": "Crawl",
+                    "value": "crawl"
                   },
                   {
                     "name": "Extract",
                     "value": "extract"
                   },
                   {
-                    "name": "Crawl",
-                    "value": "crawl"
-                  },
-                  {
                     "name": "Map",
                     "value": "map"
+                  },
+                  {
+                    "name": "Research",
+                    "value": "research"
+                  },
+                  {
+                    "name": "Search",
+                    "value": "search"
                   }
                 ]
               },
@@ -7681,57 +7701,6 @@
                     "description": "The root URL to begin the crawl"
                   }
                 ]
-              },
-              {
-                "name": "operation",
-                "displayName": "Operation",
-                "type": "options",
-                "required": false,
-                "default": "url",
-                "options": [
-                  {
-                    "name": "URL",
-                    "value": "url",
-                    "description": "Discover all internal links starting from a base URL"
-                  }
-                ]
-              },
-              {
-                "name": "options",
-                "displayName": "Options",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "query",
-                    "description": "A natural language query describing the information you want to extract from the provided URLs"
-                  },
-                  {
-                    "name": "chunks_per_source",
-                    "description": "The number of content chunks to retrieve from each source. Each chunk's length is maximum 500 characters. Available when query is provided."
-                  },
-                  {
-                    "name": "include_images",
-                    "description": "Whether to include a list of images extracted from the URLs. Default is false."
-                  },
-                  {
-                    "name": "extract_depth",
-                    "description": "The depth of the extraction process. advanced extraction retrieves more data, including tables and embedded content, with higher success but may increase latency."
-                  },
-                  {
-                    "name": "format",
-                    "description": "The format of the extracted web page content. markdown returns content in markdown format. text returns plain text and may increase latency."
-                  },
-                  {
-                    "name": "include_favicon",
-                    "description": "Whether to include the favicon URL for each result"
-                  },
-                  {
-                    "name": "include_usage",
-                    "description": "Whether to include credit usage information in the response"
-                  }
-                ]
               }
             ],
             "operations": [
@@ -7742,7 +7711,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 13
+            "totalPropertyCount": 17
           },
           "ioInfo": {
             "nodeType": "tavily",
@@ -11240,7 +11209,7 @@
     },
     "n8n-nodes-puppeteer": {
       "packageName": "n8n-nodes-puppeteer",
-      "packageVersion": "1.4.1",
+      "packageVersion": "1.5.0",
       "nodes": [
         {
           "nodeType": "n8n-nodes-puppeteer.puppeteer",
@@ -11260,7 +11229,7 @@
                 "name": "scriptCode",
                 "displayName": "Script Code",
                 "type": "string",
-                "description": "JavaScript code to execute with Puppeteer. You have access to the $browser and $page objects, which represent the Puppeteer browser and page.",
+                "description": "JavaScript code to execute with Puppeteer. You have access to the $browser and $page objects, which represent the Puppeteer browser and page. When used as an AI agent tool, AI can dynamically generate this script using $fromAI(), or you can write a reusable script that processes input from the Query parameter below.",
                 "required": true,
                 "default": "// Navigate to an IP lookup service\nawait $page.goto('https://httpbin.org/ip');\n\n// Extract the IP address from the page content\nconst ipData = await $page.evaluate(() => {\n    const response = document.body.innerText;\n    const parsed = JSON.parse(response);\n    return parsed.origin;  // Extract the 'origin' field, which typically contains the IP address\n});\n\nconsole.log(\"Hello, world!\");\n\nconsole.log(\"IP Address\", ipData);\n\n// Return the result in the required format\nreturn [{ ip: ipData, ...$json }];"
               },
@@ -11352,7 +11321,7 @@
               }
             ],
             "hasCredentials": false,
-            "totalPropertyCount": 23
+            "totalPropertyCount": 24
           },
           "ioInfo": {
             "nodeType": "puppeteer",
@@ -11483,6 +11452,3067 @@
             "inputTypes": [
               "main"
             ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-palatine-speech": {
+      "packageName": "n8n-nodes-palatine-speech",
+      "packageVersion": "1.0.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-palatine-speech.PalatineSpeechNode",
+          "displayName": "Palatine Speech",
+          "description": "Use Palatine Speech API to transcribe audio, diarize speakers, analyze sentiment, generate AI summaries and more",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "task",
+                "displayName": "Task",
+                "type": "options",
+                "description": "Select what to do with audio file",
+                "required": false,
+                "default": "transcribe",
+                "options": [
+                  {
+                    "name": "Transcribe",
+                    "value": "transcribe",
+                    "description": "Convert speech in audio file to text"
+                  },
+                  {
+                    "name": "Diarize",
+                    "value": "diarize",
+                    "description": "Split audio by speakers and return timestamps for each segment"
+                  },
+                  {
+                    "name": "Sentiment Analysis",
+                    "value": "sentiment",
+                    "description": "Detect sentiment/emotion in audio and return scores"
+                  },
+                  {
+                    "name": "Summarize",
+                    "value": "summarize",
+                    "description": "Generate an AI summary of audio (notes, decisions, action items)"
+                  }
+                ]
+              },
+              {
+                "name": "model",
+                "displayName": "Model",
+                "type": "options",
+                "description": "Model used for transcription processing",
+                "required": false,
+                "default": "palatine_small",
+                "options": [
+                  {
+                    "name": "palatine_small",
+                    "value": "palatine_small",
+                    "description": "Model used for transcription processing"
+                  },
+                  {
+                    "name": "palatine_large_highspeed",
+                    "value": "palatine_large_highspeed",
+                    "description": "Model used for transcription processing"
+                  }
+                ]
+              },
+              {
+                "name": "summarizeTask",
+                "displayName": "AI Task",
+                "type": "options",
+                "description": "Summarization mode",
+                "required": false,
+                "default": "meeting_summary",
+                "options": [
+                  {
+                    "name": "Meeting Summary",
+                    "value": "meeting_summary",
+                    "description": "Ready-made meeting summary: key points, decisions, and action items"
+                  },
+                  {
+                    "name": "User Prompt",
+                    "value": "user_prompt",
+                    "description": "Use your own prompt to control summary format/content"
+                  }
+                ]
+              },
+              {
+                "name": "binaryProperty",
+                "displayName": "File",
+                "type": "string",
+                "description": "Name of binary property that contains audio file",
+                "required": false,
+                "default": "data"
+              },
+              {
+                "name": "pollIntervalMs",
+                "displayName": "Polling Interval",
+                "type": "number",
+                "description": "How often node polls API to retrieve result. Minimum 500 ms, maximum 900000 ms",
+                "required": false,
+                "default": 500
+              },
+              {
+                "name": "pollIntervalMsSummarize",
+                "displayName": "Polling Interval",
+                "type": "number",
+                "description": "How often node polls API to retrieve result. Minimum 500 ms, maximum 900000 ms",
+                "required": false,
+                "default": 20000
+              },
+              {
+                "name": "maxPollAttempts",
+                "displayName": "Max Poll Attempts",
+                "type": "number",
+                "description": "How many times node polls API before giving up. Minimum 1 attempt, maximum 1000 attempts",
+                "required": false,
+                "default": 200
+              },
+              {
+                "name": "maxPollAttemptsSummarize",
+                "displayName": "Max Poll Attempts",
+                "type": "number",
+                "description": "How many times node polls API before giving up. Minimum 1 attempt, maximum 1000 attempts",
+                "required": false,
+                "default": 500
+              },
+              {
+                "name": "summarizePrompt",
+                "displayName": "Prompt",
+                "type": "string",
+                "description": "Your instruction for AI. Used only with \"User Prompt\". Leave blank to use default prompt",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "summarizeThinking",
+                "displayName": "Thinking",
+                "type": "boolean",
+                "description": "Enable \"thinking\" mode for deeper reasoning (may increase processing time)",
+                "required": false,
+                "default": false
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 10
+          },
+          "ioInfo": {
+            "nodeType": "PalatineSpeechNode",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-waha": {
+      "packageName": "n8n-nodes-waha",
+      "packageVersion": "2024.11.5",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-waha.WAHA",
+          "displayName": "WAHA",
+          "description": "Connect with Whatsapp HTTP API",
+          "version": "202411",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "Url",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "format",
+                "displayName": "Format",
+                "type": "options",
+                "required": true,
+                "default": "image",
+                "options": [
+                  {
+                    "name": "Image",
+                    "value": "image"
+                  },
+                  {
+                    "name": "Raw",
+                    "value": "raw"
+                  }
+                ]
+              },
+              {
+                "name": "presence",
+                "displayName": "Presence",
+                "type": "options",
+                "required": true,
+                "default": "offline",
+                "options": [
+                  {
+                    "name": "Offline",
+                    "value": "offline"
+                  },
+                  {
+                    "name": "Online",
+                    "value": "online"
+                  },
+                  {
+                    "name": "Typing",
+                    "value": "typing"
+                  },
+                  {
+                    "name": "Recording",
+                    "value": "recording"
+                  },
+                  {
+                    "name": "Paused",
+                    "value": "paused"
+                  }
+                ]
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "phoneNumber",
+                "displayName": "Phone Number",
+                "type": "string",
+                "description": "Mobile phone number in international format",
+                "required": true,
+                "default": "12132132130"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              },
+              {
+                "name": "session",
+                "displayName": "Session",
+                "type": "string",
+                "description": "Session name",
+                "required": true,
+                "default": "={{ $json.session }}"
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get QR",
+                "value": "Get QR",
+                "description": "Get QR code for pairing WhatsApp API."
+              },
+              {
+                "name": "Request Code",
+                "value": "Request Code",
+                "description": "Request authentication code."
+              },
+              {
+                "name": "Authorize Code",
+                "value": "Authorize Code",
+                "description": "Send OTP authentication code."
+              },
+              {
+                "name": "Get Captcha",
+                "value": "Get Captcha",
+                "description": "Get captcha image."
+              },
+              {
+                "name": "Save Captcha",
+                "value": "Save Captcha",
+                "description": "Enter captcha code."
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 382
+          },
+          "ioInfo": {
+            "nodeType": "WAHA",
+            "version": "202411",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-waha.wahaTrigger",
+          "displayName": "WAHA Trigger",
+          "description": "Handle WAHA events via webhooks",
+          "version": "202411",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "operation",
+                "displayName": "Remember to configure WAHA instance (session or server) to send events to <b>Webhook URL</b>. <br/>Check <b>Docs</b> link above☝️",
+                "type": "notice",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "<b>Events</b>:<br>- session.status<br>- message<br>- message.reaction<br>- message.any<br>- message.ack<br>- message.waiting<br>- message.revoked<br>- state.change<br>- group.join<br>- group.leave<br>- presence.update<br>- poll.vote<br>- poll.vote.failed<br>- chat.archive<br>- call.received<br>- call.accepted<br>- call.rejected<br>- label.upsert<br>- label.deleted<br>- label.chat.added<br>- label.chat.deleted<br>- engine.event",
+                "type": "notice",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 2
+          },
+          "ioInfo": {
+            "nodeType": "wahaTrigger",
+            "version": "202411",
+            "inputs": [],
+            "outputs": [
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main",
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": true,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 22,
+            "outputNames": [
+              "session.status",
+              "message",
+              "message.reaction",
+              "message.any",
+              "message.ack",
+              "message.waiting",
+              "message.revoked",
+              "state.change",
+              "group.join",
+              "group.leave",
+              "presence.update",
+              "poll.vote",
+              "poll.vote.failed",
+              "chat.archive",
+              "call.received",
+              "call.accepted",
+              "call.rejected",
+              "label.upsert",
+              "label.deleted",
+              "label.chat.added",
+              "label.chat.deleted",
+              "engine.event"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-pdfco": {
+      "packageName": "n8n-nodes-pdfco",
+      "packageVersion": "1.0.6",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-pdfco.PDFco Api",
+          "displayName": "PDF.co Api",
+          "description": "Generate PDF, extract data from PDF, split PDF, merge PDF, convert PDF. Fill PDF forms, add text and images to pdf and much more with pdf.co!",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "PDF URL",
+                "type": "string",
+                "description": "URL to the source PDF file",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "Web Page URL",
+                "type": "string",
+                "description": "The URL of the page to convert to PDF",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "File URL(s) to Merge",
+                "type": "string",
+                "description": "The URLs of the PDF files to merge",
+                "required": true,
+                "default": []
+              },
+              {
+                "name": "url",
+                "displayName": "Source File URL of the File to Convert",
+                "type": "string",
+                "description": "The URL of the file to convert",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "PDF URL",
+                "type": "string",
+                "description": "The URL of the PDF file to fill",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "PDF URL to Split",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "PDF URL",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "PDF URL",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "PDF URL",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "url",
+                "displayName": "PDF URL",
+                "type": "string",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "AI Invoice Parser",
+                "value": "AI Invoice Parser",
+                "description": "Transform your invoice processing with our advanced AI. Enjoy quick, accurate data extraction that eliminates manual effort and saves you valuable time."
+              },
+              {
+                "name": "URL/HTML to PDF",
+                "value": "URL/HTML to PDF",
+                "description": "Convert HTML or URL to PDF with advanced options (e.g. layout, orientation). Supports HTML templates (Handlebar and Mustache)."
+              },
+              {
+                "name": "Merge PDF",
+                "value": "Merge PDF",
+                "description": "Combine multiple document formats into a single PDF. Supported formats include PDF, DOC, DOCX, XLS, JPG, PNG, and more."
+              },
+              {
+                "name": "Split PDF",
+                "value": "Split PDF",
+                "description": "PDF Splitter that takes PDF file and splits into multiple PDF files using page index, page range, text search or barcode search"
+              },
+              {
+                "name": "Convert To PDF",
+                "value": "Convert to PDF",
+                "description": "Convert a variety of formats such as URLs, HTML code, documents, spreadsheets, presentations, images, and more into PDF"
+              },
+              {
+                "name": "Convert From PDF",
+                "value": "Convert from PDF",
+                "description": "Convert PDF pages to structured CSV, XML, JSON, Plain Text, Convert PDF to JPG, PDF to PNG, PDF to TIFF, and more"
+              },
+              {
+                "name": "Add Text/Images to PDF",
+                "value": "Add Text/Images to PDF",
+                "description": "Add text, images, and annotations to PDF documents with precise positioning and styling options"
+              },
+              {
+                "name": "Fill a PDF Form",
+                "value": "Fill a PDF Form",
+                "description": "Fill interactive PDF forms with text, checkboxes, and other form elements"
+              },
+              {
+                "name": "PDF Information & Form Fields",
+                "value": "PDF Information & Form Fields",
+                "description": "Extract metadata and form field information from PDF documents"
+              },
+              {
+                "name": "Compress PDF",
+                "value": "Compress PDF",
+                "description": "Reduce PDF file size while maintaining quality"
+              },
+              {
+                "name": "PDF Security",
+                "value": "PDF Security",
+                "description": "Add or remove password protection and security features from PDF documents"
+              },
+              {
+                "name": "Rotate PDF Pages",
+                "value": "Rotate PDF Pages",
+                "description": "Rotate PDF pages manually or automatically detect and fix rotation based on text analysis"
+              },
+              {
+                "name": "Delete PDF Pages",
+                "value": "Delete PDF Pages",
+                "description": "Remove specific pages from a PDF document"
+              },
+              {
+                "name": "Search in PDF",
+                "value": "Search in PDF",
+                "description": "Search for specific text within PDF documents or scanned images"
+              },
+              {
+                "name": "Search & Replace Text or Delete",
+                "value": "Search & Replace Text or Delete",
+                "description": "Search and delete text, replace text, or replace text with images in PDF documents"
+              },
+              {
+                "name": "Barcode Reader",
+                "value": "Barcode Reader",
+                "description": "Decode barcodes from images or PDF documents swiftly and accurately"
+              },
+              {
+                "name": "Barcode Generator",
+                "value": "Barcode Generator",
+                "description": "Generate various types of barcodes including QR codes, Code 128, Code 39, and more"
+              },
+              {
+                "name": "Make PDF Searchable or Unsearchable",
+                "value": "Make PDF Searchable or Unsearchable",
+                "description": "Convert scanned PDF or image files into text-searchable PDFs using OCR or make them unsearchable/scanned"
+              },
+              {
+                "name": "Upload File",
+                "value": "Upload File to PDF.co",
+                "description": "Upload a file to PDF.co and get a URL"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 92
+          },
+          "ioInfo": {
+            "nodeType": "PDFco Api",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@gotohuman/n8n-nodes-gotohuman": {
+      "packageName": "@gotohuman/n8n-nodes-gotohuman",
+      "packageVersion": "0.1.1",
+      "nodes": [
+        {
+          "nodeType": "@gotohuman/n8n-nodes-gotohuman.gotoHuman",
+          "displayName": "gotoHuman",
+          "description": "Request human reviews with gotoHuman",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": true,
+                "default": "reviewRequest",
+                "options": [
+                  {
+                    "name": "Review Request",
+                    "value": "reviewRequest",
+                    "description": "Request for Human Review"
+                  }
+                ]
+              },
+              {
+                "name": "metaSelect",
+                "displayName": "Meta Data",
+                "type": "options",
+                "description": "Select if you want to add meta data that you want to receive back in the response webhook",
+                "required": true,
+                "default": "no",
+                "options": [
+                  {
+                    "name": "No Meta Data",
+                    "value": "no"
+                  },
+                  {
+                    "name": "Add as JSON",
+                    "value": "json"
+                  },
+                  {
+                    "name": "Add as Key-Value Pairs",
+                    "value": "keyValue"
+                  }
+                ]
+              },
+              {
+                "name": "assignToSelect",
+                "displayName": "Assigned Users",
+                "type": "options",
+                "description": "Select who you want to assign the review to",
+                "required": true,
+                "default": "all",
+                "options": [
+                  {
+                    "name": "All Users in Your Account",
+                    "value": "all"
+                  },
+                  {
+                    "name": "Only Selected Users",
+                    "value": "selectByEmail"
+                  }
+                ]
+              },
+              {
+                "name": "fields",
+                "displayName": "Fields",
+                "type": "resourceMapper",
+                "required": true,
+                "default": {
+                  "mappingMode": "defineBelow",
+                  "value": null
+                }
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "sendAndWait",
+                "options": [
+                  {
+                    "name": "Send and Wait for Response",
+                    "value": "sendAndWait",
+                    "description": "Request a human review and wait for the response"
+                  }
+                ]
+              },
+              {
+                "name": "assignTo",
+                "displayName": "Selected Users",
+                "type": "fixedCollection",
+                "description": "List the email addresses of the users you want to assign the review to",
+                "required": false,
+                "default": [],
+                "options": [
+                  {
+                    "name": "values"
+                  }
+                ]
+              },
+              {
+                "name": "metaKeyValues",
+                "displayName": "Meta Data Values",
+                "type": "fixedCollection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "metaArray"
+                  }
+                ]
+              },
+              {
+                "name": "additionalFields",
+                "displayName": "Additional Fields",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "updateForReviewId",
+                    "description": "To update a specific review, enter the review ID here. Read more about it <a href=\"https://docs.gotohuman.com/retries\">here</a>."
+                  }
+                ]
+              },
+              {
+                "name": "reviewTemplateID",
+                "displayName": "Review Template",
+                "type": "resourceLocator",
+                "description": "Choose a review template from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                "required": false,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "metaJson",
+                "displayName": "Meta Data JSON",
+                "type": "json",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Send and Wait for Response",
+                "value": "sendAndWait",
+                "description": "Request a human review and wait for the response"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 10
+          },
+          "ioInfo": {
+            "nodeType": "gotoHuman",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@mookielianhd/n8n-nodes-instagram": {
+      "packageName": "@mookielianhd/n8n-nodes-instagram",
+      "packageVersion": "2.6.2",
+      "nodes": [
+        {
+          "nodeType": "@mookielianhd/n8n-nodes-instagram.instagram",
+          "displayName": "Instagram",
+          "description": "Publish media to Instagram using Facebook Graph API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "description": "Select what you want to do with the Instagram API",
+                "required": true,
+                "default": "image",
+                "options": [
+                  {
+                    "name": "Auth",
+                    "value": "auth",
+                    "description": "Exchange and refresh Instagram access tokens; call /me"
+                  },
+                  {
+                    "name": "Carousel",
+                    "value": "carousel",
+                    "description": "Publish a carousel (album) post with up to 10 images or videos"
+                  },
+                  {
+                    "name": "Comment",
+                    "value": "comments",
+                    "description": "Moderate comments on Instagram media"
+                  },
+                  {
+                    "name": "IG Hashtag",
+                    "value": "igHashtag",
+                    "description": "Search hashtags and fetch top or recent media for a hashtag"
+                  },
+                  {
+                    "name": "IG User",
+                    "value": "igUser",
+                    "description": "Read profile and media for an Instagram Business or Creator account"
+                  },
+                  {
+                    "name": "Image",
+                    "value": "image",
+                    "description": "Publish image posts to Instagram"
+                  },
+                  {
+                    "name": "Messaging",
+                    "value": "messaging",
+                    "description": "Send direct messages via the Instagram Messaging API"
+                  },
+                  {
+                    "name": "Page",
+                    "value": "page",
+                    "description": "Work with the connected Facebook Page and its Instagram account"
+                  },
+                  {
+                    "name": "Reel",
+                    "value": "reels",
+                    "description": "Publish Reels videos to Instagram"
+                  },
+                  {
+                    "name": "Story",
+                    "value": "stories",
+                    "description": "Publish story videos to Instagram"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "publish",
+                "options": [
+                  {
+                    "name": "Publish",
+                    "value": "publish",
+                    "description": "Publish the selected media type (image, reel, or story) to Instagram"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "getInstagramAccount",
+                "options": [
+                  {
+                    "name": "Get Instagram Account",
+                    "value": "getInstagramAccount",
+                    "description": "Get the Instagram business/creator account connected to a Facebook Page"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "publish",
+                "options": [
+                  {
+                    "name": "Publish",
+                    "value": "publish",
+                    "description": "Publish a carousel (album) post with up to 10 images or videos"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "list",
+                "options": [
+                  {
+                    "name": "Delete",
+                    "value": "deleteComment",
+                    "description": "Delete a comment from an Instagram media object"
+                  },
+                  {
+                    "name": "Disable Comments",
+                    "value": "disableComments",
+                    "description": "Disable comments on an Instagram media object"
+                  },
+                  {
+                    "name": "Enable Comments",
+                    "value": "enableComments",
+                    "description": "Enable comments on an Instagram media object"
+                  },
+                  {
+                    "name": "Hide",
+                    "value": "hideComment",
+                    "description": "Hide a comment from an Instagram media object"
+                  },
+                  {
+                    "name": "List",
+                    "value": "list",
+                    "description": "List comments on an Instagram media object"
+                  },
+                  {
+                    "name": "Send Private Reply",
+                    "value": "sendPrivateReply",
+                    "description": "Send a private reply message to a commenter using the comment ID"
+                  },
+                  {
+                    "name": "Unhide",
+                    "value": "unhideComment",
+                    "description": "Unhide a previously hidden comment"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "get",
+                "options": [
+                  {
+                    "name": "Get",
+                    "value": "get",
+                    "description": "Get basic profile information for an Instagram Business or Creator account"
+                  },
+                  {
+                    "name": "Get Media",
+                    "value": "getMedia",
+                    "description": "List media objects owned by an Instagram Business or Creator account"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "refreshAccessToken",
+                "options": [
+                  {
+                    "name": "Exchange Access Token",
+                    "value": "exchangeAccessToken",
+                    "description": "Exchange a short-lived Instagram User access token for a long-lived token using the Instagram Platform access token endpoint"
+                  },
+                  {
+                    "name": "Get Me",
+                    "value": "getMe",
+                    "description": "Call the Graph API /me endpoint using the access token from the Instagram API credential"
+                  },
+                  {
+                    "name": "Refresh Access Token",
+                    "value": "refreshAccessToken",
+                    "description": "Refresh a long-lived Instagram User access token using the Instagram Platform refresh endpoint"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "search",
+                "options": [
+                  {
+                    "name": "Search",
+                    "value": "search",
+                    "description": "Search for a hashtag by name and return its ID"
+                  },
+                  {
+                    "name": "Get Recent Media",
+                    "value": "getRecentMedia",
+                    "description": "Get the most recent media tagged with a hashtag"
+                  },
+                  {
+                    "name": "Get Top Media",
+                    "value": "getTopMedia",
+                    "description": "Get the most popular media tagged with a hashtag"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": true,
+                "default": "sendMessage",
+                "options": [
+                  {
+                    "name": "Send Message",
+                    "value": "sendMessage",
+                    "description": "Send a text message to an Instagram user via the Messaging API"
+                  }
+                ]
+              },
+              {
+                "name": "node",
+                "displayName": "Node",
+                "type": "string",
+                "description": "The Instagram Business Account ID or User ID on which to publish the media, or the professional account that owns the commented media, or the IG User to read data for, or the IG User performing a hashtag or messaging query",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Publish",
+                "value": "publish",
+                "description": "Publish the selected media type (image, reel, or story) to Instagram"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 29
+          },
+          "ioInfo": {
+            "nodeType": "instagram",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-kipps": {
+      "packageName": "n8n-nodes-kipps",
+      "packageVersion": "0.0.12",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-kipps.kippsAiChatAgent",
+          "displayName": "Kipps.AI ChatAgent",
+          "description": "Interact with a Kipps.AI ChatAgent to send and receive messages.",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "agentId",
+                "displayName": "Agent ID",
+                "type": "string",
+                "description": "The ID of the chatagent to use",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "The message to send to the chatagent",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "session",
+                "displayName": "Session ID",
+                "type": "string",
+                "description": "An optional ID to maintain conversation context. If left empty, a new session will be created.",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 3
+          },
+          "ioInfo": {
+            "nodeType": "kippsAiChatAgent",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-kipps.kippsAiVoiceAgent",
+          "displayName": "Kipps.AI VoiceAgent",
+          "description": "Manage and interact with a Kipps.AI VoiceAgent for handling calls.",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "voiceagentId",
+                "displayName": "VoiceAgent ID",
+                "type": "string",
+                "description": "The ID of the voiceagent to use",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "phoneNumber",
+                "displayName": "Phone Number",
+                "type": "string",
+                "description": "The destination phone number for the call",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "roomName",
+                "displayName": "Room Name",
+                "type": "string",
+                "description": "A unique name for the call room to perform actions in",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "action",
+                "displayName": "Action",
+                "type": "options",
+                "required": false,
+                "default": "startCall",
+                "options": [
+                  {
+                    "name": "Start Call",
+                    "value": "startCall"
+                  },
+                  {
+                    "name": "Send Audio/Text",
+                    "value": "sendAudioText"
+                  },
+                  {
+                    "name": "End Call",
+                    "value": "endCall"
+                  }
+                ]
+              },
+              {
+                "name": "inputType",
+                "displayName": "Input Type",
+                "type": "options",
+                "description": "The type of input you want to send to the voicebot",
+                "required": false,
+                "default": "text",
+                "options": [
+                  {
+                    "name": "Text",
+                    "value": "text"
+                  },
+                  {
+                    "name": "Audio",
+                    "value": "audio"
+                  }
+                ]
+              },
+              {
+                "name": "textInput",
+                "displayName": "Text Input",
+                "type": "string",
+                "description": "The text message to send to the voiceagent",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "audioInput",
+                "displayName": "Audio Input",
+                "type": "string",
+                "description": "The path or URL to the audio file to be sent",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Start Call",
+                "value": "startCall"
+              },
+              {
+                "name": "Send Audio/Text",
+                "value": "sendAudioText"
+              },
+              {
+                "name": "End Call",
+                "value": "endCall"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 7
+          },
+          "ioInfo": {
+            "nodeType": "kippsAiVoiceAgent",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-a2a": {
+      "packageName": "n8n-nodes-a2a",
+      "packageVersion": "0.4.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-a2a.a2a",
+          "displayName": "A2A",
+          "description": "A2A (Account to Account) transfers, account management, and Agent2Agent protocol communication",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "currency",
+                "displayName": "Currency",
+                "type": "options",
+                "description": "Transfer currency",
+                "required": true,
+                "default": "USD",
+                "options": [
+                  {
+                    "name": "USD",
+                    "value": "USD"
+                  },
+                  {
+                    "name": "EUR",
+                    "value": "EUR"
+                  },
+                  {
+                    "name": "GBP",
+                    "value": "GBP"
+                  },
+                  {
+                    "name": "BRL",
+                    "value": "BRL"
+                  }
+                ]
+              },
+              {
+                "name": "transferId",
+                "displayName": "Transfer ID",
+                "type": "string",
+                "description": "The ID of the transfer",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "amount",
+                "displayName": "Amount",
+                "type": "number",
+                "description": "Amount to transfer",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "fromAccountId",
+                "displayName": "From Account ID",
+                "type": "string",
+                "description": "Source account ID",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "toAccountId",
+                "displayName": "To Account ID",
+                "type": "string",
+                "description": "Destination account ID",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "accountId",
+                "displayName": "Account ID",
+                "type": "string",
+                "description": "The ID of the account",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "agentUrl",
+                "displayName": "Agent URL",
+                "type": "string",
+                "description": "The base URL of the A2A agent endpoint",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "The message to send to the agent",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "customJsonMessage",
+                "displayName": "Custom JSON Message",
+                "type": "json",
+                "description": "Custom JSON structure for the message object",
+                "required": true,
+                "default": "{\n  \"role\": \"user\",\n  \"parts\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"Your message here\"\n    }\n  ]\n}"
+              },
+              {
+                "name": "customMethod",
+                "displayName": "JSON-RPC Method",
+                "type": "string",
+                "description": "The JSON-RPC method to call",
+                "required": true,
+                "default": "tasks/send"
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create",
+                "value": "create",
+                "description": "Create a new transfer"
+              },
+              {
+                "name": "Get",
+                "value": "get",
+                "description": "Get a transfer by ID"
+              },
+              {
+                "name": "Get Many",
+                "value": "getMany",
+                "description": "Get multiple transfers"
+              },
+              {
+                "name": "Cancel",
+                "value": "cancel",
+                "description": "Cancel a transfer"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 33
+          },
+          "ioInfo": {
+            "nodeType": "a2a",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-a2a.exampleNode",
+          "displayName": "Example Node",
+          "description": "Basic Example Node",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "myString",
+                "displayName": "My String",
+                "type": "string",
+                "description": "The description text",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 1
+          },
+          "ioInfo": {
+            "nodeType": "exampleNode",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-a2a.httpBin",
+          "displayName": "HttpBin",
+          "description": "Interact with HttpBin API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "typeofData",
+                "displayName": "Type of Data",
+                "type": "options",
+                "description": "Select type of data to send [Query Parameters]",
+                "required": true,
+                "default": "queryParameter",
+                "options": [
+                  {
+                    "name": "Query",
+                    "value": "queryParameter"
+                  }
+                ]
+              },
+              {
+                "name": "typeofData",
+                "displayName": "Type of Data",
+                "type": "options",
+                "description": "Select type of data to send [Query Parameter Arguments, JSON-Body]",
+                "required": true,
+                "default": "queryParameter",
+                "options": [
+                  {
+                    "name": "Query",
+                    "value": "queryParameter"
+                  },
+                  {
+                    "name": "JSON",
+                    "value": "jsonData"
+                  }
+                ]
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "httpVerb",
+                "options": [
+                  {
+                    "name": "HTTP Verb",
+                    "value": "httpVerb"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "get",
+                "options": [
+                  {
+                    "name": "GET",
+                    "value": "get",
+                    "description": "Perform a GET request"
+                  },
+                  {
+                    "name": "DELETE",
+                    "value": "delete",
+                    "description": "Perform a DELETE request"
+                  }
+                ]
+              },
+              {
+                "name": "arguments",
+                "displayName": "Query Parameters",
+                "type": "fixedCollection",
+                "description": "The request's query parameters",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "keyvalue"
+                  }
+                ]
+              },
+              {
+                "name": "arguments",
+                "displayName": "Query Parameters",
+                "type": "fixedCollection",
+                "description": "The request's query parameters",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "keyvalue"
+                  }
+                ]
+              },
+              {
+                "name": "arguments",
+                "displayName": "JSON Object",
+                "type": "fixedCollection",
+                "description": "The request's JSON properties",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "keyvalue"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "GET",
+                "value": "get",
+                "description": "Perform a GET request"
+              },
+              {
+                "name": "DELETE",
+                "value": "delete",
+                "description": "Perform a DELETE request"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 7
+          },
+          "ioInfo": {
+            "nodeType": "httpBin",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-docx-converter": {
+      "packageName": "n8n-nodes-docx-converter",
+      "packageVersion": "0.1.3",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-docx-converter.docxToText",
+          "displayName": "DOCX to Text",
+          "description": "Converts DOCX file to plain text",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "inputBinaryField",
+                "displayName": "Input Binary Field",
+                "type": "string",
+                "description": "The name of the input binary field containing the DOCX file",
+                "required": true,
+                "default": "data"
+              },
+              {
+                "name": "destinationOutputField",
+                "displayName": "Destination Output Field",
+                "type": "string",
+                "description": "The name of the destination output field for the converted text",
+                "required": true,
+                "default": "text"
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 2
+          },
+          "ioInfo": {
+            "nodeType": "docxToText",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-notionmd": {
+      "packageName": "n8n-nodes-notionmd",
+      "packageVersion": "0.1.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-notionmd.notionMd",
+          "displayName": "Notion MD",
+          "description": "Node to transform markdown and notion blocks",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "description": "Choose whether you want to convert markdown to notion or vice versa",
+                "required": false,
+                "default": "markdownToNotion",
+                "options": [
+                  {
+                    "name": "Markdown to Notion",
+                    "value": "markdownToNotion"
+                  },
+                  {
+                    "name": "Notion to Markdown",
+                    "value": "notionToMarkdown"
+                  }
+                ]
+              },
+              {
+                "name": "input",
+                "displayName": "Input",
+                "type": "string",
+                "description": "The input to be transformed",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "outputKey",
+                "displayName": "Output Key",
+                "type": "string",
+                "description": "Key to use for the output object",
+                "required": false,
+                "default": "output"
+              }
+            ],
+            "operations": [
+              {
+                "name": "Markdown to Notion",
+                "value": "markdownToNotion"
+              },
+              {
+                "name": "Notion to Markdown",
+                "value": "notionToMarkdown"
+              }
+            ],
+            "hasCredentials": false,
+            "totalPropertyCount": 3
+          },
+          "ioInfo": {
+            "nodeType": "notionMd",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@asaasbr/n8n-nodes-asaas": {
+      "packageName": "@asaasbr/n8n-nodes-asaas",
+      "packageVersion": "1.0.3",
+      "nodes": [
+        {
+          "nodeType": "@asaasbr/n8n-nodes-asaas.asaas",
+          "displayName": "Asaas",
+          "description": "Interagir com a API do Asaas",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "value",
+                "displayName": "Valor",
+                "type": "number",
+                "description": "Valor da cobrança em reais. Exemplo: 150.50.",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "value",
+                "displayName": "Valor",
+                "type": "number",
+                "description": "Valor da cobrança",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "value",
+                "displayName": "Valor",
+                "type": "number",
+                "description": "Valor da assinatura",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "value",
+                "displayName": "Valor",
+                "type": "number",
+                "description": "Valor da assinatura",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "URL para onde os eventos serão enviados",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "value",
+                "displayName": "Valor",
+                "type": "number",
+                "description": "Valor do QR Code estático em reais",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "sendType",
+                "displayName": "Tipo De Envio",
+                "type": "options",
+                "description": "Tipo de envio dos eventos",
+                "required": true,
+                "default": "NON_SEQUENTIALLY",
+                "options": [
+                  {
+                    "name": "Sequencial",
+                    "value": "SEQUENTIALLY"
+                  },
+                  {
+                    "name": "Não Sequencial",
+                    "value": "NON_SEQUENTIALLY"
+                  }
+                ]
+              },
+              {
+                "name": "events",
+                "displayName": "Eventos",
+                "type": "multiOptions",
+                "description": "Eventos que o webhook deve escutar (opcional para atualização)",
+                "required": true,
+                "default": [],
+                "options": [
+                  {
+                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_APPROVED - Conta Bancária Aprovada",
+                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_APPROVED"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_AWAITING_APPROVAL - Conta Bancária Está Em Análise",
+                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_AWAITING_APPROVAL"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_PENDING - Conta Bancária Voltou Para Pendente",
+                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_PENDING"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_REJECTED - Conta Bancária Reprovada",
+                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_REJECTED"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_APPROVED - Informações Comerciais Aprovada",
+                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_APPROVED"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_AWAITING_APPROVAL - Informações Comerciais Em Análise",
+                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_AWAITING_APPROVAL"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_PENDING - Informações Comerciais Voltou Para Pendente",
+                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_PENDING"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_REJECTED - Informações Comerciais Reprovada",
+                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_REJECTED"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_DOCUMENT_APPROVED - Documentos Aprovados",
+                    "value": "ACCOUNT_STATUS_DOCUMENT_APPROVED"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_DOCUMENT_AWAITING_APPROVAL - Documentos Em Análise",
+                    "value": "ACCOUNT_STATUS_DOCUMENT_AWAITING_APPROVAL"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_DOCUMENT_PENDING - Documentos Voltaram Para Pendente",
+                    "value": "ACCOUNT_STATUS_DOCUMENT_PENDING"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_DOCUMENT_REJECTED - Documentos Reprovados",
+                    "value": "ACCOUNT_STATUS_DOCUMENT_REJECTED"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_APPROVED - Conta Aprovada",
+                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_APPROVED"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_AWAITING_APPROVAL - Conta Em Análise",
+                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_AWAITING_APPROVAL"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_PENDING - Conta Voltou Para Pendente",
+                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_PENDING"
+                  },
+                  {
+                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_REJECTED - Conta Reprovada",
+                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_REJECTED"
+                  },
+                  {
+                    "name": "BILL_BANK_PROCESSING - Pagamento De Contas Aguardando Processamento Bancário",
+                    "value": "BILL_BANK_PROCESSING"
+                  },
+                  {
+                    "name": "BILL_CANCELLED - Pagamento De Contas Cancelado",
+                    "value": "BILL_CANCELLED"
+                  },
+                  {
+                    "name": "BILL_CREATED - Geração De Um Novo Pague Contas",
+                    "value": "BILL_CREATED"
+                  },
+                  {
+                    "name": "BILL_FAILED - Pagamento De Contas Falhou",
+                    "value": "BILL_FAILED"
+                  },
+                  {
+                    "name": "BILL_PAID - Pagamento De Contas Pago",
+                    "value": "BILL_PAID"
+                  },
+                  {
+                    "name": "BILL_PENDING - Pagamento De Contas Aguardando Processamento",
+                    "value": "BILL_PENDING"
+                  },
+                  {
+                    "name": "BILL_REFUNDED - Pagamento De Contas Estornado",
+                    "value": "BILL_REFUNDED"
+                  },
+                  {
+                    "name": "CHECKOUT_CANCELED - Checkout Cancelado",
+                    "value": "CHECKOUT_CANCELED"
+                  },
+                  {
+                    "name": "CHECKOUT_CREATED - Checkout Criado",
+                    "value": "CHECKOUT_CREATED"
+                  },
+                  {
+                    "name": "CHECKOUT_EXPIRED - Checkout Expirado",
+                    "value": "CHECKOUT_EXPIRED"
+                  },
+                  {
+                    "name": "CHECKOUT_PAID - Checkout Pago",
+                    "value": "CHECKOUT_PAID"
+                  },
+                  {
+                    "name": "INVOICE_AUTHORIZED - Nota Fiscal Emitida",
+                    "value": "INVOICE_AUTHORIZED"
+                  },
+                  {
+                    "name": "INVOICE_CANCELED - Nota Fiscal Cancelada",
+                    "value": "INVOICE_CANCELED"
+                  },
+                  {
+                    "name": "INVOICE_CANCELLATION_DENIED - Recusado O Cancelamento Da Nota Fiscal",
+                    "value": "INVOICE_CANCELLATION_DENIED"
+                  },
+                  {
+                    "name": "INVOICE_CREATED - Geração De Nova Nota Fiscal",
+                    "value": "INVOICE_CREATED"
+                  },
+                  {
+                    "name": "INVOICE_ERROR - Nota Fiscal Com Erro",
+                    "value": "INVOICE_ERROR"
+                  },
+                  {
+                    "name": "INVOICE_PROCESSING_CANCELLATION - Nota Fiscal Processando Cancelamento",
+                    "value": "INVOICE_PROCESSING_CANCELLATION"
+                  },
+                  {
+                    "name": "INVOICE_SYNCHRONIZED - Nota Fiscal Enviada Para Prefeitura",
+                    "value": "INVOICE_SYNCHRONIZED"
+                  },
+                  {
+                    "name": "INVOICE_UPDATED - Alteração Na Nota Fiscal",
+                    "value": "INVOICE_UPDATED"
+                  },
+                  {
+                    "name": "MOBILE_PHONE_RECHARGE_CANCELLED - Recarga De Celular Cancelada",
+                    "value": "MOBILE_PHONE_RECHARGE_CANCELLED"
+                  },
+                  {
+                    "name": "MOBILE_PHONE_RECHARGE_CONFIRMED - Recarga De Celular Confirmada",
+                    "value": "MOBILE_PHONE_RECHARGE_CONFIRMED"
+                  },
+                  {
+                    "name": "MOBILE_PHONE_RECHARGE_PENDING - Recarga De Celular Pendente",
+                    "value": "MOBILE_PHONE_RECHARGE_PENDING"
+                  },
+                  {
+                    "name": "MOBILE_PHONE_RECHARGE_REFUNDED - Recarga De Celular Estornada",
+                    "value": "MOBILE_PHONE_RECHARGE_REFUNDED"
+                  },
+                  {
+                    "name": "PAYMENT_ANTICIPATED - Cobrança Antecipada",
+                    "value": "PAYMENT_ANTICIPATED"
+                  },
+                  {
+                    "name": "PAYMENT_APPROVED_BY_RISK_ANALYSIS - Pagamento Em Cartão Aprovado Pela análise Manual De Risco",
+                    "value": "PAYMENT_APPROVED_BY_RISK_ANALYSIS"
+                  },
+                  {
+                    "name": "PAYMENT_AUTHORIZED - Pagamento Em Cartão Que Foi Autorizado E Precisa Ser Capturado",
+                    "value": "PAYMENT_AUTHORIZED"
+                  },
+                  {
+                    "name": "PAYMENT_AWAITING_CHARGEBACK_REVERSAL - Disputa Vencida, Aguardando Repasse Da Adquirente",
+                    "value": "PAYMENT_AWAITING_CHARGEBACK_REVERSAL"
+                  },
+                  {
+                    "name": "PAYMENT_AWAITING_RISK_ANALYSIS - Pagamento Em Cartão Aguardando Aprovação Pela análise Manual De Risco",
+                    "value": "PAYMENT_AWAITING_RISK_ANALYSIS"
+                  },
+                  {
+                    "name": "PAYMENT_BANK_SLIP_VIEWED - Boleto Da cobrança Visualizado Pelo Cliente",
+                    "value": "PAYMENT_BANK_SLIP_VIEWED"
+                  },
+                  {
+                    "name": "PAYMENT_CHARGEBACK_DISPUTE - Em Disputa De Chargeback",
+                    "value": "PAYMENT_CHARGEBACK_DISPUTE"
+                  },
+                  {
+                    "name": "PAYMENT_CHARGEBACK_REQUESTED - Recebido Chargeback",
+                    "value": "PAYMENT_CHARGEBACK_REQUESTED"
+                  },
+                  {
+                    "name": "PAYMENT_CHECKOUT_VIEWED - Fatura Da cobrança Visualizada Pelo Cliente",
+                    "value": "PAYMENT_CHECKOUT_VIEWED"
+                  },
+                  {
+                    "name": "PAYMENT_CONFIRMED - Cobrança Confirmada (Pagamento Efetuado, Porém, O Saldo Ainda Não Foi Disponibilizado)",
+                    "value": "PAYMENT_CONFIRMED"
+                  },
+                  {
+                    "name": "PAYMENT_CREATED - Geração De Nova Cobrança",
+                    "value": "PAYMENT_CREATED"
+                  },
+                  {
+                    "name": "PAYMENT_CREDIT_CARD_CAPTURE_REFUSED - Falha No Pagamento De Cartão De Crédito",
+                    "value": "PAYMENT_CREDIT_CARD_CAPTURE_REFUSED"
+                  },
+                  {
+                    "name": "PAYMENT_DELETED - Cobrança Removida",
+                    "value": "PAYMENT_DELETED"
+                  },
+                  {
+                    "name": "PAYMENT_DUNNING_RECEIVED - Recebimento De Negativação",
+                    "value": "PAYMENT_DUNNING_RECEIVED"
+                  },
+                  {
+                    "name": "PAYMENT_DUNNING_REQUESTED - Requisição De Negativação",
+                    "value": "PAYMENT_DUNNING_REQUESTED"
+                  },
+                  {
+                    "name": "PAYMENT_OVERDUE - Cobrança Vencida",
+                    "value": "PAYMENT_OVERDUE"
+                  },
+                  {
+                    "name": "PAYMENT_PARTIALLY_REFUNDED - Cobrança Estornada Parcialmente",
+                    "value": "PAYMENT_PARTIALLY_REFUNDED"
+                  },
+                  {
+                    "name": "PAYMENT_RECEIVED - Cobrança Recebida",
+                    "value": "PAYMENT_RECEIVED"
+                  },
+                  {
+                    "name": "PAYMENT_RECEIVED_IN_CASH_UNDONE - Recebimento Em Dinheiro Desfeito",
+                    "value": "PAYMENT_RECEIVED_IN_CASH_UNDONE"
+                  },
+                  {
+                    "name": "PAYMENT_REFUND_IN_PROGRESS - Estorno Em Processamento",
+                    "value": "PAYMENT_REFUND_IN_PROGRESS"
+                  },
+                  {
+                    "name": "PAYMENT_REFUNDED - Cobrança Estornada",
+                    "value": "PAYMENT_REFUNDED"
+                  },
+                  {
+                    "name": "PAYMENT_REPROVED_BY_RISK_ANALYSIS - Pagamento Em Cartão Reprovado Pela análise Manual De Risco",
+                    "value": "PAYMENT_REPROVED_BY_RISK_ANALYSIS"
+                  },
+                  {
+                    "name": "PAYMENT_RESTORED - Cobrança Restaurada",
+                    "value": "PAYMENT_RESTORED"
+                  },
+                  {
+                    "name": "PAYMENT_SPLIT_CANCELLED - Cobrança Teve Um Split Cancelado",
+                    "value": "PAYMENT_SPLIT_CANCELLED"
+                  },
+                  {
+                    "name": "PAYMENT_SPLIT_DIVERGENCE_BLOCK - Valor Da cobrança Bloqueado Por Divergência De Split",
+                    "value": "PAYMENT_SPLIT_DIVERGENCE_BLOCK"
+                  },
+                  {
+                    "name": "PAYMENT_SPLIT_DIVERGENCE_BLOCK_FINISHED - Bloqueio Do Valor Da cobrança Por Divergência De Split Foi Finalizado",
+                    "value": "PAYMENT_SPLIT_DIVERGENCE_BLOCK_FINISHED"
+                  },
+                  {
+                    "name": "PAYMENT_UPDATED - Alteração No Vencimento Ou Valor De cobrança Existente",
+                    "value": "PAYMENT_UPDATED"
+                  },
+                  {
+                    "name": "RECEIVABLE_ANTICIPATION_CANCELLED - Antecipação Cancelada",
+                    "value": "RECEIVABLE_ANTICIPATION_CANCELLED"
+                  },
+                  {
+                    "name": "RECEIVABLE_ANTICIPATION_CREDITED - Antecipação Creditada",
+                    "value": "RECEIVABLE_ANTICIPATION_CREDITED"
+                  },
+                  {
+                    "name": "RECEIVABLE_ANTICIPATION_DEBITED - Antecipação Debitada",
+                    "value": "RECEIVABLE_ANTICIPATION_DEBITED"
+                  },
+                  {
+                    "name": "RECEIVABLE_ANTICIPATION_DENIED - Solicitação Da Antecipação Negada",
+                    "value": "RECEIVABLE_ANTICIPATION_DENIED"
+                  },
+                  {
+                    "name": "RECEIVABLE_ANTICIPATION_OVERDUE - Antecipação Vencida",
+                    "value": "RECEIVABLE_ANTICIPATION_OVERDUE"
+                  },
+                  {
+                    "name": "RECEIVABLE_ANTICIPATION_PENDING - Antecipação Em Análise",
+                    "value": "RECEIVABLE_ANTICIPATION_PENDING"
+                  },
+                  {
+                    "name": "RECEIVABLE_ANTICIPATION_SCHEDULED - Antecipação Agendada",
+                    "value": "RECEIVABLE_ANTICIPATION_SCHEDULED"
+                  },
+                  {
+                    "name": "SUBSCRIPTION_CREATED - Geração De Nova Assinatura",
+                    "value": "SUBSCRIPTION_CREATED"
+                  },
+                  {
+                    "name": "SUBSCRIPTION_DELETED - Assinatura Removida",
+                    "value": "SUBSCRIPTION_DELETED"
+                  },
+                  {
+                    "name": "SUBSCRIPTION_INACTIVATED - Assinatura Inativada",
+                    "value": "SUBSCRIPTION_INACTIVATED"
+                  },
+                  {
+                    "name": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK - Assinatura Bloqueada Por Divergência De Split",
+                    "value": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK"
+                  },
+                  {
+                    "name": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK_FINISHED - Bloqueio Da Assinatura Por Divergência De Split Foi Finalizado",
+                    "value": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK_FINISHED"
+                  },
+                  {
+                    "name": "SUBSCRIPTION_UPDATED - Alteração Na Assinatura",
+                    "value": "SUBSCRIPTION_UPDATED"
+                  },
+                  {
+                    "name": "TRANSFER_BLOCKED - Transferência Bloqueada",
+                    "value": "TRANSFER_BLOCKED"
+                  },
+                  {
+                    "name": "TRANSFER_CANCELLED - Transferência Cancelada",
+                    "value": "TRANSFER_CANCELLED"
+                  },
+                  {
+                    "name": "TRANSFER_CREATED - Geração De Nova Transferência",
+                    "value": "TRANSFER_CREATED"
+                  },
+                  {
+                    "name": "TRANSFER_DONE - Transferência Realizada",
+                    "value": "TRANSFER_DONE"
+                  },
+                  {
+                    "name": "TRANSFER_FAILED - Transferência Falhou",
+                    "value": "TRANSFER_FAILED"
+                  },
+                  {
+                    "name": "TRANSFER_IN_BANK_PROCESSING - Transferência Em Processamento Bancário",
+                    "value": "TRANSFER_IN_BANK_PROCESSING"
+                  },
+                  {
+                    "name": "TRANSFER_PENDING - Transferência Pendente De Execução",
+                    "value": "TRANSFER_PENDING"
+                  }
+                ]
+              },
+              {
+                "name": "keyType",
+                "displayName": "Tipo Da Chave",
+                "type": "options",
+                "description": "Tipo da chave PIX a ser criada",
+                "required": true,
+                "default": "EVP",
+                "options": [
+                  {
+                    "name": "EVP",
+                    "value": "EVP",
+                    "description": "Endereçamento Virtual de Pagamento (chave PIX aleatória)"
+                  }
+                ]
+              },
+              {
+                "name": "billingType",
+                "displayName": "Forma De Pagamento",
+                "type": "options",
+                "required": true,
+                "default": "BOLETO",
+                "options": [
+                  {
+                    "name": "Boleto Bancário",
+                    "value": "BOLETO"
+                  },
+                  {
+                    "name": "Cartão De Crédito",
+                    "value": "CREDIT_CARD"
+                  },
+                  {
+                    "name": "PIX",
+                    "value": "PIX"
+                  },
+                  {
+                    "name": "Pergunte Ao Cliente",
+                    "value": "UNDEFINED"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Atualizar Cliente Existente",
+                "value": "update",
+                "description": "Atualizar um cliente"
+              },
+              {
+                "name": "Criar Novo Cliente",
+                "value": "create",
+                "description": "Criar um novo cliente"
+              },
+              {
+                "name": "Get Many",
+                "value": "getAll",
+                "description": "Listar todos os clientes"
+              },
+              {
+                "name": "Recuperar Notificações De Um Cliente",
+                "value": "getNotifications"
+              },
+              {
+                "name": "Recuperar Um Único Cliente",
+                "value": "get",
+                "description": "Buscar um cliente específico"
+              },
+              {
+                "name": "Remover Cliente",
+                "value": "delete",
+                "description": "Excluir um cliente"
+              },
+              {
+                "name": "Restaurar Cliente Removido",
+                "value": "restore",
+                "description": "Restaurar um cliente excluído"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 217
+          },
+          "ioInfo": {
+            "nodeType": "asaas",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-youtube-transcript-api": {
+      "packageName": "n8n-nodes-youtube-transcript-api",
+      "packageVersion": "2.4.3",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-youtube-transcript-api.youtubeTranscriptApi",
+          "displayName": "Youtube Transcript API",
+          "description": "Get the transcript of a youtube video",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "youtubeURL",
+                "displayName": "Youtube URL",
+                "type": "string",
+                "description": "The ID or URL of the video to transcribe",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "language",
+                "displayName": "Language",
+                "type": "string",
+                "description": "The language of the video to transcribe",
+                "required": false,
+                "default": "en"
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 2
+          },
+          "ioInfo": {
+            "nodeType": "youtubeTranscriptApi",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@pixelinfinito/n8n-nodes-chatwoot": {
+      "packageName": "@pixelinfinito/n8n-nodes-chatwoot",
+      "packageVersion": "0.3.1",
+      "nodes": [
+        {
+          "nodeType": "@pixelinfinito/n8n-nodes-chatwoot.chatwoot",
+          "displayName": "Chatwoot",
+          "description": "Interact with Chatwoot API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL where webhook events will be sent",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "status",
+                "displayName": "Status",
+                "type": "options",
+                "description": "Status of the conversation",
+                "required": true,
+                "default": "open",
+                "options": [
+                  {
+                    "name": "Open",
+                    "value": "open"
+                  },
+                  {
+                    "name": "Resolved",
+                    "value": "resolved"
+                  },
+                  {
+                    "name": "Pending",
+                    "value": "pending"
+                  }
+                ]
+              },
+              {
+                "name": "contactId",
+                "displayName": "Contact ID",
+                "type": "number",
+                "description": "The numeric ID of the contact",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "conversationId",
+                "displayName": "Conversation ID",
+                "type": "number",
+                "description": "The numeric ID of the conversation",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sourceId",
+                "displayName": "Source ID",
+                "type": "string",
+                "description": "The source ID for the conversation",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "inboxId",
+                "displayName": "Inbox ID",
+                "type": "number",
+                "description": "The numeric ID of the inbox",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "initialMessage",
+                "displayName": "Initial Message Content",
+                "type": "string",
+                "description": "Content of the initial message",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "conversationId",
+                "displayName": "Conversation ID",
+                "type": "number",
+                "description": "The numeric ID of the conversation",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "messageId",
+                "displayName": "Message ID",
+                "type": "number",
+                "description": "The numeric ID of the message",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "content",
+                "displayName": "Content",
+                "type": "string",
+                "description": "The content of the message",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get",
+                "value": "get",
+                "description": "Get account details"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 61
+          },
+          "ioInfo": {
+            "nodeType": "chatwoot",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-transcript-lol": {
+      "packageName": "n8n-nodes-transcript-lol",
+      "packageVersion": "0.3.2",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-transcript-lol.transcriptLol",
+          "displayName": "Transcript LOL",
+          "description": "Create recordings and get transcripts from Transcript LOL",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "language",
+                "displayName": "Language",
+                "type": "options",
+                "description": "Language of the audio",
+                "required": true,
+                "default": "en",
+                "options": [
+                  {
+                    "name": "Arabic",
+                    "value": "ar"
+                  },
+                  {
+                    "name": "Bulgarian",
+                    "value": "bg"
+                  },
+                  {
+                    "name": "Catalan",
+                    "value": "ca"
+                  },
+                  {
+                    "name": "Chinese (Simplified)",
+                    "value": "zh"
+                  },
+                  {
+                    "name": "Chinese (Simplified, China)",
+                    "value": "zh-CN"
+                  },
+                  {
+                    "name": "Chinese (Traditional, Taiwan)",
+                    "value": "zh-TW"
+                  },
+                  {
+                    "name": "Croatian",
+                    "value": "hr"
+                  },
+                  {
+                    "name": "Czech",
+                    "value": "cs"
+                  },
+                  {
+                    "name": "Danish",
+                    "value": "da"
+                  },
+                  {
+                    "name": "Dutch",
+                    "value": "nl"
+                  },
+                  {
+                    "name": "English",
+                    "value": "en"
+                  },
+                  {
+                    "name": "English (Australia)",
+                    "value": "en-AU"
+                  },
+                  {
+                    "name": "English (India)",
+                    "value": "en-IN"
+                  },
+                  {
+                    "name": "English (UK)",
+                    "value": "en-GB"
+                  },
+                  {
+                    "name": "English (US)",
+                    "value": "en-US"
+                  },
+                  {
+                    "name": "Estonian",
+                    "value": "et"
+                  },
+                  {
+                    "name": "Filipino",
+                    "value": "tl"
+                  },
+                  {
+                    "name": "Finnish",
+                    "value": "fi"
+                  },
+                  {
+                    "name": "Flemish",
+                    "value": "nl-BE"
+                  },
+                  {
+                    "name": "French",
+                    "value": "fr"
+                  },
+                  {
+                    "name": "French (Canada)",
+                    "value": "fr-CA"
+                  },
+                  {
+                    "name": "Georgian",
+                    "value": "ka"
+                  },
+                  {
+                    "name": "German",
+                    "value": "de"
+                  },
+                  {
+                    "name": "German (Switzerland)",
+                    "value": "de-CH"
+                  },
+                  {
+                    "name": "Greek",
+                    "value": "el"
+                  },
+                  {
+                    "name": "Hebrew",
+                    "value": "he"
+                  },
+                  {
+                    "name": "Hindi",
+                    "value": "hi"
+                  },
+                  {
+                    "name": "Hungarian",
+                    "value": "hu"
+                  },
+                  {
+                    "name": "Indonesian",
+                    "value": "id"
+                  },
+                  {
+                    "name": "Italian",
+                    "value": "it"
+                  },
+                  {
+                    "name": "Japanese",
+                    "value": "ja"
+                  },
+                  {
+                    "name": "Kannada",
+                    "value": "kn"
+                  },
+                  {
+                    "name": "Korean",
+                    "value": "ko"
+                  },
+                  {
+                    "name": "Latvian",
+                    "value": "lv"
+                  },
+                  {
+                    "name": "Lithuanian",
+                    "value": "lt"
+                  },
+                  {
+                    "name": "Malay",
+                    "value": "ms"
+                  },
+                  {
+                    "name": "Malayalam",
+                    "value": "ml"
+                  },
+                  {
+                    "name": "Norwegian",
+                    "value": "no"
+                  },
+                  {
+                    "name": "Norwegian Nynorsk",
+                    "value": "nn"
+                  },
+                  {
+                    "name": "Persian",
+                    "value": "fa"
+                  },
+                  {
+                    "name": "Polish",
+                    "value": "pl"
+                  },
+                  {
+                    "name": "Portuguese",
+                    "value": "pt"
+                  },
+                  {
+                    "name": "Portuguese (Brazil)",
+                    "value": "pt-BR"
+                  },
+                  {
+                    "name": "Romanian",
+                    "value": "ro"
+                  },
+                  {
+                    "name": "Russian",
+                    "value": "ru"
+                  },
+                  {
+                    "name": "Slovak",
+                    "value": "sk"
+                  },
+                  {
+                    "name": "Slovenian",
+                    "value": "sl"
+                  },
+                  {
+                    "name": "Spanish",
+                    "value": "es"
+                  },
+                  {
+                    "name": "Spanish (Latin America)",
+                    "value": "es-419"
+                  },
+                  {
+                    "name": "Swedish",
+                    "value": "sv"
+                  },
+                  {
+                    "name": "Telugu",
+                    "value": "te"
+                  },
+                  {
+                    "name": "Thai",
+                    "value": "th"
+                  },
+                  {
+                    "name": "Turkish",
+                    "value": "tr"
+                  },
+                  {
+                    "name": "Ukrainian",
+                    "value": "uk"
+                  },
+                  {
+                    "name": "Urdu",
+                    "value": "ur"
+                  },
+                  {
+                    "name": "Vietnamese",
+                    "value": "vi"
+                  }
+                ]
+              },
+              {
+                "name": "workspaceId",
+                "displayName": "Workspace",
+                "type": "options",
+                "description": "The workspace to use",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "recordingId",
+                "displayName": "Recording ID",
+                "type": "string",
+                "description": "The ID of the recording",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "title",
+                "displayName": "Title",
+                "type": "string",
+                "description": "Title of the recording",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sourceUrl",
+                "displayName": "Source URL",
+                "type": "string",
+                "description": "A public URL to fetch the recording media from",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "workspaceId",
+                "displayName": "Workspace",
+                "type": "options",
+                "description": "The workspace to use",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "recordingId",
+                "displayName": "Recording ID",
+                "type": "string",
+                "description": "The ID of the recording",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "recording",
+                "options": [
+                  {
+                    "name": "Recording",
+                    "value": "recording"
+                  },
+                  {
+                    "name": "Transcript",
+                    "value": "transcript"
+                  },
+                  {
+                    "name": "Workspace",
+                    "value": "workspace"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "create",
+                "options": [
+                  {
+                    "name": "Create",
+                    "value": "create",
+                    "description": "Create a new recording for transcription"
+                  },
+                  {
+                    "name": "Get",
+                    "value": "get",
+                    "description": "Get a recording by ID"
+                  },
+                  {
+                    "name": "Get Many",
+                    "value": "getMany",
+                    "description": "Get many recordings from a workspace"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "get",
+                "options": [
+                  {
+                    "name": "Get",
+                    "value": "get",
+                    "description": "Get transcript for a recording"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create",
+                "value": "create",
+                "description": "Create a new recording for transcription"
+              },
+              {
+                "name": "Get",
+                "value": "get",
+                "description": "Get a recording by ID"
+              },
+              {
+                "name": "Get Many",
+                "value": "getMany",
+                "description": "Get many recordings from a workspace"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 13
+          },
+          "ioInfo": {
+            "nodeType": "transcriptLol",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-transcript-lol.transcriptLolTrigger",
+          "displayName": "Transcript LOL Trigger",
+          "description": "Starts the workflow when a Transcript.lol event occurs",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "event",
+                "displayName": "Event",
+                "type": "options",
+                "required": true,
+                "default": "TRANSCRIPT_CREATED",
+                "options": [
+                  {
+                    "name": "New Transcript",
+                    "value": "TRANSCRIPT_CREATED",
+                    "description": "Triggers when a transcript is completed for a recording"
+                  },
+                  {
+                    "name": "Transcript Failed",
+                    "value": "TRANSCRIPT_FAILED",
+                    "description": "Triggers when a transcript fails to be created"
+                  },
+                  {
+                    "name": "New Insights",
+                    "value": "INSIGHT_CREATED",
+                    "description": "Triggers when new AI insights are generated for a recording"
+                  },
+                  {
+                    "name": "Translation Created",
+                    "value": "TRANSLATION_CREATED",
+                    "description": "Triggers when a translation is completed for a recording"
+                  }
+                ]
+              },
+              {
+                "name": "workspaceId",
+                "displayName": "Workspace",
+                "type": "options",
+                "description": "The workspace to monitor for events",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "format",
+                    "description": "Format to retrieve the transcript in"
+                  },
+                  {
+                    "name": "includeTranscript",
+                    "description": "Whether to fetch and include the full transcript content"
+                  }
+                ]
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 3
+          },
+          "ioInfo": {
+            "nodeType": "transcriptLolTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
             "outputTypes": [
               "main"
             ],
