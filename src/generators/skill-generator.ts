@@ -76,7 +76,7 @@ export interface SkillGeneratorInput {
 const DEFAULT_CONFIG: Required<SkillConfig> = {
   name: 'n8n-skills',
   version: '1.0.0',
-  description: 'n8n workflow automation knowledge base. Provides n8n node information, node functionality details, workflow patterns, and configuration examples. Covers triggers, data transformation, data input/output, AI integration, and more. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
+  description: 'Use when building or troubleshooting n8n workflows. Covers node discovery, configuration details, connection compatibility, and workflow patterns. Keywords: n8n, workflow, automation, node, trigger, webhook, http request, database, ai agent.',
   author: 'n8n-skill',
   license: 'MIT',
   maxLines: 5000,
@@ -144,8 +144,10 @@ export class SkillGenerator {
     const sections: string[] = [
       this.generateFrontmatter(totalNodes),
       this.generateOverview(),
-      this.generateTableOfContents(),
-      this.generateWorkflowPatterns(templateCount),
+      this.generateWhenToUse(),
+      this.generateQuickNavigation(),
+      this.generateCommonMistakes(),
+      this.generateResources(templateCount),
       this.generateLicense(),
     ];
 
@@ -219,17 +221,99 @@ export class SkillGenerator {
   }
 
   /**
-   * Generate table of contents
+   * Generate When to Use section
    */
-  private generateTableOfContents(): string {
+  private generateWhenToUse(): string {
     return [
-      '## Table of Contents',
+      '## When to Use',
       '',
-      '- [Overview](#overview)',
-      '- [Common Workflow Patterns](#common-workflow-patterns)',
-      '- [How to Find Nodes](resources/guides/how-to-find-nodes.md)',
-      '- [Usage Guide](resources/guides/usage-guide.md)',
-      '- [License and Attribution](#license-and-attribution)',
+      'Use this skill when:',
+      '- Building or designing n8n workflows',
+      '- Searching for nodes that match specific functionality',
+      '- Troubleshooting node configurations or connections',
+      '- Understanding node input/output compatibility',
+      '- Exploring community packages for extended functionality',
+      '',
+      'Do NOT use when:',
+      '- Learning general automation concepts (use n8n official docs)',
+      '- Deploying or hosting n8n (infrastructure questions)',
+      '- Pricing or licensing questions (contact n8n directly)',
+    ].join('\n');
+  }
+
+  /**
+   * Generate Quick Navigation section with decision flowchart
+   */
+  private generateQuickNavigation(): string {
+    return [
+      '## Quick Navigation',
+      '',
+      'Use this flowchart to find the right resource:',
+      '',
+      '```dot',
+      'digraph navigation {',
+      '    rankdir=TB;',
+      '    node [shape=diamond];',
+      '',
+      '    start [label="What do you need?" shape=ellipse];',
+      '    q1 [label="Know the\\nnode name?"];',
+      '    q2 [label="Know the\\nfunctionality?"];',
+      '    q3 [label="Need\\nexamples?"];',
+      '',
+      '    node [shape=box];',
+      '    a1 [label="Glob: resources/**/*{name}*.md"];',
+      '    a2 [label="Grep: search keywords\\nin resources/"];',
+      '    a3 [label="Read: resources/templates/"];',
+      '    a4 [label="Read: INDEX.md\\nby category"];',
+      '',
+      '    start -> q1;',
+      '    q1 -> a1 [label="yes"];',
+      '    q1 -> q2 [label="no"];',
+      '    q2 -> a2 [label="yes"];',
+      '    q2 -> q3 [label="no"];',
+      '    q3 -> a3 [label="yes"];',
+      '    q3 -> a4 [label="no"];',
+      '}',
+      '```',
+      '',
+      '### Quick Links',
+      '',
+      '- [Complete Node Index](resources/INDEX.md) - All nodes with line numbers',
+      '- [How to Find Nodes](resources/guides/how-to-find-nodes.md) - Search strategies',
+      '- [Usage Guide](resources/guides/usage-guide.md) - Detailed instructions',
+      '- [Workflow Patterns](resources/guides/workflow-patterns.md) - Common patterns',
+    ].join('\n');
+  }
+
+  /**
+   * Generate Common Mistakes section (compact version)
+   */
+  private generateCommonMistakes(): string {
+    return [
+      '## Common Mistakes',
+      '',
+      '| Mistake | Solution |',
+      '|---------|----------|',
+      '| Reading entire merged files (thousands of lines) | Use INDEX.md to find line numbers, then use offset/limit for precise reading |',
+      '| Confusing Trigger and Action nodes | Triggers can only be placed at workflow start, Actions can be anywhere |',
+      '| Ignoring node compatibility | Check compatibility-matrix.md to verify node connections |',
+      '| Using wrong node naming format | File format is `nodes-base.{nodeType}.md`, nodeType is usually camelCase |',
+      '',
+      'See [Usage Guide](resources/guides/usage-guide.md#common-pitfalls) for more details.',
+    ].join('\n');
+  }
+
+  /**
+   * Generate Resources section (replaces workflow patterns in main file)
+   */
+  private generateResources(templateCount: number): string {
+    return [
+      '## Resources',
+      '',
+      `- [Workflow Patterns](resources/guides/workflow-patterns.md) - ${COMMON_PATTERNS.length} common workflow patterns`,
+      `- [Template Library](resources/templates/README.md) - ${templateCount} popular templates`,
+      '- [Node Index](resources/INDEX.md) - Complete node reference',
+      '- [Compatibility Matrix](resources/compatibility-matrix.md) - Node connection rules',
     ].join('\n');
   }
 
@@ -244,7 +328,37 @@ export class SkillGenerator {
     const sections = [
       '# How to Find Nodes',
       '',
-      'This skill contains complete information for 542 n8n nodes. As an AI assistant, you can use the following tools to efficiently find and read node information.',
+      'This skill contains complete information for n8n nodes. As an AI assistant, you can use the following tools to efficiently find and read node information.',
+      '',
+      '## Quick Decision Flowchart',
+      '',
+      'Use this flowchart to decide which tool to use:',
+      '',
+      '```dot',
+      'digraph find_nodes {',
+      '    rankdir=TB;',
+      '    node [shape=diamond];',
+      '',
+      '    start [label="What info do you have?" shape=ellipse];',
+      '    q1 [label="Know exact\\nnode name?"];',
+      '    q2 [label="Know what\\nit does?"];',
+      '    q3 [label="Know the\\ncategory?"];',
+      '',
+      '    node [shape=box];',
+      '    a1 [label="Glob: resources/**/*{name}*.md"];',
+      '    a2 [label="Grep: search by keywords"];',
+      '    a3 [label="Read: category README"];',
+      '    a4 [label="Read: INDEX.md"];',
+      '',
+      '    start -> q1;',
+      '    q1 -> a1 [label="yes"];',
+      '    q1 -> q2 [label="no"];',
+      '    q2 -> a2 [label="yes"];',
+      '    q2 -> q3 [label="no"];',
+      '    q3 -> a3 [label="yes"];',
+      '    q3 -> a4 [label="no"];',
+      '}',
+      '```',
       '',
       '## 1. Using the Unified Index (INDEX.md)',
       '',
@@ -385,13 +499,13 @@ export class SkillGenerator {
   }
 
   /**
-   * Generate workflow patterns section
+   * Generate workflow patterns file (for separate file in guides/)
    */
-  private generateWorkflowPatterns(templateCount: number): string {
+  generateWorkflowPatternsFile(templateCount: number): string {
     const sections = [
       '# Common Workflow Patterns',
       '',
-      'Here are some common workflow patterns you can use as a starting point:',
+      'Here are common workflow patterns you can use as a starting point.',
       '',
     ];
 
@@ -414,12 +528,12 @@ export class SkillGenerator {
       '',
       `We have collected ${templateCount} popular workflow templates from n8n.io, categorized by use case:`,
       '',
-      '- [AI & Chatbots](resources/templates/ai-chatbots/README.md) - AI Agents, RAG systems, intelligent conversations',
-      '- [Social Media & Video](resources/templates/social-media/README.md) - TikTok, Instagram, YouTube automation',
-      '- [Data Processing & Analysis](resources/templates/data-processing/README.md) - Google Sheets, database integration',
-      '- [Communication & Collaboration](resources/templates/communication/README.md) - Email, WhatsApp, Telegram automation',
+      '- [AI & Chatbots](../templates/ai-chatbots/README.md) - AI Agents, RAG systems, intelligent conversations',
+      '- [Social Media & Video](../templates/social-media/README.md) - TikTok, Instagram, YouTube automation',
+      '- [Data Processing & Analysis](../templates/data-processing/README.md) - Google Sheets, database integration',
+      '- [Communication & Collaboration](../templates/communication/README.md) - Email, WhatsApp, Telegram automation',
       '',
-      'See the [complete template index](resources/templates/README.md) for all available templates.',
+      'See the [complete template index](../templates/README.md) for all available templates.',
       ''
     );
 
@@ -675,22 +789,48 @@ export class SkillGenerator {
       '',
       '### Common Pitfalls',
       '',
-      '1. Don\'t always read complete merged files',
-      '   - Merged files can have thousands of lines',
-      '   - Should use INDEX.md to find line numbers, then read precisely',
+      '| Mistake | Impact | Solution |',
+      '|---------|--------|----------|',
+      '| Reading entire merged files | Wastes tokens, slow response | Use INDEX.md to find line numbers, use offset/limit |',
+      '| Confusing Trigger and Action nodes | Invalid workflow structure | Triggers only at workflow start, Actions anywhere else |',
+      '| Ignoring node compatibility | Connection errors at runtime | Check compatibility-matrix.md before connecting |',
+      '| Wrong node naming format | File not found errors | Use `nodes-base.{nodeType}.md`, nodeType is camelCase |',
+      '| Skipping node version check | Using deprecated features | Check version info in node documentation |',
+      '| Not checking authentication requirements | Auth errors at runtime | Check "Credentials" section in node docs |',
+      '| Assuming all nodes have individual files | Reading wrong content | Only top 50 nodes have individual files, others are merged |',
+      '| Ignoring input/output types | Data format mismatches | Check "Connection Guide" section for data types |',
       '',
-      '2. Pay attention to node naming format',
-      '   - File format: `nodes-base.{nodeType}.md`',
-      '   - nodeType is usually lowercase with hyphens',
-      '   - Example: `nodes-base.httpRequest.md` (not `http-request`)',
+      '## 5. Multi-Environment Usage',
       '',
-      '3. Distinguish between trigger and action nodes',
-      '   - Triggers can only be placed at the beginning of workflows',
-      '   - Webhook nodes are also a type of trigger',
+      'This skill works across different Claude environments:',
       '',
-      '4. Check node versions',
-      '   - Some nodes have multiple versions',
-      '   - Documentation will note version numbers and differences',
+      '### Claude Code (CLI)',
+      '',
+      '- Full file system access via Read, Glob, Grep tools',
+      '- Use offset/limit for precise reading of merged files',
+      '- Most efficient for large-scale node searches',
+      '- Example: `Read("resources/INDEX.md", offset=50, limit=100)`',
+      '',
+      '### Claude.ai Web',
+      '',
+      '- No direct file system access',
+      '- Request node information conversationally',
+      '- Claude references skill knowledge to answer',
+      '- Example: "Tell me about the HTTP Request node configuration"',
+      '',
+      '### Claude Desktop (with MCP)',
+      '',
+      '- File access depends on MCP server configuration',
+      '- If filesystem MCP enabled: same capabilities as Claude Code',
+      '- Otherwise: same as Claude.ai Web',
+      '',
+      '### Usage Recommendations by Environment',
+      '',
+      '| Environment | Recommended Approach |',
+      '|-------------|---------------------|',
+      '| Claude Code | Use tools directly for file reading, most efficient |',
+      '| Claude.ai Web | Describe your needs, let Claude answer from knowledge |',
+      '| Claude Desktop | Check MCP config first, then choose appropriate method |',
       '',
     ];
 
