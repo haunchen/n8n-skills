@@ -310,7 +310,7 @@ export class SkillGenerator {
     return [
       '## Resources',
       '',
-      '- [Workflow Patterns](resources/guides/workflow-patterns.md) - 6 common workflow patterns',
+      `- [Workflow Patterns](resources/guides/workflow-patterns.md) - ${COMMON_PATTERNS.length} common workflow patterns`,
       `- [Template Library](resources/templates/README.md) - ${templateCount} popular templates`,
       '- [Node Index](resources/INDEX.md) - Complete node reference',
       '- [Compatibility Matrix](resources/compatibility-matrix.md) - Node connection rules',
