@@ -53,7 +53,7 @@
   "devDependencies": {
     "@types/axios": "^0.9.36",
     "@types/jest": "^29.5.0",
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.50.0",
@@ -62,7 +62,7 @@
     "typescript": "^5.3.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.16.0"
   },
   "overrides": {
     "xlsx": "0.18.5"
