@@ -57,6 +57,9 @@ jobs:
       - name: Build skill pack
         working-directory: n8n-skills
         run: npm run build:full
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
+          CI: true
 
       - name: Get version info
         id: version

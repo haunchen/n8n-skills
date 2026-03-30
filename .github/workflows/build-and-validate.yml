@@ -33,6 +33,9 @@ jobs:
 
       - name: Run full build (compile + generate)
         run: npm run build:full
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096 --expose-gc
+          CI: true
 
       - name: Check build artifacts
         run: |
