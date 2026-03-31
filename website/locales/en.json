@@ -10,6 +10,10 @@
     "ariaGithub": "Visit n8n Skills GitHub repository",
     "ariaGetStarted": "Download the latest version of n8n Skills"
   },
+  "aria": {
+    "githubProject": "Visit n8n Skills GitHub repository",
+    "downloadLatest": "Download the latest version of n8n Skills"
+  },
   "hero": {
     "license": "Open Source MIT License",
     "title": "n8n Skills",

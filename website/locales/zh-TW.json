@@ -10,6 +10,10 @@
     "ariaGithub": "前往 n8n Skills GitHub 專案",
     "ariaGetStarted": "下載最新版本的 n8n Skills"
   },
+  "aria": {
+    "githubProject": "前往 n8n Skills GitHub 專案",
+    "downloadLatest": "下載最新版本的 n8n Skills"
+  },
   "hero": {
     "license": "Open Source MIT License",
     "title": "n8n Skills",
