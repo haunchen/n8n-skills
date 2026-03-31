@@ -1,34 +1,8 @@
 // Scroll-based navbar control
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.getElementById('navbar');
     const heroButtons = document.querySelector('.hero-buttons');
     const heroTitle = document.querySelector('.hero-title');
-
-    // Initialize i18n as global variable
-    window.i18n = new I18n();
-    await window.i18n.init();
-
-    // Update language toggle button text
-    updateLangToggleButton(window.i18n.getCurrentLanguage());
-
-    // Setup language toggle
-    const langToggle = document.getElementById('lang-toggle');
-    if (langToggle) {
-        langToggle.addEventListener('click', async function() {
-            const currentLang = window.i18n.getCurrentLanguage();
-            const newLang = currentLang === 'zh-TW' ? 'en' : 'zh-TW';
-            await window.i18n.switchLanguage(newLang);
-            updateLangToggleButton(newLang);
-        });
-    }
-
-    // Update language toggle button text
-    function updateLangToggleButton(lang) {
-        const langText = document.querySelector('.lang-text');
-        if (langText) {
-            langText.textContent = lang === 'zh-TW' ? '中' : 'En';
-        }
-    }
 
     // Use Intersection Observer to monitor button area
     const observerOptions = {
@@ -90,45 +64,6 @@ function initCommunityPackages() {
             section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     }
-
-    // Update category labels based on current language
-    if (window.i18n) {
-        updateCategoryLabels();
-        // Listen for language changes
-        document.addEventListener('languageChanged', updateCategoryLabels);
-    }
-}
-
-// Update category labels with translations
-function updateCategoryLabels() {
-    const categoryLabels = {
-        'en': {
-            'communication': 'Communication',
-            'ai-tools': 'AI Tools',
-            'web-scraping': 'Web Scraping',
-            'document': 'Document',
-            'data-processing': 'Data Processing',
-            'utilities': 'Utilities'
-        },
-        'zh-TW': {
-            'communication': '通訊',
-            'ai-tools': 'AI 工具',
-            'web-scraping': '網頁爬蟲',
-            'document': '文件處理',
-            'data-processing': '資料處理',
-            'utilities': '實用工具'
-        }
-    };
-
-    const currentLang = window.i18n ? window.i18n.getCurrentLanguage() : 'zh-TW';
-    const labels = categoryLabels[currentLang] || categoryLabels['en'];
-
-    document.querySelectorAll('.package-category[data-category]').forEach(el => {
-        const category = el.getAttribute('data-category');
-        if (labels[category]) {
-            el.textContent = labels[category];
-        }
-    });
 }
 
 // Copy button functionality
