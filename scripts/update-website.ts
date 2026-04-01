@@ -467,6 +467,7 @@ class WebsiteUpdater {
         '__base_path__': config.basePath,
         '__og_locale__': config.ogLocale,
         '__alt_lang_url__': altLangUrl,
+        '__alt_lang_path__': config.lang === 'en' ? '/zh-TW/' : '/',
         '__alt_lang_label__': config.altLangLabel,
       };
 
