@@ -84,6 +84,12 @@ body {
     background-clip: text;
 }
 
+.hero-title-sub {
+    font-size: 0.5em;
+    font-weight: 400;
+    display: block;
+}
+
 .hero-subtitle {
     font-size: 1.75rem;
     margin-bottom: 1rem;

@@ -47,6 +47,31 @@ class WebsiteUpdater {
   private outputDir: string;
   private websiteDir: string;
 
+  private readonly SITE_DOMAIN = 'https://n8n-skills.frankchen.tw';
+
+  private readonly localeConfigs: Array<{
+    lang: string;
+    outputPath: string;
+    basePath: string;
+    ogLocale: string;
+    altLangLabel: string;
+  }> = [
+    {
+      lang: 'en',
+      outputPath: 'index.html',
+      basePath: './',
+      ogLocale: 'en_US',
+      altLangLabel: '中文',
+    },
+    {
+      lang: 'zh-TW',
+      outputPath: 'zh-TW/index.html',
+      basePath: '../',
+      ogLocale: 'zh_TW',
+      altLangLabel: 'English',
+    },
+  ];
+
   constructor() {
     this.outputDir = path.join(process.cwd(), 'output');
     this.websiteDir = path.join(process.cwd(), 'website');
@@ -68,25 +93,32 @@ class WebsiteUpdater {
       info(`Total size: ${data.totalSize}`);
       info(`Update time: ${data.timestamp}`);
 
-      // 2. Update all files
+      // 2. Update READMEs
       info('Updating README.md (English)...');
       await this.updateReadmeEn(data);
 
       info('Updating README.zh-TW.md (Traditional Chinese)...');
       await this.updateReadmeZhTW(data);
 
+      // 3. Update locale JSONs (data source for template)
       info('Updating website/locales/en.json...');
       await this.updateLocaleEn(data);
 
       info('Updating website/locales/zh-TW.json...');
       await this.updateLocaleZhTW(data);
 
-      info('Updating website/index.html...');
-      await this.updateIndexHtml(data);
+      // 4. Update template stats and community packages
+      info('Updating template stats...');
+      await this.updateTemplateStats(data);
 
-      info('Updating community packages list...');
+      info('Updating community packages in template...');
       await this.updateCommunityPackages();
 
+      // 5. Generate localized HTML pages from template
+      info('Generating localized pages...');
+      await this.generateLocalizedPages();
+
+      // 6. Update sitemap
       info('Updating website/sitemap.xml...');
       await this.updateSitemap(data.timestamp);
 
@@ -412,108 +444,112 @@ class WebsiteUpdater {
     }
   }
 
-  private async updateIndexHtml(data: UpdateData): Promise<void> {
-    try {
-      const indexPath = path.join(this.websiteDir, 'index.html');
-      let content = await fs.readFile(indexPath, 'utf-8');
+  private async generateLocalizedPages(): Promise<void> {
+    const templatePath = path.join(this.websiteDir, 'template.html');
+    const template = await fs.readFile(templatePath, 'utf-8');
 
-      const updateDate = data.timestamp.split('T')[0];
+    for (const config of this.localeConfigs) {
+      const localePath = path.join(this.websiteDir, 'locales', `${config.lang}.json`);
+      const localeContent = await fs.readFile(localePath, 'utf-8');
+      const locale = JSON.parse(localeContent);
 
-      // Update statistics cards - these are hardcoded numbers, not i18n
-      // Note: Most text content is handled by i18n (locale JSON files),
-      // but the stat numbers are direct HTML content
-      // We match using data-i18n attributes since the actual text is loaded dynamically
+      // Build special variables
+      const canonical = config.lang === 'en'
+        ? `${this.SITE_DOMAIN}/`
+        : `${this.SITE_DOMAIN}/zh-TW/`;
+      const altLangUrl = config.lang === 'en'
+        ? `${this.SITE_DOMAIN}/zh-TW/`
+        : `${this.SITE_DOMAIN}/`;
 
-      // 1. Update node count in statistics card (data-i18n="stats.nodes")
-      content = content.replace(
-        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label"[^>]*data-i18n="stats\.nodes")/s,
-        `$1${data.actualNodeCount}$2`
-      );
+      const specialVars: Record<string, string> = {
+        '__lang__': config.lang,
+        '__canonical__': canonical,
+        '__base_path__': config.basePath,
+        '__og_locale__': config.ogLocale,
+        '__alt_lang_url__': altLangUrl,
+        '__alt_lang_path__': config.lang === 'en' ? '/zh-TW/' : '/',
+        '__alt_lang_label__': config.altLangLabel,
+      };
 
-      // 2. Update template count in statistics card (data-i18n="stats.templates")
-      content = content.replace(
-        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label"[^>]*data-i18n="stats\.templates")/s,
-        `$1${data.templateCount}$2`
-      );
+      // Replace placeholders
+      let html = template;
 
-      // 3. Update fallback content for i18n elements (optional, will be overridden by i18n)
-      // These provide default text before i18n loads
+      // Replace special variables first
+      for (const [key, value] of Object.entries(specialVars)) {
+        html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+      }
 
-      // Update meta descriptions
-      content = content.replace(
-        /包含 \d+ 個節點的完整知識庫/g,
-        `包含 ${data.actualNodeCount} 個節點的完整知識庫`
-      );
+      // Replace locale variables (supports nested keys like {{meta.title}})
+      html = html.replace(/\{\{([a-zA-Z][a-zA-Z0-9_.]*)\}\}/g, (_match, keyPath: string) => {
+        const keys = keyPath.split('.');
+        let value: unknown = locale;
+        for (const k of keys) {
+          if (value && typeof value === 'object') {
+            value = (value as Record<string, unknown>)[k];
+          } else {
+            return `{{${keyPath}}}`; // Keep unresolved
+          }
+        }
+        return typeof value === 'string' ? value : `{{${keyPath}}}`;
+      });
 
-      content = content.replace(
-        /Complete knowledge base with \d+ nodes/g,
-        `Complete knowledge base with ${data.actualNodeCount} nodes`
-      );
-
-      // Update hero description
-      content = content.replace(
-        />\d+ 個節點的完整知識庫，定期更新/,
-        `>${data.actualNodeCount} 個節點的完整知識庫，定期更新`
-      );
-
-      // Update feature descriptions
-      content = content.replace(
-        /包含 \d+ 個 n8n 節點的詳細文件/,
-        `包含 ${data.actualNodeCount} 個 n8n 節點的詳細文件`
-      );
-
-      content = content.replace(
-        /Detailed documentation for \d+ n8n nodes/,
-        `Detailed documentation for ${data.actualNodeCount} n8n nodes`
-      );
-
-      content = content.replace(
-        /支援最新的 n8n v[\d.]+/,
-        `支援最新的 n8n v${data.n8nVersion}`
-      );
-
-      content = content.replace(
-        /supports the latest n8n v[\d.]+/i,
-        `supports the latest n8n v${data.n8nVersion}`
-      );
-
-      // Update footer
-      content = content.replace(
-        /支援 n8n v[\d.]+ \| 最後更新：\d{4}-\d{2}-\d{2}/,
-        `支援 n8n v${data.n8nVersion} | 最後更新：${updateDate}`
-      );
-
-      content = content.replace(
-        /Supports n8n v[\d.]+ \| Last updated: \d{4}-\d{2}-\d{2}/,
-        `Supports n8n v${data.n8nVersion} | Last updated: ${updateDate}`
-      );
-
-      await fs.writeFile(indexPath, content, 'utf-8');
-      info('index.html update completed');
-    } catch (err) {
-      throw new Error(`Failed to update index.html: ${err}`);
+      // Ensure output directory exists
+      const outputPath = path.join(this.websiteDir, config.outputPath);
+      await fs.mkdir(path.dirname(outputPath), { recursive: true });
+      await fs.writeFile(outputPath, html, 'utf-8');
+      info(`Generated ${config.outputPath} (${config.lang})`);
     }
   }
 
+  private async updateTemplateStats(data: UpdateData): Promise<void> {
+    const templatePath = path.join(this.websiteDir, 'template.html');
+    let content = await fs.readFile(templatePath, 'utf-8');
+
+    // Update node count stat card
+    content = content.replace(
+      /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label">{{stats\.nodes}})/s,
+      `$1${data.actualNodeCount}$2`
+    );
+
+    // Update template count stat card
+    content = content.replace(
+      /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label">{{stats\.templates}})/s,
+      `$1${data.templateCount}$2`
+    );
+
+    // Update community packages count stat card
+    content = content.replace(
+      /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label">{{stats\.communityPackages}})/s,
+      `$1${data.communityPackageCount}$2`
+    );
+
+    await fs.writeFile(templatePath, content, 'utf-8');
+    info('template.html stats update completed');
+  }
+
   private async updateSitemap(timestamp: string): Promise<void> {
-    try {
-      const sitemapPath = path.join(this.websiteDir, 'sitemap.xml');
-      let content = await fs.readFile(sitemapPath, 'utf-8');
+    const sitemapPath = path.join(this.websiteDir, 'sitemap.xml');
+    const lastmod = timestamp.split('T')[0];
 
-      // Format timestamp for sitemap format (YYYY-MM-DD)
-      const lastmod = timestamp.split('T')[0];
+    const content = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>${this.SITE_DOMAIN}/</loc>
+        <lastmod>${lastmod}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>${this.SITE_DOMAIN}/zh-TW/</loc>
+        <lastmod>${lastmod}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+</urlset>
+`;
 
-      // Update lastmod
-      content = content.replace(
-        /<lastmod>[\d-]+<\/lastmod>/g,
-        `<lastmod>${lastmod}</lastmod>`
-      );
-
-      await fs.writeFile(sitemapPath, content, 'utf-8');
-      info('sitemap.xml update completed');
-    } catch (err) {
-      throw new Error(`Failed to update sitemap.xml: ${err}`);
-    }
+    await fs.writeFile(sitemapPath, content, 'utf-8');
+    info('sitemap.xml update completed');
   }
 
   private async readCommunityPackages(): Promise<CommunityPackagesConfig> {
@@ -561,8 +597,8 @@ class WebsiteUpdater {
 
   private async updateCommunityPackages(): Promise<void> {
     try {
-      const indexPath = path.join(this.websiteDir, 'index.html');
-      let content = await fs.readFile(indexPath, 'utf-8');
+      const templatePath = path.join(this.websiteDir, 'template.html');
+      let content = await fs.readFile(templatePath, 'utf-8');
 
       const communityConfig = await this.readCommunityPackages();
       const packages = communityConfig.packages;
@@ -582,13 +618,7 @@ ${packagesHtml}
 
       content = content.replace(listPattern, replacement);
 
-      // Update community packages count in stats card
-      content = content.replace(
-        /(<div class="stat-number">)\d+(<\/div>\s*<div class="stat-label"[^>]*data-i18n="stats\.communityPackages")/s,
-        `$1${packages.length}$2`
-      );
-
-      await fs.writeFile(indexPath, content, 'utf-8');
+      await fs.writeFile(templatePath, content, 'utf-8');
       info('Community packages list update completed');
     } catch (err) {
       throw new Error(`Failed to update community packages: ${err}`);
