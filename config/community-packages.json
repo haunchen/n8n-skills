@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-03-01T00:54:54.553Z",
+  "lastUpdated": "2026-04-05T00:57:00.627Z",
   "limit": 30,
   "packages": [
     {
@@ -13,13 +13,13 @@
       "repository": "git+https://github.com/oriondesign2015/n8n-nodes-evolution-api.git"
     },
     {
-      "name": "n8n-nodes-kommo",
-      "description": "n8n node for Kommo Api",
+      "name": "n8n-nodes-globals",
+      "description": "N8N community node that allows users to create global constants and use them in all their workflows",
       "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kommo",
-      "version": "0.0.16",
-      "maintainer": "yatolstoy",
-      "repository": "git+https://github.com/yatolstoy/n8n-node-kommo.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-globals",
+      "version": "1.1.0",
+      "maintainer": "umanamente",
+      "repository": "git+https://github.com/umanamente/n8n-nodes-globals.git"
     },
     {
       "name": "n8n-nodes-palatine-speech",
@@ -31,40 +31,22 @@
       "repository": "git+https://github.com/PalatineVision/n8n-nodes-palatine-speech.git"
     },
     {
-      "name": "n8n-nodes-waha",
-      "description": "n8n to connect with WAHA (Whatsapp HTTP API)",
+      "name": "@devlikeapro/n8n-nodes-chatwoot",
+      "description": "n8n node to connect with ChatWoot",
       "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-waha",
-      "version": "2024.11.5",
-      "maintainer": "morning-bird",
-      "repository": "git+https://github.com/devlikeapro/n8n-nodes-waha.git"
+      "npmUrl": "https://www.npmjs.com/package/@devlikeapro/n8n-nodes-chatwoot",
+      "version": "1.0.2",
+      "maintainer": "devlikeapro",
+      "repository": "git+https://github.com/devlikeapro/n8n-nodes-chatwoot.git"
     },
     {
-      "name": "n8n-nodes-serpapi",
-      "description": "Official n8n node for SerpApi",
-      "category": "web-scraping",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-serpapi",
-      "version": "0.1.8",
-      "maintainer": "serpapi",
-      "repository": "git+https://github.com/serpapi/n8n-nodes-serpapi.git"
-    },
-    {
-      "name": "n8n-nodes-pdfco",
-      "description": "Pdf.co nodes for n8n",
-      "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdfco",
-      "version": "1.0.6",
-      "maintainer": "artifex-dev",
-      "repository": "git+https://github.com/pdfdotco/n8n-nodes-pdfco.git"
-    },
-    {
-      "name": "n8n-nodes-globals",
-      "description": "N8N community node that allows users to create global constants and use them in all their workflows",
+      "name": "n8n-nodes-kommo",
+      "description": "n8n node for Kommo Api",
       "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-globals",
-      "version": "1.1.0",
-      "maintainer": "umanamente",
-      "repository": "git+https://github.com/umanamente/n8n-nodes-globals.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kommo",
+      "version": "0.0.16",
+      "maintainer": "yatolstoy",
+      "repository": "git+https://github.com/yatolstoy/n8n-node-kommo.git"
     },
     {
       "name": "n8n-nodes-chatwoot",
@@ -76,67 +58,40 @@
       "repository": "git+https://github.com/sufficit/n8n-nodes-chatwoot.git"
     },
     {
-      "name": "@gotohuman/n8n-nodes-gotohuman",
-      "description": "n8n node to request human reviews in AI workflows with gotoHuman",
-      "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/@gotohuman/n8n-nodes-gotohuman",
-      "version": "0.1.1",
-      "maintainer": "gotohuman-admin",
-      "repository": "git+https://github.com/gotohuman/n8n-nodes-gotohuman.git"
-    },
-    {
-      "name": "@tavily/n8n-nodes-tavily",
-      "description": "A community node for n8n to integrate Tavily API for web search and content extraction.",
+      "name": "n8n-nodes-puppeteer",
+      "description": "n8n node for browser automation using Puppeteer",
       "category": "web-scraping",
-      "npmUrl": "https://www.npmjs.com/package/@tavily/n8n-nodes-tavily",
-      "version": "0.5.1",
-      "maintainer": "mayramati",
-      "repository": "git+https://github.com/tavily-ai/tavily-n8n-node.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-puppeteer",
+      "version": "1.5.0",
+      "maintainer": "drudge",
+      "repository": "git+https://github.com/drudge/n8n-nodes-puppeteer.git"
     },
     {
-      "name": "@mookielianhd/n8n-nodes-instagram",
-      "description": "Instagram node for n8n",
+      "name": "@apify/n8n-nodes-apify",
+      "description": "n8n nodes for Apify",
       "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@mookielianhd/n8n-nodes-instagram",
-      "version": "2.6.2",
-      "maintainer": "mookielian",
-      "repository": "git+https://github.com/MookieLian/n8n-nodes-instagram.git"
-    },
-    {
-      "name": "@elevenlabs/n8n-nodes-elevenlabs",
-      "description": "Official ElevenLabs node for n8n",
-      "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/@elevenlabs/n8n-nodes-elevenlabs",
-      "version": "0.2.3",
+      "npmUrl": "https://www.npmjs.com/package/@apify/n8n-nodes-apify",
+      "version": "0.6.5",
       "maintainer": "GitHub Actions",
-      "repository": "git+https://github.com/elevenlabs/elevenlabs-n8n.git"
+      "repository": "git+https://github.com/apify/n8n-nodes-apify.git"
     },
     {
-      "name": "n8n-nodes-kipps",
-      "description": "Custom Kipps.ai integration node for n8n",
-      "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kipps",
-      "version": "0.0.12",
-      "maintainer": "kipps.ai",
-      "repository": "git+https://github.com/KIPPS-AI/n8n-nodes-kipps.git"
+      "name": "n8n-nodes-cloudinary",
+      "description": "The official Cloudinary n8n node - upload media, update asset tags and metadata, and more",
+      "category": "data-processing",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-cloudinary",
+      "version": "0.0.9",
+      "maintainer": "sveta_s",
+      "repository": "git+https://github.com/cloudinary/n8n-nodes-cloudinary.git"
     },
     {
-      "name": "n8n-nodes-cronlytic",
-      "description": "n8n community node for Cronlytic advanced cron scheduling",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-cronlytic",
-      "version": "0.1.4",
-      "maintainer": "cronlytic",
-      "repository": "git+https://github.com/Cronlytic/n8n-nodes-cronlytic.git"
-    },
-    {
-      "name": "n8n-nodes-a2a",
-      "description": "n8n community node for A2A (Account to Account) transfers, account management, and Google Agent2Agent protocol communication with advanced features including file upload, custom JSON fields, custom requests, and streaming support",
+      "name": "n8n-nodes-pdfco",
+      "description": "Pdf.co nodes for n8n",
       "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-a2a",
-      "version": "0.4.0",
-      "maintainer": "bruno.growthsales",
-      "repository": "git+https://github.com/bruno-growthsales/n8n-nodes-a2a.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdfco",
+      "version": "1.0.6",
+      "maintainer": "artifex-dev",
+      "repository": "git+https://github.com/pdfdotco/n8n-nodes-pdfco.git"
     },
     {
       "name": "n8n-nodes-rd-station-crm",
@@ -157,94 +112,103 @@
       "repository": "git+https://github.com/nerding-io/n8n-nodes-mcp.git"
     },
     {
-      "name": "@devlikeapro/n8n-nodes-chatwoot",
-      "description": "n8n node to connect with ChatWoot",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/@devlikeapro/n8n-nodes-chatwoot",
-      "version": "1.0.2",
-      "maintainer": "devlikeapro",
-      "repository": "git+https://github.com/devlikeapro/n8n-nodes-chatwoot.git"
-    },
-    {
-      "name": "n8n-nodes-powerbi",
-      "description": "n8n nodes for integration with Power BI APIs",
+      "name": "n8n-nodes-cronlytic",
+      "description": "n8n community node for Cronlytic advanced cron scheduling",
       "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-powerbi",
-      "version": "2.3.10",
-      "maintainer": "androcha",
-      "repository": "git+https://github.com/And-Rochaa/n8n-nodes-powerbi.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-cronlytic",
+      "version": "0.1.4",
+      "maintainer": "cronlytic",
+      "repository": "git+https://github.com/Cronlytic/n8n-nodes-cronlytic.git"
     },
     {
-      "name": "n8n-nodes-docx-converter",
-      "description": "A node to convert Docx to Text",
-      "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-docx-converter",
-      "version": "0.1.3",
-      "maintainer": "cre8tiv",
-      "repository": "git+https://github.com/cre8tiv/n8n-docx-converter.git"
+      "name": "n8n-nodes-efibank",
+      "description": "Nó personalizado para integração com as APIs Cobranças e Pix do Efi Bank, permitindo operações de pagamentos, recebimentos e gerenciamento de transações financeiras.",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-efibank",
+      "version": "1.0.10",
+      "maintainer": "consultoria-efi",
+      "repository": "git+https://github.com/efipay/n8n-nodes-efibank.git"
     },
     {
-      "name": "n8n-nodes-notionmd",
-      "description": "n8n node to transform markdown to notion blocks",
-      "category": "data-processing",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-notionmd",
-      "version": "0.1.0",
-      "maintainer": "minhlucvan",
-      "repository": "git+https://github.com/minhlucvan/n8n-nodes-notionmd.git"
-    },
-    {
-      "name": "n8n-nodes-puppeteer",
-      "description": "n8n node for browser automation using Puppeteer",
+      "name": "n8n-nodes-serpapi",
+      "description": "Official n8n node for SerpApi",
       "category": "web-scraping",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-puppeteer",
-      "version": "1.5.0",
-      "maintainer": "drudge",
-      "repository": "git+https://github.com/drudge/n8n-nodes-puppeteer.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-serpapi",
+      "version": "0.1.10",
+      "maintainer": "serpapi",
+      "repository": "git+https://github.com/serpapi/n8n-nodes-serpapi.git"
     },
     {
-      "name": "@asaasbr/n8n-nodes-asaas",
-      "description": "n8n nodes for integrating with the Asaas API",
+      "name": "n8n-nodes-bitrix",
+      "description": "n8n node for bitrix rest api",
       "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@asaasbr/n8n-nodes-asaas",
-      "version": "1.0.3",
-      "maintainer": "phelipe_pereira",
-      "repository": "git+https://github.com/asaasdev/n8n-plugin-asaas.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-bitrix",
+      "version": "1.3.0",
+      "maintainer": "dewocom",
+      "repository": "git+https://github.com/dewocom/n8n-nodes-bitrix.git"
     },
     {
-      "name": "@apify/n8n-nodes-apify",
-      "description": "n8n nodes for Apify",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@apify/n8n-nodes-apify",
-      "version": "0.6.5",
-      "maintainer": "GitHub Actions",
-      "repository": "git+https://github.com/apify/n8n-nodes-apify.git"
-    },
-    {
-      "name": "n8n-nodes-youtube-transcript-api",
-      "description": "YouTube Transcript API Nodes for n8n",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-youtube-transcript-api",
-      "version": "2.4.3",
-      "maintainer": "shidoverse",
-      "repository": "git+https://github.com/akpenou/n8n-youtube-transcript.git"
-    },
-    {
-      "name": "@pixelinfinito/n8n-nodes-chatwoot",
-      "description": "n8n community node for Chatwoot API integration",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/@pixelinfinito/n8n-nodes-chatwoot",
-      "version": "0.3.1",
-      "maintainer": "mctlisboa",
-      "repository": "git+https://github.com/pixelinfinito/n8n-nodes-chatwoot.git"
-    },
-    {
-      "name": "@mendable/n8n-nodes-firecrawl",
-      "description": "Official Firecrawl nodes for n8n - scrape, crawl, map, search, and extract data from websites. Supports AI Agent tool usage.",
+      "name": "n8n-nodes-pdfvector",
+      "description": "n8n community node for PDF Vector — parse PDF, Word, Excel, and image documents, extract structured data with JSON Schema, ask AI questions, and search academic papers across multiple databases.",
       "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/@mendable/n8n-nodes-firecrawl",
-      "version": "2.0.4",
-      "maintainer": "hello_sideguide",
-      "repository": "git+https://github.com/mendableai/n8n-nodes-firecrawl.git"
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdfvector",
+      "version": "2.0.5",
+      "maintainer": "GitHub Actions",
+      "repository": "git+https://github.com/phuctm97/n8n-nodes-pdfvector.git"
+    },
+    {
+      "name": "n8n-nodes-instagram-token",
+      "description": "N8N nodes for Instagram API integration with access token authentication",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-instagram-token",
+      "version": "2.4.2",
+      "maintainer": "robsonmilioli",
+      "repository": "git+https://github.com/r-milioli/n8n-nodes-insta-accessToken.git"
+    },
+    {
+      "name": "n8n-nodes-htmlcsstopdf",
+      "description": "n8n community node to convert HTML and CSS to PDF using PdfMunk API - perfect for invoices, reports, certificates, and document generation",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-htmlcsstopdf",
+      "version": "3.2.5",
+      "maintainer": "htmlcsstoimage",
+      "repository": "git+https://github.com/PdfMunk/n8n-nodes-htmltopdf.git"
+    },
+    {
+      "name": "@devlikeapro/n8n-nodes-waha",
+      "description": "n8n to connect with WAHA (Whatsapp HTTP API)",
+      "category": "communication",
+      "npmUrl": "https://www.npmjs.com/package/@devlikeapro/n8n-nodes-waha",
+      "version": "2025.2.9",
+      "maintainer": "devlikeapro",
+      "repository": "git+https://github.com/devlikeapro/n8n-nodes-waha.git"
+    },
+    {
+      "name": "n8n-nodes-pdfkit",
+      "description": "Node for using PDFKit to tranform images into PDF, more functionality may be added later.",
+      "category": "document",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdfkit",
+      "version": "0.1.2",
+      "maintainer": "bramknuever",
+      "repository": "git+https://github.com/bramkn/n8n-nodes-pdfkit.git"
+    },
+    {
+      "name": "n8n-nodes-transcript-lol",
+      "description": "n8n community node for Transcript.lol - AI-powered audio and video transcription service",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-transcript-lol",
+      "version": "0.3.3",
+      "maintainer": "pkpio",
+      "repository": "git+https://github.com/transcript-lol/n8n-nodes-transcript-lol.git"
+    },
+    {
+      "name": "n8n-nodes-openpix",
+      "description": "n8n nodes for OpenPix",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-openpix",
+      "version": "0.3.0",
+      "maintainer": "fersilva",
+      "repository": "git+https://github.com/open-pix/n8n-nodes-openpix.git"
     },
     {
       "name": "n8n-nodes-thong-zalo-test-trial",
@@ -256,13 +220,22 @@
       "repository": ""
     },
     {
-      "name": "n8n-nodes-transcript-lol",
-      "description": "n8n community node for Transcript.lol - AI-powered audio and video transcription service",
+      "name": "@elevenlabs/n8n-nodes-elevenlabs",
+      "description": "Official ElevenLabs node for n8n",
       "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-transcript-lol",
-      "version": "0.3.2",
-      "maintainer": "pkpio",
-      "repository": "git+https://github.com/transcript-lol/n8n-nodes-transcript-lol.git"
+      "npmUrl": "https://www.npmjs.com/package/@elevenlabs/n8n-nodes-elevenlabs",
+      "version": "0.2.4",
+      "maintainer": "GitHub Actions",
+      "repository": "git+https://github.com/elevenlabs/elevenlabs-n8n.git"
+    },
+    {
+      "name": "n8n-nodes-weld",
+      "description": "n8n community node for Weld — web scraping across LinkedIn, Instagram, TikTok, Twitter/X, YouTube & Facebook",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-weld",
+      "version": "1.1.4",
+      "maintainer": "GitHub Actions",
+      "repository": "git+https://github.com/useweld/n8n-nodes-weld.git"
     },
     {
       "name": "n8n-nodes-mtai-zalo-test-trial",
@@ -272,6 +245,33 @@
       "version": "1.2.1",
       "maintainer": "dangminhtaivietinsoft",
       "repository": ""
+    },
+    {
+      "name": "n8n-nodes-zapi",
+      "description": "Custom n8n node for Z-API.",
+      "category": "communication",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-zapi",
+      "version": "0.1.0",
+      "maintainer": "leandcesar",
+      "repository": "git+https://github.com/leandcesar/n8n-nodes-zapi.git"
+    },
+    {
+      "name": "n8n-nodes-autype",
+      "description": "n8n community node for the Autype Developer API — document generation, PDF tools, bulk rendering, and more.",
+      "category": "document",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-autype",
+      "version": "1.0.5",
+      "maintainer": "centerbit_co",
+      "repository": "git+https://github.com/centerbitco/n8n-nodes-autype.git"
+    },
+    {
+      "name": "n8n-nodes-instagram-integrations",
+      "description": "N8N nodes for Instagram API integration with OAuth2 authentication",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-instagram-integrations",
+      "version": "1.6.0",
+      "maintainer": "msameim181",
+      "repository": "git+https://github.com/Msameim181/n8n-nodes-instagram-integrations.git"
     }
   ]
 }
