@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-05T00:57:00.633Z",
+  "lastUpdated": "2026-06-07T01:21:50.904Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -1512,7 +1512,7 @@
     },
     "@apify/n8n-nodes-apify": {
       "packageName": "@apify/n8n-nodes-apify",
-      "packageVersion": "0.6.5",
+      "packageVersion": "0.6.9",
       "nodes": [
         {
           "nodeType": "@apify/n8n-nodes-apify.apify",
@@ -1651,7 +1651,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 54
+            "totalPropertyCount": 55
           },
           "ioInfo": {
             "nodeType": "apify",
@@ -11474,42 +11474,112 @@
     },
     "n8n-nodes-palatine-speech": {
       "packageName": "n8n-nodes-palatine-speech",
-      "packageVersion": "1.0.1",
+      "packageVersion": "1.1.1",
       "nodes": [
         {
-          "nodeType": "n8n-nodes-palatine-speech.PalatineSpeechNode",
+          "nodeType": "n8n-nodes-palatine-speech.palatineSpeech",
           "displayName": "Palatine Speech",
-          "description": "Use Palatine Speech API to transcribe audio, diarize speakers, analyze sentiment, generate AI summaries and more",
-          "version": "1",
+          "description": "Transcribe audio, diarize speakers, analyze sentiment, generate AI summaries, or use OpenAI-compatible LLM Chat Completions via Palatine. Keywords: n8n-community-node-package, n8n, palatine, speech-to-text, transcribe, transcription, stt, audio, ai, automation, voice-to-text, speech-recognition, audio-transcription, audio2text, audio-processing, diarization, speaker-diarization, speaker-segmentation, summarization, audio-summarization, sentiment-analysis, emotion-detection, tone-analysis, llm, chat-completions, openai-compatible, structured-output, json-schema",
+          "version": "3",
           "properties": {
             "coreProperties": [
               {
-                "name": "task",
-                "displayName": "Task",
+                "name": "llmModel",
+                "displayName": "Model",
+                "type": "resourceLocator",
+                "description": "Model to use",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "userMessage",
+                "displayName": "User Message",
+                "type": "string",
+                "description": "The main message sent to model",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "binaryProperty",
+                "displayName": "Binary Property",
+                "type": "string",
+                "description": "Name of the binary property that contains the input file",
+                "required": true,
+                "default": "data"
+              },
+              {
+                "name": "binaryProperty",
+                "displayName": "Binary Property",
+                "type": "string",
+                "description": "Name of the binary property that contains the input file",
+                "required": true,
+                "default": "data"
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
                 "type": "options",
-                "description": "Select what to do with audio file",
+                "required": false,
+                "default": "audio",
+                "options": [
+                  {
+                    "name": "Audio",
+                    "value": "audio"
+                  },
+                  {
+                    "name": "LLM",
+                    "value": "llm"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
                 "required": false,
                 "default": "transcribe",
                 "options": [
                   {
                     "name": "Transcribe",
                     "value": "transcribe",
-                    "description": "Convert speech in audio file to text"
+                    "description": "Convert speech in an audio file to text"
                   },
                   {
                     "name": "Diarize",
                     "value": "diarize",
-                    "description": "Split audio by speakers and return timestamps for each segment"
+                    "description": "Split audio by speakers and return timestamps"
                   },
                   {
                     "name": "Sentiment Analysis",
                     "value": "sentiment",
-                    "description": "Detect sentiment/emotion in audio and return scores"
+                    "description": "Detect sentiment/emotion in audio"
                   },
                   {
-                    "name": "Summarize",
-                    "value": "summarize",
-                    "description": "Generate an AI summary of audio (notes, decisions, action items)"
+                    "name": "Summarize File",
+                    "value": "summarizeFile",
+                    "description": "Generate an AI summary of an uploaded file"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "chatCompletions",
+                "options": [
+                  {
+                    "name": "Message a Model",
+                    "value": "chatCompletions",
+                    "description": "Get a response from the model using LLM Palatine Speech"
+                  },
+                  {
+                    "name": "Summarize Text",
+                    "value": "summarizeText",
+                    "description": "Generate an AI summary of provided text"
                   }
                 ]
               },
@@ -11522,20 +11592,45 @@
                 "default": "palatine_small",
                 "options": [
                   {
-                    "name": "palatine_small",
+                    "name": "Palatine_small",
                     "value": "palatine_small",
-                    "description": "Model used for transcription processing"
+                    "description": "Fast, compact, efficient model for basic speech recognition tasks"
                   },
                   {
-                    "name": "palatine_large_highspeed",
+                    "name": "Palatine_large_highspeed",
                     "value": "palatine_large_highspeed",
-                    "description": "Model used for transcription processing"
+                    "description": "Slower, more accurate model for complex and demanding scenarios"
+                  }
+                ]
+              },
+              {
+                "name": "responseFormat",
+                "displayName": "Response Format",
+                "type": "options",
+                "description": "Format of returned diarization result",
+                "required": false,
+                "default": "json",
+                "options": [
+                  {
+                    "name": "JSON",
+                    "value": "json",
+                    "description": "Return JSON"
+                  },
+                  {
+                    "name": "SRT",
+                    "value": "srt",
+                    "description": "SubRip subtitles (.srt)"
+                  },
+                  {
+                    "name": "VTT",
+                    "value": "vtt",
+                    "description": "WebVTT subtitles (.vtt)"
                   }
                 ]
               },
               {
                 "name": "summarizeTask",
-                "displayName": "AI Task",
+                "displayName": "Summarize Mode",
                 "type": "options",
                 "description": "Summarization mode",
                 "required": false,
@@ -11544,79 +11639,44 @@
                   {
                     "name": "Meeting Summary",
                     "value": "meeting_summary",
-                    "description": "Ready-made meeting summary: key points, decisions, and action items"
+                    "description": "Meeting summary output format"
                   },
                   {
                     "name": "User Prompt",
                     "value": "user_prompt",
-                    "description": "Use your own prompt to control summary format/content"
+                    "description": "Use custom prompt"
                   }
                 ]
-              },
-              {
-                "name": "binaryProperty",
-                "displayName": "File",
-                "type": "string",
-                "description": "Name of binary property that contains audio file",
-                "required": false,
-                "default": "data"
-              },
-              {
-                "name": "pollIntervalMs",
-                "displayName": "Polling Interval",
-                "type": "number",
-                "description": "How often node polls API to retrieve result. Minimum 500 ms, maximum 900000 ms",
-                "required": false,
-                "default": 500
-              },
-              {
-                "name": "pollIntervalMsSummarize",
-                "displayName": "Polling Interval",
-                "type": "number",
-                "description": "How often node polls API to retrieve result. Minimum 500 ms, maximum 900000 ms",
-                "required": false,
-                "default": 20000
-              },
-              {
-                "name": "maxPollAttempts",
-                "displayName": "Max Poll Attempts",
-                "type": "number",
-                "description": "How many times node polls API before giving up. Minimum 1 attempt, maximum 1000 attempts",
-                "required": false,
-                "default": 200
-              },
-              {
-                "name": "maxPollAttemptsSummarize",
-                "displayName": "Max Poll Attempts",
-                "type": "number",
-                "description": "How many times node polls API before giving up. Minimum 1 attempt, maximum 1000 attempts",
-                "required": false,
-                "default": 500
-              },
-              {
-                "name": "summarizePrompt",
-                "displayName": "Prompt",
-                "type": "string",
-                "description": "Your instruction for AI. Used only with \"User Prompt\". Leave blank to use default prompt",
-                "required": false,
-                "default": ""
-              },
-              {
-                "name": "summarizeThinking",
-                "displayName": "Thinking",
-                "type": "boolean",
-                "description": "Enable \"thinking\" mode for deeper reasoning (may increase processing time)",
-                "required": false,
-                "default": false
               }
             ],
-            "operations": [],
+            "operations": [
+              {
+                "name": "Transcribe",
+                "value": "transcribe",
+                "description": "Convert speech in an audio file to text"
+              },
+              {
+                "name": "Diarize",
+                "value": "diarize",
+                "description": "Split audio by speakers and return timestamps"
+              },
+              {
+                "name": "Sentiment Analysis",
+                "value": "sentiment",
+                "description": "Detect sentiment/emotion in audio"
+              },
+              {
+                "name": "Summarize File",
+                "value": "summarizeFile",
+                "description": "Generate an AI summary of an uploaded file"
+              }
+            ],
             "hasCredentials": true,
-            "totalPropertyCount": 10
+            "totalPropertyCount": 20
           },
           "ioInfo": {
-            "nodeType": "PalatineSpeechNode",
-            "version": "1",
+            "nodeType": "palatineSpeech",
+            "version": "3",
             "inputs": [
               "main"
             ],
@@ -12312,7 +12372,7 @@
     },
     "@mookielianhd/n8n-nodes-instagram": {
       "packageName": "@mookielianhd/n8n-nodes-instagram",
-      "packageVersion": "2.6.2",
+      "packageVersion": "3.4.0",
       "nodes": [
         {
           "nodeType": "@mookielianhd/n8n-nodes-instagram.instagram",
@@ -12565,7 +12625,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 29
+            "totalPropertyCount": 32
           },
           "ioInfo": {
             "nodeType": "instagram",
@@ -12579,6 +12639,126 @@
             "inputTypes": [
               "main"
             ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "@mookielianhd/n8n-nodes-instagram.instagramTrigger",
+          "displayName": "Instagram Trigger",
+          "description": "Instagram trigger to receive real-time webhook events from Meta and start a workflow when an event is received.",
+          "version": "2",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "verifyToken",
+                "displayName": "Verify Token",
+                "type": "string",
+                "description": "Must match the Verify Token you set in Meta App Dashboard → Webhooks. Meta sends this on GET for URL verification.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "eventsToInclude",
+                "displayName": "Events to Include",
+                "type": "multiOptions",
+                "description": "If empty, all received events are output. Otherwise only selected event types are passed to the workflow.",
+                "required": false,
+                "default": [],
+                "options": [
+                  {
+                    "name": "Comments",
+                    "value": "comments",
+                    "description": "When someone comments on media"
+                  },
+                  {
+                    "name": "Live Comments",
+                    "value": "live_comments",
+                    "description": "Comments during live streams"
+                  },
+                  {
+                    "name": "Message Edit",
+                    "value": "message_edit",
+                    "description": "When a direct message is edited"
+                  },
+                  {
+                    "name": "Message Reactions",
+                    "value": "message_reactions",
+                    "description": "Reactions to direct messages"
+                  },
+                  {
+                    "name": "Messages",
+                    "value": "messages",
+                    "description": "When users send direct messages"
+                  },
+                  {
+                    "name": "Mentions",
+                    "value": "mentions",
+                    "description": "When your account is @mentioned"
+                  },
+                  {
+                    "name": "Messaging Handover",
+                    "value": "messaging_handover",
+                    "description": "Thread control changes"
+                  },
+                  {
+                    "name": "Messaging Referral",
+                    "value": "messaging_referral",
+                    "description": "Referral from messaging"
+                  },
+                  {
+                    "name": "Messaging Seen",
+                    "value": "messaging_seen",
+                    "description": "When someone sees a message"
+                  },
+                  {
+                    "name": "Messaging Postbacks",
+                    "value": "messaging_postbacks",
+                    "description": "Postback button clicks"
+                  },
+                  {
+                    "name": "Standby",
+                    "value": "standby",
+                    "description": "Standby events"
+                  },
+                  {
+                    "name": "Story Insights",
+                    "value": "story_insights",
+                    "description": "Metrics when a story expires"
+                  }
+                ]
+              },
+              {
+                "name": "skipSignatureVerification",
+                "displayName": "Skip Signature Verification",
+                "type": "boolean",
+                "description": "Whether to skip X-Hub-Signature-256 verification. Enabled by default because n8n may not provide raw body for signature verification; disable only if you have confirmed verification works in your setup.",
+                "required": false,
+                "default": true
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 3
+          },
+          "ioInfo": {
+            "nodeType": "instagramTrigger",
+            "version": "2",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
             "outputTypes": [
               "main"
             ],
@@ -13303,7 +13483,7 @@
     },
     "@asaasbr/n8n-nodes-asaas": {
       "packageName": "@asaasbr/n8n-nodes-asaas",
-      "packageVersion": "1.0.3",
+      "packageVersion": "1.1.3",
       "nodes": [
         {
           "nodeType": "@asaasbr/n8n-nodes-asaas.asaas",
@@ -13312,6 +13492,22 @@
           "version": "1",
           "properties": {
             "coreProperties": [
+              {
+                "name": "value",
+                "displayName": "Valor",
+                "type": "number",
+                "description": "Valor da assinatura",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "value",
+                "displayName": "Valor",
+                "type": "number",
+                "description": "Valor da assinatura",
+                "required": true,
+                "default": 0
+              },
               {
                 "name": "value",
                 "displayName": "Valor",
@@ -13332,15 +13528,7 @@
                 "name": "value",
                 "displayName": "Valor",
                 "type": "number",
-                "description": "Valor da assinatura",
-                "required": true,
-                "default": 0
-              },
-              {
-                "name": "value",
-                "displayName": "Valor",
-                "type": "number",
-                "description": "Valor da assinatura",
+                "description": "Valor do QR Code estático em reais",
                 "required": true,
                 "default": 0
               },
@@ -13353,464 +13541,103 @@
                 "default": ""
               },
               {
-                "name": "value",
-                "displayName": "Valor",
-                "type": "number",
-                "description": "Valor do QR Code estático em reais",
+                "name": "billingTypes",
+                "displayName": "Formas De Pagamento",
+                "type": "fixedCollection",
+                "description": "Formas de pagamento aceitas no checkout",
                 "required": true,
-                "default": 0
-              },
-              {
-                "name": "sendType",
-                "displayName": "Tipo De Envio",
-                "type": "options",
-                "description": "Tipo de envio dos eventos",
-                "required": true,
-                "default": "NON_SEQUENTIALLY",
+                "default": {},
                 "options": [
                   {
-                    "name": "Sequencial",
-                    "value": "SEQUENTIALLY"
-                  },
-                  {
-                    "name": "Não Sequencial",
-                    "value": "NON_SEQUENTIALLY"
+                    "name": "billingType"
                   }
                 ]
               },
               {
-                "name": "events",
-                "displayName": "Eventos",
-                "type": "multiOptions",
-                "description": "Eventos que o webhook deve escutar (opcional para atualização)",
+                "name": "chargeTypes",
+                "displayName": "Tipos De Cobrança",
+                "type": "fixedCollection",
+                "description": "Tipos de cobrança do checkout",
                 "required": true,
-                "default": [],
+                "default": {},
                 "options": [
                   {
-                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_APPROVED - Conta Bancária Aprovada",
-                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_APPROVED"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_AWAITING_APPROVAL - Conta Bancária Está Em Análise",
-                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_AWAITING_APPROVAL"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_PENDING - Conta Bancária Voltou Para Pendente",
-                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_PENDING"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_REJECTED - Conta Bancária Reprovada",
-                    "value": "ACCOUNT_STATUS_BANK_ACCOUNT_INFO_REJECTED"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_APPROVED - Informações Comerciais Aprovada",
-                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_APPROVED"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_AWAITING_APPROVAL - Informações Comerciais Em Análise",
-                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_AWAITING_APPROVAL"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_PENDING - Informações Comerciais Voltou Para Pendente",
-                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_PENDING"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_COMMERCIAL_INFO_REJECTED - Informações Comerciais Reprovada",
-                    "value": "ACCOUNT_STATUS_COMMERCIAL_INFO_REJECTED"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_DOCUMENT_APPROVED - Documentos Aprovados",
-                    "value": "ACCOUNT_STATUS_DOCUMENT_APPROVED"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_DOCUMENT_AWAITING_APPROVAL - Documentos Em Análise",
-                    "value": "ACCOUNT_STATUS_DOCUMENT_AWAITING_APPROVAL"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_DOCUMENT_PENDING - Documentos Voltaram Para Pendente",
-                    "value": "ACCOUNT_STATUS_DOCUMENT_PENDING"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_DOCUMENT_REJECTED - Documentos Reprovados",
-                    "value": "ACCOUNT_STATUS_DOCUMENT_REJECTED"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_APPROVED - Conta Aprovada",
-                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_APPROVED"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_AWAITING_APPROVAL - Conta Em Análise",
-                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_AWAITING_APPROVAL"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_PENDING - Conta Voltou Para Pendente",
-                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_PENDING"
-                  },
-                  {
-                    "name": "ACCOUNT_STATUS_GENERAL_APPROVAL_REJECTED - Conta Reprovada",
-                    "value": "ACCOUNT_STATUS_GENERAL_APPROVAL_REJECTED"
-                  },
-                  {
-                    "name": "BILL_BANK_PROCESSING - Pagamento De Contas Aguardando Processamento Bancário",
-                    "value": "BILL_BANK_PROCESSING"
-                  },
-                  {
-                    "name": "BILL_CANCELLED - Pagamento De Contas Cancelado",
-                    "value": "BILL_CANCELLED"
-                  },
-                  {
-                    "name": "BILL_CREATED - Geração De Um Novo Pague Contas",
-                    "value": "BILL_CREATED"
-                  },
-                  {
-                    "name": "BILL_FAILED - Pagamento De Contas Falhou",
-                    "value": "BILL_FAILED"
-                  },
-                  {
-                    "name": "BILL_PAID - Pagamento De Contas Pago",
-                    "value": "BILL_PAID"
-                  },
-                  {
-                    "name": "BILL_PENDING - Pagamento De Contas Aguardando Processamento",
-                    "value": "BILL_PENDING"
-                  },
-                  {
-                    "name": "BILL_REFUNDED - Pagamento De Contas Estornado",
-                    "value": "BILL_REFUNDED"
-                  },
-                  {
-                    "name": "CHECKOUT_CANCELED - Checkout Cancelado",
-                    "value": "CHECKOUT_CANCELED"
-                  },
-                  {
-                    "name": "CHECKOUT_CREATED - Checkout Criado",
-                    "value": "CHECKOUT_CREATED"
-                  },
-                  {
-                    "name": "CHECKOUT_EXPIRED - Checkout Expirado",
-                    "value": "CHECKOUT_EXPIRED"
-                  },
-                  {
-                    "name": "CHECKOUT_PAID - Checkout Pago",
-                    "value": "CHECKOUT_PAID"
-                  },
-                  {
-                    "name": "INVOICE_AUTHORIZED - Nota Fiscal Emitida",
-                    "value": "INVOICE_AUTHORIZED"
-                  },
-                  {
-                    "name": "INVOICE_CANCELED - Nota Fiscal Cancelada",
-                    "value": "INVOICE_CANCELED"
-                  },
-                  {
-                    "name": "INVOICE_CANCELLATION_DENIED - Recusado O Cancelamento Da Nota Fiscal",
-                    "value": "INVOICE_CANCELLATION_DENIED"
-                  },
-                  {
-                    "name": "INVOICE_CREATED - Geração De Nova Nota Fiscal",
-                    "value": "INVOICE_CREATED"
-                  },
-                  {
-                    "name": "INVOICE_ERROR - Nota Fiscal Com Erro",
-                    "value": "INVOICE_ERROR"
-                  },
-                  {
-                    "name": "INVOICE_PROCESSING_CANCELLATION - Nota Fiscal Processando Cancelamento",
-                    "value": "INVOICE_PROCESSING_CANCELLATION"
-                  },
-                  {
-                    "name": "INVOICE_SYNCHRONIZED - Nota Fiscal Enviada Para Prefeitura",
-                    "value": "INVOICE_SYNCHRONIZED"
-                  },
-                  {
-                    "name": "INVOICE_UPDATED - Alteração Na Nota Fiscal",
-                    "value": "INVOICE_UPDATED"
-                  },
-                  {
-                    "name": "MOBILE_PHONE_RECHARGE_CANCELLED - Recarga De Celular Cancelada",
-                    "value": "MOBILE_PHONE_RECHARGE_CANCELLED"
-                  },
-                  {
-                    "name": "MOBILE_PHONE_RECHARGE_CONFIRMED - Recarga De Celular Confirmada",
-                    "value": "MOBILE_PHONE_RECHARGE_CONFIRMED"
-                  },
-                  {
-                    "name": "MOBILE_PHONE_RECHARGE_PENDING - Recarga De Celular Pendente",
-                    "value": "MOBILE_PHONE_RECHARGE_PENDING"
-                  },
-                  {
-                    "name": "MOBILE_PHONE_RECHARGE_REFUNDED - Recarga De Celular Estornada",
-                    "value": "MOBILE_PHONE_RECHARGE_REFUNDED"
-                  },
-                  {
-                    "name": "PAYMENT_ANTICIPATED - Cobrança Antecipada",
-                    "value": "PAYMENT_ANTICIPATED"
-                  },
-                  {
-                    "name": "PAYMENT_APPROVED_BY_RISK_ANALYSIS - Pagamento Em Cartão Aprovado Pela análise Manual De Risco",
-                    "value": "PAYMENT_APPROVED_BY_RISK_ANALYSIS"
-                  },
-                  {
-                    "name": "PAYMENT_AUTHORIZED - Pagamento Em Cartão Que Foi Autorizado E Precisa Ser Capturado",
-                    "value": "PAYMENT_AUTHORIZED"
-                  },
-                  {
-                    "name": "PAYMENT_AWAITING_CHARGEBACK_REVERSAL - Disputa Vencida, Aguardando Repasse Da Adquirente",
-                    "value": "PAYMENT_AWAITING_CHARGEBACK_REVERSAL"
-                  },
-                  {
-                    "name": "PAYMENT_AWAITING_RISK_ANALYSIS - Pagamento Em Cartão Aguardando Aprovação Pela análise Manual De Risco",
-                    "value": "PAYMENT_AWAITING_RISK_ANALYSIS"
-                  },
-                  {
-                    "name": "PAYMENT_BANK_SLIP_VIEWED - Boleto Da cobrança Visualizado Pelo Cliente",
-                    "value": "PAYMENT_BANK_SLIP_VIEWED"
-                  },
-                  {
-                    "name": "PAYMENT_CHARGEBACK_DISPUTE - Em Disputa De Chargeback",
-                    "value": "PAYMENT_CHARGEBACK_DISPUTE"
-                  },
-                  {
-                    "name": "PAYMENT_CHARGEBACK_REQUESTED - Recebido Chargeback",
-                    "value": "PAYMENT_CHARGEBACK_REQUESTED"
-                  },
-                  {
-                    "name": "PAYMENT_CHECKOUT_VIEWED - Fatura Da cobrança Visualizada Pelo Cliente",
-                    "value": "PAYMENT_CHECKOUT_VIEWED"
-                  },
-                  {
-                    "name": "PAYMENT_CONFIRMED - Cobrança Confirmada (Pagamento Efetuado, Porém, O Saldo Ainda Não Foi Disponibilizado)",
-                    "value": "PAYMENT_CONFIRMED"
-                  },
-                  {
-                    "name": "PAYMENT_CREATED - Geração De Nova Cobrança",
-                    "value": "PAYMENT_CREATED"
-                  },
-                  {
-                    "name": "PAYMENT_CREDIT_CARD_CAPTURE_REFUSED - Falha No Pagamento De Cartão De Crédito",
-                    "value": "PAYMENT_CREDIT_CARD_CAPTURE_REFUSED"
-                  },
-                  {
-                    "name": "PAYMENT_DELETED - Cobrança Removida",
-                    "value": "PAYMENT_DELETED"
-                  },
-                  {
-                    "name": "PAYMENT_DUNNING_RECEIVED - Recebimento De Negativação",
-                    "value": "PAYMENT_DUNNING_RECEIVED"
-                  },
-                  {
-                    "name": "PAYMENT_DUNNING_REQUESTED - Requisição De Negativação",
-                    "value": "PAYMENT_DUNNING_REQUESTED"
-                  },
-                  {
-                    "name": "PAYMENT_OVERDUE - Cobrança Vencida",
-                    "value": "PAYMENT_OVERDUE"
-                  },
-                  {
-                    "name": "PAYMENT_PARTIALLY_REFUNDED - Cobrança Estornada Parcialmente",
-                    "value": "PAYMENT_PARTIALLY_REFUNDED"
-                  },
-                  {
-                    "name": "PAYMENT_RECEIVED - Cobrança Recebida",
-                    "value": "PAYMENT_RECEIVED"
-                  },
-                  {
-                    "name": "PAYMENT_RECEIVED_IN_CASH_UNDONE - Recebimento Em Dinheiro Desfeito",
-                    "value": "PAYMENT_RECEIVED_IN_CASH_UNDONE"
-                  },
-                  {
-                    "name": "PAYMENT_REFUND_IN_PROGRESS - Estorno Em Processamento",
-                    "value": "PAYMENT_REFUND_IN_PROGRESS"
-                  },
-                  {
-                    "name": "PAYMENT_REFUNDED - Cobrança Estornada",
-                    "value": "PAYMENT_REFUNDED"
-                  },
-                  {
-                    "name": "PAYMENT_REPROVED_BY_RISK_ANALYSIS - Pagamento Em Cartão Reprovado Pela análise Manual De Risco",
-                    "value": "PAYMENT_REPROVED_BY_RISK_ANALYSIS"
-                  },
-                  {
-                    "name": "PAYMENT_RESTORED - Cobrança Restaurada",
-                    "value": "PAYMENT_RESTORED"
-                  },
-                  {
-                    "name": "PAYMENT_SPLIT_CANCELLED - Cobrança Teve Um Split Cancelado",
-                    "value": "PAYMENT_SPLIT_CANCELLED"
-                  },
-                  {
-                    "name": "PAYMENT_SPLIT_DIVERGENCE_BLOCK - Valor Da cobrança Bloqueado Por Divergência De Split",
-                    "value": "PAYMENT_SPLIT_DIVERGENCE_BLOCK"
-                  },
-                  {
-                    "name": "PAYMENT_SPLIT_DIVERGENCE_BLOCK_FINISHED - Bloqueio Do Valor Da cobrança Por Divergência De Split Foi Finalizado",
-                    "value": "PAYMENT_SPLIT_DIVERGENCE_BLOCK_FINISHED"
-                  },
-                  {
-                    "name": "PAYMENT_UPDATED - Alteração No Vencimento Ou Valor De cobrança Existente",
-                    "value": "PAYMENT_UPDATED"
-                  },
-                  {
-                    "name": "RECEIVABLE_ANTICIPATION_CANCELLED - Antecipação Cancelada",
-                    "value": "RECEIVABLE_ANTICIPATION_CANCELLED"
-                  },
-                  {
-                    "name": "RECEIVABLE_ANTICIPATION_CREDITED - Antecipação Creditada",
-                    "value": "RECEIVABLE_ANTICIPATION_CREDITED"
-                  },
-                  {
-                    "name": "RECEIVABLE_ANTICIPATION_DEBITED - Antecipação Debitada",
-                    "value": "RECEIVABLE_ANTICIPATION_DEBITED"
-                  },
-                  {
-                    "name": "RECEIVABLE_ANTICIPATION_DENIED - Solicitação Da Antecipação Negada",
-                    "value": "RECEIVABLE_ANTICIPATION_DENIED"
-                  },
-                  {
-                    "name": "RECEIVABLE_ANTICIPATION_OVERDUE - Antecipação Vencida",
-                    "value": "RECEIVABLE_ANTICIPATION_OVERDUE"
-                  },
-                  {
-                    "name": "RECEIVABLE_ANTICIPATION_PENDING - Antecipação Em Análise",
-                    "value": "RECEIVABLE_ANTICIPATION_PENDING"
-                  },
-                  {
-                    "name": "RECEIVABLE_ANTICIPATION_SCHEDULED - Antecipação Agendada",
-                    "value": "RECEIVABLE_ANTICIPATION_SCHEDULED"
-                  },
-                  {
-                    "name": "SUBSCRIPTION_CREATED - Geração De Nova Assinatura",
-                    "value": "SUBSCRIPTION_CREATED"
-                  },
-                  {
-                    "name": "SUBSCRIPTION_DELETED - Assinatura Removida",
-                    "value": "SUBSCRIPTION_DELETED"
-                  },
-                  {
-                    "name": "SUBSCRIPTION_INACTIVATED - Assinatura Inativada",
-                    "value": "SUBSCRIPTION_INACTIVATED"
-                  },
-                  {
-                    "name": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK - Assinatura Bloqueada Por Divergência De Split",
-                    "value": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK"
-                  },
-                  {
-                    "name": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK_FINISHED - Bloqueio Da Assinatura Por Divergência De Split Foi Finalizado",
-                    "value": "SUBSCRIPTION_SPLIT_DIVERGENCE_BLOCK_FINISHED"
-                  },
-                  {
-                    "name": "SUBSCRIPTION_UPDATED - Alteração Na Assinatura",
-                    "value": "SUBSCRIPTION_UPDATED"
-                  },
-                  {
-                    "name": "TRANSFER_BLOCKED - Transferência Bloqueada",
-                    "value": "TRANSFER_BLOCKED"
-                  },
-                  {
-                    "name": "TRANSFER_CANCELLED - Transferência Cancelada",
-                    "value": "TRANSFER_CANCELLED"
-                  },
-                  {
-                    "name": "TRANSFER_CREATED - Geração De Nova Transferência",
-                    "value": "TRANSFER_CREATED"
-                  },
-                  {
-                    "name": "TRANSFER_DONE - Transferência Realizada",
-                    "value": "TRANSFER_DONE"
-                  },
-                  {
-                    "name": "TRANSFER_FAILED - Transferência Falhou",
-                    "value": "TRANSFER_FAILED"
-                  },
-                  {
-                    "name": "TRANSFER_IN_BANK_PROCESSING - Transferência Em Processamento Bancário",
-                    "value": "TRANSFER_IN_BANK_PROCESSING"
-                  },
-                  {
-                    "name": "TRANSFER_PENDING - Transferência Pendente De Execução",
-                    "value": "TRANSFER_PENDING"
+                    "name": "chargeType"
                   }
                 ]
               },
               {
-                "name": "keyType",
-                "displayName": "Tipo Da Chave",
-                "type": "options",
-                "description": "Tipo da chave PIX a ser criada",
+                "name": "items",
+                "displayName": "Itens",
+                "type": "fixedCollection",
+                "description": "Lista de itens no checkout",
                 "required": true,
-                "default": "EVP",
+                "default": {},
                 "options": [
                   {
-                    "name": "EVP",
-                    "value": "EVP",
-                    "description": "Endereçamento Virtual de Pagamento (chave PIX aleatória)"
+                    "name": "item"
                   }
                 ]
               },
               {
-                "name": "billingType",
-                "displayName": "Forma De Pagamento",
-                "type": "options",
+                "name": "callback",
+                "displayName": "Callback",
+                "type": "collection",
+                "description": "Informações de redirecionamento automático após pagamento na tela do checkout",
                 "required": true,
-                "default": "BOLETO",
+                "default": {},
                 "options": [
                   {
-                    "name": "Boleto Bancário",
-                    "value": "BOLETO"
+                    "name": "successUrl",
+                    "description": "URL de direcionamento para checkout com sucesso"
                   },
                   {
-                    "name": "Cartão De Crédito",
-                    "value": "CREDIT_CARD"
+                    "name": "cancelUrl",
+                    "description": "URL de direcionamento para checkout cancelado"
                   },
                   {
-                    "name": "PIX",
-                    "value": "PIX"
-                  },
-                  {
-                    "name": "Pergunte Ao Cliente",
-                    "value": "UNDEFINED"
+                    "name": "expiredUrl",
+                    "description": "URL de direcionamento para checkout expirado"
                   }
                 ]
               }
             ],
             "operations": [
               {
-                "name": "Atualizar Cliente Existente",
-                "value": "update",
-                "description": "Atualizar um cliente"
+                "name": "Atualizar Status Da Antecipação Automática",
+                "value": "updateAutomaticStatus"
               },
               {
-                "name": "Criar Novo Cliente",
-                "value": "create",
-                "description": "Criar um novo cliente"
+                "name": "Cancelar Antecipação",
+                "value": "cancel"
               },
               {
                 "name": "Get Many",
-                "value": "getAll",
-                "description": "Listar todos os clientes"
+                "value": "getAll"
               },
               {
-                "name": "Recuperar Notificações De Um Cliente",
-                "value": "getNotifications"
+                "name": "Recuperar Antecipação",
+                "value": "get"
               },
               {
-                "name": "Recuperar Um Único Cliente",
-                "value": "get",
-                "description": "Buscar um cliente específico"
+                "name": "Recuperar Limites De Antecipações",
+                "value": "getLimits"
               },
               {
-                "name": "Remover Cliente",
-                "value": "delete",
-                "description": "Excluir um cliente"
+                "name": "Recuperar Status Da Antecipação Automática",
+                "value": "getAutomaticStatus"
               },
               {
-                "name": "Restaurar Cliente Removido",
-                "value": "restore",
-                "description": "Restaurar um cliente excluído"
+                "name": "Simular Antecipação",
+                "value": "simulate"
+              },
+              {
+                "name": "Solicitar Antecipação",
+                "value": "request"
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 217
+            "totalPropertyCount": 224
           },
           "ioInfo": {
             "nodeType": "asaas",
@@ -20123,6 +19950,2119 @@
           },
           "ioInfo": {
             "nodeType": "autype",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-chat-data": {
+      "packageName": "n8n-nodes-chat-data",
+      "packageVersion": "1.2.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-chat-data.chatData",
+          "displayName": "Chat Data",
+          "description": "Basic Chat Data Node",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "messages",
+                "displayName": "Messages",
+                "type": "fixedCollection",
+                "description": "The messages to send in the conversation",
+                "required": true,
+                "default": {},
+                "options": [
+                  {
+                    "name": "messageValues"
+                  }
+                ]
+              },
+              {
+                "name": "senderType",
+                "displayName": "Sender Type",
+                "type": "options",
+                "description": "Whether this message is from a human agent or bot",
+                "required": true,
+                "default": "bot",
+                "options": [
+                  {
+                    "name": "Human Agent",
+                    "value": "human",
+                    "description": "Send as a human customer support agent"
+                  },
+                  {
+                    "name": "Bot Response",
+                    "value": "bot",
+                    "description": "Send as an automated bot response"
+                  }
+                ]
+              },
+              {
+                "name": "chatbot_id",
+                "displayName": "Chatbot Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "chatbot_id",
+                "displayName": "Chatbot Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "limit",
+                "displayName": "Limit",
+                "type": "number",
+                "description": "Max number of results to return",
+                "required": true,
+                "default": 50
+              },
+              {
+                "name": "chatbot_id",
+                "displayName": "Chatbot Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "limit",
+                "displayName": "Limit",
+                "type": "number",
+                "description": "Max number of results to return",
+                "required": true,
+                "default": 50
+              },
+              {
+                "name": "chatbot_id",
+                "displayName": "Chatbot Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "conversationId",
+                "displayName": "Conversation ID",
+                "type": "string",
+                "description": "The ID of the existing conversation to send the message to",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "The message text to send",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Send a Message",
+                "value": "sendMessage",
+                "description": "Send a message to a chat"
+              },
+              {
+                "name": "Get Leads",
+                "value": "getLeads",
+                "description": "Retrieve leads/customers from a chatbot"
+              },
+              {
+                "name": "Get Conversations",
+                "value": "getConversations",
+                "description": "Retrieve conversation history from a chatbot"
+              },
+              {
+                "name": "Append a Message",
+                "value": "appendMessage",
+                "description": "Append a message to an existing conversation as a human agent or assistant"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 33
+          },
+          "ioInfo": {
+            "nodeType": "chatData",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-chat-data.chatDataTrigger",
+          "displayName": "Chat Data Trigger",
+          "description": "Triggers workflows on Chat Data events",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "chatbot_id",
+                "displayName": "Chatbot Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "chatbot_id",
+                "displayName": "Chatbot Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "chatbot_id",
+                "displayName": "Chatbot Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "onNewMessage",
+                "options": [
+                  {
+                    "name": "On Lead Submission",
+                    "value": "onLeadSubmission",
+                    "description": "Trigger when a lead submission occurs"
+                  },
+                  {
+                    "name": "On Live Chat Escalation",
+                    "value": "onLiveChatEscalation",
+                    "description": "Trigger when a chat is escalated to a live agent"
+                  },
+                  {
+                    "name": "On New Message",
+                    "value": "onNewMessage",
+                    "description": "Trigger when a new chat message is received"
+                  }
+                ]
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "hidden",
+                "required": false,
+                "default": "trigger"
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "webhookDebug",
+                    "description": "Whether to turn on additional logging for webhook debugging"
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "webhookDebug",
+                    "description": "Whether to turn on additional logging for webhook debugging"
+                  }
+                ]
+              },
+              {
+                "name": "options",
+                "displayName": "Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "webhookDebug",
+                    "description": "Whether to turn on additional logging for webhook debugging"
+                  }
+                ]
+              },
+              {
+                "name": "webhook",
+                "displayName": "Webhook",
+                "type": "hidden",
+                "required": false,
+                "default": "default"
+              },
+              {
+                "name": "webhook",
+                "displayName": "Webhook",
+                "type": "hidden",
+                "required": false,
+                "default": "default"
+              }
+            ],
+            "operations": [
+              {
+                "name": "On Lead Submission",
+                "value": "onLeadSubmission",
+                "description": "Trigger when a lead submission occurs"
+              },
+              {
+                "name": "On Live Chat Escalation",
+                "value": "onLiveChatEscalation",
+                "description": "Trigger when a chat is escalated to a live agent"
+              },
+              {
+                "name": "On New Message",
+                "value": "onNewMessage",
+                "description": "Trigger when a new chat message is received"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 11
+          },
+          "ioInfo": {
+            "nodeType": "chatDataTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@winth03/n8n-nodes-minio": {
+      "packageName": "@winth03/n8n-nodes-minio",
+      "packageVersion": "1.3.0",
+      "nodes": [
+        {
+          "nodeType": "@winth03/n8n-nodes-minio.minIo",
+          "displayName": "MinIO",
+          "description": "Connect to your MinIO server",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "bucketName",
+                "displayName": "Bucket Name",
+                "type": "resourceLocator",
+                "description": "Name of the bucket to operate on",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "bucketName",
+                "displayName": "Bucket Name",
+                "type": "string",
+                "description": "Name of the bucket to create",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "bucketName",
+                "displayName": "Bucket Name",
+                "type": "resourceLocator",
+                "description": "Name of the bucket containing the object",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "objectName",
+                "displayName": "Object Name",
+                "type": "resourceLocator",
+                "description": "Name of the object (key) in the bucket",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "fieldName",
+                "displayName": "Field Name",
+                "type": "string",
+                "description": "Name of the binary field to use for object data",
+                "required": true,
+                "default": "data"
+              },
+              {
+                "name": "bucketName",
+                "displayName": "Bucket Name",
+                "type": "resourceLocator",
+                "description": "Name of the bucket for which to generate the presigned URL",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "objectName",
+                "displayName": "Object Name",
+                "type": "resourceLocator",
+                "description": "Name of the object (key) for which to generate the presigned URL",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "bucket",
+                "options": [
+                  {
+                    "name": "Bucket",
+                    "value": "bucket",
+                    "description": "Operations on storage buckets"
+                  },
+                  {
+                    "name": "Object",
+                    "value": "object",
+                    "description": "Operations on objects stored in buckets"
+                  },
+                  {
+                    "name": "Presigned",
+                    "value": "presigned",
+                    "description": "Generate presigned URLs for temporary access"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "list",
+                "options": [
+                  {
+                    "name": "List",
+                    "value": "list",
+                    "description": "Lists all buckets owned by the authenticated user"
+                  },
+                  {
+                    "name": "Make",
+                    "value": "make",
+                    "description": "Creates a new bucket with the specified name"
+                  },
+                  {
+                    "name": "Remove",
+                    "value": "remove",
+                    "description": "Removes an empty bucket"
+                  },
+                  {
+                    "name": "Exists",
+                    "value": "exists",
+                    "description": "Checks if a bucket exists and is accessible"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "list",
+                "options": [
+                  {
+                    "name": "Get",
+                    "value": "get",
+                    "description": "Downloads an object from the bucket and returns it as binary data"
+                  },
+                  {
+                    "name": "List",
+                    "value": "list",
+                    "description": "Lists all objects in a bucket"
+                  },
+                  {
+                    "name": "Put",
+                    "value": "put",
+                    "description": "Uploads an object to the bucket from binary data"
+                  },
+                  {
+                    "name": "Remove",
+                    "value": "remove",
+                    "description": "Removes an object from the bucket"
+                  },
+                  {
+                    "name": "Stat",
+                    "value": "stat",
+                    "description": "Retrieves metadata about an object in the specified bucket"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "List",
+                "value": "list",
+                "description": "Lists all buckets owned by the authenticated user"
+              },
+              {
+                "name": "Make",
+                "value": "make",
+                "description": "Creates a new bucket with the specified name"
+              },
+              {
+                "name": "Remove",
+                "value": "remove",
+                "description": "Removes an empty bucket"
+              },
+              {
+                "name": "Exists",
+                "value": "exists",
+                "description": "Checks if a bucket exists and is accessible"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 19
+          },
+          "ioInfo": {
+            "nodeType": "minIo",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@digital-boss/n8n-nodes-odoo-trigger": {
+      "packageName": "@digital-boss/n8n-nodes-odoo-trigger",
+      "packageVersion": "1.1.3",
+      "nodes": [
+        {
+          "nodeType": "@digital-boss/n8n-nodes-odoo-trigger.odooTrigger",
+          "displayName": "Odoo Trigger",
+          "description": "Handle Odoo events via webhooks (v.1.1.3)",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "trigger",
+                "displayName": "Trigger",
+                "type": "options",
+                "description": "The method the webhook should trigger",
+                "required": false,
+                "default": "on_create",
+                "options": [
+                  {
+                    "name": "On Create",
+                    "value": "on_create"
+                  },
+                  {
+                    "name": "On Update",
+                    "value": "on_write"
+                  },
+                  {
+                    "name": "On Create And Update",
+                    "value": "on_create_or_write"
+                  },
+                  {
+                    "name": "On Delete",
+                    "value": "on_unlink"
+                  }
+                ]
+              },
+              {
+                "name": "odooResource",
+                "displayName": "Resource Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 2
+          },
+          "ioInfo": {
+            "nodeType": "odooTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-evo-go": {
+      "packageName": "n8n-nodes-evo-go",
+      "packageVersion": "1.0.4",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-evo-go.evoGo",
+          "displayName": "EvoGo",
+          "description": "EvoGo Node - integrate EvoGo in your n8n workflows",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "sendButtonButtons",
+                "displayName": "Buttons",
+                "type": "fixedCollection",
+                "description": "Add one or more buttons. Choose the type and fill the fields for each.",
+                "required": true,
+                "default": {
+                  "values": [
+                    {
+                      "buttonType": "reply",
+                      "displayText": "",
+                      "id": ""
+                    }
+                  ]
+                },
+                "options": [
+                  {
+                    "name": "values"
+                  }
+                ]
+              },
+              {
+                "name": "adminApiKey",
+                "displayName": "ApiKey • Global",
+                "type": "string",
+                "description": "Administrative API key for authentication",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "instanceApiKey",
+                "displayName": "ApiKey • Instance",
+                "type": "string",
+                "description": "Instance API key for authentication",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "pairPhone",
+                "displayName": "Phone",
+                "type": "string",
+                "description": "Phone number for pairing (with country code)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sendTextNumber",
+                "displayName": "Number",
+                "type": "string",
+                "description": "Phone number with country code (e.g. 5511999999999)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sendTextContent",
+                "displayName": "Text",
+                "type": "string",
+                "description": "Text message content",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sendLinkNumber",
+                "displayName": "Number",
+                "type": "string",
+                "description": "Phone number with country code",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sendLinkText",
+                "displayName": "Text",
+                "type": "string",
+                "description": "Message text with URL (e.g. text plus https://example.com)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sendMediaNumber",
+                "displayName": "Number",
+                "type": "string",
+                "description": "Phone number with country code",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "sendMediaUrl",
+                "displayName": "Media URL",
+                "type": "string",
+                "description": "URL of the file (image, video or document)",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create Instance",
+                "value": "create",
+                "description": "Create a new instance in EvoGo"
+              },
+              {
+                "name": "Delete Instance",
+                "value": "delete",
+                "description": "Delete an instance from EvoGo"
+              },
+              {
+                "name": "Delete Proxy",
+                "value": "deleteProxy",
+                "description": "Delete proxy for an instance from EvoGo"
+              },
+              {
+                "name": "Disconnect",
+                "value": "disconnect",
+                "description": "Disconnect an instance from EvoGo"
+              },
+              {
+                "name": "Fetch All Instances",
+                "value": "fetchAll",
+                "description": "Get all instances from EvoGo"
+              },
+              {
+                "name": "Fetch Instance",
+                "value": "fetch",
+                "description": "Get a single instance by ID from EvoGo"
+              },
+              {
+                "name": "Get Logs",
+                "value": "getLogs",
+                "description": "Get logs for an instance"
+              },
+              {
+                "name": "Get QR",
+                "value": "getQr",
+                "description": "Get QR code for instance connection"
+              },
+              {
+                "name": "Get Status",
+                "value": "getStatus",
+                "description": "Get status of an instance"
+              },
+              {
+                "name": "Instance Connect",
+                "value": "instanceConnect",
+                "description": "Connect an instance to EvoGo"
+              },
+              {
+                "name": "Logout",
+                "value": "logout",
+                "description": "Logout an instance from EvoGo"
+              },
+              {
+                "name": "Pairing Code",
+                "value": "pairingCode",
+                "description": "Get pairing code for instance connection"
+              },
+              {
+                "name": "Reconnect",
+                "value": "reconnect",
+                "description": "Reconnect an instance to EvoGo"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 153
+          },
+          "ioInfo": {
+            "nodeType": "evoGo",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-odoo-enhanced": {
+      "packageName": "n8n-nodes-odoo-enhanced",
+      "packageVersion": "1.0.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-odoo-enhanced.odooEnhanced",
+          "displayName": "Odoo Enhanced (PR15676)",
+          "description": "Consume Odoo API with enhanced features from PR #15676",
+          "version": "2",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "customFilterToggle",
+                "displayName": "Custom Filter",
+                "type": "boolean",
+                "description": "Whether to filter by domain using JSON syntax [\"&\" [\"attribute\", \"=\", false], [\"attribute2\", \"=\", \"test\"]]",
+                "required": true,
+                "default": false
+              },
+              {
+                "name": "methodName",
+                "displayName": "Method Name",
+                "type": "string",
+                "description": "Choose a method to execute on the custom resource",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "customResourceId",
+                "displayName": "Custom Resource ID",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "customResourceId",
+                "displayName": "Custom Resource ID",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "customResourceId",
+                "displayName": "Custom Resource ID",
+                "type": "string",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "custom",
+                "options": [
+                  {
+                    "name": "Custom Resource",
+                    "value": "custom"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "create",
+                "options": [
+                  {
+                    "name": "Create",
+                    "value": "create",
+                    "description": "Create a new item"
+                  },
+                  {
+                    "name": "Delete",
+                    "value": "delete",
+                    "description": "Delete an item"
+                  },
+                  {
+                    "name": "Execute a Method",
+                    "value": "executeMethod",
+                    "description": "Execute a method on a custom resource"
+                  },
+                  {
+                    "name": "Get",
+                    "value": "get",
+                    "description": "Get an item"
+                  },
+                  {
+                    "name": "Get Many",
+                    "value": "getAll",
+                    "description": "Get many items"
+                  },
+                  {
+                    "name": "Update",
+                    "value": "update",
+                    "description": "Update an item"
+                  }
+                ]
+              },
+              {
+                "name": "basicFilter",
+                "displayName": "Simple Filter (Search Domain Combined Using &)",
+                "type": "fixedCollection",
+                "description": "Add search domains combined using &. Learn more in the <a href=\"https://www.odoo.com/documentation/18.0/developer/reference/backend/orm.html?highlight=search#search-domains\" target=\"_blank\">Odoo documentation</a>.",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "searchDomain"
+                  }
+                ]
+              },
+              {
+                "name": "methodArgs",
+                "displayName": "Method Arguments",
+                "type": "fixedCollection",
+                "description": "Arguments to pass to the method",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "args"
+                  }
+                ]
+              },
+              {
+                "name": "methodKwargs",
+                "displayName": "Method Keyword Arguments",
+                "type": "fixedCollection",
+                "description": "Keyword arguments to pass to the method",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "kwargs"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create",
+                "value": "create",
+                "description": "Create a new item"
+              },
+              {
+                "name": "Delete",
+                "value": "delete",
+                "description": "Delete an item"
+              },
+              {
+                "name": "Execute a Method",
+                "value": "executeMethod",
+                "description": "Execute a method on a custom resource"
+              },
+              {
+                "name": "Get",
+                "value": "get",
+                "description": "Get an item"
+              },
+              {
+                "name": "Get Many",
+                "value": "getAll",
+                "description": "Get many items"
+              },
+              {
+                "name": "Update",
+                "value": "update",
+                "description": "Update an item"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 18
+          },
+          "ioInfo": {
+            "nodeType": "odooEnhanced",
+            "version": "2",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-thang-zalo-app": {
+      "packageName": "n8n-nodes-thang-zalo-app",
+      "packageVersion": "1.1.5",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-thang-zalo-app.zaloLoginByQr",
+          "displayName": "Zalo Login Via QR Code",
+          "description": "Đăng nhập Zalo bằng QR code và lưu thông tin vào Credential",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "proxy",
+                "displayName": "Proxy",
+                "type": "string",
+                "description": "HTTP proxy to use for Zalo API requests",
+                "required": false,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 1
+          },
+          "ioInfo": {
+            "nodeType": "zaloLoginByQr",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-thang-zalo-app.zaloSendMessage",
+          "displayName": "Zalo Send Message",
+          "description": "Gửi tin nhắn qua API Zalo sử dụng kết nối đăng nhập bằng cookie",
+          "version": "4",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "threadId",
+                "displayName": "Thread ID",
+                "type": "string",
+                "description": "ID của thread để gửi tin nhắn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "Nội dung tin nhắn cần gửi",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "threadId",
+                "displayName": "Thread ID",
+                "type": "string",
+                "description": "ID của thread để gửi tin nhắn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "required": false,
+                "default": "zaloSendMessage",
+                "options": [
+                  {
+                    "name": "Zalo Send Message",
+                    "value": "zaloSendMessage"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "sendMessage",
+                "options": [
+                  {
+                    "name": "Gửi tin nhắn",
+                    "value": "sendMessage",
+                    "description": "Gửi tin nhắn"
+                  },
+                  {
+                    "name": "Gửi trạng thái tin nhắn",
+                    "value": "sendMessageStatus",
+                    "description": "Gửi trạng thái tin nhắn"
+                  }
+                ]
+              },
+              {
+                "name": "type",
+                "displayName": "Type",
+                "type": "options",
+                "description": "Loại của tin nhắn (user hoặc group)",
+                "required": false,
+                "default": 0,
+                "options": [
+                  {
+                    "name": "User",
+                    "value": 0
+                  },
+                  {
+                    "name": "Group",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "name": "urgency",
+                "displayName": "Urgency",
+                "type": "options",
+                "description": "Mức độ khẩn cấp của tin nhắn",
+                "required": false,
+                "default": 0,
+                "options": [
+                  {
+                    "name": "Default",
+                    "value": 0
+                  },
+                  {
+                    "name": "Important",
+                    "value": 1
+                  },
+                  {
+                    "name": "Urgent",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "name": "quote",
+                "displayName": "Quote Message",
+                "type": "collection",
+                "description": "Trả lời tin nhắn",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "msgId",
+                    "description": "ID của tin nhắn cần trích dẫn"
+                  },
+                  {
+                    "name": "senderId",
+                    "description": "ID của người gửi tin nhắn trích dẫn"
+                  },
+                  {
+                    "name": "content",
+                    "description": "Nội dung tin nhắn trích dẫn"
+                  }
+                ]
+              },
+              {
+                "name": "mentions",
+                "displayName": "Mentions",
+                "type": "collection",
+                "description": "Đề cập tin nhắn",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "uid",
+                    "description": "ID của người dùng được mention"
+                  },
+                  {
+                    "name": "pos",
+                    "description": "Vị trí mention trong tin nhắn"
+                  },
+                  {
+                    "name": "len",
+                    "description": "Độ dài của mention"
+                  }
+                ]
+              },
+              {
+                "name": "attachments",
+                "displayName": "Attachments",
+                "type": "fixedCollection",
+                "description": "Một hoặc nhiều ảnh đính kèm để gửi",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "attachment"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Gửi tin nhắn",
+                "value": "sendMessage",
+                "description": "Gửi tin nhắn"
+              },
+              {
+                "name": "Gửi trạng thái tin nhắn",
+                "value": "sendMessageStatus",
+                "description": "Gửi trạng thái tin nhắn"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 11
+          },
+          "ioInfo": {
+            "nodeType": "zaloSendMessage",
+            "version": "4",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-thang-zalo-app.zaloUser",
+          "displayName": "Zalo User",
+          "description": "Quản lý người dùng Zalo",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "gender",
+                "displayName": "Gender",
+                "type": "options",
+                "description": "Giới tính",
+                "required": true,
+                "default": 1,
+                "options": [
+                  {
+                    "name": "Male",
+                    "value": 1
+                  },
+                  {
+                    "name": "Female",
+                    "value": 2
+                  },
+                  {
+                    "name": "Other",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần chấp nhận lời mời kết bạn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần gửi lời mời kết bạn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "description": "Tin nhắn kèm theo lời mời kết bạn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần chặn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần bỏ chặn",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "User ID",
+                "type": "string",
+                "description": "ID của người dùng cần đổi ảnh đại diện",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "filePath",
+                "displayName": "File Path",
+                "type": "string",
+                "description": "Đường dẫn đến file ảnh đại diện",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "name",
+                "displayName": "Name",
+                "type": "string",
+                "description": "Tên hiển thị",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "dob",
+                "displayName": "Date of Birth",
+                "type": "string",
+                "description": "Ngày sinh (YYYY-MM-DD)",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Chấp nhận lời mời kết bạn",
+                "value": "acceptFriendRequest"
+              },
+              {
+                "name": "Gửi lời mời kết bạn",
+                "value": "sendFriendRequest",
+                "description": "Gửi lời mời kết bạn"
+              },
+              {
+                "name": "Chặn người dùng",
+                "value": "blockUser",
+                "description": "Chặn người dùng"
+              },
+              {
+                "name": "Bỏ chặn người dùng",
+                "value": "unblockUser",
+                "description": "Bỏ chặn người dùng"
+              },
+              {
+                "name": "Đổi ảnh đại diện (Không hỗ trợ)",
+                "value": "changeAccountAvatar",
+                "description": "Đổi ảnh đại diện - Không được hỗ trợ trong phiên bản API hiện tại"
+              },
+              {
+                "name": "Thay đổi cài đặt tài khoản (Không hỗ trợ)",
+                "value": "changeAccountSetting",
+                "description": "Thay đổi cài đặt tài khoản - Không được hỗ trợ trong phiên bản API hiện tại"
+              },
+              {
+                "name": "Lấy thông tin người dùng",
+                "value": "getUserInfo",
+                "description": "Lấy thông tin người dùng"
+              },
+              {
+                "name": "Lấy danh sách bạn bè",
+                "value": "getAllFriends",
+                "description": "Lấy danh sách bạn bè"
+              },
+              {
+                "name": "Tìm kiếm người dùng",
+                "value": "findUser",
+                "description": "Tìm kiếm người dùng"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 17
+          },
+          "ioInfo": {
+            "nodeType": "zaloUser",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-thang-zalo-app.zaloGroup",
+          "displayName": "Zalo Group",
+          "description": "Quản lý nhóm Zalo",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "groupName",
+                "displayName": "Tên Nhóm",
+                "type": "string",
+                "description": "Tên của nhóm mới",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userIds",
+                "displayName": "Danh Sách ID Thành Viên (nếu nhiều người dùng vui lòng phân cách bằng dấu phẩy)",
+                "type": "string",
+                "description": "Danh sách ID thành viên, phân cách bằng dấu phẩy",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm cần lấy thông tin",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userId",
+                "displayName": "ID Người Dùng",
+                "type": "string",
+                "description": "ID của người dùng cần thêm làm phó nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userIds",
+                "displayName": "Danh Sách ID Thành Viên (nếu nhiều người dùng vui lòng phân cách bằng dấu phẩy)",
+                "type": "string",
+                "description": "Danh sách ID thành viên, phân cách bằng dấu phẩy",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "imageUrl",
+                "displayName": "URL Ảnh",
+                "type": "string",
+                "description": "URL của ảnh đại diện mới",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "groupId",
+                "displayName": "ID Nhóm",
+                "type": "string",
+                "description": "ID của nhóm",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Tạo Nhóm",
+                "value": "createGroup",
+                "description": "Tạo một nhóm mới"
+              },
+              {
+                "name": "Lấy Thông Tin Nhóm",
+                "value": "getGroupInfo",
+                "description": "Lấy thông tin của một nhóm"
+              },
+              {
+                "name": "Thêm Phó Nhóm",
+                "value": "addGroupDeputy",
+                "description": "Thêm phó nhóm cho một nhóm"
+              },
+              {
+                "name": "Thêm Thành Viên Vào Nhóm",
+                "value": "addUserToGroup",
+                "description": "Thêm thành viên vào nhóm"
+              },
+              {
+                "name": "Đổi Avatar Nhóm",
+                "value": "changeGroupAvatar",
+                "description": "Đổi avatar của nhóm"
+              },
+              {
+                "name": "Đổi Tên Nhóm",
+                "value": "changeGroupName",
+                "description": "Đổi tên của nhóm"
+              },
+              {
+                "name": "Lấy Danh Sách Thành Viên",
+                "value": "getGroupMembers",
+                "description": "Lấy danh sách thành viên của nhóm"
+              },
+              {
+                "name": "Lấy Tất Cả Nhóm",
+                "value": "getAllGroups",
+                "description": "Lấy danh sách tất cả các nhóm"
+              },
+              {
+                "name": "Xóa Thành Viên Khỏi Nhóm",
+                "value": "removeUserFromGroup",
+                "description": "Xóa thành viên khỏi nhóm"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 18
+          },
+          "ioInfo": {
+            "nodeType": "zaloGroup",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-thang-zalo-app.zaloMessageTrigger",
+          "displayName": "Zalo Message Trigger",
+          "description": "Sự kiện lắng nghe tin nhắn trên Zalo với hỗ trợ voice-to-text",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "eventTypes",
+                "displayName": "Event Types",
+                "type": "multiOptions",
+                "description": "Types of messages to listen for",
+                "required": true,
+                "default": [
+                  0,
+                  1
+                ],
+                "options": [
+                  {
+                    "name": "User Messages",
+                    "value": 0,
+                    "description": "Lắng nghe tin nhắn từ người dùng"
+                  },
+                  {
+                    "name": "Group Messages",
+                    "value": 1,
+                    "description": "Lắng nghe tin nhắn từ nhóm"
+                  }
+                ]
+              },
+              {
+                "name": "selfListen",
+                "displayName": "Self Listen",
+                "type": "boolean",
+                "description": "Whether to allow listening to messages sent by yourself",
+                "required": true,
+                "default": false
+              },
+              {
+                "name": "enableVoiceProcessing",
+                "displayName": "Enable Voice Processing",
+                "type": "boolean",
+                "description": "Whether to enable voice message to text processing",
+                "required": true,
+                "default": true
+              },
+              {
+                "name": "languageDetectMode",
+                "displayName": "Chế độ nhận diện ngôn ngữ",
+                "type": "options",
+                "description": "Chọn chế độ nhận diện ngôn ngữ cho voice",
+                "required": false,
+                "default": "auto",
+                "options": [
+                  {
+                    "name": "Tự động (độ chính xác không cao)",
+                    "value": "auto"
+                  },
+                  {
+                    "name": "Thủ công",
+                    "value": "manual"
+                  }
+                ]
+              },
+              {
+                "name": "manualLanguage",
+                "displayName": "Ngôn ngữ thủ công",
+                "type": "options",
+                "description": "Chọn ngôn ngữ khi ở chế độ thủ công",
+                "required": false,
+                "default": "vi",
+                "options": [
+                  {
+                    "name": "Tiếng Việt",
+                    "value": "vi"
+                  },
+                  {
+                    "name": "Tiếng Anh",
+                    "value": "en"
+                  },
+                  {
+                    "name": "Tiếng Trung",
+                    "value": "zh"
+                  }
+                ]
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 5
+          },
+          "ioInfo": {
+            "nodeType": "zaloMessageTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-thang-zalo-app.zaloFriendTrigger",
+          "displayName": "Zalo Friend Trigger",
+          "description": "Lắng nghe sự kiện kết bạn trên Zalo",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "eventTypes",
+                "displayName": "Event Types",
+                "type": "multiOptions",
+                "description": "Friend events to listen for",
+                "required": true,
+                "default": [
+                  2
+                ],
+                "options": [
+                  {
+                    "name": "Friend Requests",
+                    "value": 2,
+                    "description": "Nghe sự kiện yêu cầu kết bạn"
+                  }
+                ]
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 1
+          },
+          "ioInfo": {
+            "nodeType": "zaloFriendTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-docx-to-md": {
+      "packageName": "n8n-nodes-docx-to-md",
+      "packageVersion": "0.2.2",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-docx-to-md.docxToMd",
+          "displayName": "Docx to Markdown",
+          "description": "Converts Docx file to Markdown",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "inputBinaryField",
+                "displayName": "Input Binary Field",
+                "type": "string",
+                "description": "The name of the input binary field containing the Docx file",
+                "required": true,
+                "default": "data"
+              },
+              {
+                "name": "destinationOutputField",
+                "displayName": "Destination Output Field",
+                "type": "string",
+                "description": "The name of the destination output field for the converted Markdown text",
+                "required": true,
+                "default": "text"
+              },
+              {
+                "name": "removeImages",
+                "displayName": "Remove Images",
+                "type": "boolean",
+                "description": "Whether to remove images from the converted Markdown",
+                "required": false,
+                "default": false
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 3
+          },
+          "ioInfo": {
+            "nodeType": "docxToMd",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@mazix/n8n-nodes-converter-documents": {
+      "packageName": "@mazix/n8n-nodes-converter-documents",
+      "packageVersion": "1.2.2",
+      "nodes": [
+        {
+          "nodeType": "@mazix/n8n-nodes-converter-documents.convertFileToJson",
+          "displayName": "Convert File to JSON",
+          "description": "DOCX / XML / YML / XLSX / CSV / PDF / TXT / PPTX / HTML → JSON|text",
+          "version": "5",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "outputFormat",
+                "displayName": "Output Format (DOCX)",
+                "type": "options",
+                "description": "Choose output format for DOCX files. Markdown and HTML preserve tables and formatting for AI/LLM processing.",
+                "required": false,
+                "default": "text",
+                "options": [
+                  {
+                    "name": "Plain Text",
+                    "value": "text",
+                    "description": "Extract text only (fastest, smallest output)"
+                  },
+                  {
+                    "name": "HTML",
+                    "value": "html",
+                    "description": "Convert to HTML (preserves tables, formatting, structure)"
+                  },
+                  {
+                    "name": "Markdown",
+                    "value": "markdown",
+                    "description": "Convert to Markdown with GFM tables (ideal for AI/LLM/RAG)"
+                  }
+                ]
+              },
+              {
+                "name": "binaryPropertyName",
+                "displayName": "Binary Property",
+                "type": "string",
+                "description": "Name of the binary property that contains the file",
+                "required": false,
+                "default": "data"
+              },
+              {
+                "name": "maxFileSize",
+                "displayName": "Max File Size (MB)",
+                "type": "number",
+                "description": "Maximum file size in megabytes",
+                "required": false,
+                "default": 50
+              },
+              {
+                "name": "maxConcurrency",
+                "displayName": "Max Concurrency",
+                "type": "number",
+                "description": "Maximum number of files processed concurrently",
+                "required": false,
+                "default": 4
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "convertFileToJson",
+            "version": "5",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-qdrant": {
+      "packageName": "n8n-nodes-qdrant",
+      "packageVersion": "0.2.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-qdrant.qdrant",
+          "displayName": "Qdrant",
+          "description": "Official n8n node to interface with Qdrant - https://qdrant.tech",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "json",
+                "description": "Query to perform. Can be a vector, ID, or complex query object (recommend, fusion, sample, formula).",
+                "required": true,
+                "default": "[0.532, 0.953, 0.123]"
+              },
+              {
+                "name": "collectionName",
+                "displayName": "Collection Name",
+                "type": "string",
+                "description": "Name of the collection",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "vectors",
+                "displayName": "Vectors",
+                "type": "json",
+                "description": "Vector parameters of the collection",
+                "required": true,
+                "default": "{}"
+              },
+              {
+                "name": "collectionName",
+                "displayName": "Collection Name",
+                "type": "resourceLocator",
+                "description": "Name of the collection",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": null
+                }
+              },
+              {
+                "name": "collectionName",
+                "displayName": "Collection Name",
+                "type": "resourceLocator",
+                "description": "Name of the collection",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": null
+                }
+              },
+              {
+                "name": "collectionName",
+                "displayName": "Collection Name",
+                "type": "string",
+                "description": "Name of the collection",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "collectionName",
+                "displayName": "Collection Name",
+                "type": "resourceLocator",
+                "description": "Name of the collection",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": null
+                }
+              },
+              {
+                "name": "collectionName",
+                "displayName": "Collection Name",
+                "type": "resourceLocator",
+                "description": "Name of the collection",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": null
+                }
+              },
+              {
+                "name": "points",
+                "displayName": "Points",
+                "type": "json",
+                "description": "List of points to upsert. Each point should have ID, vector, and optional payload.",
+                "required": true,
+                "default": "[\n    {\n        \"id\": 0,\n        \"payload\": {\n            \"color\": \"red\",\n            \"age\": 32\n        },\n        \"vector\": [\n            0.9,\n            0.1,\n            0.1\n        ]\n    },\n    {\n        \"id\": 1,\n        \"payload\": {\n            \"color\": \"green\",\n            \"age\": 55\n        },\n        \"vector\": [\n            0.1,\n            0.9,\n            0.1\n        ]\n    }\n]"
+              },
+              {
+                "name": "collectionName",
+                "displayName": "Collection Name",
+                "type": "resourceLocator",
+                "description": "Name of the collection",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": null
+                }
+              }
+            ],
+            "operations": [
+              {
+                "name": "List Collections",
+                "value": "listCollections",
+                "description": "List all collections in the Qdrant instance"
+              },
+              {
+                "name": "Create Collection",
+                "value": "createCollection",
+                "description": "Create a new collection in the Qdrant instance"
+              },
+              {
+                "name": "Update Collection",
+                "value": "updateCollection",
+                "description": "Update parameters of an existing collection in the Qdrant instance"
+              },
+              {
+                "name": "Get Collection",
+                "value": "getCollection",
+                "description": "Get details of a specific collection"
+              },
+              {
+                "name": "Check If Collection Exists",
+                "value": "collectionExists",
+                "description": "Check if a collection exists in the Qdrant instance"
+              },
+              {
+                "name": "Delete Collection",
+                "value": "deleteCollection",
+                "description": "Delete the specified collection"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 179
+          },
+          "ioInfo": {
+            "nodeType": "qdrant",
             "version": "1",
             "inputs": [
               "main"
