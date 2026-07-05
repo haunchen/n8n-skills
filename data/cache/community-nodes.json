@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-07T01:21:50.904Z",
+  "lastUpdated": "2026-07-05T01:03:23.811Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -1512,7 +1512,7 @@
     },
     "@apify/n8n-nodes-apify": {
       "packageName": "@apify/n8n-nodes-apify",
-      "packageVersion": "0.6.9",
+      "packageVersion": "0.6.10",
       "nodes": [
         {
           "nodeType": "@apify/n8n-nodes-apify.apify",
@@ -11973,13 +11973,13 @@
     },
     "n8n-nodes-pdfco": {
       "packageName": "n8n-nodes-pdfco",
-      "packageVersion": "1.0.6",
+      "packageVersion": "1.0.8",
       "nodes": [
         {
           "nodeType": "n8n-nodes-pdfco.PDFco Api",
           "displayName": "PDF.co Api",
           "description": "Generate PDF, extract data from PDF, split PDF, merge PDF, convert PDF. Fill PDF forms, add text and images to pdf and much more with pdf.co!",
-          "version": "1",
+          "version": "1.1",
           "properties": {
             "coreProperties": [
               {
@@ -12160,7 +12160,7 @@
           },
           "ioInfo": {
             "nodeType": "PDFco Api",
-            "version": "1",
+            "version": "1.1",
             "inputs": [
               "main"
             ],
@@ -12777,20 +12777,20 @@
     },
     "n8n-nodes-kipps": {
       "packageName": "n8n-nodes-kipps",
-      "packageVersion": "0.0.12",
+      "packageVersion": "1.1.0",
       "nodes": [
         {
-          "nodeType": "n8n-nodes-kipps.kippsAiChatAgent",
-          "displayName": "Kipps.AI ChatAgent",
-          "description": "Interact with a Kipps.AI ChatAgent to send and receive messages.",
+          "nodeType": "n8n-nodes-kipps.kippsAi",
+          "displayName": "Kipps.AI",
+          "description": "Interact with Kipps.AI — Chatbot, Voice Agent, or WhatsApp",
           "version": "1",
           "properties": {
             "coreProperties": [
               {
                 "name": "agentId",
-                "displayName": "Agent ID",
-                "type": "string",
-                "description": "The ID of the chatagent to use",
+                "displayName": "Agent Name or ID",
+                "type": "options",
+                "description": "The ID(uuid) of the chatbot agent to use. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
                 "required": true,
                 "default": ""
               },
@@ -12798,61 +12798,15 @@
                 "name": "message",
                 "displayName": "Message",
                 "type": "string",
-                "description": "The message to send to the chatagent",
+                "description": "The message to send to the chatbot",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "session",
-                "displayName": "Session ID",
-                "type": "string",
-                "description": "An optional ID to maintain conversation context. If left empty, a new session will be created.",
-                "required": false,
-                "default": ""
-              }
-            ],
-            "operations": [],
-            "hasCredentials": true,
-            "totalPropertyCount": 3
-          },
-          "ioInfo": {
-            "nodeType": "kippsAiChatAgent",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-kipps.kippsAiVoiceAgent",
-          "displayName": "Kipps.AI VoiceAgent",
-          "description": "Manage and interact with a Kipps.AI VoiceAgent for handling calls.",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "voiceagentId",
-                "displayName": "VoiceAgent ID",
-                "type": "string",
-                "description": "The ID of the voiceagent to use",
+                "name": "voicebotId",
+                "displayName": "Voicebot Name or ID",
+                "type": "options",
+                "description": "ID of the Kipps.AI voicebot used to start the call. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
                 "required": true,
                 "default": ""
               },
@@ -12860,7 +12814,7 @@
                 "name": "phoneNumber",
                 "displayName": "Phone Number",
                 "type": "string",
-                "description": "The destination phone number for the call",
+                "description": "Destination phone number in E.164 format",
                 "required": true,
                 "default": ""
               },
@@ -12868,85 +12822,76 @@
                 "name": "roomName",
                 "displayName": "Room Name",
                 "type": "string",
-                "description": "A unique name for the call room to perform actions in",
+                "description": "Unique room name for the phone call session",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "action",
-                "displayName": "Action",
+                "name": "whatsappAgentUuid",
+                "displayName": "WhatsApp Agent UUID Name or ID",
                 "type": "options",
-                "required": false,
-                "default": "startCall",
-                "options": [
-                  {
-                    "name": "Start Call",
-                    "value": "startCall"
-                  },
-                  {
-                    "name": "Send Audio/Text",
-                    "value": "sendAudioText"
-                  },
-                  {
-                    "name": "End Call",
-                    "value": "endCall"
-                  }
-                ]
-              },
-              {
-                "name": "inputType",
-                "displayName": "Input Type",
-                "type": "options",
-                "description": "The type of input you want to send to the voicebot",
-                "required": false,
-                "default": "text",
-                "options": [
-                  {
-                    "name": "Text",
-                    "value": "text"
-                  },
-                  {
-                    "name": "Audio",
-                    "value": "audio"
-                  }
-                ]
-              },
-              {
-                "name": "textInput",
-                "displayName": "Text Input",
-                "type": "string",
-                "description": "The text message to send to the voiceagent",
-                "required": false,
+                "description": "WhatsApp agent UUID used to fetch templates. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
                 "default": ""
               },
               {
-                "name": "audioInput",
-                "displayName": "Audio Input",
+                "name": "to",
+                "displayName": "To",
                 "type": "string",
-                "description": "The path or URL to the audio file to be sent",
-                "required": false,
+                "description": "Recipient WhatsApp number in international format (e.g. +1234567890)",
+                "required": true,
                 "default": ""
-              }
-            ],
-            "operations": [
-              {
-                "name": "Start Call",
-                "value": "startCall"
               },
               {
-                "name": "Send Audio/Text",
-                "value": "sendAudioText"
+                "name": "templateName",
+                "displayName": "Template Name or ID",
+                "type": "options",
+                "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                "required": true,
+                "default": ""
               },
               {
-                "name": "End Call",
-                "value": "endCall"
+                "name": "mappedParameters",
+                "displayName": "Parameters",
+                "type": "resourceMapper",
+                "description": "Enter values for template parameters. Fields appear automatically after selecting a template. If they do not appear, click ⋮ → \"Refresh fields\".",
+                "required": true,
+                "default": {
+                  "mappingMode": "defineBelow",
+                  "value": {}
+                }
+              },
+              {
+                "name": "agentType",
+                "displayName": "Agent Type",
+                "type": "options",
+                "required": false,
+                "default": "chatbot",
+                "options": [
+                  {
+                    "name": "Chatbot",
+                    "value": "chatbot",
+                    "description": "Send and receive messages with a Kipps.AI chatbot"
+                  },
+                  {
+                    "name": "Voice Agent",
+                    "value": "voiceAgent",
+                    "description": "Start an outbound phone call using a Kipps.AI voice agent"
+                  },
+                  {
+                    "name": "WhatsApp",
+                    "value": "whatsapp",
+                    "description": "Send a WhatsApp template message via Kipps.AI"
+                  }
+                ]
               }
             ],
+            "operations": [],
             "hasCredentials": true,
-            "totalPropertyCount": 7
+            "totalPropertyCount": 13
           },
           "ioInfo": {
-            "nodeType": "kippsAiVoiceAgent",
+            "nodeType": "kippsAi",
             "version": "1",
             "inputs": [
               "main"
@@ -22063,6 +22008,2792 @@
           },
           "ioInfo": {
             "nodeType": "qdrant",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@searchapi/n8n-nodes-searchapi": {
+      "packageName": "@searchapi/n8n-nodes-searchapi",
+      "packageVersion": "2.0.4",
+      "nodes": [
+        {
+          "nodeType": "@searchapi/n8n-nodes-searchapi.searchApi",
+          "displayName": "SearchApi",
+          "description": "Access real-time search results from Google, Google Images, Google Maps, Google Shopping and more. Use this when you need current, up-to-date information, product searches, location data, or visual content that may not be available in your training data.",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "q",
+                "displayName": "Query",
+                "type": "string",
+                "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google search. e.g. inurl:, site:, intitle:, and more.",
+                "required": true,
+                "default": "",
+                "options": []
+              },
+              {
+                "name": "q",
+                "displayName": "Query",
+                "type": "string",
+                "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google search. e.g. inurl:, site:, intitle:. We also support advanced search query parameters such as as_dt and as_eq.",
+                "required": true,
+                "default": "",
+                "options": []
+              },
+              {
+                "name": "q",
+                "displayName": "Query",
+                "type": "string",
+                "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google Maps search.",
+                "required": true,
+                "default": "",
+                "options": []
+              },
+              {
+                "name": "q",
+                "displayName": "Query",
+                "type": "string",
+                "description": "Specifies the search query, similar to performing a regular Google search. Filters embedded in the q parameter act as hints rather than strict filters. If there are too few matching items, results outside the filters may appear. Examples of usage: Search by price: tshirt under $30, skinny fit kids jeans between $15 and $30, charizard over $300. Search by size: mens size 8.5 nike air. Search by color: Playstation white. Search nearby stores: Apparel nearby. Search by condition: iphone used, macbook new. Search by brand: prada dress, gucci shoes. Search discounted products: laptop on sale, headphones on sale.",
+                "required": true,
+                "default": "",
+                "options": []
+              },
+              {
+                "name": "resource",
+                "displayName": "Resource",
+                "type": "options",
+                "description": "The search engine to use",
+                "required": false,
+                "default": "google",
+                "options": [
+                  {
+                    "name": "Google Search",
+                    "value": "google"
+                  },
+                  {
+                    "name": "Google Images",
+                    "value": "google_images"
+                  },
+                  {
+                    "name": "Google Maps",
+                    "value": "google_maps"
+                  },
+                  {
+                    "name": "Google Shopping",
+                    "value": "google_shopping"
+                  }
+                ]
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation Name",
+                "type": "options",
+                "required": false,
+                "default": "search",
+                "options": [
+                  {
+                    "name": "Search",
+                    "value": "search",
+                    "description": "Search using the engine specified in the resource"
+                  }
+                ]
+              },
+              {
+                "name": "locationSettings",
+                "displayName": "Location Settings",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "gl",
+                    "description": "The default parameter us defines the country of the search. Check the full list of supported Google gl countries."
+                  },
+                  {
+                    "name": "cr",
+                    "description": "The cr parameter restricts search results to documents originating in a particular country. Google determines the country of a document by the top-level domain (TLD) of the document's URL or by Web server's IP address geographic location. Check the full list of supported Google cr countries."
+                  },
+                  {
+                    "name": "uule",
+                    "description": "Parameter is the Google encoded location you want to use for the search. SearchApi automatically generated the uule parameter when you use the location parameter but we allow you to overwrite it directly. uule and location parameters can't be used together."
+                  },
+                  {
+                    "name": "location",
+                    "description": "Parameter defines from where you want the search to originate. If several locations match the location requested, we'll pick the most popular one. Head to the Locations API if you need more precise control."
+                  },
+                  {
+                    "name": "google_domain",
+                    "description": "The default parameter google.com defines the Google domain of the search. Check the full list of supported Google google_domain domains."
+                  }
+                ]
+              },
+              {
+                "name": "languageSettings",
+                "displayName": "Language Settings",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "hl",
+                    "description": "The default parameter en defines the interface language of the search. Check the full list of supported Google hl languages."
+                  },
+                  {
+                    "name": "lr",
+                    "description": "The lr parameter restricts search results to documents written in a particular language or a set of languages. You can select multiple languages to include documents written in any of those languages."
+                  }
+                ]
+              },
+              {
+                "name": "searchOptions",
+                "displayName": "Search Options",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "filter",
+                    "description": "This parameter controls whether the 'Duplicate Content' and 'Host Crowding' filters are enabled. Set the value to 1 to enable these filters, which is the default setting. To disable these filters, set the value to 0."
+                  },
+                  {
+                    "name": "device",
+                    "description": "The default parameter desktop defines the search on a desktop device. The mobile parameter defines the search on a mobile device. The tablet parameter defines the search on a tablet device."
+                  },
+                  {
+                    "name": "nfpr",
+                    "description": "This parameter controls whether results from queries that have been auto-corrected for spelling errors are included. To exclude these auto-corrected results, set the value to 1. By default, the value is 0, meaning auto-corrected results are included."
+                  },
+                  {
+                    "name": "optimization_strategy",
+                    "description": "Controls how the search request is optimized. Available options: performance (Default), ads - optimizes for higher ad collection success rate, which may result in longer request processing times."
+                  },
+                  {
+                    "name": "safe",
+                    "description": "This parameter toggles the SafeSearch feature for the results. SafeSearch operates by filtering out adult content from your search results. Google's filters use proprietary technology to check keywords, phrases and URLs. While no filters are 100 percent accurate, SafeSearch will remove the overwhelming majority of adult content from your search results. Set the value to active to enable SafeSearch. To disable it, set the value to off. By default, SafeSearch is disabled."
+                  }
+                ]
+              },
+              {
+                "name": "timeFilters",
+                "displayName": "Time Filters",
+                "type": "collection",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "time_period",
+                    "description": "This parameter restricts results to URLs based on date. Supported values are: last_hour - data from the past hour. last_day - data from the past 24 hours. last_week - data from the past week. last_month - data from the past month. last_year - data from the past year. Using time_period_min or time_period_max parameters, you can specify a custom time period. Note, that the time_period_min and time_period_max parameters could be used separately as well."
+                  },
+                  {
+                    "name": "time_period_min",
+                    "description": "This parameter specifies the start of the time period. It could be used in combination with the time_period_max parameter. The value should be in the format MM/DD/YYYY."
+                  },
+                  {
+                    "name": "time_period_max",
+                    "description": "This parameter specifies the end of the time period. It could be used in combination with the time_period_min parameter. The value should be in the format MM/DD/YYYY."
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "Search",
+                "value": "search",
+                "description": "Search using the engine specified in the resource"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 23
+          },
+          "ioInfo": {
+            "nodeType": "searchApi",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-templated": {
+      "packageName": "n8n-nodes-templated",
+      "packageVersion": "0.4.5",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-templated.templated",
+          "displayName": "Templated",
+          "description": "Automate the generation of images, videos, and PDFs with Templated (https://templated.io)",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "renders",
+                "displayName": "Renders",
+                "type": "fixedCollection",
+                "required": true,
+                "default": {},
+                "options": [
+                  {
+                    "name": "render"
+                  }
+                ]
+              },
+              {
+                "name": "template",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "The template to use for rendering",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "renderId",
+                "displayName": "Render ID",
+                "type": "string",
+                "description": "The ID of the render to retrieve",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "templateName",
+                "displayName": "Template Name",
+                "type": "string",
+                "description": "The name of the template",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "width",
+                "displayName": "Width",
+                "type": "number",
+                "description": "The width of the template in pixels (max 5000)",
+                "required": true,
+                "default": 1200
+              },
+              {
+                "name": "height",
+                "displayName": "Height",
+                "type": "number",
+                "description": "The height of the template in pixels (max 5000)",
+                "required": true,
+                "default": 630
+              },
+              {
+                "name": "layersJson",
+                "displayName": "Layers (JSON)",
+                "type": "json",
+                "description": "JSON array of layer objects. Each layer must have \"layer\" (name), \"type\" (text/image/shape), and positioning properties (x, y, width, height).",
+                "required": true,
+                "default": "[\n  {\n    \"layer\": \"text-1\",\n    \"type\": \"text\",\n    \"text\": \"Hello World\",\n    \"x\": 100,\n    \"y\": 100,\n    \"width\": 400,\n    \"height\": 50\n  }\n]"
+              },
+              {
+                "name": "templateId",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "The template to update",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "templateId",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "The template to retrieve",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "templateId",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "The template to retrieve layers for",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create a Render",
+                "value": "createRender",
+                "description": "Generate an image, video, or PDF from a template"
+              },
+              {
+                "name": "Merge Renders",
+                "value": "mergeRenders",
+                "description": "Merge multiple renders into a single PDF"
+              },
+              {
+                "name": "Retrieve a Render",
+                "value": "retrieveRender",
+                "description": "Get details of a specific render"
+              },
+              {
+                "name": "Clone a Template",
+                "value": "cloneTemplate",
+                "description": "Create a clone of an existing template (maintains link to source)"
+              },
+              {
+                "name": "Create a Template",
+                "value": "createTemplate",
+                "description": "Create a new template programmatically with layers"
+              },
+              {
+                "name": "List All Templates",
+                "value": "listTemplates",
+                "description": "Get a list of all templates in your account"
+              },
+              {
+                "name": "List Template Layers",
+                "value": "listTemplateLayers",
+                "description": "Get all layers of a specific template"
+              },
+              {
+                "name": "List Template Pages",
+                "value": "listTemplatePages",
+                "description": "Get all pages of a multi-page template"
+              },
+              {
+                "name": "List Template Renders",
+                "value": "listTemplateRenders",
+                "description": "Get all renders created from a specific template"
+              },
+              {
+                "name": "Retrieve a Template",
+                "value": "retrieveTemplate",
+                "description": "Get details of a specific template"
+              },
+              {
+                "name": "Update a Template",
+                "value": "updateTemplate",
+                "description": "Update an existing template (layers, properties, or content)"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 30
+          },
+          "ioInfo": {
+            "nodeType": "templated",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@pdfgeneratorapi/n8n-nodes-pdf-generator-api": {
+      "packageName": "@pdfgeneratorapi/n8n-nodes-pdf-generator-api",
+      "packageVersion": "0.4.0",
+      "nodes": [
+        {
+          "nodeType": "@pdfgeneratorapi/n8n-nodes-pdf-generator-api.pdfGeneratorApi",
+          "displayName": "PDF Generator API",
+          "description": "Generate PDFs, manage templates, convert HTML/URLs to PDF, and perform PDF operations like watermarking, encryption, and optimization",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "Public URL to convert to PDF",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "templates",
+                "displayName": "Templates",
+                "type": "fixedCollection",
+                "required": true,
+                "default": {
+                  "templateList": [
+                    {}
+                  ]
+                },
+                "options": [
+                  {
+                    "name": "templateList"
+                  }
+                ]
+              },
+              {
+                "name": "fileUrl",
+                "displayName": "PDF URL",
+                "type": "string",
+                "description": "Public URL to the PDF document",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "fileBase64",
+                "displayName": "PDF Base64",
+                "type": "string",
+                "description": "Base64 encoded PDF content",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "decryptionPassword",
+                "displayName": "Password",
+                "type": "string",
+                "description": "Password to decrypt the PDF document",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "formFieldsData",
+                "displayName": "Form Fields Data",
+                "type": "json",
+                "description": "JSON object containing the form field names as keys and their values as data to fill in the PDF form",
+                "required": true,
+                "default": "{}"
+              },
+              {
+                "name": "publicId",
+                "displayName": "Public ID",
+                "type": "string",
+                "description": "The public ID of the document",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "templateId",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "Select the template to use for PDF generation",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "templateId",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "Select the template to work with",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "outputId",
+                "displayName": "Output ID",
+                "type": "string",
+                "description": "The ID of the async generation output",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Generate QR Code",
+                "value": "generateQRCode",
+                "description": "Generate a QR code image"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 50
+          },
+          "ioInfo": {
+            "nodeType": "pdfGeneratorApi",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-pdf4me": {
+      "packageName": "n8n-nodes-pdf4me",
+      "packageVersion": "2.3.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-pdf4me.PDF4me",
+          "displayName": "PDF4me",
+          "description": "Comprehensive PDF and document processing: generate barcodes, convert files, extract data, manipulate images, and automate workflows with the PDF4ME API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "inputDataType",
+                "displayName": "Input Data Type",
+                "type": "options",
+                "description": "Choose how to provide the PDF file to add attachments to",
+                "required": true,
+                "default": "binaryData",
+                "options": [
+                  {
+                    "name": "Binary Data",
+                    "value": "binaryData",
+                    "description": "Use PDF file from previous node"
+                  },
+                  {
+                    "name": "Base64 String",
+                    "value": "base64",
+                    "description": "Provide PDF content as base64 encoded string"
+                  },
+                  {
+                    "name": "URL",
+                    "value": "url",
+                    "description": "Provide URL to PDF file"
+                  }
+                ]
+              },
+              {
+                "name": "inputDataType",
+                "displayName": "Input Data Type",
+                "type": "options",
+                "description": "Choose how to provide the PDF file to add barcode to",
+                "required": true,
+                "default": "binaryData",
+                "options": [
+                  {
+                    "name": "Binary Data",
+                    "value": "binaryData",
+                    "description": "Use PDF file from previous node"
+                  },
+                  {
+                    "name": "Base64 String",
+                    "value": "base64",
+                    "description": "Provide PDF content as base64 encoded string"
+                  },
+                  {
+                    "name": "URL",
+                    "value": "url",
+                    "description": "Provide URL to PDF file"
+                  }
+                ]
+              },
+              {
+                "name": "barcodeType",
+                "displayName": "Barcode Type",
+                "type": "options",
+                "description": "Select the type of barcode to add to the PDF",
+                "required": true,
+                "default": "qrCode",
+                "options": [
+                  {
+                    "name": "QR Code",
+                    "value": "qrCode"
+                  },
+                  {
+                    "name": "Code 128",
+                    "value": "code128"
+                  },
+                  {
+                    "name": "Data Matrix",
+                    "value": "dataMatrix"
+                  },
+                  {
+                    "name": "Aztec",
+                    "value": "aztec"
+                  },
+                  {
+                    "name": "Han Xin",
+                    "value": "hanXin"
+                  },
+                  {
+                    "name": "PDF417",
+                    "value": "pdf417"
+                  },
+                  {
+                    "name": "EAN-13",
+                    "value": "ean13"
+                  },
+                  {
+                    "name": "UPC-A",
+                    "value": "upcA"
+                  },
+                  {
+                    "name": "Code 39",
+                    "value": "code39"
+                  },
+                  {
+                    "name": "Code 93",
+                    "value": "code93"
+                  },
+                  {
+                    "name": "Codabar",
+                    "value": "codabar"
+                  },
+                  {
+                    "name": "Interleaved 2 of 5",
+                    "value": "code2Of5Interleaved"
+                  },
+                  {
+                    "name": "Code 11",
+                    "value": "code11"
+                  },
+                  {
+                    "name": "Code 2 of 5 Standard",
+                    "value": "code2Of5Standard"
+                  },
+                  {
+                    "name": "Code 2 of 5 IATA",
+                    "value": "code2Of5Iata"
+                  },
+                  {
+                    "name": "Code 2 of 5 Matrix",
+                    "value": "code2Of5Matrix"
+                  },
+                  {
+                    "name": "Code 2 of 5 Data Logic",
+                    "value": "code2Of5DataLogic"
+                  },
+                  {
+                    "name": "Code 2 of 5 Industry",
+                    "value": "code2Of5Industry"
+                  },
+                  {
+                    "name": "Code 39 Extended",
+                    "value": "code39Extended"
+                  },
+                  {
+                    "name": "EAN-8",
+                    "value": "ean8"
+                  },
+                  {
+                    "name": "EAN-8 with 2 Addon",
+                    "value": "ean8With2Addon"
+                  },
+                  {
+                    "name": "EAN-8 with 5 Addon",
+                    "value": "ean8With5Addon"
+                  },
+                  {
+                    "name": "EAN-13 with 2 Addon",
+                    "value": "ean13With2Addon"
+                  },
+                  {
+                    "name": "EAN-13 with 5 Addon",
+                    "value": "ean13With5Addon"
+                  },
+                  {
+                    "name": "EAN UCC 128",
+                    "value": "eanUcc128"
+                  },
+                  {
+                    "name": "UPC-12",
+                    "value": "upc12"
+                  },
+                  {
+                    "name": "Codabar 2",
+                    "value": "codabar2"
+                  },
+                  {
+                    "name": "Codabar 18",
+                    "value": "codabar18"
+                  },
+                  {
+                    "name": "Deutsche Post Leitcode",
+                    "value": "deutschePostLeitcode"
+                  },
+                  {
+                    "name": "Deutsche Post Identcode",
+                    "value": "deutschePostIdentcode"
+                  },
+                  {
+                    "name": "ISBN-13 with 5 Addon",
+                    "value": "isbn13With5Addon"
+                  },
+                  {
+                    "name": "ISMN",
+                    "value": "ismn"
+                  },
+                  {
+                    "name": "ISSN",
+                    "value": "issn"
+                  },
+                  {
+                    "name": "ISSN with 2 Addon",
+                    "value": "issnWith2Addon"
+                  },
+                  {
+                    "name": "Flattermarken",
+                    "value": "flattermarken"
+                  },
+                  {
+                    "name": "GS1 DataBar",
+                    "value": "gs1DataBar"
+                  },
+                  {
+                    "name": "GS1 DataBar Limited",
+                    "value": "gs1DataBarLimited"
+                  },
+                  {
+                    "name": "GS1 DataBar Expanded",
+                    "value": "gs1DataBarExpanded"
+                  },
+                  {
+                    "name": "Telepen Alpha",
+                    "value": "telepenAlpha"
+                  },
+                  {
+                    "name": "UCC-128",
+                    "value": "ucc128"
+                  },
+                  {
+                    "name": "UPC-A with 2 Addon",
+                    "value": "upcAWith2Addon"
+                  },
+                  {
+                    "name": "UPC-A with 5 Addon",
+                    "value": "upcAWith5Addon"
+                  },
+                  {
+                    "name": "UPC-E",
+                    "value": "upcE"
+                  },
+                  {
+                    "name": "UPC-E with 2 Addon",
+                    "value": "upcEWith2Addon"
+                  },
+                  {
+                    "name": "UPC-E with 5 Addon",
+                    "value": "upcEWith5Addon"
+                  },
+                  {
+                    "name": "USPS Postnet 5",
+                    "value": "uspsPostnet5"
+                  },
+                  {
+                    "name": "USPS Postnet 6",
+                    "value": "uspsPostnet6"
+                  },
+                  {
+                    "name": "USPS Postnet 9",
+                    "value": "uspsPostnet9"
+                  },
+                  {
+                    "name": "USPS Postnet 10",
+                    "value": "uspsPostnet10"
+                  },
+                  {
+                    "name": "USPS Postnet 11",
+                    "value": "uspsPostnet11"
+                  },
+                  {
+                    "name": "USPS Postnet 12",
+                    "value": "uspsPostnet12"
+                  },
+                  {
+                    "name": "Plessey",
+                    "value": "plessey"
+                  },
+                  {
+                    "name": "MSI",
+                    "value": "msi"
+                  },
+                  {
+                    "name": "SSCC-18",
+                    "value": "sscc18"
+                  },
+                  {
+                    "name": "FIM",
+                    "value": "fim"
+                  },
+                  {
+                    "name": "LOGMARS",
+                    "value": "logmars"
+                  },
+                  {
+                    "name": "Pharmacode One Track",
+                    "value": "pharmacodeOneTrack"
+                  },
+                  {
+                    "name": "PZN-7",
+                    "value": "pzn7"
+                  },
+                  {
+                    "name": "Pharmacode Two Track",
+                    "value": "pharmacodeTwoTrack"
+                  },
+                  {
+                    "name": "CEP Net",
+                    "value": "cepNet"
+                  },
+                  {
+                    "name": "PDF417 Truncated",
+                    "value": "pdf417Truncated"
+                  },
+                  {
+                    "name": "Maxicode",
+                    "value": "maxicode"
+                  },
+                  {
+                    "name": "Code 128 Subset A",
+                    "value": "code128SubsetA"
+                  },
+                  {
+                    "name": "Code 128 Subset B",
+                    "value": "code128SubsetB"
+                  },
+                  {
+                    "name": "Code 128 Subset C",
+                    "value": "code128SubsetC"
+                  },
+                  {
+                    "name": "Code 93 Extended",
+                    "value": "code93Extended"
+                  },
+                  {
+                    "name": "Australian Post Custom",
+                    "value": "australianPostCustom"
+                  },
+                  {
+                    "name": "Australian Post Custom 2",
+                    "value": "australianPostCustom2"
+                  },
+                  {
+                    "name": "Australian Post Custom 3",
+                    "value": "australianPostCustom3"
+                  },
+                  {
+                    "name": "Australian Post Reply Paid",
+                    "value": "australianPostReplyPaid"
+                  },
+                  {
+                    "name": "Australian Post Routing",
+                    "value": "australianPostRouting"
+                  },
+                  {
+                    "name": "Australian Post Redirection",
+                    "value": "australianPostRedirection"
+                  },
+                  {
+                    "name": "ISBN-13",
+                    "value": "isbn13"
+                  },
+                  {
+                    "name": "RM4SCC",
+                    "value": "rm4Scc"
+                  },
+                  {
+                    "name": "EAN-14",
+                    "value": "ean14"
+                  },
+                  {
+                    "name": "VIN",
+                    "value": "vin"
+                  },
+                  {
+                    "name": "Codablock F",
+                    "value": "codablockF"
+                  },
+                  {
+                    "name": "NVE-18",
+                    "value": "nve18"
+                  },
+                  {
+                    "name": "Japanese Postal",
+                    "value": "japanesePostal"
+                  },
+                  {
+                    "name": "Korean Postal Authority",
+                    "value": "koreanPostalAuthority"
+                  },
+                  {
+                    "name": "GS1 DataBar Truncated",
+                    "value": "gs1DataBarTruncated"
+                  },
+                  {
+                    "name": "GS1 DataBar Stacked",
+                    "value": "gs1DataBarStacked"
+                  },
+                  {
+                    "name": "GS1 DataBar Stacked Omnidirectional",
+                    "value": "gs1DataBarStackedOmnidirectional"
+                  },
+                  {
+                    "name": "GS1 DataBar Expanded Stacked",
+                    "value": "gs1DataBarExpandedStacked"
+                  },
+                  {
+                    "name": "Planet 12",
+                    "value": "planet12"
+                  },
+                  {
+                    "name": "Planet 14",
+                    "value": "planet14"
+                  },
+                  {
+                    "name": "Micro PDF417",
+                    "value": "microPdf417"
+                  },
+                  {
+                    "name": "USPS Intelligent Mail",
+                    "value": "uspsIntelligentMail"
+                  },
+                  {
+                    "name": "Plessey Bidirectional",
+                    "value": "plesseyBidirectional"
+                  },
+                  {
+                    "name": "Telepen",
+                    "value": "telepen"
+                  },
+                  {
+                    "name": "GS1-128",
+                    "value": "gs1_128"
+                  },
+                  {
+                    "name": "ITF-14",
+                    "value": "itf14"
+                  },
+                  {
+                    "name": "KIX",
+                    "value": "kix"
+                  },
+                  {
+                    "name": "Code 32",
+                    "value": "code32"
+                  },
+                  {
+                    "name": "Italian Postal 2 of 5",
+                    "value": "italianPostal2Of5"
+                  },
+                  {
+                    "name": "Italian Postal 3 of 9",
+                    "value": "italianPostal3Of9"
+                  },
+                  {
+                    "name": "DPD",
+                    "value": "dpd"
+                  },
+                  {
+                    "name": "Micro QR Code",
+                    "value": "microQRCode"
+                  },
+                  {
+                    "name": "HIBC LIC 128",
+                    "value": "hibcLic128"
+                  },
+                  {
+                    "name": "HIBC LIC 3OF9",
+                    "value": "hibcLic3OF9"
+                  },
+                  {
+                    "name": "HIBC PAS 128",
+                    "value": "hibcPas128"
+                  },
+                  {
+                    "name": "HIBC PAS 3OF9",
+                    "value": "hibcPas3OF9"
+                  },
+                  {
+                    "name": "HIBC LIC Data Matrix",
+                    "value": "hibcLicDataMatrix"
+                  },
+                  {
+                    "name": "HIBC PAS Data Matrix",
+                    "value": "hibcPasDataMatrix"
+                  },
+                  {
+                    "name": "HIBC LIC QR Code",
+                    "value": "hibcLicQRCode"
+                  },
+                  {
+                    "name": "HIBC PAS QR Code",
+                    "value": "hibcPasQRCode"
+                  },
+                  {
+                    "name": "HIBC LIC PDF417",
+                    "value": "hibcLicPDF417"
+                  },
+                  {
+                    "name": "HIBC PAS PDF417",
+                    "value": "hibcPasPDF417"
+                  },
+                  {
+                    "name": "HIBC LIC MPDF417",
+                    "value": "hibcLicMPDF417"
+                  },
+                  {
+                    "name": "HIBC PAS MPDF417",
+                    "value": "hibcPasMPDF417"
+                  },
+                  {
+                    "name": "HIBC LIC CODABLOCK_F",
+                    "value": "hibcLicCODABLOCK_F"
+                  },
+                  {
+                    "name": "HIBC PAS CODABLOCK_F",
+                    "value": "hibcPasCODABLOCK_F"
+                  },
+                  {
+                    "name": "QR Code 2005",
+                    "value": "qrcode2005"
+                  },
+                  {
+                    "name": "PZN-8",
+                    "value": "pzn8"
+                  },
+                  {
+                    "name": "Dot Code",
+                    "value": "dotCode"
+                  },
+                  {
+                    "name": "USPS IM Package",
+                    "value": "uSPSIMPackage"
+                  },
+                  {
+                    "name": "Swedish Postal Shipment ID",
+                    "value": "swedishPostalShipmentId"
+                  },
+                  {
+                    "name": "Mailmark 2D",
+                    "value": "mailmark_2D"
+                  },
+                  {
+                    "name": "UPU S10",
+                    "value": "upuS10"
+                  },
+                  {
+                    "name": "Mailmark 4state",
+                    "value": "mailmark_4state"
+                  },
+                  {
+                    "name": "HIBC LIC Aztec",
+                    "value": "hibcLicAztec"
+                  },
+                  {
+                    "name": "HIBC PAS Aztec",
+                    "value": "hibcPasAztec"
+                  },
+                  {
+                    "name": "PPN",
+                    "value": "ppn"
+                  },
+                  {
+                    "name": "NTIN",
+                    "value": "ntin"
+                  },
+                  {
+                    "name": "Swiss QR Code",
+                    "value": "swissQrCode"
+                  }
+                ]
+              },
+              {
+                "name": "alignX",
+                "displayName": "Horizontal Alignment",
+                "type": "options",
+                "description": "Set the horizontal alignment of the Barcode",
+                "required": true,
+                "default": "Right",
+                "options": [
+                  {
+                    "name": "Left",
+                    "value": "Left"
+                  },
+                  {
+                    "name": "Center",
+                    "value": "Center"
+                  },
+                  {
+                    "name": "Right",
+                    "value": "Right"
+                  }
+                ]
+              },
+              {
+                "name": "alignY",
+                "displayName": "Vertical Alignment",
+                "type": "options",
+                "description": "Set the vertical alignment of the Barcode",
+                "required": true,
+                "default": "Bottom",
+                "options": [
+                  {
+                    "name": "Top",
+                    "value": "Top"
+                  },
+                  {
+                    "name": "Middle",
+                    "value": "Middle"
+                  },
+                  {
+                    "name": "Bottom",
+                    "value": "Bottom"
+                  }
+                ]
+              },
+              {
+                "name": "pdfInputDataType",
+                "displayName": "PDF Input Data Type",
+                "type": "options",
+                "description": "Choose how to provide the PDF file",
+                "required": true,
+                "default": "binaryData",
+                "options": [
+                  {
+                    "name": "Binary Data",
+                    "value": "binaryData",
+                    "description": "Use PDF file from previous node"
+                  },
+                  {
+                    "name": "Base64 String",
+                    "value": "base64",
+                    "description": "Provide PDF content as base64 encoded string"
+                  },
+                  {
+                    "name": "URL",
+                    "value": "url",
+                    "description": "Provide URL to PDF file"
+                  }
+                ]
+              },
+              {
+                "name": "formFieldType",
+                "displayName": "Form Field Type",
+                "type": "options",
+                "description": "Type of form field to add",
+                "required": true,
+                "default": "TextBox",
+                "options": [
+                  {
+                    "name": "Text Box",
+                    "value": "TextBox",
+                    "description": "Text input field"
+                  },
+                  {
+                    "name": "Check Box",
+                    "value": "CheckBox",
+                    "description": "Checkbox field"
+                  }
+                ]
+              },
+              {
+                "name": "inputDataType",
+                "displayName": "Input Data Type",
+                "type": "options",
+                "description": "Choose how to provide the PDF file to add HTML header/footer to",
+                "required": true,
+                "default": "binaryData",
+                "options": [
+                  {
+                    "name": "Binary Data",
+                    "value": "binaryData",
+                    "description": "Use PDF file from previous node"
+                  },
+                  {
+                    "name": "Base64 String",
+                    "value": "base64",
+                    "description": "Provide PDF content as base64 encoded string"
+                  },
+                  {
+                    "name": "URL",
+                    "value": "url",
+                    "description": "Provide URL to PDF file"
+                  }
+                ]
+              },
+              {
+                "name": "location",
+                "displayName": "Location",
+                "type": "options",
+                "description": "Location where to add the HTML content",
+                "required": true,
+                "default": "Header",
+                "options": [
+                  {
+                    "name": "Header",
+                    "value": "Header",
+                    "description": "Add HTML content as header"
+                  },
+                  {
+                    "name": "Footer",
+                    "value": "Footer",
+                    "description": "Add HTML content as footer"
+                  },
+                  {
+                    "name": "Both",
+                    "value": "Both",
+                    "description": "Add HTML content as both header and footer"
+                  }
+                ]
+              },
+              {
+                "name": "inputDataType",
+                "displayName": "Input Data Type",
+                "type": "options",
+                "description": "Choose how to provide the PDF file to add image stamp to",
+                "required": true,
+                "default": "binaryData",
+                "options": [
+                  {
+                    "name": "Binary Data",
+                    "value": "binaryData",
+                    "description": "Use PDF file from previous node"
+                  },
+                  {
+                    "name": "Base64 String",
+                    "value": "base64",
+                    "description": "Provide PDF content as base64 encoded string"
+                  },
+                  {
+                    "name": "URL",
+                    "value": "url",
+                    "description": "Provide URL to PDF file"
+                  }
+                ]
+              }
+            ],
+            "operations": [
+              {
+                "name": "AI-Invoice Parser",
+                "value": "AI-Invoice Parser",
+                "description": "Extract structured data from invoices using AI/ML technology for automated data entry"
+              },
+              {
+                "name": "AI-Process Bank Cheque",
+                "value": "AI-Process Bank Cheque",
+                "description": "Extract structured data from bank cheques using AI/ML technology for payment processing"
+              },
+              {
+                "name": "AI-Process Credit Card",
+                "value": "AI-Process Credit Card",
+                "description": "Extract structured data from credit cards using AI/ML technology for payment processing"
+              },
+              {
+                "name": "AI-Process Contract",
+                "value": "AI-Process Contract",
+                "description": "Extract structured data from contracts using AI/ML technology for legal document analysis"
+              },
+              {
+                "name": "AI-Process HealthCard",
+                "value": "AI-Process HealthCard",
+                "description": "Extract structured data from health cards using AI/ML technology for member management"
+              },
+              {
+                "name": "AI-Process Marriage Certificate",
+                "value": "AI-Process Marriage Certificate",
+                "description": "Extract structured data from marriage certificates using AI/ML technology for document verification"
+              },
+              {
+                "name": "AI-Process Mortgage Document",
+                "value": "AI-Process Mortgage Document",
+                "description": "Extract structured data from mortgage documents using AI/ML technology for loan processing"
+              },
+              {
+                "name": "AI-Process Pay Stub",
+                "value": "AI-Process Pay Stub",
+                "description": "Extract structured data from pay stubs using AI/ML technology for payroll processing"
+              },
+              {
+                "name": "AI Auto Crop Document",
+                "value": "AI Auto Crop Document",
+                "description": "Automatically crop a document using AI to remove borders and unwanted areas"
+              },
+              {
+                "name": "AI - Universal Document Data Extraction",
+                "value": "Process Universal Document",
+                "description": "Extract specified fields from documents using universal document processing"
+              },
+              {
+                "name": "AI-Process Shipping Label",
+                "value": "Process Shipping Label",
+                "description": "Process shipping labels to extract and analyze shipping information"
+              },
+              {
+                "name": "AI-Process Order",
+                "value": "Process Order",
+                "description": "Process order documents to extract and analyze order information"
+              },
+              {
+                "name": "AI-Process Receipt",
+                "value": "Process Receipt",
+                "description": "Process receipt documents to extract items, merchant info, totals, and custom fields"
+              },
+              {
+                "name": "AI-Process Tax Document",
+                "value": "Process Tax Document",
+                "description": "Process tax documents (W2, 1099, 1040, etc.) to extract tax information and custom fields"
+              },
+              {
+                "name": "AI-Process Bank Statement",
+                "value": "Process Bank Statement",
+                "description": "Process bank statement documents to extract transactions, analyze patterns, and custom fields"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 1059
+          },
+          "ioInfo": {
+            "nodeType": "PDF4me",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-placid": {
+      "packageName": "n8n-nodes-placid",
+      "packageVersion": "0.1.6",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-placid.placid",
+          "displayName": "Placid",
+          "description": "Generate images, PDFs, and videos via Placid's API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "pdfSources",
+                "displayName": "PDF Sources",
+                "type": "fixedCollection",
+                "description": "PDF files to merge (2-10 sources required). You can mix URLs and binary files.",
+                "required": true,
+                "default": {},
+                "options": [
+                  {
+                    "name": "sources"
+                  }
+                ]
+              },
+              {
+                "name": "files",
+                "displayName": "Files",
+                "type": "fixedCollection",
+                "description": "Files to upload (up to 5 files, max 2MB each)",
+                "required": true,
+                "default": {
+                  "fileItems": [
+                    {
+                      "file": "",
+                      "fileName": ""
+                    }
+                  ]
+                },
+                "options": [
+                  {
+                    "name": "fileItems"
+                  }
+                ]
+              },
+              {
+                "name": "template_id",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "Select the Placid template to use for image generation",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "imageId",
+                "displayName": "Image ID",
+                "type": "string",
+                "description": "The unique ID of the image to retrieve",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "imageId",
+                "displayName": "Image ID",
+                "type": "string",
+                "description": "The unique ID of the image to delete",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "template_id",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "Select the Placid template to use for PDF generation",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "urlsJson",
+                "displayName": "URLs (JSON)",
+                "type": "json",
+                "description": "JSON array of PDF URLs to merge (2-10 URLs). Example: [\"https://example.com/doc1.pdf\", \"https://example.com/doc2.pdf\"].",
+                "required": true,
+                "default": "[]"
+              },
+              {
+                "name": "pdfId",
+                "displayName": "PDF ID",
+                "type": "string",
+                "description": "The unique ID of the PDF to retrieve",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "pdfId",
+                "displayName": "PDF ID",
+                "type": "string",
+                "description": "The unique ID of the PDF to delete",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "template_id",
+                "displayName": "Template",
+                "type": "resourceLocator",
+                "description": "Select the Placid template to use for video generation",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create",
+                "value": "create",
+                "description": "Generate a new image from a template"
+              },
+              {
+                "name": "Get",
+                "value": "get",
+                "description": "Retrieve an existing image by ID"
+              },
+              {
+                "name": "Delete",
+                "value": "delete",
+                "description": "Delete an existing image by ID"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 41
+          },
+          "ioInfo": {
+            "nodeType": "placid",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-upload-post": {
+      "packageName": "n8n-nodes-upload-post",
+      "packageVersion": "0.1.48",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-upload-post.uploadPost",
+          "displayName": "Upload Post",
+          "description": "Upload content to social media via Upload-Post API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "instagramUser",
+                "displayName": "User Identifier Name or ID",
+                "type": "options",
+                "description": "Choose from your created profiles. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "instagramPostId",
+                "displayName": "Post ID or URL",
+                "type": "string",
+                "description": "Numeric media ID or full Instagram post URL (e.g., https://www.instagram.com/p/ABC123/)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "instagramCommentId",
+                "displayName": "Comment ID",
+                "type": "string",
+                "description": "The ID of the comment to reply to (from Get Post Comments)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "instagramReplyMessage",
+                "displayName": "Message",
+                "type": "string",
+                "description": "The reply message text",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "user",
+                "displayName": "User Identifier Name or ID",
+                "type": "options",
+                "description": "Choose from your created profiles, or specify a profile name using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "userManual",
+                "displayName": "User Identifier (Manual Entry)",
+                "type": "string",
+                "description": "Provide a profile name or ID when it does not appear in the list",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "platform",
+                "displayName": "Platform Names or IDs",
+                "type": "multiOptions",
+                "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                "required": true,
+                "default": []
+              },
+              {
+                "name": "photos",
+                "displayName": "Photos (Files or URLs)",
+                "type": "string",
+                "description": "Provide photo files or URLs as a comma-separated list (e.g., data,https://example.com/image.jpg,otherImage). For files, enter the binary property name (e.g., data, myImage). For URLs, provide direct HTTP/HTTPS URLs.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "video",
+                "displayName": "Video (File or URL)",
+                "type": "string",
+                "description": "The video file to upload or a video URL. For files, enter the binary property name (e.g., data).",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "document",
+                "displayName": "Document (File or URL)",
+                "type": "string",
+                "description": "The document file (PDF, PPT, PPTX, DOC, DOCX) to upload or a document URL. For files, enter the binary property name (e.g., data). Max 100MB, 300 pages.",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Upload Document",
+                "value": "uploadDocument",
+                "description": "Upload a document (PDF, PPT, PPTX, DOC, DOCX) as a native carousel/viewer (Supports: LinkedIn only)"
+              },
+              {
+                "name": "Upload Photo(s)",
+                "value": "uploadPhotos",
+                "description": "Upload one or more photos (Supports: TikTok, Instagram, LinkedIn, Facebook, X, Threads)"
+              },
+              {
+                "name": "Upload Text",
+                "value": "uploadText",
+                "description": "Upload a text-based post (Supports: X, LinkedIn, Facebook, Threads)"
+              },
+              {
+                "name": "Upload Video",
+                "value": "uploadVideo",
+                "description": "Upload a single video (Supports: TikTok, Instagram, LinkedIn, YouTube, Facebook, X, Threads)"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 164
+          },
+          "ioInfo": {
+            "nodeType": "uploadPost",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-businessmap": {
+      "packageName": "n8n-nodes-businessmap",
+      "packageVersion": "1.1.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-businessmap.businessmap",
+          "displayName": "Businessmap",
+          "description": "Use Businessmap API v2",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "output",
+                "displayName": "Output",
+                "type": "options",
+                "description": "Select the fields available in the output",
+                "required": true,
+                "default": "simplified",
+                "options": [
+                  {
+                    "name": "Simplified",
+                    "value": "simplified"
+                  },
+                  {
+                    "name": "Raw",
+                    "value": "raw"
+                  },
+                  {
+                    "name": "Selected Fields",
+                    "value": "selected"
+                  }
+                ]
+              },
+              {
+                "name": "output_fields",
+                "displayName": "Select Output Fields",
+                "type": "multiOptions",
+                "description": "Select all the putput fields you want to receive for the card(s). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": [
+                  "card_id"
+                ],
+                "options": [
+                  {
+                    "name": "Annotations",
+                    "value": "annotations"
+                  },
+                  {
+                    "name": "Archived At",
+                    "value": "archived_at"
+                  },
+                  {
+                    "name": "Attachments",
+                    "value": "attachments"
+                  },
+                  {
+                    "name": "Block Reason",
+                    "value": "block_reason"
+                  },
+                  {
+                    "name": "Block Times",
+                    "value": "block_times"
+                  },
+                  {
+                    "name": "Board ID",
+                    "value": "board_id"
+                  },
+                  {
+                    "name": "Card ID",
+                    "value": "card_id"
+                  },
+                  {
+                    "name": "Checked Column Checklist Items",
+                    "value": "checked_column_checklist_items"
+                  },
+                  {
+                    "name": "Child Card Stats",
+                    "value": "child_card_stats"
+                  },
+                  {
+                    "name": "Co Owner IDs",
+                    "value": "co_owner_ids"
+                  },
+                  {
+                    "name": "Color",
+                    "value": "color"
+                  },
+                  {
+                    "name": "Column ID",
+                    "value": "column_id"
+                  },
+                  {
+                    "name": "Comment Count",
+                    "value": "comment_count"
+                  },
+                  {
+                    "name": "Cover Image",
+                    "value": "cover_image"
+                  },
+                  {
+                    "name": "Created At",
+                    "value": "created_at"
+                  },
+                  {
+                    "name": "Current Block Time",
+                    "value": "current_block_time"
+                  },
+                  {
+                    "name": "Current Cycle Time",
+                    "value": "current_cycle_time"
+                  },
+                  {
+                    "name": "Current Logged Time",
+                    "value": "current_logged_time"
+                  },
+                  {
+                    "name": "Custom Card ID",
+                    "value": "custom_id"
+                  },
+                  {
+                    "name": "Custom Fields",
+                    "value": "custom_fields"
+                  },
+                  {
+                    "name": "Deadline",
+                    "value": "deadline"
+                  },
+                  {
+                    "name": "Description",
+                    "value": "description"
+                  },
+                  {
+                    "name": "Discard Comment",
+                    "value": "discard_comment"
+                  },
+                  {
+                    "name": "Discarded At",
+                    "value": "discarded_at"
+                  },
+                  {
+                    "name": "Finished Subtask Count",
+                    "value": "finished_subtask_count"
+                  },
+                  {
+                    "name": "First End Time",
+                    "value": "first_end_time"
+                  },
+                  {
+                    "name": "First Request Time",
+                    "value": "first_request_time"
+                  },
+                  {
+                    "name": "First Start Time",
+                    "value": "first_start_time"
+                  },
+                  {
+                    "name": "In Current Position Since",
+                    "value": "in_current_position_since"
+                  },
+                  {
+                    "name": "Initiative Details",
+                    "value": "initiative_details"
+                  },
+                  {
+                    "name": "Is Blocked",
+                    "value": "is_blocked"
+                  },
+                  {
+                    "name": "Lane ID",
+                    "value": "lane_id"
+                  },
+                  {
+                    "name": "Last Column ID",
+                    "value": "last_column_id"
+                  },
+                  {
+                    "name": "Last End Time",
+                    "value": "last_end_time"
+                  },
+                  {
+                    "name": "Last Lane ID",
+                    "value": "last_lane_id"
+                  },
+                  {
+                    "name": "Last Modified",
+                    "value": "last_modified"
+                  },
+                  {
+                    "name": "Last Request Time",
+                    "value": "last_request_time"
+                  },
+                  {
+                    "name": "Last Start Time",
+                    "value": "last_start_time"
+                  },
+                  {
+                    "name": "Lead Time Per Column",
+                    "value": "lead_time_per_column"
+                  },
+                  {
+                    "name": "Linked Cards",
+                    "value": "linked_cards"
+                  },
+                  {
+                    "name": "Logged Times",
+                    "value": "logged_times"
+                  },
+                  {
+                    "name": "Logged Times For Child Cards",
+                    "value": "logged_times_for_child_cards"
+                  },
+                  {
+                    "name": "Outcome Current Values",
+                    "value": "outcome_current_values"
+                  },
+                  {
+                    "name": "Outcomes",
+                    "value": "outcomes"
+                  },
+                  {
+                    "name": "Owner User ID",
+                    "value": "owner_user_id"
+                  },
+                  {
+                    "name": "Position",
+                    "value": "position"
+                  },
+                  {
+                    "name": "Priority",
+                    "value": "priority"
+                  },
+                  {
+                    "name": "Reason ID",
+                    "value": "reason_id"
+                  },
+                  {
+                    "name": "Reporter",
+                    "value": "reporter"
+                  },
+                  {
+                    "name": "Revision",
+                    "value": "revision"
+                  },
+                  {
+                    "name": "Section",
+                    "value": "section"
+                  },
+                  {
+                    "name": "Size",
+                    "value": "size"
+                  },
+                  {
+                    "name": "Stickers",
+                    "value": "stickers"
+                  },
+                  {
+                    "name": "Subtasks",
+                    "value": "subtasks"
+                  },
+                  {
+                    "name": "Tag IDs",
+                    "value": "tag_ids"
+                  },
+                  {
+                    "name": "Title",
+                    "value": "title"
+                  },
+                  {
+                    "name": "Transitions",
+                    "value": "transitions"
+                  },
+                  {
+                    "name": "Type ID",
+                    "value": "type_id"
+                  },
+                  {
+                    "name": "Unfinished Subtask Count",
+                    "value": "unfinished_subtask_count"
+                  },
+                  {
+                    "name": "Version ID",
+                    "value": "version_id"
+                  },
+                  {
+                    "name": "Watcher IDs",
+                    "value": "watcher_ids"
+                  },
+                  {
+                    "name": "Workflow ID",
+                    "value": "workflow_id"
+                  }
+                ]
+              },
+              {
+                "name": "output",
+                "displayName": "Output",
+                "type": "options",
+                "description": "Select the fields available in the output",
+                "required": true,
+                "default": "simplified",
+                "options": [
+                  {
+                    "name": "Simplified",
+                    "value": "simplified"
+                  },
+                  {
+                    "name": "Raw",
+                    "value": "raw"
+                  },
+                  {
+                    "name": "Selected Fields",
+                    "value": "selected"
+                  }
+                ]
+              },
+              {
+                "name": "output_fields",
+                "displayName": "Select Output Fields",
+                "type": "multiOptions",
+                "description": "Select all the putput fields you want to receive for the card(s). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": [
+                  "card_id"
+                ],
+                "options": [
+                  {
+                    "name": "Annotations",
+                    "value": "annotations"
+                  },
+                  {
+                    "name": "Archived At",
+                    "value": "archived_at"
+                  },
+                  {
+                    "name": "Attachments",
+                    "value": "attachments"
+                  },
+                  {
+                    "name": "Block Reason",
+                    "value": "block_reason"
+                  },
+                  {
+                    "name": "Block Times",
+                    "value": "block_times"
+                  },
+                  {
+                    "name": "Board ID",
+                    "value": "board_id"
+                  },
+                  {
+                    "name": "Card ID",
+                    "value": "card_id"
+                  },
+                  {
+                    "name": "Checked Column Checklist Items",
+                    "value": "checked_column_checklist_items"
+                  },
+                  {
+                    "name": "Child Card Stats",
+                    "value": "child_card_stats"
+                  },
+                  {
+                    "name": "Co Owner IDs",
+                    "value": "co_owner_ids"
+                  },
+                  {
+                    "name": "Color",
+                    "value": "color"
+                  },
+                  {
+                    "name": "Column ID",
+                    "value": "column_id"
+                  },
+                  {
+                    "name": "Comment Count",
+                    "value": "comment_count"
+                  },
+                  {
+                    "name": "Cover Image",
+                    "value": "cover_image"
+                  },
+                  {
+                    "name": "Created At",
+                    "value": "created_at"
+                  },
+                  {
+                    "name": "Current Block Time",
+                    "value": "current_block_time"
+                  },
+                  {
+                    "name": "Current Cycle Time",
+                    "value": "current_cycle_time"
+                  },
+                  {
+                    "name": "Current Logged Time",
+                    "value": "current_logged_time"
+                  },
+                  {
+                    "name": "Custom Card ID",
+                    "value": "custom_id"
+                  },
+                  {
+                    "name": "Custom Fields",
+                    "value": "custom_fields"
+                  },
+                  {
+                    "name": "Deadline",
+                    "value": "deadline"
+                  },
+                  {
+                    "name": "Description",
+                    "value": "description"
+                  },
+                  {
+                    "name": "Discard Comment",
+                    "value": "discard_comment"
+                  },
+                  {
+                    "name": "Discarded At",
+                    "value": "discarded_at"
+                  },
+                  {
+                    "name": "Finished Subtask Count",
+                    "value": "finished_subtask_count"
+                  },
+                  {
+                    "name": "First End Time",
+                    "value": "first_end_time"
+                  },
+                  {
+                    "name": "First Request Time",
+                    "value": "first_request_time"
+                  },
+                  {
+                    "name": "First Start Time",
+                    "value": "first_start_time"
+                  },
+                  {
+                    "name": "In Current Position Since",
+                    "value": "in_current_position_since"
+                  },
+                  {
+                    "name": "Initiative Details",
+                    "value": "initiative_details"
+                  },
+                  {
+                    "name": "Is Blocked",
+                    "value": "is_blocked"
+                  },
+                  {
+                    "name": "Lane ID",
+                    "value": "lane_id"
+                  },
+                  {
+                    "name": "Last Column ID",
+                    "value": "last_column_id"
+                  },
+                  {
+                    "name": "Last End Time",
+                    "value": "last_end_time"
+                  },
+                  {
+                    "name": "Last Lane ID",
+                    "value": "last_lane_id"
+                  },
+                  {
+                    "name": "Last Modified",
+                    "value": "last_modified"
+                  },
+                  {
+                    "name": "Last Request Time",
+                    "value": "last_request_time"
+                  },
+                  {
+                    "name": "Last Start Time",
+                    "value": "last_start_time"
+                  },
+                  {
+                    "name": "Lead Time Per Column",
+                    "value": "lead_time_per_column"
+                  },
+                  {
+                    "name": "Linked Cards",
+                    "value": "linked_cards"
+                  },
+                  {
+                    "name": "Logged Times",
+                    "value": "logged_times"
+                  },
+                  {
+                    "name": "Logged Times For Child Cards",
+                    "value": "logged_times_for_child_cards"
+                  },
+                  {
+                    "name": "Outcome Current Values",
+                    "value": "outcome_current_values"
+                  },
+                  {
+                    "name": "Outcomes",
+                    "value": "outcomes"
+                  },
+                  {
+                    "name": "Owner User ID",
+                    "value": "owner_user_id"
+                  },
+                  {
+                    "name": "Position",
+                    "value": "position"
+                  },
+                  {
+                    "name": "Priority",
+                    "value": "priority"
+                  },
+                  {
+                    "name": "Reason ID",
+                    "value": "reason_id"
+                  },
+                  {
+                    "name": "Reporter",
+                    "value": "reporter"
+                  },
+                  {
+                    "name": "Revision",
+                    "value": "revision"
+                  },
+                  {
+                    "name": "Section",
+                    "value": "section"
+                  },
+                  {
+                    "name": "Size",
+                    "value": "size"
+                  },
+                  {
+                    "name": "Stickers",
+                    "value": "stickers"
+                  },
+                  {
+                    "name": "Subtasks",
+                    "value": "subtasks"
+                  },
+                  {
+                    "name": "Tag IDs",
+                    "value": "tag_ids"
+                  },
+                  {
+                    "name": "Title",
+                    "value": "title"
+                  },
+                  {
+                    "name": "Transitions",
+                    "value": "transitions"
+                  },
+                  {
+                    "name": "Type ID",
+                    "value": "type_id"
+                  },
+                  {
+                    "name": "Unfinished Subtask Count",
+                    "value": "unfinished_subtask_count"
+                  },
+                  {
+                    "name": "Version ID",
+                    "value": "version_id"
+                  },
+                  {
+                    "name": "Watcher IDs",
+                    "value": "watcher_ids"
+                  },
+                  {
+                    "name": "Workflow ID",
+                    "value": "workflow_id"
+                  }
+                ]
+              },
+              {
+                "name": "link_type",
+                "displayName": "Will Be Linked As",
+                "type": "options",
+                "required": true,
+                "default": "relatives",
+                "options": [
+                  {
+                    "name": "Child",
+                    "value": "parents"
+                  },
+                  {
+                    "name": "Parent",
+                    "value": "children"
+                  },
+                  {
+                    "name": "Relative",
+                    "value": "relatives"
+                  },
+                  {
+                    "name": "Predecessor",
+                    "value": "successors"
+                  },
+                  {
+                    "name": "Successor",
+                    "value": "predecessors"
+                  }
+                ]
+              },
+              {
+                "name": "link_type",
+                "displayName": "Linked As",
+                "type": "options",
+                "required": true,
+                "default": "relatives",
+                "options": [
+                  {
+                    "name": "Child",
+                    "value": "parents"
+                  },
+                  {
+                    "name": "Parent",
+                    "value": "children"
+                  },
+                  {
+                    "name": "Relative",
+                    "value": "relatives"
+                  },
+                  {
+                    "name": "Predecessor",
+                    "value": "successors"
+                  },
+                  {
+                    "name": "Successor",
+                    "value": "predecessors"
+                  }
+                ]
+              },
+              {
+                "name": "time_unit",
+                "displayName": "Time Unit",
+                "type": "options",
+                "required": true,
+                "default": "hours",
+                "options": [
+                  {
+                    "name": "Minutes",
+                    "value": "minutes"
+                  },
+                  {
+                    "name": "Hours",
+                    "value": "hours"
+                  },
+                  {
+                    "name": "Days",
+                    "value": "days"
+                  }
+                ]
+              },
+              {
+                "name": "board_id",
+                "displayName": "Board Name or ID",
+                "type": "resourceLocator",
+                "description": "Select a board by ID, pick from the list, or use the AI button to choose one",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "workflow_id",
+                "displayName": "Workflow Name or ID",
+                "type": "resourceLocator",
+                "description": "Select a workflow by ID, pick from the list, or click the AI button to choose one",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              },
+              {
+                "name": "lane_id",
+                "displayName": "Lane Name or ID",
+                "type": "resourceLocator",
+                "description": "Select a lane by ID, pick from the list, or click the AI button to choose one",
+                "required": true,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create",
+                "value": "create",
+                "description": "Create card"
+              },
+              {
+                "name": "Update",
+                "value": "update",
+                "description": "Update card"
+              },
+              {
+                "name": "Move",
+                "value": "move",
+                "description": "Move card"
+              },
+              {
+                "name": "Get Card",
+                "value": "get",
+                "description": "Get card by ID"
+              },
+              {
+                "name": "Get Custom Card",
+                "value": "getCustom",
+                "description": "Get card by custom card ID"
+              },
+              {
+                "name": "Get All Cards Per Board",
+                "value": "getAllCardsPerBoard",
+                "description": "Retrieve all cards from a board"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 100
+          },
+          "ioInfo": {
+            "nodeType": "businessmap",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-businessmap.businessmapTrigger",
+          "displayName": "Businessmap Trigger",
+          "description": "Starts the workflow when Businessmap events occur",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "events",
+                "displayName": "Events",
+                "type": "multiOptions",
+                "description": "The events to listen to",
+                "required": true,
+                "default": [],
+                "options": [
+                  {
+                    "name": "All Events",
+                    "value": "All"
+                  },
+                  {
+                    "name": "Card Created",
+                    "value": "Card Created"
+                  },
+                  {
+                    "name": "Card Details Changed",
+                    "value": "Card Details Changed"
+                  },
+                  {
+                    "name": "Card Discarded",
+                    "value": "Card Discarded"
+                  },
+                  {
+                    "name": "Card Restored",
+                    "value": "Card Restored"
+                  },
+                  {
+                    "name": "Card Moved",
+                    "value": "Card Moved"
+                  },
+                  {
+                    "name": "Card Archived",
+                    "value": "Card Archived"
+                  },
+                  {
+                    "name": "Card Unarchived",
+                    "value": "Card Unarchived"
+                  },
+                  {
+                    "name": "Comment Created",
+                    "value": "Comment Created"
+                  },
+                  {
+                    "name": "Comment Updated",
+                    "value": "Comment Updated"
+                  },
+                  {
+                    "name": "Comment Deleted",
+                    "value": "Comment Deleted"
+                  },
+                  {
+                    "name": "Subtask Created",
+                    "value": "Subtask Created"
+                  },
+                  {
+                    "name": "Subtask Updated",
+                    "value": "Subtask Updated"
+                  },
+                  {
+                    "name": "Subtask Deleted",
+                    "value": "Subtask Deleted"
+                  },
+                  {
+                    "name": "Board Renamed",
+                    "value": "Board Renamed"
+                  },
+                  {
+                    "name": "Board Archived",
+                    "value": "Board Archived"
+                  },
+                  {
+                    "name": "Board Deleted",
+                    "value": "Board Deleted"
+                  },
+                  {
+                    "name": "Board Structure Changed",
+                    "value": "Board Structure Changed"
+                  }
+                ]
+              },
+              {
+                "name": "board_id",
+                "displayName": "Board Name or ID",
+                "type": "options",
+                "description": "Selected board to attach the webhook to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": "",
+                "options": []
+              },
+              {
+                "name": "authenticate_webhook",
+                "displayName": "Authenticate Incoming Webhook",
+                "type": "boolean",
+                "description": "Whether authentication should be activated for incoming webhooks",
+                "required": false,
+                "default": true
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 3
+          },
+          "ioInfo": {
+            "nodeType": "businessmapTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-yepcode": {
+      "packageName": "n8n-nodes-yepcode",
+      "packageVersion": "1.1.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-yepcode.yepCode",
+          "displayName": "YepCode",
+          "description": "YepCode lets you run full processes or dynamic scripts using Node.js or Python, with support for any NPM or PyPI dependency. All in a secure, sandboxed environment.",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "process",
+                "displayName": "Process",
+                "type": "options",
+                "description": "The YepCode process to run. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "code",
+                "displayName": "Code",
+                "type": "string",
+                "description": "The source's code to execute. It can be a JavaScript or Python code, and it will be executed in the YepCode environment. You can import any NPM or PyPI package and it will be installed automatically (see <a href='https://yepcode.io/docs/yepcode-coding-rules'>YepCode docs</a> for more details).",
+                "required": true,
+                "default": "// Import any npm package - YepCode will install it automatically\nconst { DateTime } = require(\"luxon\");\n\nconst { n8n } = yepcode.context.parameters;\n\nconst results = [];\nfor (const item of n8n.items) {\n  results.push({\n    ...item.json,\n    processedAt: DateTime.now().toISO(),\n  });\n}\n\n// Access n8n metadata - check all available fields at: https://docs.n8n.io/code/builtin/n8n-metadata/\nconsole.log(\"Environment:\", n8n.metadata);\nconsole.log(\"Resume URL:\", n8n.metadata[\"$execution\"].resumeUrl);\n\nreturn results;"
+              },
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "run_process",
+                "options": [
+                  {
+                    "name": "Run Process",
+                    "value": "run_process",
+                    "description": "Move your complex business logic into yep code processes and trigger them from your workflows using dynamic input parameters it s the most flexible way to connect with your ap is and services using real code with zero dev ops overhead"
+                  },
+                  {
+                    "name": "Run Code",
+                    "value": "run_code",
+                    "description": "A lightweight, flexible way to execute Node.js or Python code on demand — directly from your workflows or AI agents. The run_code tool runs in secure cloud sandboxes with full support for NPM and PyPI dependencies (https://yepcode.io/docs/dependencies), access to secrets, APIs, and databases. Perfect for quick scripts, dynamic logic, or AI-generated code."
+                  }
+                ]
+              },
+              {
+                "name": "language",
+                "displayName": "Language",
+                "type": "options",
+                "description": "The source's code language. Optional as we'll try to detect it automatically.",
+                "required": false,
+                "default": "",
+                "options": [
+                  {
+                    "name": "Auto",
+                    "value": ""
+                  },
+                  {
+                    "name": "JavaScript",
+                    "value": "javascript"
+                  },
+                  {
+                    "name": "Python",
+                    "value": "python"
+                  }
+                ]
+              },
+              {
+                "name": "mode",
+                "displayName": "Mode",
+                "type": "options",
+                "required": false,
+                "default": "runOnceForAllItems",
+                "options": [
+                  {
+                    "name": "Run Once for All Items",
+                    "value": "runOnceForAllItems",
+                    "description": "Run this code only once, no matter how many input items there are"
+                  },
+                  {
+                    "name": "Run Once for Each Item",
+                    "value": "runOnceForEachItem",
+                    "description": "Run this code as many times as there are input items"
+                  }
+                ]
+              },
+              {
+                "name": "mode",
+                "displayName": "Mode",
+                "type": "options",
+                "required": false,
+                "default": "runOnceForAllItems",
+                "options": [
+                  {
+                    "name": "Run Once for All Items",
+                    "value": "runOnceForAllItems",
+                    "description": "Run this code only once, no matter how many input items there are"
+                  },
+                  {
+                    "name": "Run Once for Each Item",
+                    "value": "runOnceForEachItem",
+                    "description": "Run this code as many times as there are input items"
+                  }
+                ]
+              },
+              {
+                "name": "parameters",
+                "displayName": "Parameters",
+                "type": "resourceMapper",
+                "description": "Map input data to the process form",
+                "required": false,
+                "default": {
+                  "mappingMode": "defineBelow",
+                  "value": null
+                }
+              },
+              {
+                "name": "addN8nContext",
+                "displayName": "Add n8n Context as Parameters",
+                "type": "boolean",
+                "description": "Whether to add the n8n context to the execution. When enabled, your code will receive n8n data via yepcode.context.parameters.n8n containing input items and workflow metadata (environment variables, execution info, etc.).",
+                "required": false,
+                "default": true
+              },
+              {
+                "name": "version",
+                "displayName": "Version",
+                "type": "options",
+                "description": "Specify a version tag to run a particular published version of the process. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                "required": false,
+                "default": "$CURRENT"
+              },
+              {
+                "name": "synchronous",
+                "displayName": "Synchronous",
+                "type": "boolean",
+                "description": "Whether to wait for the execution to finish or not. If false, the execution result won't be available.",
+                "required": false,
+                "default": true
+              }
+            ],
+            "operations": [
+              {
+                "name": "Run Process",
+                "value": "run_process",
+                "description": "Move your complex business logic into yep code processes and trigger them from your workflows using dynamic input parameters it s the most flexible way to connect with your ap is and services using real code with zero dev ops overhead"
+              },
+              {
+                "name": "Run Code",
+                "value": "run_code",
+                "description": "A lightweight, flexible way to execute Node.js or Python code on demand — directly from your workflows or AI agents. The run_code tool runs in secure cloud sandboxes with full support for NPM and PyPI dependencies (https://yepcode.io/docs/dependencies), access to secrets, APIs, and databases. Perfect for quick scripts, dynamic logic, or AI-generated code."
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 18
+          },
+          "ioInfo": {
+            "nodeType": "yepCode",
             "version": "1",
             "inputs": [
               "main"
