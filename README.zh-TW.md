@@ -383,4 +383,4 @@ n8n Skills 是開源專案，我們歡迎任何形式的貢獻：
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=haunchen/n8n-skills&type=Date)](https://star-history.com/#haunchen/n8n-skills&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=haunchen/n8n-skills&type=Date)](https://star-history.dera.page/#haunchen/n8n-skills&Date)
