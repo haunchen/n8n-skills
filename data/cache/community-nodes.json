@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-05T01:03:23.811Z",
+  "lastUpdated": "2026-10-04T05:32:27.744Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -6352,13 +6352,13 @@
     },
     "@brave/n8n-nodes-brave-search": {
       "packageName": "@brave/n8n-nodes-brave-search",
-      "packageVersion": "1.0.25",
+      "packageVersion": "1.1.8",
       "nodes": [
         {
           "nodeType": "@brave/n8n-nodes-brave-search.braveSearch",
           "displayName": "Brave Search",
           "description": "Search the web using Brave Search",
-          "version": "1",
+          "version": "1.1",
           "properties": {
             "coreProperties": [
               {
@@ -6390,6 +6390,11 @@
                     "description": "Search for Videos"
                   },
                   {
+                    "name": "Place Search",
+                    "value": "place_search",
+                    "description": "Search for points of interest in an area"
+                  },
+                  {
                     "name": "Spellcheck",
                     "value": "spellcheck",
                     "description": "Check spelling of a query"
@@ -6398,6 +6403,11 @@
                     "name": "Suggest",
                     "value": "suggest",
                     "description": "Get suggestions for a query"
+                  },
+                  {
+                    "name": "LLM Context",
+                    "value": "llm_context",
+                    "description": "Get pre-extracted web content optimized for AI agents, LLM grounding, and RAG pipelines"
                   }
                 ]
               },
@@ -6447,6 +6457,22 @@
                 "type": "string",
                 "description": "The user’s suggest search query term. Query can not be empty. The max query length is 400 characters, and the word limit is 50.",
                 "required": true,
+                "default": ""
+              },
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "string",
+                "description": "The user’s search query term. Query can not be empty. Maximum of 400 characters and 50 words in the query.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "string",
+                "description": "Optional text to find points of interest. If empty, the API returns general POIs for the area you specify with Location or coordinates.",
+                "required": false,
                 "default": ""
               },
               {
@@ -6509,76 +6535,6 @@
                     "description": "Whether to include summary key generation in web search results. This is required for summarizer to be enabled."
                   }
                 ]
-              },
-              {
-                "name": "additionalParameters",
-                "displayName": "Additional Parameters",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "country",
-                    "description": "The search query country, where the results come from. The country string is limited to 2 character country codes of supported countries."
-                  },
-                  {
-                    "name": "search_lang",
-                    "description": "The language of the search query. The language string is limited to 2 character language codes of supported languages."
-                  },
-                  {
-                    "name": "ui_lang",
-                    "description": "User interface language preferred in response. Usually of the format <language_code>-<country_code>. For more, see <a href=\"https://www.rfc-editor.org/rfc/rfc9110.html#name-accept-language\">RFC 9110</a>."
-                  },
-                  {
-                    "name": "offset",
-                    "description": "The number of result sets to skip before returning results. The default is 0. Combine this parameter with <code>count</code> to paginate search results."
-                  },
-                  {
-                    "name": "spellcheck",
-                    "description": "Whether to enable spellcheck for the search query. The default is true."
-                  },
-                  {
-                    "name": "safesearch",
-                    "description": "Whether to enable safe search for the search query. The default is moderate."
-                  },
-                  {
-                    "name": "freshness",
-                    "description": "The freshness of the search query results"
-                  },
-                  {
-                    "name": "extra_snippets",
-                    "description": "Whether to enable extra snippets for the search query. A snippet is an excerpt from a page you get as a result of the query, and extra_snippets allow you to get up to 5 additional, alternative excerpts. Only available under Free AI, Base AI, Pro AI, Base Data, Pro Data and Custom plans."
-                  },
-                  {
-                    "name": "goggles",
-                    "description": "Goggles act as a custom re-ranking on top of Brave’s search index. The parameter supports one or more URLs where the desired Goggle(s) will be found."
-                  }
-                ]
-              },
-              {
-                "name": "additionalParameters",
-                "displayName": "Additional Parameters",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "country",
-                    "description": "The search query country, where the results come from"
-                  },
-                  {
-                    "name": "search_lang",
-                    "description": "The search language preference"
-                  },
-                  {
-                    "name": "safesearch",
-                    "description": "Filters search results for adult content"
-                  },
-                  {
-                    "name": "spellcheck",
-                    "description": "Whether to spellcheck provided query. If the spellchecker is enabled, the modified query is always used for search. The modified query can be found in altered key from the <a href=\"https://api-dashboard.search.brave.com/app/documentation/image-search/responses#Query\">query</a> response model."
-                  }
-                ]
               }
             ],
             "operations": [
@@ -6603,6 +6559,11 @@
                 "description": "Search for Videos"
               },
               {
+                "name": "Place Search",
+                "value": "place_search",
+                "description": "Search for points of interest in an area"
+              },
+              {
                 "name": "Spellcheck",
                 "value": "spellcheck",
                 "description": "Check spelling of a query"
@@ -6611,14 +6572,19 @@
                 "name": "Suggest",
                 "value": "suggest",
                 "description": "Get suggestions for a query"
+              },
+              {
+                "name": "LLM Context",
+                "value": "llm_context",
+                "description": "Get pre-extracted web content optimized for AI agents, LLM grounding, and RAG pipelines"
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 18
+            "totalPropertyCount": 26
           },
           "ioInfo": {
             "nodeType": "braveSearch",
-            "version": "1",
+            "version": "1.1",
             "inputs": [
               "main"
             ],
@@ -8425,2246 +8391,271 @@
     },
     "n8n-nodes-rd-station-crm": {
       "packageName": "n8n-nodes-rd-station-crm",
-      "packageVersion": "1.3.1",
+      "packageVersion": "2.3.2",
       "nodes": [
         {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmContacts",
-          "displayName": "RD Station CRM Contatos",
-          "description": "Operações com contatos no RD Station CRM",
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrm",
+          "displayName": "RD Station CRM",
+          "description": "Read and write data in RD Station CRM. Create, get, update and list contacts (leads/people), deals (sales opportunities), organizations (companies), tasks, notes, and manage pipelines, stages, products, custom fields, sources, campaigns, loss reasons, users, teams and webhooks. Supports API v1 (private token) and API v2 (OAuth2). Usable as an AI Agent tool.",
           "version": "1",
           "properties": {
             "coreProperties": [
               {
-                "name": "resource",
-                "displayName": "Recurso",
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "HTTPS endpoint that receives the event payload by POST, must have a valid TLS certificate",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "type",
+                "displayName": "Type",
                 "type": "options",
+                "description": "Data type of the custom field values. One of: date, multiple_choice, option, text",
+                "required": true,
+                "default": "text",
+                "options": [
+                  {
+                    "name": "Date",
+                    "value": "date"
+                  },
+                  {
+                    "name": "Multiple Choice",
+                    "value": "multiple_choice"
+                  },
+                  {
+                    "name": "Option",
+                    "value": "option"
+                  },
+                  {
+                    "name": "Text",
+                    "value": "text"
+                  }
+                ]
+              },
+              {
+                "name": "entity",
+                "displayName": "Entity",
+                "type": "options",
+                "description": "Record type this custom field applies to. One of: contact, deal, organization, product",
                 "required": true,
                 "default": "contact",
                 "options": [
                   {
-                    "name": "Contato",
+                    "name": "Contact",
                     "value": "contact"
-                  }
-                ]
-              },
-              {
-                "name": "contact_id",
-                "displayName": "ID do Contato",
-                "type": "string",
-                "description": "ID do contato",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "name",
-                "displayName": "Nome",
-                "type": "string",
-                "description": "Nome do contato (obrigatório, mínimo 2 caracteres)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Criar",
-                    "value": "create",
-                    "description": "Criar um novo contato"
                   },
                   {
-                    "name": "Atualizar",
-                    "value": "update",
-                    "description": "Atualizar um contato existente"
-                  },
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar contatos"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter um contato pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "filters",
-                "displayName": "Filtros",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "page",
-                    "description": "Número da página listada. Valor padrão é 1"
-                  },
-                  {
-                    "name": "limit",
-                    "description": "Limite de contatos que virão por listagem. Valor padrão é 20. Valor máximo é 200"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo para ordenação"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Ordenação da lista. \"asc\" ou \"desc\", padrão é \"asc\""
-                  },
-                  {
-                    "name": "q",
-                    "description": "Busca por nome do contato"
-                  },
-                  {
-                    "name": "email",
-                    "description": "Filtrar por e-mail do contato"
-                  },
-                  {
-                    "name": "phone",
-                    "description": "Filtrar por telefone do contato"
-                  },
-                  {
-                    "name": "title",
-                    "description": "Filtrar por cargo do contato"
-                  },
-                  {
-                    "name": "organization_id",
-                    "description": "ID da organização à qual o contato pertence"
-                  },
-                  {
-                    "name": "user_id",
-                    "description": "ID do usuário responsável pelo contato"
-                  }
-                ]
-              },
-              {
-                "name": "contactData",
-                "displayName": "Dados do Contato",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "name",
-                    "description": "Nome do contato (mínimo 2 caracteres)"
-                  },
-                  {
-                    "name": "title",
-                    "description": "Cargo do contato"
-                  },
-                  {
-                    "name": "birthday",
-                    "description": "Data de aniversário (formato: yyyy-mm-dd)"
-                  },
-                  {
-                    "name": "organization_id",
-                    "description": "ID da organização à qual o contato pertence"
-                  },
-                  {
-                    "name": "deal_ids",
-                    "description": "IDs das negociações separados por vírgula (ex: id1,id2,id3)"
-                  },
-                  {
-                    "name": "facebook",
-                    "description": "Perfil do Facebook"
-                  },
-                  {
-                    "name": "linkedin",
-                    "description": "Perfil do LinkedIn"
-                  },
-                  {
-                    "name": "skype",
-                    "description": "Usuário do Skype"
-                  }
-                ]
-              },
-              {
-                "name": "emails",
-                "displayName": "E-mails",
-                "type": "fixedCollection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "emailValues"
-                  }
-                ]
-              },
-              {
-                "name": "phones",
-                "displayName": "Telefones",
-                "type": "fixedCollection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "phoneValues"
-                  }
-                ]
-              },
-              {
-                "name": "contact_custom_fields",
-                "displayName": "Campos Customizados",
-                "type": "fixedCollection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "customFieldValues"
-                  }
-                ]
-              },
-              {
-                "name": "legal_bases",
-                "displayName": "Base Legal",
-                "type": "fixedCollection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "legalBaseValues"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Criar",
-                "value": "create",
-                "description": "Criar um novo contato"
-              },
-              {
-                "name": "Atualizar",
-                "value": "update",
-                "description": "Atualizar um contato existente"
-              },
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar contatos"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter um contato pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 10
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmContacts",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmDeals",
-          "displayName": "RD Station CRM Negociações",
-          "description": "Operações com negociações no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "deal",
-                "options": [
-                  {
-                    "name": "Negociação",
+                    "name": "Deal",
                     "value": "deal"
-                  }
-                ]
-              },
-              {
-                "name": "deal_id",
-                "displayName": "ID da Negociação",
-                "type": "string",
-                "description": "ID da negociação",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "name",
-                "displayName": "Nome da Negociação",
-                "type": "string",
-                "description": "Nome da negociação (obrigatório, mínimo 2 caracteres)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Criar",
-                    "value": "create",
-                    "description": "Criar uma nova negociação"
                   },
                   {
-                    "name": "Atualizar",
-                    "value": "update",
-                    "description": "Atualizar uma negociação existente"
-                  },
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar negociações"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter uma negociação pelo ID"
-                  },
-                  {
-                    "name": "Listar Contatos",
-                    "value": "getContacts",
-                    "description": "Listar contatos associados a uma negociação"
-                  }
-                ]
-              },
-              {
-                "name": "contacts",
-                "displayName": "Novos Contatos",
-                "type": "fixedCollection",
-                "description": "Criar novos contatos e associá-los à negociação",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "contactValues"
-                  }
-                ]
-              },
-              {
-                "name": "set_contacts",
-                "displayName": "Contatos Existentes",
-                "type": "fixedCollection",
-                "description": "Associar contatos existentes à negociação",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "contactIds"
-                  }
-                ]
-              },
-              {
-                "name": "filters",
-                "displayName": "Filtros",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "page",
-                    "description": "Número da página listada"
-                  },
-                  {
-                    "name": "limit",
-                    "description": "Limite de negociações por página. Máximo: 200"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo para ordenação. Padrão: created_at"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação"
-                  },
-                  {
-                    "name": "name",
-                    "description": "Nome da negociação"
-                  },
-                  {
-                    "name": "exact_name",
-                    "description": "Para buscas com nome exato"
-                  },
-                  {
-                    "name": "win",
-                    "description": "Status da negociação: ganhas, perdidas ou em aberto"
-                  },
-                  {
-                    "name": "closed_at",
-                    "description": "Filtrar por negociações fechadas ou abertas"
-                  },
-                  {
-                    "name": "hold",
-                    "description": "Se marcado como true, retorna apenas negociações pausadas"
-                  },
-                  {
-                    "name": "user_id",
-                    "description": "ID do usuário responsável pela negociação"
-                  },
-                  {
-                    "name": "deal_stage_id",
-                    "description": "ID da etapa do funil"
-                  },
-                  {
-                    "name": "deal_pipeline_id",
-                    "description": "ID do funil de vendas"
-                  },
-                  {
-                    "name": "organization",
-                    "description": "ID da empresa associada"
-                  },
-                  {
-                    "name": "deal_lost_reason_id",
-                    "description": "ID do motivo de perda"
-                  },
-                  {
-                    "name": "campaign_id",
-                    "description": "ID da campanha"
-                  },
-                  {
-                    "name": "closed_by_id",
-                    "description": "ID do usuário que fechou a venda"
-                  },
-                  {
-                    "name": "product_presence",
-                    "description": "false (sem produtos), true (com produtos) ou lista de IDs separados por vírgula"
-                  },
-                  {
-                    "name": "next_page",
-                    "description": "Token para consultar a próxima página de resultados"
-                  }
-                ]
-              },
-              {
-                "name": "periodFilters",
-                "displayName": "Filtros de Período",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "closed_at_period",
-                    "description": "Filtrar por data de fechamento"
-                  },
-                  {
-                    "name": "created_at_period",
-                    "description": "Filtrar por data de criação"
-                  },
-                  {
-                    "name": "prediction_date_period",
-                    "description": "Filtrar por data de previsão de fechamento"
-                  },
-                  {
-                    "name": "start_date",
-                    "description": "Data/hora inicial do período. Ex: 2020-12-14T15:00:00"
-                  },
-                  {
-                    "name": "end_date",
-                    "description": "Data/hora final do período. Ex: 2020-12-14T15:00:00"
-                  }
-                ]
-              },
-              {
-                "name": "dealData",
-                "displayName": "Dados da Negociação",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "name",
-                    "description": "Nome da negociação (mínimo 2 caracteres)"
-                  },
-                  {
-                    "name": "deal_stage_id",
-                    "description": "ID da etapa do funil"
-                  },
-                  {
-                    "name": "user_id",
-                    "description": "ID do usuário responsável. Se não enviado, o dono do token será atribuído"
-                  },
-                  {
-                    "name": "rating",
-                    "description": "Avaliação da negociação"
-                  },
-                  {
-                    "name": "prediction_date",
-                    "description": "Data de previsão de fechamento (formato: yyyy-mm-dd)"
-                  },
-                  {
-                    "name": "win",
-                    "description": "Status da negociação"
-                  },
-                  {
-                    "name": "hold",
-                    "description": "Status de pausa da negociação"
-                  },
-                  {
-                    "name": "deal_lost_reason_id",
-                    "description": "ID do motivo da perda (quando negociação é perdida)"
-                  },
-                  {
-                    "name": "deal_lost_note",
-                    "description": "Nota explicativa sobre a perda da negociação"
-                  },
-                  {
-                    "name": "organization_id",
-                    "description": "ID da empresa à qual a negociação pertence"
-                  }
-                ]
-              },
-              {
-                "name": "deal_custom_fields",
-                "displayName": "Campos Customizados",
-                "type": "fixedCollection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "customFieldValues"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Criar",
-                "value": "create",
-                "description": "Criar uma nova negociação"
-              },
-              {
-                "name": "Atualizar",
-                "value": "update",
-                "description": "Atualizar uma negociação existente"
-              },
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar negociações"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter uma negociação pelo ID"
-              },
-              {
-                "name": "Listar Contatos",
-                "value": "getContacts",
-                "description": "Listar contatos associados a uma negociação"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 15
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmDeals",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmTasks",
-          "displayName": "RD Station CRM Tarefas",
-          "description": "Operações com tarefas no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "task",
-                "options": [
-                  {
-                    "name": "Tarefa",
-                    "value": "task"
-                  }
-                ]
-              },
-              {
-                "name": "taskId",
-                "displayName": "ID da Tarefa",
-                "type": "string",
-                "description": "ID da tarefa a ser consultada/atualizada",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "dealId",
-                "displayName": "ID do Negócio",
-                "type": "string",
-                "description": "ID do negócio ao qual a tarefa está ligada (obrigatório)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Criar",
-                    "value": "create",
-                    "description": "Criar uma nova tarefa"
-                  },
-                  {
-                    "name": "Atualizar",
-                    "value": "update",
-                    "description": "Atualizar uma tarefa existente"
-                  },
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar tarefas"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter uma tarefa pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de tarefas a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "deal_id",
-                    "description": "Filtrar tarefas por negócio específico"
-                  },
-                  {
-                    "name": "user_id",
-                    "description": "Filtrar tarefas por usuário responsável"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Status das tarefas a serem filtradas"
-                  },
-                  {
-                    "name": "start_date",
-                    "description": "Data inicial para filtrar tarefas (formato YYYY-MM-DD)"
-                  },
-                  {
-                    "name": "end_date",
-                    "description": "Data final para filtrar tarefas (formato YYYY-MM-DD)"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  }
-                ]
-              },
-              {
-                "name": "taskData",
-                "displayName": "Dados da Tarefa",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "title",
-                    "description": "Título ou assunto da tarefa (obrigatório para criação)"
-                  },
-                  {
-                    "name": "type",
-                    "description": "Tipo da tarefa (obrigatório para criação)"
-                  },
-                  {
-                    "name": "due_date",
-                    "description": "Data de vencimento/realização (formato YYYY-MM-DD)"
-                  },
-                  {
-                    "name": "due_time",
-                    "description": "Horário da tarefa (formato HH:MM)"
-                  },
-                  {
-                    "name": "user_id",
-                    "description": "ID do usuário atribuído à tarefa"
-                  },
-                  {
-                    "name": "description",
-                    "description": "Descrição/detalhes adicionais da tarefa"
-                  },
-                  {
-                    "name": "done",
-                    "description": "Se verdadeiro, marca a tarefa como concluída (apenas para atualização)"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Criar",
-                "value": "create",
-                "description": "Criar uma nova tarefa"
-              },
-              {
-                "name": "Atualizar",
-                "value": "update",
-                "description": "Atualizar uma tarefa existente"
-              },
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar tarefas"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter uma tarefa pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 6
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmTasks",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmNotes",
-          "displayName": "RD Station CRM Notas",
-          "description": "Operações com anotações no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "note",
-                "options": [
-                  {
-                    "name": "Nota",
-                    "value": "note"
-                  }
-                ]
-              },
-              {
-                "name": "dealId",
-                "displayName": "ID do Negócio",
-                "type": "string",
-                "description": "ID do negócio ao qual a nota está ligada (obrigatório)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "userId",
-                "displayName": "ID do Usuário",
-                "type": "string",
-                "description": "ID do usuário autor da nota (obrigatório)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "text",
-                "displayName": "Texto da Nota",
-                "type": "string",
-                "description": "Conteúdo da anotação a ser registrada (obrigatório)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Criar",
-                    "value": "create",
-                    "description": "Criar uma nova anotação para um negócio"
-                  },
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar anotações"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de notas a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "deal_id",
-                    "description": "Filtrar notas por negócio específico"
-                  },
-                  {
-                    "name": "user_id",
-                    "description": "Filtrar notas por usuário autor"
-                  },
-                  {
-                    "name": "start_date",
-                    "description": "Data inicial para filtrar notas (formato YYYY-MM-DD)"
-                  },
-                  {
-                    "name": "end_date",
-                    "description": "Data final para filtrar notas (formato YYYY-MM-DD)"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Criar",
-                "value": "create",
-                "description": "Criar uma nova anotação para um negócio"
-              },
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar anotações"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 6
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmNotes",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmCompanies",
-          "displayName": "RD Station CRM Organizações",
-          "description": "Operações com organizações no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "organization",
-                "options": [
-                  {
-                    "name": "Organização",
+                    "name": "Organization",
                     "value": "organization"
+                  },
+                  {
+                    "name": "Product",
+                    "value": "product"
                   }
                 ]
               },
               {
-                "name": "organization_id",
-                "displayName": "ID da Organização",
-                "type": "string",
-                "description": "ID da organização",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "name",
-                "displayName": "Nome",
-                "type": "string",
-                "description": "Nome da organização (obrigatório, mínimo 2 caracteres, deve ser único)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
+                "name": "eventType",
+                "displayName": "Event",
                 "type": "options",
-                "required": false,
-                "default": "getAll",
+                "description": "RD Station CRM event that triggers this webhook, only one event is allowed per subscription, for example crm_deal_created or crm_contact_updated",
+                "required": true,
+                "default": "crm_deal_created",
                 "options": [
                   {
-                    "name": "Criar",
-                    "value": "create",
-                    "description": "Criar uma nova organização"
+                    "name": "Campaign Created",
+                    "value": "crm_campaign_created"
                   },
                   {
-                    "name": "Atualizar",
-                    "value": "update",
-                    "description": "Atualizar uma organização existente"
+                    "name": "Campaign Deleted",
+                    "value": "crm_campaign_deleted"
                   },
                   {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar organizações"
+                    "name": "Campaign Updated",
+                    "value": "crm_campaign_updated"
                   },
                   {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter uma organização pelo ID"
+                    "name": "Contact Created",
+                    "value": "crm_contact_created"
                   },
                   {
-                    "name": "Listar Contatos",
-                    "value": "getContacts",
-                    "description": "Listar contatos associados a uma organização"
+                    "name": "Contact Deleted",
+                    "value": "crm_contact_deleted"
+                  },
+                  {
+                    "name": "Contact Updated",
+                    "value": "crm_contact_updated"
+                  },
+                  {
+                    "name": "Deal Created",
+                    "value": "crm_deal_created"
+                  },
+                  {
+                    "name": "Deal Deleted",
+                    "value": "crm_deal_deleted"
+                  },
+                  {
+                    "name": "Deal Updated",
+                    "value": "crm_deal_updated"
+                  },
+                  {
+                    "name": "Loss Reason Created",
+                    "value": "crm_lost_reason_created"
+                  },
+                  {
+                    "name": "Loss Reason Deleted",
+                    "value": "crm_lost_reason_deleted"
+                  },
+                  {
+                    "name": "Loss Reason Updated",
+                    "value": "crm_lost_reason_updated"
+                  },
+                  {
+                    "name": "Organization Created",
+                    "value": "crm_organization_created"
+                  },
+                  {
+                    "name": "Organization Deleted",
+                    "value": "crm_organization_deleted"
+                  },
+                  {
+                    "name": "Organization Updated",
+                    "value": "crm_organization_updated"
+                  },
+                  {
+                    "name": "Product Created",
+                    "value": "crm_product_created"
+                  },
+                  {
+                    "name": "Product Deleted",
+                    "value": "crm_product_deleted"
+                  },
+                  {
+                    "name": "Product Updated",
+                    "value": "crm_product_updated"
+                  },
+                  {
+                    "name": "Source Created",
+                    "value": "crm_source_created"
+                  },
+                  {
+                    "name": "Source Deleted",
+                    "value": "crm_source_deleted"
+                  },
+                  {
+                    "name": "Source Updated",
+                    "value": "crm_source_updated"
+                  },
+                  {
+                    "name": "Task Created",
+                    "value": "crm_task_created"
+                  },
+                  {
+                    "name": "Task Updated",
+                    "value": "crm_task_updated"
                   }
                 ]
               },
               {
-                "name": "filters",
-                "displayName": "Filtros",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "page",
-                    "description": "Número da página listada. Valor padrão é 1"
-                  },
-                  {
-                    "name": "limit",
-                    "description": "Limite de organizações que virão por listagem. Valor padrão é 20. Valor máximo é 200"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo para ordenação. Valor padrão é \"name\""
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Ordenação da lista. \"asc\" ou \"desc\", padrão é \"asc\""
-                  },
-                  {
-                    "name": "q",
-                    "description": "Busca por nome da organização"
-                  },
-                  {
-                    "name": "organization_segment_id",
-                    "description": "ID do segmento da organização"
-                  },
-                  {
-                    "name": "user_id",
-                    "description": "ID do usuário responsável pela organização"
-                  }
-                ]
-              },
-              {
-                "name": "organizationData",
-                "displayName": "Dados da Organização",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "name",
-                    "description": "Nome da organização (mínimo 2 caracteres, deve ser único)"
-                  },
-                  {
-                    "name": "organization_segment_id",
-                    "description": "ID do segmento da organização"
-                  },
-                  {
-                    "name": "website",
-                    "description": "URL do site da organização"
-                  },
-                  {
-                    "name": "email",
-                    "description": "E-mail de contato geral da organização"
-                  },
-                  {
-                    "name": "address",
-                    "description": "Endereço da organização"
-                  }
-                ]
-              },
-              {
-                "name": "phones",
-                "displayName": "Telefones",
-                "type": "fixedCollection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "phoneValues"
-                  }
-                ]
-              },
-              {
-                "name": "organization_custom_fields",
-                "displayName": "Campos Customizados",
-                "type": "fixedCollection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "customFieldValues"
-                  }
-                ]
-              },
-              {
-                "name": "contactListParams",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "page",
-                    "description": "Página da listagem de contatos. Valor padrão é 1"
-                  },
-                  {
-                    "name": "limit",
-                    "description": "Limite de contatos que virão por listagem. Valor padrão é 20. Valor máximo é 200"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Criar",
-                "value": "create",
-                "description": "Criar uma nova organização"
-              },
-              {
-                "name": "Atualizar",
-                "value": "update",
-                "description": "Atualizar uma organização existente"
-              },
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar organizações"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter uma organização pelo ID"
-              },
-              {
-                "name": "Listar Contatos",
-                "value": "getContacts",
-                "description": "Listar contatos associados a uma organização"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 9
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmCompanies",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmDealProducts",
-          "displayName": "RD Station CRM Produtos em Negócios",
-          "description": "Gerenciar produtos em negociações no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
+                "name": "entity",
+                "displayName": "Entity",
                 "type": "options",
+                "description": "Type of record this custom field is attached to. One of: contact, deal, organization, product",
                 "required": true,
-                "default": "dealProduct",
+                "default": "contact",
                 "options": [
                   {
-                    "name": "Produto em Negócio",
-                    "value": "dealProduct"
-                  }
-                ]
-              },
-              {
-                "name": "dealId",
-                "displayName": "ID do Negócio",
-                "type": "string",
-                "description": "ID do negócio ao qual os produtos estão ou serão vinculados",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Adicionar",
-                    "value": "add",
-                    "description": "Adicionar produtos a uma negociação"
+                    "name": "Contact",
+                    "value": "contact"
                   },
                   {
-                    "name": "Atualizar",
-                    "value": "update",
-                    "description": "Atualizar produtos em uma negociação"
+                    "name": "Deal",
+                    "value": "deal"
                   },
                   {
-                    "name": "Remover",
-                    "value": "remove",
-                    "description": "Remover produtos de uma negociação"
+                    "name": "Organization",
+                    "value": "organization"
                   },
                   {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todos os produtos de uma negociação"
-                  }
-                ]
-              },
-              {
-                "name": "productIds",
-                "displayName": "IDs dos Produtos",
-                "type": "fixedCollection",
-                "description": "IDs dos produtos a serem removidos da negociação",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "productIdValues"
-                  }
-                ]
-              },
-              {
-                "name": "products",
-                "displayName": "Produtos",
-                "type": "fixedCollection",
-                "description": "Produtos a serem adicionados ou atualizados na negociação",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "productValues"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Adicionar",
-                "value": "add",
-                "description": "Adicionar produtos a uma negociação"
-              },
-              {
-                "name": "Atualizar",
-                "value": "update",
-                "description": "Atualizar produtos em uma negociação"
-              },
-              {
-                "name": "Remover",
-                "value": "remove",
-                "description": "Remover produtos de uma negociação"
-              },
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todos os produtos de uma negociação"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 5
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmDealProducts",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmUsers",
-          "displayName": "RD Station CRM Usuários",
-          "description": "Consultar usuários no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "user",
-                "options": [
-                  {
-                    "name": "Usuário",
-                    "value": "user"
-                  }
-                ]
-              },
-              {
-                "name": "userId",
-                "displayName": "ID do Usuário",
-                "type": "string",
-                "description": "ID do usuário a ser consultado",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todos os usuários"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter um usuário pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de usuários a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  },
-                  {
-                    "name": "team_id",
-                    "description": "Filtrar usuários por equipe específica"
-                  },
-                  {
-                    "name": "role",
-                    "description": "Filtrar usuários por papel/função no sistema"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Filtrar usuários por status da conta"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todos os usuários"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter um usuário pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 4
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmUsers",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmTeams",
-          "displayName": "RD Station CRM Equipes",
-          "description": "Consultar equipes no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "team",
-                "options": [
-                  {
-                    "name": "Equipe",
-                    "value": "team"
-                  }
-                ]
-              },
-              {
-                "name": "teamId",
-                "displayName": "ID da Equipe",
-                "type": "string",
-                "description": "ID da equipe a ser consultada",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todas as equipes"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter uma equipe pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de equipes a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Filtrar equipes por status"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todas as equipes"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter uma equipe pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 4
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmTeams",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmPipelines",
-          "displayName": "RD Station CRM Funis",
-          "description": "Consultar funis e etapas no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "pipeline",
-                "options": [
-                  {
-                    "name": "Funil",
-                    "value": "pipeline"
-                  },
-                  {
-                    "name": "Etapa",
-                    "value": "stage"
-                  }
-                ]
-              },
-              {
-                "name": "pipelineId",
-                "displayName": "ID do Funil",
-                "type": "string",
-                "description": "ID do funil a ser consultado",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "pipelineId",
-                "displayName": "ID do Funil",
-                "type": "string",
-                "description": "ID do funil para listar suas etapas",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "stageId",
-                "displayName": "ID da Etapa",
-                "type": "string",
-                "description": "ID da etapa a ser consultada",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todos os funis"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter um funil pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todas as etapas de um funil"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter uma etapa pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "listPipelineParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de funis a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Filtrar funis por status"
-                  }
-                ]
-              },
-              {
-                "name": "listStageParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de etapas a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todos os funis"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter um funil pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 8
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmPipelines",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmCampaigns",
-          "displayName": "RD Station CRM Campanhas",
-          "description": "Consultar campanhas no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "campaign",
-                "options": [
-                  {
-                    "name": "Campanha",
-                    "value": "campaign"
+                    "name": "Product",
+                    "value": "product"
                   }
                 ]
               },
               {
                 "name": "campaignId",
-                "displayName": "ID da Campanha",
+                "displayName": "Campaign ID",
                 "type": "string",
-                "description": "ID da campanha a ser consultada",
+                "description": "Unique ID of the campaign to retrieve or update, as returned by a Create or Get Many campaign operation",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todas as campanhas"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter uma campanha pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de campanhas a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Filtrar campanhas por status"
-                  },
-                  {
-                    "name": "query",
-                    "description": "Termo para buscar no nome da campanha"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todas as campanhas"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter uma campanha pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 4
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmCampaigns",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmSources",
-          "displayName": "RD Station CRM Fontes",
-          "description": "Consultar fontes de leads no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "source",
-                "options": [
-                  {
-                    "name": "Fonte",
-                    "value": "source"
-                  }
-                ]
-              },
-              {
-                "name": "sourceId",
-                "displayName": "ID da Fonte",
+                "name": "name",
+                "displayName": "Name",
                 "type": "string",
-                "description": "ID da fonte a ser consultada",
+                "description": "Name of the marketing campaign, for example Black Friday 2026",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todas as fontes"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter uma fonte pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de fontes a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Filtrar fontes por status"
-                  },
-                  {
-                    "name": "query",
-                    "description": "Termo para buscar no nome da fonte"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todas as fontes"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter uma fonte pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 4
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmSources",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmLossReasons",
-          "displayName": "RD Station CRM Motivos de Perda",
-          "description": "Consultar motivos de perda no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "lossReason",
-                "options": [
-                  {
-                    "name": "Motivo de Perda",
-                    "value": "lossReason"
-                  }
-                ]
-              },
-              {
-                "name": "lossReasonId",
-                "displayName": "ID do Motivo de Perda",
+                "name": "contactId",
+                "displayName": "Contact ID",
                 "type": "string",
-                "description": "ID do motivo de perda a ser consultado",
+                "description": "Unique ID of the contact to retrieve or update, as returned by a Create or Get Many contact operation",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todos os motivos de perda"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter um motivo de perda pelo ID"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de motivos de perda a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Filtrar motivos de perda por status"
-                  }
-                ]
-              }
-            ],
-            "operations": [
-              {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todos os motivos de perda"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter um motivo de perda pelo ID"
-              }
-            ],
-            "hasCredentials": true,
-            "totalPropertyCount": 4
-          },
-          "ioInfo": {
-            "nodeType": "rdStationCrmLossReasons",
-            "version": "1",
-            "inputs": [
-              "main"
-            ],
-            "outputs": [
-              "main"
-            ],
-            "inputTypes": [
-              "main"
-            ],
-            "outputTypes": [
-              "main"
-            ],
-            "isMultiInput": false,
-            "isMultiOutput": false,
-            "requiresSpecialInputs": false,
-            "hasErrorOutput": false,
-            "outputCount": 1,
-            "outputNames": [
-              "main"
-            ],
-            "isDynamicOutput": false
-          }
-        },
-        {
-          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmWebhooks",
-          "displayName": "RD Station CRM Webhooks",
-          "description": "Gerenciar webhooks no RD Station CRM",
-          "version": "1",
-          "properties": {
-            "coreProperties": [
-              {
-                "name": "resource",
-                "displayName": "Recurso",
-                "type": "options",
-                "required": true,
-                "default": "webhook",
-                "options": [
-                  {
-                    "name": "Webhook",
-                    "value": "webhook"
-                  }
-                ]
-              },
-              {
-                "name": "webhookId",
-                "displayName": "ID do Webhook",
+                "name": "name",
+                "displayName": "Name",
                 "type": "string",
-                "description": "ID do webhook a ser consultado, atualizado ou deletado",
+                "description": "Full name of the contact (person or lead), for example Maria Silva",
                 "required": true,
                 "default": ""
               },
               {
-                "name": "operation",
-                "displayName": "Operação",
-                "type": "options",
-                "required": false,
-                "default": "getAll",
-                "options": [
-                  {
-                    "name": "Listar",
-                    "value": "getAll",
-                    "description": "Listar todos os webhooks"
-                  },
-                  {
-                    "name": "Obter",
-                    "value": "get",
-                    "description": "Obter um webhook pelo ID"
-                  },
-                  {
-                    "name": "Criar",
-                    "value": "create",
-                    "description": "Criar um novo webhook"
-                  },
-                  {
-                    "name": "Atualizar",
-                    "value": "update",
-                    "description": "Atualizar um webhook existente"
-                  },
-                  {
-                    "name": "Deletar",
-                    "value": "delete",
-                    "description": "Deletar um webhook"
-                  }
-                ]
-              },
-              {
-                "name": "listParameters",
-                "displayName": "Parâmetros de Listagem",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "limit",
-                    "description": "Número máximo de webhooks a retornar"
-                  },
-                  {
-                    "name": "page",
-                    "description": "Número da página para retornar"
-                  },
-                  {
-                    "name": "order",
-                    "description": "Campo pelo qual ordenar os resultados"
-                  },
-                  {
-                    "name": "direction",
-                    "description": "Direção da ordenação (crescente ou decrescente)"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Filtrar webhooks por status"
-                  },
-                  {
-                    "name": "event",
-                    "description": "Filtrar webhooks por tipo de evento que dispara a notificação"
-                  }
-                ]
-              },
-              {
-                "name": "webhookData",
-                "displayName": "Dados do Webhook",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "url",
-                    "description": "URL para onde as notificações serão enviadas quando o evento ocorrer"
-                  },
-                  {
-                    "name": "events",
-                    "description": "Eventos que dispararão o webhook"
-                  },
-                  {
-                    "name": "status",
-                    "description": "Status do webhook (ativo enviará notificações, inativo não)"
-                  },
-                  {
-                    "name": "format",
-                    "description": "Formato dos dados que serão enviados para a URL de callback"
-                  },
-                  {
-                    "name": "headers",
-                    "description": "Cabeçalhos HTTP personalizados para enviar junto com a requisição de webhook"
-                  }
-                ]
+                "name": "customFieldId",
+                "displayName": "Custom Field ID",
+                "type": "string",
+                "description": "ID of the custom field definition to operate on, obtained from a create or get many custom fields operation",
+                "required": true,
+                "default": ""
               }
             ],
             "operations": [
               {
-                "name": "Listar",
-                "value": "getAll",
-                "description": "Listar todos os webhooks"
-              },
-              {
-                "name": "Obter",
-                "value": "get",
-                "description": "Obter um webhook pelo ID"
-              },
-              {
-                "name": "Criar",
+                "name": "Create",
                 "value": "create",
-                "description": "Criar um novo webhook"
+                "description": "Create a new marketing campaign in RD Station CRM and return the created record including its ID"
               },
               {
-                "name": "Atualizar",
+                "name": "Get",
+                "value": "get",
+                "description": "Retrieve a single campaign from RD Station CRM by its unique ID"
+              },
+              {
+                "name": "Get Many",
+                "value": "getMany",
+                "description": "Retrieve a paginated list of campaigns from RD Station CRM, with an optional name filter"
+              },
+              {
+                "name": "Update",
                 "value": "update",
-                "description": "Atualizar um webhook existente"
-              },
-              {
-                "name": "Deletar",
-                "value": "delete",
-                "description": "Deletar um webhook"
+                "description": "Update an existing RD Station CRM campaign identified by its ID and return the updated record"
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 5
+            "totalPropertyCount": 203
           },
           "ioInfo": {
-            "nodeType": "rdStationCrmWebhooks",
+            "nodeType": "rdStationCrm",
             "version": "1",
             "inputs": [
               "main"
@@ -10675,6 +8666,142 @@
             "inputTypes": [
               "main"
             ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "n8n-nodes-rd-station-crm.rdStationCrmTrigger",
+          "displayName": "RD Station CRM Trigger",
+          "description": "Starts the workflow when RD Station CRM events happen",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "events",
+                "displayName": "Trigger On",
+                "type": "multiOptions",
+                "description": "The RD Station CRM events to subscribe to (one webhook is registered per event)",
+                "required": true,
+                "default": [],
+                "options": [
+                  {
+                    "name": "Campaign Created",
+                    "value": "crm_campaign_created"
+                  },
+                  {
+                    "name": "Campaign Deleted",
+                    "value": "crm_campaign_deleted"
+                  },
+                  {
+                    "name": "Campaign Updated",
+                    "value": "crm_campaign_updated"
+                  },
+                  {
+                    "name": "Contact Created",
+                    "value": "crm_contact_created"
+                  },
+                  {
+                    "name": "Contact Deleted",
+                    "value": "crm_contact_deleted"
+                  },
+                  {
+                    "name": "Contact Updated",
+                    "value": "crm_contact_updated"
+                  },
+                  {
+                    "name": "Deal Created",
+                    "value": "crm_deal_created"
+                  },
+                  {
+                    "name": "Deal Deleted",
+                    "value": "crm_deal_deleted"
+                  },
+                  {
+                    "name": "Deal Updated",
+                    "value": "crm_deal_updated"
+                  },
+                  {
+                    "name": "Loss Reason Created",
+                    "value": "crm_lost_reason_created"
+                  },
+                  {
+                    "name": "Loss Reason Deleted",
+                    "value": "crm_lost_reason_deleted"
+                  },
+                  {
+                    "name": "Loss Reason Updated",
+                    "value": "crm_lost_reason_updated"
+                  },
+                  {
+                    "name": "Organization Created",
+                    "value": "crm_organization_created"
+                  },
+                  {
+                    "name": "Organization Deleted",
+                    "value": "crm_organization_deleted"
+                  },
+                  {
+                    "name": "Organization Updated",
+                    "value": "crm_organization_updated"
+                  },
+                  {
+                    "name": "Product Created",
+                    "value": "crm_product_created"
+                  },
+                  {
+                    "name": "Product Deleted",
+                    "value": "crm_product_deleted"
+                  },
+                  {
+                    "name": "Product Updated",
+                    "value": "crm_product_updated"
+                  },
+                  {
+                    "name": "Source Created",
+                    "value": "crm_source_created"
+                  },
+                  {
+                    "name": "Source Deleted",
+                    "value": "crm_source_deleted"
+                  },
+                  {
+                    "name": "Source Updated",
+                    "value": "crm_source_updated"
+                  },
+                  {
+                    "name": "Task Created",
+                    "value": "crm_task_created"
+                  },
+                  {
+                    "name": "Task Updated",
+                    "value": "crm_task_updated"
+                  }
+                ]
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 1
+          },
+          "ioInfo": {
+            "nodeType": "rdStationCrmTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
             "outputTypes": [
               "main"
             ],
@@ -11973,12 +10100,12 @@
     },
     "n8n-nodes-pdfco": {
       "packageName": "n8n-nodes-pdfco",
-      "packageVersion": "1.0.8",
+      "packageVersion": "1.0.15",
       "nodes": [
         {
           "nodeType": "n8n-nodes-pdfco.PDFco Api",
-          "displayName": "PDF.co Api",
-          "description": "Generate PDF, extract data from PDF, split PDF, merge PDF, convert PDF. Fill PDF forms, add text and images to pdf and much more with pdf.co!",
+          "displayName": "PDF.co",
+          "description": "Automate document workflows with OCR, AI invoice parsing, data extraction, conversion, form filling, merging/splitting, and barcode processing. Ideal for invoices, forms, and scanned files.",
           "version": "1.1",
           "properties": {
             "coreProperties": [
@@ -12156,7 +10283,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 92
+            "totalPropertyCount": 93
           },
           "ioInfo": {
             "nodeType": "PDFco Api",
@@ -15470,7 +13597,7 @@
     },
     "n8n-nodes-htmlcsstopdf": {
       "packageName": "n8n-nodes-htmlcsstopdf",
-      "packageVersion": "3.2.5",
+      "packageVersion": "3.2.9",
       "nodes": [
         {
           "nodeType": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
@@ -15631,6 +13758,31 @@
                 ]
               },
               {
+                "name": "wait_until",
+                "displayName": "Wait Until",
+                "type": "options",
+                "description": "Lifecycle event the browser waits for before capturing the PDF",
+                "required": false,
+                "default": "load",
+                "options": [
+                  {
+                    "name": "DOM Content Loaded",
+                    "value": "domcontentloaded",
+                    "description": "Recommended for speed & stability"
+                  },
+                  {
+                    "name": "Load",
+                    "value": "load",
+                    "description": "Standard (waits for all resources to download)"
+                  },
+                  {
+                    "name": "Network Idle",
+                    "value": "networkidle",
+                    "description": "For dynamic content (waits for 500ms of no requests)"
+                  }
+                ]
+              },
+              {
                 "name": "dynamic_params",
                 "displayName": "Dynamic Params",
                 "type": "fixedCollection",
@@ -15660,28 +13812,6 @@
                     "value": "file"
                   }
                 ]
-              },
-              {
-                "name": "merge_output",
-                "displayName": "Output Type",
-                "type": "options",
-                "description": "Format of the merged PDF output",
-                "required": false,
-                "default": "url",
-                "options": [
-                  {
-                    "name": "URL",
-                    "value": "url"
-                  },
-                  {
-                    "name": "File",
-                    "value": "file"
-                  },
-                  {
-                    "name": "Base64",
-                    "value": "base64"
-                  }
-                ]
               }
             ],
             "operations": [
@@ -15697,7 +13827,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 75
+            "totalPropertyCount": 78
           },
           "ioInfo": {
             "nodeType": "htmlcsstopdf",
@@ -24819,6 +22949,1601 @@
           }
         }
       ]
+    },
+    "@alipeople/n8n-nodes-sendon": {
+      "packageName": "@alipeople/n8n-nodes-sendon",
+      "packageVersion": "0.1.7",
+      "nodes": [
+        {
+          "nodeType": "@alipeople/n8n-nodes-sendon.sendon",
+          "displayName": "Sendon",
+          "description": "Send SMS using Sendon API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "type",
+                "displayName": "Type",
+                "type": "options",
+                "required": false,
+                "default": "auto",
+                "options": [
+                  {
+                    "name": "Auto",
+                    "value": "auto"
+                  },
+                  {
+                    "name": "SMS",
+                    "value": "SMS"
+                  },
+                  {
+                    "name": "LMS",
+                    "value": "LMS"
+                  },
+                  {
+                    "name": "MMS",
+                    "value": "MMS"
+                  }
+                ]
+              },
+              {
+                "name": "from",
+                "displayName": "Sender Number",
+                "type": "string",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "to",
+                "displayName": "Recipient Number",
+                "type": "string",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "title",
+                "displayName": "Title",
+                "type": "string",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "message",
+                "displayName": "Message",
+                "type": "string",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "isAd",
+                "displayName": "Is Ad",
+                "type": "boolean",
+                "required": false,
+                "default": false
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 6
+          },
+          "ioInfo": {
+            "nodeType": "sendon",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-scrape-creators": {
+      "packageName": "n8n-nodes-scrape-creators",
+      "packageVersion": "0.1.11",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-scrape-creators.scrapeCreators",
+          "displayName": "Scrape Creators",
+          "description": "Get real time social media data",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "string",
+                "description": "The query to search for",
+                "required": true,
+                "default": "yoga pants"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL of the ad to get details for",
+                "required": true,
+                "default": "https://adstransparency.google.com/advertiser/AR01614014350098432001/creative/CR10449491775734153217"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL of the ad to get details for",
+                "required": true,
+                "default": "https://www.linkedin.com/ad-library/detail/726178896"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL of the tweet to get details for",
+                "required": true,
+                "default": "https://x.com/elonmusk/status/1933950533813068181"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL of the post to get comments from",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "string",
+                "description": "The query to search Reddit for",
+                "required": true,
+                "default": "dogs"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL of the threads post",
+                "required": true,
+                "default": "https://www.threads.com/@zuck/post/DKudiKcRO4i"
+              },
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "string",
+                "description": "The query to search for",
+                "required": true,
+                "default": "dogs"
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL of the truth social post",
+                "required": true,
+                "default": "https://truthsocial.com/@realDonaldTrump/114691752952220639"
+              },
+              {
+                "name": "query",
+                "displayName": "Query",
+                "type": "string",
+                "description": "The query to search for",
+                "required": true,
+                "default": "dogs"
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get Profile",
+                "value": "getInstagramProfile",
+                "description": "Get an Instagram profile"
+              },
+              {
+                "name": "Get User's Posts",
+                "value": "getInstagramUserPosts",
+                "description": "Get an Instagram user's posts"
+              },
+              {
+                "name": "Get Post",
+                "value": "getInstagramPost",
+                "description": "Get an Instagram post or reel"
+              },
+              {
+                "name": "Get Post Transcript",
+                "value": "getInstagramPostTranscript",
+                "description": "Get an Instagram post transcript"
+              },
+              {
+                "name": "Get User's Reels",
+                "value": "getInstagramUserReels",
+                "description": "Get an Instagram user's reels"
+              },
+              {
+                "name": "Get User's Story Highlights",
+                "value": "getInstagramUserStoryHighlights",
+                "description": "Get an Instagram user's story highlights"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 65
+          },
+          "ioInfo": {
+            "nodeType": "scrapeCreators",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@conciso/n8n-nodes-confluence-cloud": {
+      "packageName": "@conciso/n8n-nodes-confluence-cloud",
+      "packageVersion": "1.3.1",
+      "nodes": [
+        {
+          "nodeType": "@conciso/n8n-nodes-confluence-cloud.confluenceCloud",
+          "displayName": "Confluence Cloud",
+          "description": "Access to the Confluence Cloud REST API - Auto-generated from OpenAPI",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "id",
+                "displayName": "Id",
+                "type": "number",
+                "description": "The ID of the space to be returned.",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "spaceKey",
+                "displayName": "Space Key",
+                "type": "string",
+                "description": "The key of the space to update.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "spaceKey",
+                "displayName": "Space Key",
+                "type": "string",
+                "description": "The key of the space to delete.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "id",
+                "displayName": "Id",
+                "type": "number",
+                "description": "The ID of the page to be returned. If you don't know the page ID, use Get pages and filter the results.",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "id",
+                "displayName": "Id",
+                "type": "number",
+                "description": "The ID of the page to be updated. If you don't know the page ID, use Get Pages and filter the results.",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "id",
+                "displayName": "Id",
+                "type": "number",
+                "description": "The ID of the page to be deleted.",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "id",
+                "displayName": "Id",
+                "type": "number",
+                "description": "The ID of the space for which pages should be returned.",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "id",
+                "displayName": "Id",
+                "type": "number",
+                "description": "The ID of the label for which pages should be returned.",
+                "required": true,
+                "default": 0
+              },
+              {
+                "name": "contentTemplateId",
+                "displayName": "Content Template Id",
+                "type": "string",
+                "description": "The ID of the content template to be returned.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "contentTemplateId",
+                "displayName": "Content Template Id",
+                "type": "string",
+                "description": "The ID of the template to be deleted.",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get Spaces",
+                "value": "getSpaces",
+                "description": "<p>Returns all spaces. The results will be sorted by id ascending. The number of results is limited by the <code>limit</code> parameter and</p>\n<p>additional results (if available) will be available through the <code>next</code> URL present in the <code>Link</code> response header.</p><p><strong><a href=\"https://confluence.atlassian.com/x/_AozKw\">Permissions</a> required</strong>:</p>\n<p>Permission to access the Confluence site ('Can use' global permission).</p>\n<p>Only spaces that the user has permission to view will be returned.</p>"
+              },
+              {
+                "name": "Get Space By Id",
+                "value": "getSpaceById",
+                "description": "<p>Returns a specific space.</p><p><strong><a href=\"https://confluence.atlassian.com/x/_AozKw\">Permissions</a> required</strong>:</p>\n<p>Permission to view the space.</p>"
+              },
+              {
+                "name": "Create Space",
+                "value": "createSpace",
+                "description": "<p>Creates a new space. Note, currently you cannot set space labels when</p>\n<p>creating a space.</p><p><strong><a href=\"https://confluence.atlassian.com/x/_AozKw\">Permissions</a> required</strong>:</p>\n<p>'Create Space(s)' global permission.</p> <em>(using V1 API)</em>"
+              },
+              {
+                "name": "Update Space",
+                "value": "updateSpace",
+                "description": "<p>Updates the name, description, or homepage of a space.</p><p>-   For security reasons, permissions cannot be updated via the API and</p>\n<p>must be changed via the user interface instead.</p>\n<p>-   Currently you cannot set space labels when updating a space.</p><p><strong><a href=\"https://confluence.atlassian.com/x/_AozKw\">Permissions</a> required</strong>:</p>\n<p>'Admin' permission for the space.</p> <em>(using V1 API)</em>"
+              },
+              {
+                "name": "Delete Space",
+                "value": "deleteSpace",
+                "description": "<p>Permanently deletes a space without sending it to the trash. Note, the space will be deleted in a long running task.</p>\n<p>Therefore, the space may not be deleted yet when this method has</p>\n<p>returned. Clients should poll the status link that is returned in the</p>\n<p>response until the task completes.</p><p><strong><a href=\"https://confluence.atlassian.com/x/_AozKw\">Permissions</a> required</strong>:</p>\n<p>'Admin' permission for the space.</p> <em>(using V1 API)</em>"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 108
+          },
+          "ioInfo": {
+            "nodeType": "confluenceCloud",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@mbakgun/n8n-nodes-slack-socket-mode": {
+      "packageName": "@mbakgun/n8n-nodes-slack-socket-mode",
+      "packageVersion": "1.7.1",
+      "nodes": [
+        {
+          "nodeType": "@mbakgun/n8n-nodes-slack-socket-mode.slackSocketTrigger",
+          "displayName": "Slack Socket Mode Trigger",
+          "description": "Triggers workflow when a Slack message matches a regex pattern via Socket Mode",
+          "version": "2",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "channelsToWatch",
+                "displayName": "Channels to Watch",
+                "type": "fixedCollection",
+                "description": "Select channels to filter events. If specified, only events from these channels will trigger the workflow. To enter IDs manually, add each channel separately (e.g., C1234567890, G1234567890).",
+                "required": false,
+                "default": {},
+                "options": [
+                  {
+                    "name": "channelValues"
+                  }
+                ]
+              },
+              {
+                "name": "trigger",
+                "displayName": "Trigger On",
+                "type": "multiOptions",
+                "required": false,
+                "default": [],
+                "options": [
+                  {
+                    "name": "App Deleted",
+                    "value": "app_deleted",
+                    "description": "When a user has deleted an app"
+                  },
+                  {
+                    "name": "App Home Opened",
+                    "value": "app_home_opened",
+                    "description": "When a user clicks into your App Home"
+                  },
+                  {
+                    "name": "App Installed",
+                    "value": "app_installed",
+                    "description": "When a user has installed an app"
+                  },
+                  {
+                    "name": "App Mention",
+                    "value": "app_mention",
+                    "description": "When your bot or app is mentioned in a channel"
+                  },
+                  {
+                    "name": "App Rate Limited",
+                    "value": "app_rate_limited",
+                    "description": "When your app's event subscriptions are being rate limited"
+                  },
+                  {
+                    "name": "App Requested",
+                    "value": "app_requested",
+                    "description": "When a user requested an app"
+                  },
+                  {
+                    "name": "App Uninstalled",
+                    "value": "app_uninstalled",
+                    "description": "When your Slack app was uninstalled"
+                  },
+                  {
+                    "name": "App Uninstalled Team",
+                    "value": "app_uninstalled_team",
+                    "description": "When a user has uninstalled an app"
+                  },
+                  {
+                    "name": "Assistant Thread Context Changed",
+                    "value": "assistant_thread_context_changed",
+                    "description": "When the context changed while an AI assistant thread was visible"
+                  },
+                  {
+                    "name": "Assistant Thread Started",
+                    "value": "assistant_thread_started",
+                    "description": "When an AI assistant thread was started"
+                  },
+                  {
+                    "name": "Bot Added",
+                    "value": "bot_added",
+                    "description": "When a bot user was added"
+                  },
+                  {
+                    "name": "Bot Changed",
+                    "value": "bot_changed",
+                    "description": "When a bot user was changed"
+                  },
+                  {
+                    "name": "Button Interaction",
+                    "value": "block_actions",
+                    "description": "When a user interacts with buttons, including NPS-style ratings"
+                  },
+                  {
+                    "name": "Call Rejected",
+                    "value": "call_rejected",
+                    "description": "When a call was rejected"
+                  },
+                  {
+                    "name": "Channel Archive",
+                    "value": "channel_archive",
+                    "description": "When a channel was archived"
+                  },
+                  {
+                    "name": "Channel Created",
+                    "value": "channel_created",
+                    "description": "When a new channel was created"
+                  },
+                  {
+                    "name": "Channel Deleted",
+                    "value": "channel_deleted",
+                    "description": "When a channel was deleted"
+                  },
+                  {
+                    "name": "Channel History Changed",
+                    "value": "channel_history_changed",
+                    "description": "When bulk updates were made to a channel's history"
+                  },
+                  {
+                    "name": "Channel ID Changed",
+                    "value": "channel_id_changed",
+                    "description": "When a channel ID changed"
+                  },
+                  {
+                    "name": "Channel Joined",
+                    "value": "channel_joined",
+                    "description": "When you joined a channel"
+                  },
+                  {
+                    "name": "Channel Left",
+                    "value": "channel_left",
+                    "description": "When you left a channel"
+                  },
+                  {
+                    "name": "Channel Marked",
+                    "value": "channel_marked",
+                    "description": "When your channel read marker was updated"
+                  },
+                  {
+                    "name": "Channel Rename",
+                    "value": "channel_rename",
+                    "description": "When a channel was renamed"
+                  },
+                  {
+                    "name": "Channel Shared",
+                    "value": "channel_shared",
+                    "description": "When a channel has been shared with an external workspace"
+                  },
+                  {
+                    "name": "Channel Unarchive",
+                    "value": "channel_unarchive",
+                    "description": "When a channel was unarchived"
+                  },
+                  {
+                    "name": "Channel Unshared",
+                    "value": "channel_unshared",
+                    "description": "When a channel has been unshared with an external workspace"
+                  },
+                  {
+                    "name": "Commands Changed",
+                    "value": "commands_changed",
+                    "description": "When a slash command has been added or changed"
+                  },
+                  {
+                    "name": "DND Updated",
+                    "value": "dnd_updated",
+                    "description": "When Do not Disturb settings changed for the current user"
+                  },
+                  {
+                    "name": "DND Updated User",
+                    "value": "dnd_updated_user",
+                    "description": "When Do not Disturb settings changed for a member"
+                  },
+                  {
+                    "name": "Email Domain Changed",
+                    "value": "email_domain_changed",
+                    "description": "When the workspace email domain has changed"
+                  },
+                  {
+                    "name": "Emoji Changed",
+                    "value": "emoji_changed",
+                    "description": "When a custom emoji has been added or changed"
+                  },
+                  {
+                    "name": "External Org Migration Finished",
+                    "value": "external_org_migration_finished",
+                    "description": "When an enterprise grid migration has finished on an external workspace"
+                  },
+                  {
+                    "name": "External Org Migration Started",
+                    "value": "external_org_migration_started",
+                    "description": "When an enterprise grid migration has started on an external workspace"
+                  },
+                  {
+                    "name": "File Change",
+                    "value": "file_change",
+                    "description": "When a file was changed"
+                  },
+                  {
+                    "name": "File Comment Added",
+                    "value": "file_comment_added",
+                    "description": "When a file comment was added"
+                  },
+                  {
+                    "name": "File Comment Deleted",
+                    "value": "file_comment_deleted",
+                    "description": "When a file comment was deleted"
+                  },
+                  {
+                    "name": "File Comment Edited",
+                    "value": "file_comment_edited",
+                    "description": "When a file comment was edited"
+                  },
+                  {
+                    "name": "File Created",
+                    "value": "file_created",
+                    "description": "When a file was created"
+                  },
+                  {
+                    "name": "File Deleted",
+                    "value": "file_deleted",
+                    "description": "When a file was deleted"
+                  },
+                  {
+                    "name": "File Public",
+                    "value": "file_public",
+                    "description": "When a file was made public"
+                  },
+                  {
+                    "name": "File Shared",
+                    "value": "file_shared",
+                    "description": "When a file was shared"
+                  },
+                  {
+                    "name": "File Unshared",
+                    "value": "file_unshared",
+                    "description": "When a file was unshared"
+                  },
+                  {
+                    "name": "Function Executed",
+                    "value": "function_executed",
+                    "description": "When your app function is executed as a step in a workflow"
+                  },
+                  {
+                    "name": "Grid Migration Finished",
+                    "value": "grid_migration_finished",
+                    "description": "When an enterprise grid migration has finished on this workspace"
+                  },
+                  {
+                    "name": "Grid Migration Started",
+                    "value": "grid_migration_started",
+                    "description": "When an enterprise grid migration has started on this workspace"
+                  },
+                  {
+                    "name": "Group Archive",
+                    "value": "group_archive",
+                    "description": "When a private channel was archived"
+                  },
+                  {
+                    "name": "Group Close",
+                    "value": "group_close",
+                    "description": "When you closed a private channel"
+                  },
+                  {
+                    "name": "Group Deleted",
+                    "value": "group_deleted",
+                    "description": "When a private channel was deleted"
+                  },
+                  {
+                    "name": "Group History Changed",
+                    "value": "group_history_changed",
+                    "description": "When bulk updates were made to a private channel's history"
+                  },
+                  {
+                    "name": "Group Joined",
+                    "value": "group_joined",
+                    "description": "When you joined a private channel"
+                  },
+                  {
+                    "name": "Group Left",
+                    "value": "group_left",
+                    "description": "When you left a private channel"
+                  },
+                  {
+                    "name": "Group Marked",
+                    "value": "group_marked",
+                    "description": "When a private channel read marker was updated"
+                  },
+                  {
+                    "name": "Group Open",
+                    "value": "group_open",
+                    "description": "When you created a group DM"
+                  },
+                  {
+                    "name": "Group Rename",
+                    "value": "group_rename",
+                    "description": "When a private channel was renamed"
+                  },
+                  {
+                    "name": "Group Unarchive",
+                    "value": "group_unarchive",
+                    "description": "When a private channel was unarchived"
+                  },
+                  {
+                    "name": "Hello",
+                    "value": "hello",
+                    "description": "When the client has successfully connected to the server"
+                  },
+                  {
+                    "name": "IM Close",
+                    "value": "im_close",
+                    "description": "When you closed a DM"
+                  },
+                  {
+                    "name": "IM Created",
+                    "value": "im_created",
+                    "description": "When a DM was created"
+                  },
+                  {
+                    "name": "IM History Changed",
+                    "value": "im_history_changed",
+                    "description": "When bulk updates were made to a DM's history"
+                  },
+                  {
+                    "name": "IM Marked",
+                    "value": "im_marked",
+                    "description": "When a direct message read marker was updated"
+                  },
+                  {
+                    "name": "IM Open",
+                    "value": "im_open",
+                    "description": "When you opened a DM"
+                  },
+                  {
+                    "name": "Invite Requested",
+                    "value": "invite_requested",
+                    "description": "When a user requested an invite"
+                  },
+                  {
+                    "name": "Link Shared",
+                    "value": "link_shared",
+                    "description": "When a message was posted containing links relevant to your application"
+                  },
+                  {
+                    "name": "Manual Presence Change",
+                    "value": "manual_presence_change",
+                    "description": "When you manually updated your presence"
+                  },
+                  {
+                    "name": "Member Joined Channel",
+                    "value": "member_joined_channel",
+                    "description": "When a user joined a public channel, private channel or MPDM"
+                  },
+                  {
+                    "name": "Member Left Channel",
+                    "value": "member_left_channel",
+                    "description": "When a user left a public or private channel"
+                  },
+                  {
+                    "name": "Message",
+                    "value": "message",
+                    "description": "When a message was sent to a channel"
+                  },
+                  {
+                    "name": "Message App Home",
+                    "value": "message.app_home",
+                    "description": "When a user sent a message to your Slack app"
+                  },
+                  {
+                    "name": "Message Channels",
+                    "value": "message.channels",
+                    "description": "When a message was posted to a channel"
+                  },
+                  {
+                    "name": "Message Groups",
+                    "value": "message.groups",
+                    "description": "When a message was posted to a private channel"
+                  },
+                  {
+                    "name": "Message IM",
+                    "value": "message.im",
+                    "description": "When a message was posted in a direct message channel"
+                  },
+                  {
+                    "name": "Message Metadata Deleted",
+                    "value": "message_metadata_deleted",
+                    "description": "When message metadata was deleted"
+                  },
+                  {
+                    "name": "Message Metadata Posted",
+                    "value": "message_metadata_posted",
+                    "description": "When message metadata was posted"
+                  },
+                  {
+                    "name": "Message Metadata Updated",
+                    "value": "message_metadata_updated",
+                    "description": "When message metadata was updated"
+                  },
+                  {
+                    "name": "Message MPIM",
+                    "value": "message.mpim",
+                    "description": "When a message was posted in a multiparty direct message channel"
+                  },
+                  {
+                    "name": "Pin Added",
+                    "value": "pin_added",
+                    "description": "When a pin was added to a channel"
+                  },
+                  {
+                    "name": "Pin Removed",
+                    "value": "pin_removed",
+                    "description": "When a pin was removed from a channel"
+                  },
+                  {
+                    "name": "Pref Change",
+                    "value": "pref_change",
+                    "description": "When you have updated your preferences"
+                  },
+                  {
+                    "name": "Presence Change",
+                    "value": "presence_change",
+                    "description": "When a member's presence changed"
+                  },
+                  {
+                    "name": "Reaction Added",
+                    "value": "reaction_added",
+                    "description": "When a member has added an emoji reaction to an item"
+                  },
+                  {
+                    "name": "Reaction Removed",
+                    "value": "reaction_removed",
+                    "description": "When a member removed an emoji reaction"
+                  },
+                  {
+                    "name": "Resources Added",
+                    "value": "resources_added",
+                    "description": "When access to a set of resources was granted for your app"
+                  },
+                  {
+                    "name": "Resources Removed",
+                    "value": "resources_removed",
+                    "description": "When access to a set of resources was removed for your app"
+                  },
+                  {
+                    "name": "Scope Denied",
+                    "value": "scope_denied",
+                    "description": "When OAuth scopes were denied to your app"
+                  },
+                  {
+                    "name": "Scope Granted",
+                    "value": "scope_granted",
+                    "description": "When OAuth scopes were granted to your app"
+                  },
+                  {
+                    "name": "Shared Channel Invite Accepted",
+                    "value": "shared_channel_invite_accepted",
+                    "description": "When a shared channel invite was accepted"
+                  },
+                  {
+                    "name": "Shared Channel Invite Approved",
+                    "value": "shared_channel_invite_approved",
+                    "description": "When a shared channel invite was approved"
+                  },
+                  {
+                    "name": "Shared Channel Invite Declined",
+                    "value": "shared_channel_invite_declined",
+                    "description": "When a shared channel invite was declined"
+                  },
+                  {
+                    "name": "Shared Channel Invite Received",
+                    "value": "shared_channel_invite_received",
+                    "description": "When a shared channel invite was sent to a Slack user"
+                  },
+                  {
+                    "name": "Shared Channel Invite Requested",
+                    "value": "shared_channel_invite_requested",
+                    "description": "When a shared channel invite was requested"
+                  },
+                  {
+                    "name": "Slash Command",
+                    "value": "slash_command",
+                    "description": "When a user invokes a slash command (e.g., /mycommand)"
+                  },
+                  {
+                    "name": "Star Added",
+                    "value": "star_added",
+                    "description": "When a member has saved an item for later or starred an item"
+                  },
+                  {
+                    "name": "Star Removed",
+                    "value": "star_removed",
+                    "description": "When a member has removed an item saved for later or starred an item"
+                  },
+                  {
+                    "name": "Subteam Created",
+                    "value": "subteam_created",
+                    "description": "When a User Group has been added to the workspace"
+                  },
+                  {
+                    "name": "Subteam Members Changed",
+                    "value": "subteam_members_changed",
+                    "description": "When the membership of an existing User Group has changed"
+                  },
+                  {
+                    "name": "Subteam Self Added",
+                    "value": "subteam_self_added",
+                    "description": "When you have been added to a User Group"
+                  },
+                  {
+                    "name": "Subteam Self Removed",
+                    "value": "subteam_self_removed",
+                    "description": "When you have been removed from a User Group"
+                  },
+                  {
+                    "name": "Subteam Updated",
+                    "value": "subteam_updated",
+                    "description": "When an existing User Group has been updated or its members changed"
+                  },
+                  {
+                    "name": "Team Access Granted",
+                    "value": "team_access_granted",
+                    "description": "When access to a set of teams was granted to your org app"
+                  },
+                  {
+                    "name": "Team Access Revoked",
+                    "value": "team_access_revoked",
+                    "description": "When access to a set of teams was revoked from your org app"
+                  },
+                  {
+                    "name": "Team Domain Change",
+                    "value": "team_domain_change",
+                    "description": "When the workspace domain has changed"
+                  },
+                  {
+                    "name": "Team Join",
+                    "value": "team_join",
+                    "description": "When a new member has joined"
+                  },
+                  {
+                    "name": "Team Plan Change",
+                    "value": "team_plan_change",
+                    "description": "When the account billing plan has changed"
+                  },
+                  {
+                    "name": "Team Pref Change",
+                    "value": "team_pref_change",
+                    "description": "When a preference has been updated"
+                  },
+                  {
+                    "name": "Team Profile Change",
+                    "value": "team_profile_change",
+                    "description": "When the workspace profile fields have been updated"
+                  },
+                  {
+                    "name": "Team Profile Delete",
+                    "value": "team_profile_delete",
+                    "description": "When the workspace profile fields have been deleted"
+                  },
+                  {
+                    "name": "Team Profile Reorder",
+                    "value": "team_profile_reorder",
+                    "description": "When the workspace profile fields have been reordered"
+                  },
+                  {
+                    "name": "Team Rename",
+                    "value": "team_rename",
+                    "description": "When the workspace name has changed"
+                  },
+                  {
+                    "name": "Tokens Revoked",
+                    "value": "tokens_revoked",
+                    "description": "When API tokens for your app were revoked"
+                  },
+                  {
+                    "name": "URL Verification",
+                    "value": "url_verification",
+                    "description": "When verifying ownership of an Events API Request URL"
+                  },
+                  {
+                    "name": "User Change",
+                    "value": "user_change",
+                    "description": "When a member's data has changed"
+                  },
+                  {
+                    "name": "User Resource Denied",
+                    "value": "user_resource_denied",
+                    "description": "When user resource was denied to your app"
+                  },
+                  {
+                    "name": "User Resource Granted",
+                    "value": "user_resource_granted",
+                    "description": "When user resource was granted to your app"
+                  },
+                  {
+                    "name": "User Resource Removed",
+                    "value": "user_resource_removed",
+                    "description": "When user resource was removed from your app"
+                  },
+                  {
+                    "name": "User Typing",
+                    "value": "user_typing",
+                    "description": "When a channel member is typing a message"
+                  },
+                  {
+                    "name": "View Closed",
+                    "value": "view_closed",
+                    "description": "When a modal view is closed (contains view details and private_metadata)"
+                  },
+                  {
+                    "name": "View Submitted",
+                    "value": "view_submission",
+                    "description": "When a modal view is submitted (contains submitted values)"
+                  },
+                  {
+                    "name": "Workflow Deleted",
+                    "value": "workflow_deleted",
+                    "description": "When a workflow that contains a step supported by your app was deleted"
+                  },
+                  {
+                    "name": "Workflow Published",
+                    "value": "workflow_published",
+                    "description": "When a workflow that contains a step supported by your app was published"
+                  },
+                  {
+                    "name": "Workflow Step Deleted",
+                    "value": "workflow_step_deleted",
+                    "description": "When a workflow step supported by your app was removed from a workflow"
+                  },
+                  {
+                    "name": "Workflow Step Execute",
+                    "value": "workflow_step_execute",
+                    "description": "When a workflow step supported by your app should execute"
+                  },
+                  {
+                    "name": "Workflow Unpublished",
+                    "value": "workflow_unpublished",
+                    "description": "When a workflow that contains a step supported by your app was unpublished"
+                  }
+                ]
+              },
+              {
+                "name": "regexPattern",
+                "displayName": "Regex Pattern",
+                "type": "string",
+                "description": "Regular expression to match against incoming Slack messages. Capture groups can be used to extract data.",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "regexFlags",
+                "displayName": "Regex Flags",
+                "type": "string",
+                "description": "Flags for the regular expression (e.g., g for global, i for case-insensitive)",
+                "required": false,
+                "default": "g"
+              },
+              {
+                "name": "slashCommand",
+                "displayName": "Slash Commands",
+                "type": "string",
+                "description": "Comma-separated list of slash commands to listen for (e.g., deploy, status, help). Leave empty to listen for all slash commands. Do not include the leading slash.",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "channelToWatch",
+                "displayName": "Legacy Channel to Watch",
+                "type": "resourceLocator",
+                "description": "Legacy single-channel selector retained for workflows created before version 1.4.0",
+                "required": false,
+                "default": {
+                  "mode": "list",
+                  "value": ""
+                }
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 6
+          },
+          "ioInfo": {
+            "nodeType": "slackSocketTrigger",
+            "version": "2",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-pdf-generation": {
+      "packageName": "n8n-nodes-pdf-generation",
+      "packageVersion": "0.1.0",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-pdf-generation.pdfGeneration",
+          "displayName": "PDF Generation",
+          "description": "Generates a PDF file from text or table data",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "contentType",
+                "displayName": "Content Type",
+                "type": "options",
+                "description": "Select the type of content to include in the PDF",
+                "required": false,
+                "default": "text",
+                "options": [
+                  {
+                    "name": "Text",
+                    "value": "text"
+                  },
+                  {
+                    "name": "Table",
+                    "value": "table"
+                  }
+                ]
+              },
+              {
+                "name": "content",
+                "displayName": "Content",
+                "type": "string",
+                "description": "Text or table data to be converted into a PDF",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "filename",
+                "displayName": "Filename",
+                "type": "string",
+                "description": "Name of the generated PDF file",
+                "required": false,
+                "default": "output.pdf"
+              },
+              {
+                "name": "autoDownload",
+                "displayName": "Auto Download",
+                "type": "boolean",
+                "description": "Whether to automatically download the PDF after generation",
+                "required": false,
+                "default": false
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "pdfGeneration",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-craftmypdf": {
+      "packageName": "n8n-nodes-craftmypdf",
+      "packageVersion": "0.2.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-craftmypdf.craftMyPdf",
+          "displayName": "CraftMyPdf",
+          "description": "Consume the CraftMyPDF API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "URL of the source PDF",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "region",
+                "displayName": "Region",
+                "type": "options",
+                "description": "Region of the endpoint",
+                "required": true,
+                "default": "api",
+                "options": [
+                  {
+                    "name": "Default Endpoint",
+                    "value": "api",
+                    "description": "Default endpoint for the API"
+                  },
+                  {
+                    "name": "Endpoint: Australia",
+                    "value": "api-au",
+                    "description": "Endpoint for Australia"
+                  },
+                  {
+                    "name": "Endpoint: Europe (Frankfurt)",
+                    "value": "api-de",
+                    "description": "Endpoint for Europe (Frankfurt)"
+                  },
+                  {
+                    "name": "Endpoint: US East (N. Virginia)",
+                    "value": "api-us",
+                    "description": "Endpoint for US East (N Virginia)"
+                  },
+                  {
+                    "name": "Other: Alternative - Europe (Frankfurt)",
+                    "value": "api-alt-de",
+                    "description": "Alternative endpoint for Europe (Frankfurt)"
+                  },
+                  {
+                    "name": "Other: Alternative - Singapore",
+                    "value": "api-alt",
+                    "description": "Alternative endpoint for Australia"
+                  },
+                  {
+                    "name": "Other: Alternative - US East (N. Virginia)",
+                    "value": "api-alt-us",
+                    "description": "Alternative endpoint for US East (N Virginia)"
+                  },
+                  {
+                    "name": "Other: Staging",
+                    "value": "api-staging",
+                    "description": "Staging endpoint"
+                  }
+                ]
+              },
+              {
+                "name": "export_type",
+                "displayName": "Export Type",
+                "type": "options",
+                "description": "Export type of the image",
+                "required": true,
+                "default": "json",
+                "options": [
+                  {
+                    "name": "JSON",
+                    "value": "json",
+                    "description": "Returns a JSON object, and the output image is stored on a CDN (until expiration)"
+                  },
+                  {
+                    "name": "File",
+                    "value": "file",
+                    "description": "Returns binary data of the generated image (More secure and completely private) and the response HTTP header Content-Disposition is set to attachment"
+                  }
+                ]
+              },
+              {
+                "name": "output_type",
+                "displayName": "Output Type",
+                "type": "options",
+                "description": "Image output file type",
+                "required": true,
+                "default": "jpeg",
+                "options": [
+                  {
+                    "name": "JPEG",
+                    "value": "jpeg"
+                  },
+                  {
+                    "name": "PNG",
+                    "value": "png"
+                  }
+                ]
+              },
+              {
+                "name": "export_type",
+                "displayName": "Export Type",
+                "type": "options",
+                "description": "Export type of the PDF",
+                "required": true,
+                "default": "json",
+                "options": [
+                  {
+                    "name": "JSON",
+                    "value": "json",
+                    "description": "Returns a JSON object, and the output PDF is stored on a CDN (until expiration)"
+                  },
+                  {
+                    "name": "File",
+                    "value": "file",
+                    "description": "Returns binary data of the generated PDF (More secure and completely private) and the response HTTP header Content-Disposition is set to attachment"
+                  }
+                ]
+              },
+              {
+                "name": "urls",
+                "displayName": "URL Array",
+                "type": "collection",
+                "required": true,
+                "default": {
+                  "url": ""
+                },
+                "options": [
+                  {
+                    "name": "url",
+                    "description": "URL of a PDF to be merged"
+                  }
+                ]
+              },
+              {
+                "name": "data",
+                "displayName": "Data",
+                "type": "json",
+                "description": "JSON data, it supports stringified JSON string or an JSON object",
+                "required": true,
+                "default": "{}"
+              },
+              {
+                "name": "data",
+                "displayName": "Data",
+                "type": "json",
+                "description": "JSON data, it supports stringified JSON string or an JSON object",
+                "required": true,
+                "default": "{}"
+              },
+              {
+                "name": "webhook_url",
+                "displayName": "Webhook URL",
+                "type": "string",
+                "description": "Callback URL to your server. It starts with http:// or https:// and has to be urlencoded.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "expiration",
+                "displayName": "Expiration",
+                "type": "number",
+                "description": "Expiration of the generated PDF in minutes",
+                "required": true,
+                "default": 5
+              }
+            ],
+            "operations": [
+              {
+                "name": "Get",
+                "value": "get",
+                "description": "Get account information"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 37
+          },
+          "ioInfo": {
+            "nodeType": "craftMyPdf",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-htmlcsstoimage": {
+      "packageName": "n8n-nodes-htmlcsstoimage",
+      "packageVersion": "0.3.1",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-htmlcsstoimage.htmlCssToImage",
+          "displayName": "HTML to Image",
+          "description": "Convert HTML/CSS or a URL to an Image",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "operation",
+                "displayName": "Operation",
+                "type": "options",
+                "required": false,
+                "default": "htmlToImage",
+                "options": [
+                  {
+                    "name": "HTML to Image",
+                    "value": "htmlToImage",
+                    "description": "Convert HTML and CSS to an image"
+                  },
+                  {
+                    "name": "URL to Image",
+                    "value": "urlToImage",
+                    "description": "Capture a screenshot of a website"
+                  }
+                ]
+              },
+              {
+                "name": "url",
+                "displayName": "URL",
+                "type": "string",
+                "description": "The URL of the website to capture",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "response_format_html",
+                "displayName": "Response Format",
+                "type": "options",
+                "description": "Format of the image response",
+                "required": false,
+                "default": "url",
+                "options": [
+                  {
+                    "name": "URL",
+                    "value": "url"
+                  },
+                  {
+                    "name": "PNG",
+                    "value": "png"
+                  },
+                  {
+                    "name": "Base64",
+                    "value": "base64"
+                  }
+                ]
+              },
+              {
+                "name": "response_format_url",
+                "displayName": "Response Format",
+                "type": "options",
+                "description": "Format of the screenshot response",
+                "required": false,
+                "default": "image",
+                "options": [
+                  {
+                    "name": "URL in PNG",
+                    "value": "url"
+                  },
+                  {
+                    "name": "Image",
+                    "value": "image"
+                  },
+                  {
+                    "name": "Base64",
+                    "value": "base64"
+                  }
+                ]
+              },
+              {
+                "name": "html_content",
+                "displayName": "HTML Content",
+                "type": "string",
+                "description": "The HTML content to render as an image",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "css_content",
+                "displayName": "CSS Content",
+                "type": "string",
+                "description": "The CSS to style the HTML",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "viewPortWidth",
+                "displayName": "Viewport Width",
+                "type": "number",
+                "description": "Viewport Width in Pixels",
+                "required": false,
+                "default": 1080
+              },
+              {
+                "name": "viewPortHeight",
+                "displayName": "Viewport Height",
+                "type": "number",
+                "description": "Viewport Height in Pixels",
+                "required": false,
+                "default": 720
+              },
+              {
+                "name": "full_page",
+                "displayName": "Full Page",
+                "type": "boolean",
+                "description": "Whether to capture the full page",
+                "required": false,
+                "default": true
+              },
+              {
+                "name": "wait_till",
+                "displayName": "Wait Till",
+                "type": "number",
+                "description": "Milliseconds to wait before capturing",
+                "required": false,
+                "default": 10000
+              }
+            ],
+            "operations": [
+              {
+                "name": "HTML to Image",
+                "value": "htmlToImage",
+                "description": "Convert HTML and CSS to an image"
+              },
+              {
+                "name": "URL to Image",
+                "value": "urlToImage",
+                "description": "Capture a screenshot of a website"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 10
+          },
+          "ioInfo": {
+            "nodeType": "htmlCssToImage",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-openai-advanced": {
+      "packageName": "n8n-nodes-openai-advanced",
+      "packageVersion": "0.1.25",
+      "nodes": [],
+      "loadError": "All nodes failed to load"
     }
   }
 }
