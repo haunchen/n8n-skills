@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-07-05T01:03:23.802Z",
+  "lastUpdated": "2026-10-04T05:32:27.736Z",
   "limit": 30,
   "packages": [
     {
@@ -13,76 +13,13 @@
       "repository": "git+https://github.com/oriondesign2015/n8n-nodes-evolution-api.git"
     },
     {
-      "name": "@devlikeapro/n8n-nodes-chatwoot",
-      "description": "n8n node to connect with ChatWoot",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/@devlikeapro/n8n-nodes-chatwoot",
-      "version": "1.0.2",
-      "maintainer": "devlikeapro",
-      "repository": "git+https://github.com/devlikeapro/n8n-nodes-chatwoot.git"
-    },
-    {
-      "name": "n8n-nodes-openpix",
-      "description": "n8n nodes for OpenPix",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-openpix",
-      "version": "0.3.0",
-      "maintainer": "fersilva",
-      "repository": "git+https://github.com/open-pix/n8n-nodes-openpix.git"
-    },
-    {
-      "name": "n8n-nodes-bitrix",
-      "description": "n8n node for bitrix rest api",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-bitrix",
-      "version": "1.3.0",
-      "maintainer": "dewocom",
-      "repository": "git+https://github.com/dewocom/n8n-nodes-bitrix.git"
-    },
-    {
-      "name": "n8n-nodes-pdfkit",
-      "description": "Node for using PDFKit to tranform images into PDF, more functionality may be added later.",
-      "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdfkit",
-      "version": "0.1.2",
-      "maintainer": "bramknuever",
-      "repository": "git+https://github.com/bramkn/n8n-nodes-pdfkit.git"
-    },
-    {
-      "name": "n8n-nodes-mcp",
-      "description": "MCP nodes for n8n ",
+      "name": "@elevenlabs/n8n-nodes-elevenlabs",
+      "description": "Official ElevenLabs node for n8n",
       "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-mcp",
-      "version": "0.1.37",
+      "npmUrl": "https://www.npmjs.com/package/@elevenlabs/n8n-nodes-elevenlabs",
+      "version": "0.2.4",
       "maintainer": "GitHub Actions",
-      "repository": "git+https://github.com/nerding-io/n8n-nodes-mcp.git"
-    },
-    {
-      "name": "n8n-nodes-serpapi",
-      "description": "Official n8n node for SerpApi",
-      "category": "web-scraping",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-serpapi",
-      "version": "0.1.10",
-      "maintainer": "serpapi",
-      "repository": "git+https://github.com/serpapi/n8n-nodes-serpapi.git"
-    },
-    {
-      "name": "@searchapi/n8n-nodes-searchapi",
-      "description": "SearchApi.io nodes for n8n",
-      "category": "web-scraping",
-      "npmUrl": "https://www.npmjs.com/package/@searchapi/n8n-nodes-searchapi",
-      "version": "2.0.4",
-      "maintainer": "searchapi_team",
-      "repository": "git+https://github.com/SearchApi/n8n-nodes-searchapi.git"
-    },
-    {
-      "name": "n8n-nodes-templated",
-      "description": "n8n node to automate the generation of images, videos, and PDFs with Templated (https://templated.io).",
-      "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-templated",
-      "version": "0.4.5",
-      "maintainer": "templated.io",
-      "repository": "git+https://github.com/templated-io/n8n-nodes-templated.git"
+      "repository": "git+https://github.com/elevenlabs/elevenlabs-n8n.git"
     },
     {
       "name": "n8n-nodes-palatine-speech",
@@ -94,31 +31,175 @@
       "repository": "git+https://github.com/PalatineVision/n8n-nodes-palatine-speech.git"
     },
     {
-      "name": "@pdfgeneratorapi/n8n-nodes-pdf-generator-api",
-      "description": "PDF Generator API Node for n8n",
-      "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/@pdfgeneratorapi/n8n-nodes-pdf-generator-api",
-      "version": "0.4.0",
-      "maintainer": "taneltahepold",
-      "repository": "git+https://github.com/pdfgeneratorapi/n8n-nodes-pdf-generator-api.git"
+      "name": "n8n-nodes-chatwoot",
+      "description": "This is an n8n community node. It lets you use ChatWoot in your n8n workflows.",
+      "category": "communication",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-chatwoot",
+      "version": "0.1.40",
+      "maintainer": "hugodeco",
+      "repository": "git+https://github.com/sufficit/n8n-nodes-chatwoot.git"
     },
     {
-      "name": "n8n-nodes-pdf4me",
-      "description": "n8n community node for PDF4me API integration",
+      "name": "n8n-nodes-deepseek",
+      "description": "A user-friendly DeepSeek AI node, similar to OpenAI, designed to enhance your workflow. npm link: https://www.npmjs.com/package/n8n-nodes-deepseek",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-deepseek",
+      "version": "1.0.6",
+      "maintainer": "rubickecho",
+      "repository": "git+https://github.com/rubickecho/n8n-deepseek.git"
+    },
+    {
+      "name": "n8n-nodes-serpapi",
+      "description": "Official n8n node for SerpApi",
+      "category": "web-scraping",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-serpapi",
+      "version": "0.1.10",
+      "maintainer": "serpapi",
+      "repository": "git+https://github.com/serpapi/n8n-nodes-serpapi.git"
+    },
+    {
+      "name": "n8n-nodes-openpix",
+      "description": "n8n nodes for OpenPix",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-openpix",
+      "version": "0.3.0",
+      "maintainer": "fersilva",
+      "repository": "git+https://github.com/open-pix/n8n-nodes-openpix.git"
+    },
+    {
+      "name": "n8n-nodes-kommo",
+      "description": "n8n node for Kommo Api",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kommo",
+      "version": "0.0.16",
+      "maintainer": "yatolstoy",
+      "repository": "git+https://github.com/yatolstoy/n8n-node-kommo.git"
+    },
+    {
+      "name": "n8n-nodes-pdfkit",
+      "description": "Node for using PDFKit to tranform images into PDF, more functionality may be added later.",
       "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdf4me",
-      "version": "2.3.1",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdfkit",
+      "version": "0.1.2",
+      "maintainer": "bramknuever",
+      "repository": "git+https://github.com/bramkn/n8n-nodes-pdfkit.git"
+    },
+    {
+      "name": "@brave/n8n-nodes-brave-search",
+      "description": "A n8n node for the Brave Search API",
+      "category": "web-scraping",
+      "npmUrl": "https://www.npmjs.com/package/@brave/n8n-nodes-brave-search",
+      "version": "1.1.8",
+      "maintainer": "brave.com",
+      "repository": "https://github.com/brave/n8n-nodes-brave-search.git"
+    },
+    {
+      "name": "@alipeople/n8n-nodes-sendon",
+      "description": "Sendon node and tool package for n8n",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/@alipeople/n8n-nodes-sendon",
+      "version": "0.1.7",
+      "maintainer": "alipeople",
+      "repository": "git+https://github.com/alipeople/n8n-nodes-sendon.git"
+    },
+    {
+      "name": "n8n-nodes-scrape-creators",
+      "description": "Scrape Creators Node for n8n. Get real time social media data.",
+      "category": "web-scraping",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-scrape-creators",
+      "version": "0.1.11",
       "maintainer": "GitHub Actions",
-      "repository": "git+https://github.com/pdf4me/n8n-nodes-pdf4me.git"
+      "repository": "git+https://github.com/adrianhorning08/n8n-nodes-scrape-creators.git"
+    },
+    {
+      "name": "n8n-nodes-qdrant",
+      "description": "Official n8n node to interface with Qdrant - https://qdrant.tech",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-qdrant",
+      "version": "0.2.1",
+      "maintainer": "qdrant-tech",
+      "repository": "git+https://github.com/qdrant/n8n-nodes-qdrant.git"
+    },
+    {
+      "name": "@tavily/n8n-nodes-tavily",
+      "description": "A community node for n8n to integrate Tavily API for web search and content extraction.",
+      "category": "web-scraping",
+      "npmUrl": "https://www.npmjs.com/package/@tavily/n8n-nodes-tavily",
+      "version": "0.5.1",
+      "maintainer": "mayramati",
+      "repository": "git+https://github.com/tavily-ai/tavily-n8n-node.git"
+    },
+    {
+      "name": "@conciso/n8n-nodes-confluence-cloud",
+      "description": "n8n node for Confluence Cloud REST API integration",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/@conciso/n8n-nodes-confluence-cloud",
+      "version": "1.3.1",
+      "maintainer": "npm_conciso_thorsten",
+      "repository": "git+https://github.com/conciso/n8n-nodes-confluence-cloud.git"
     },
     {
       "name": "n8n-nodes-rd-station-crm",
-      "description": "Nós personalizados do n8n para integração com a API do RD Station CRM (v1)",
-      "category": "utilities",
+      "description": "n8n community node for RD Station CRM: API v1 (private token) and API v2 (OAuth2) — contacts, deals, organizations, tasks, notes, pipelines, stages, products, custom fields, sources, campaigns, loss reasons, users, teams and a real webhook trigger.",
+      "category": "ai-tools",
       "npmUrl": "https://www.npmjs.com/package/n8n-nodes-rd-station-crm",
-      "version": "1.3.1",
+      "version": "2.3.2",
       "maintainer": "pexuleco",
-      "repository": "git+https://github.com/rdstation/n8n-nodes-rd-station-crm.git"
+      "repository": "git+https://github.com/PedroHSGuimaraes/n8n-nodes-rd-station-crm.git"
+    },
+    {
+      "name": "@mbakgun/n8n-nodes-slack-socket-mode",
+      "description": "Slack Socket Mode Node for n8n that allows you to use +100 Slack events in your n8n instance with proxy mode",
+      "category": "communication",
+      "npmUrl": "https://www.npmjs.com/package/@mbakgun/n8n-nodes-slack-socket-mode",
+      "version": "1.7.1",
+      "maintainer": "mbakgun",
+      "repository": "git+https://github.com/mbakgun/n8n-slack-socket-mode.git"
+    },
+    {
+      "name": "n8n-nodes-mcp",
+      "description": "MCP nodes for n8n ",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-mcp",
+      "version": "0.1.37",
+      "maintainer": "GitHub Actions",
+      "repository": "git+https://github.com/nerding-io/n8n-nodes-mcp.git"
+    },
+    {
+      "name": "n8n-nodes-pdforge",
+      "description": "pdf noodle (previously pdforge) automates PDF Generation in minutes using AI.Create custom PDF templates in seconds using our AI Agents, fine tune the design with our PDF builder and automate the PDF delivery with our native pdforge node inside n8n. No co",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdforge",
+      "version": "2.3.3",
+      "maintainer": "mabreum",
+      "repository": "git+https://github.com/pdfnoodle/n8n-nodes-pdforge.git"
+    },
+    {
+      "name": "n8n-nodes-pdf-generation",
+      "description": "n8n node to generate PDF from text or table data.",
+      "category": "document",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdf-generation",
+      "version": "0.1.0",
+      "maintainer": "tuananhit1612",
+      "repository": "git+https://github.com/pot030321/Custom_Node_List.git"
+    },
+    {
+      "name": "n8n-nodes-craftmypdf",
+      "description": "Automating PDF Document Creation has never been easier with CraftMyPDF's PDF template editor and PDF generation API!",
+      "category": "document",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-craftmypdf",
+      "version": "0.2.1",
+      "maintainer": "GitHub Actions",
+      "repository": "git+https://github.com/CraftMyPDF/n8n-nodes-craftmypdf.git"
+    },
+    {
+      "name": "@mookielianhd/n8n-nodes-instagram",
+      "description": "Instagram node for n8n",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/@mookielianhd/n8n-nodes-instagram",
+      "version": "3.4.0",
+      "maintainer": "mookielian",
+      "repository": "git+https://github.com/MookieLian/n8n-nodes-instagram.git"
     },
     {
       "name": "n8n-nodes-globals",
@@ -130,103 +211,49 @@
       "repository": "git+https://github.com/umanamente/n8n-nodes-globals.git"
     },
     {
-      "name": "n8n-nodes-pdfco",
-      "description": "Pdf.co nodes for n8n",
+      "name": "@devlikeapro/n8n-nodes-chatwoot",
+      "description": "n8n node to connect with ChatWoot",
+      "category": "communication",
+      "npmUrl": "https://www.npmjs.com/package/@devlikeapro/n8n-nodes-chatwoot",
+      "version": "1.0.2",
+      "maintainer": "devlikeapro",
+      "repository": "git+https://github.com/devlikeapro/n8n-nodes-chatwoot.git"
+    },
+    {
+      "name": "n8n-nodes-htmlcsstoimage",
+      "description": "n8n node to convert html css to image",
       "category": "document",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-htmlcsstoimage",
+      "version": "0.3.1",
+      "maintainer": "htmlcsstoimage",
+      "repository": "git+https://github.com/HtmlCssToImg/n8n-nodes-htmlcsstoimage.git"
+    },
+    {
+      "name": "n8n-nodes-htmlcsstopdf",
+      "description": "n8n community node to convert HTML and CSS to PDF using PdfMunk API - perfect for invoices, reports, certificates, and document generation",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-htmlcsstopdf",
+      "version": "3.2.9",
+      "maintainer": "GitHub Actions",
+      "repository": "git+https://github.com/PdfMunk/n8n-nodes-htmltopdf.git"
+    },
+    {
+      "name": "n8n-nodes-instagram-token",
+      "description": "N8N nodes for Instagram API integration with access token authentication",
+      "category": "utilities",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-instagram-token",
+      "version": "2.4.2",
+      "maintainer": "robsonmilioli",
+      "repository": "git+https://github.com/r-milioli/n8n-nodes-insta-accessToken.git"
+    },
+    {
+      "name": "n8n-nodes-pdfco",
+      "description": "Extract, convert, generate, and edit PDFs with OCR and AI-powered document tools.",
+      "category": "ai-tools",
       "npmUrl": "https://www.npmjs.com/package/n8n-nodes-pdfco",
-      "version": "1.0.8",
+      "version": "1.0.15",
       "maintainer": "artifex-dev",
       "repository": "git+https://github.com/pdfdotco/n8n-nodes-pdfco.git"
-    },
-    {
-      "name": "@winth03/n8n-nodes-minio",
-      "description": "n8n node wrapper for the official MinIO JavaScript SDK",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@winth03/n8n-nodes-minio",
-      "version": "1.3.0",
-      "maintainer": "winth03",
-      "repository": "git+https://github.com/winth03/n8n-nodes-minio.git"
-    },
-    {
-      "name": "n8n-nodes-placid",
-      "description": "n8n node to interact with Placid API for creative generation",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-placid",
-      "version": "0.1.6",
-      "maintainer": "placidapp",
-      "repository": "git+https://github.com/placidapp/n8n-nodes-placid.git"
-    },
-    {
-      "name": "n8n-nodes-upload-post",
-      "description": "n8n community node for Upload Post",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-upload-post",
-      "version": "0.1.48",
-      "maintainer": "upload-post",
-      "repository": "git+https://github.com/Upload-Post/n8n-nodes-upload-post.git"
-    },
-    {
-      "name": "@apify/n8n-nodes-apify",
-      "description": "n8n nodes for Apify",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@apify/n8n-nodes-apify",
-      "version": "0.6.10",
-      "maintainer": "GitHub Actions",
-      "repository": "git+https://github.com/apify/n8n-nodes-apify.git"
-    },
-    {
-      "name": "n8n-nodes-businessmap",
-      "description": "An n8n community node package that integrates with Businessmap's REST API for CRUD operations on boards, cards and workflow artifacts across enterprise environments.",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-businessmap",
-      "version": "1.1.1",
-      "maintainer": "GitHub Actions",
-      "repository": "git+https://github.com/kanbanize/n8n-nodes-businessmap.git"
-    },
-    {
-      "name": "n8n-nodes-yepcode",
-      "description": "Custom n8n node module for YepCode",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-yepcode",
-      "version": "1.1.0",
-      "maintainer": "yepcode",
-      "repository": "git+https://github.com/yepcode/n8n-nodes-yepcode.git"
-    },
-    {
-      "name": "n8n-nodes-a2a",
-      "description": "n8n community node for A2A (Account to Account) transfers, account management, and Google Agent2Agent protocol communication with advanced features including file upload, custom JSON fields, custom requests, and streaming support",
-      "category": "document",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-a2a",
-      "version": "0.4.0",
-      "maintainer": "bruno.growthsales",
-      "repository": "git+https://github.com/bruno-growthsales/n8n-nodes-a2a.git"
-    },
-    {
-      "name": "n8n-nodes-kipps",
-      "description": "Custom Kipps.ai integration node for n8n — Chatbot, Voice Agent & WhatsApp in one node",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kipps",
-      "version": "1.1.0",
-      "maintainer": "kipps.ai",
-      "repository": "git+https://github.com/KIPPS-AI/n8n-nodes-kipps.git"
-    },
-    {
-      "name": "n8n-nodes-evolution-api-media-downloader",
-      "description": "Download Media from Evolution API data message",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-evolution-api-media-downloader",
-      "version": "0.1.0",
-      "maintainer": "betorcs",
-      "repository": "git+https://github.com/betorcs/n8n-nodes-evolution-api-media-downloader.git"
-    },
-    {
-      "name": "n8n-nodes-mtai-zalo-test-trial",
-      "description": "Các node hỗ trợ Zalo cho n8n",
-      "category": "ai-tools",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-mtai-zalo-test-trial",
-      "version": "1.2.1",
-      "maintainer": "dangminhtaivietinsoft",
-      "repository": ""
     },
     {
       "name": "n8n-nodes-transcript-lol",
@@ -238,40 +265,13 @@
       "repository": "git+https://github.com/transcript-lol/n8n-nodes-transcript-lol.git"
     },
     {
-      "name": "@asaasbr/n8n-nodes-asaas",
-      "description": "n8n nodes for integrating with the Asaas API",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/@asaasbr/n8n-nodes-asaas",
-      "version": "1.1.3",
-      "maintainer": "asaas-pagamentos",
-      "repository": "git+https://github.com/asaasdev/n8n-plugin-asaas.git"
-    },
-    {
-      "name": "n8n-nodes-thong-zalo-test-trial",
-      "description": "Các node hỗ trợ Zalo cho n8n",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-thong-zalo-test-trial",
-      "version": "0.1.182",
-      "maintainer": "vanthong0404",
-      "repository": ""
-    },
-    {
-      "name": "n8n-nodes-chatwoot",
-      "description": "This is an n8n community node. It lets you use ChatWoot in your n8n workflows.",
-      "category": "communication",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-chatwoot",
-      "version": "0.1.40",
-      "maintainer": "hugodeco",
-      "repository": "git+https://github.com/sufficit/n8n-nodes-chatwoot.git"
-    },
-    {
-      "name": "n8n-nodes-kommo",
-      "description": "n8n node for Kommo Api",
-      "category": "utilities",
-      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-kommo",
-      "version": "0.0.16",
-      "maintainer": "yatolstoy",
-      "repository": "git+https://github.com/yatolstoy/n8n-node-kommo.git"
+      "name": "n8n-nodes-openai-advanced",
+      "description": "n8n community node for OpenAI with LiteLLM prompt caching support",
+      "category": "ai-tools",
+      "npmUrl": "https://www.npmjs.com/package/n8n-nodes-openai-advanced",
+      "version": "0.1.25",
+      "maintainer": "unbalanced",
+      "repository": "git+https://github.com/<...>/n8n-nodes-<...>.git"
     }
   ]
 }
