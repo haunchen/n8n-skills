@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-05T01:03:23.811Z",
+  "lastUpdated": "2026-11-01T05:45:29.608Z",
   "nodes": {
     "n8n-nodes-evolution-api": {
       "packageName": "n8n-nodes-evolution-api",
@@ -1512,7 +1512,7 @@
     },
     "@apify/n8n-nodes-apify": {
       "packageName": "@apify/n8n-nodes-apify",
-      "packageVersion": "0.6.10",
+      "packageVersion": "0.9.0",
       "nodes": [
         {
           "nodeType": "@apify/n8n-nodes-apify.apify",
@@ -1525,7 +1525,7 @@
                 "name": "actorId",
                 "displayName": "Actor",
                 "type": "resourceLocator",
-                "description": "Actor ID or a tilde-separated username and Actor name",
+                "description": "The ID of the Actor to run, in the format \"username~actor-name\" (e.g. \"apify~web-scraper\") or as a plain actor ID. Browse available Actors at https://apify.com/store",
                 "required": true,
                 "default": {
                   "mode": "list",
@@ -1536,7 +1536,7 @@
                 "name": "actorId",
                 "displayName": "Actor",
                 "type": "resourceLocator",
-                "description": "Actor ID or a tilde-separated username and Actor name",
+                "description": "The ID of the Actor to run, in the format \"username~actor-name\" (e.g. \"apify~web-scraper\") or as a plain actor ID. Browse available Actors at https://apify.com/store",
                 "required": true,
                 "default": {
                   "mode": "list",
@@ -1558,7 +1558,7 @@
                 "name": "actorTaskId",
                 "displayName": "Actor Task",
                 "type": "resourceLocator",
-                "description": "Task ID or a tilde-separated username and task name",
+                "description": "The ID of the task to run, in the format \"username~task-name\" or as a plain task ID. Manage your saved tasks in Apify Console at https://console.apify.com.",
                 "required": true,
                 "default": {
                   "mode": "list",
@@ -1569,7 +1569,7 @@
                 "name": "actorTaskId",
                 "displayName": "Actor Task",
                 "type": "resourceLocator",
-                "description": "Task ID or a tilde-separated username and task name",
+                "description": "The ID of the task to run, in the format \"username~task-name\" or as a plain task ID. Manage your saved tasks in Apify Console at https://console.apify.com.",
                 "required": true,
                 "default": {
                   "mode": "list",
@@ -1586,6 +1586,14 @@
                   "mode": "list",
                   "value": ""
                 }
+              },
+              {
+                "name": "abortRunId",
+                "displayName": "Run ID",
+                "type": "string",
+                "description": "The ID of the Actor run to abort",
+                "required": true,
+                "default": ""
               },
               {
                 "name": "datasetId",
@@ -1616,16 +1624,6 @@
                   "mode": "list",
                   "value": ""
                 }
-              },
-              {
-                "name": "runId",
-                "displayName": "Run ID",
-                "type": "resourceLocator",
-                "required": true,
-                "default": {
-                  "mode": "list",
-                  "value": ""
-                }
               }
             ],
             "operations": [
@@ -1651,7 +1649,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 55
+            "totalPropertyCount": 62
           },
           "ioInfo": {
             "nodeType": "apify",
@@ -2284,13 +2282,13 @@
     },
     "@mendable/n8n-nodes-firecrawl": {
       "packageName": "@mendable/n8n-nodes-firecrawl",
-      "packageVersion": "2.0.4",
+      "packageVersion": "2.2.0",
       "nodes": [
         {
           "nodeType": "@mendable/n8n-nodes-firecrawl.firecrawl",
           "displayName": "Firecrawl",
           "description": "Scrape, crawl, map, search, and extract structured data from websites using Firecrawl API",
-          "version": "1",
+          "version": "1.1",
           "properties": {
             "coreProperties": [
               {
@@ -2376,24 +2374,29 @@
             ],
             "operations": [
               {
-                "name": "Scrape a URL and get content as markdown or other formats",
-                "value": "scrape"
+                "name": "Scrape URL",
+                "value": "scrape",
+                "description": "Scrape a single URL and optionally extract information using AI"
               },
               {
-                "name": "Batch scrape multiple URLs simultaneously",
-                "value": "batchScrape"
+                "name": "Batch Scrape URLs",
+                "value": "batchScrape",
+                "description": "Scrape multiple URLs in one job and optionally extract information using AI"
               },
               {
-                "name": "Get batch scrape status",
-                "value": "batchScrapeStatus"
+                "name": "Get Batch Scrape Status",
+                "value": "batchScrapeStatus",
+                "description": "Get the status and results of a batch scrape job"
               },
               {
-                "name": "Get batch scrape errors",
-                "value": "batchScrapeErrors"
+                "name": "Get Batch Scrape Errors",
+                "value": "batchScrapeErrors",
+                "description": "Get the errors and robots.txt blocks of a batch scrape job"
               },
               {
-                "name": "Cancel batch scrape job",
-                "value": "cancelBatchScrape"
+                "name": "Cancel Batch Scrape Job",
+                "value": "cancelBatchScrape",
+                "description": "Cancel a running batch scrape job"
               }
             ],
             "hasCredentials": true,
@@ -2401,7 +2404,7 @@
           },
           "ioInfo": {
             "nodeType": "firecrawl",
-            "version": "1",
+            "version": "1.1",
             "inputs": [
               "main"
             ],
@@ -11973,12 +11976,12 @@
     },
     "n8n-nodes-pdfco": {
       "packageName": "n8n-nodes-pdfco",
-      "packageVersion": "1.0.8",
+      "packageVersion": "1.0.16",
       "nodes": [
         {
           "nodeType": "n8n-nodes-pdfco.PDFco Api",
-          "displayName": "PDF.co Api",
-          "description": "Generate PDF, extract data from PDF, split PDF, merge PDF, convert PDF. Fill PDF forms, add text and images to pdf and much more with pdf.co!",
+          "displayName": "PDF.co",
+          "description": "Automate document workflows with OCR, AI invoice parsing, data extraction, conversion, form filling, merging/splitting, and barcode processing. Ideal for invoices, forms, and scanned files.",
           "version": "1.1",
           "properties": {
             "coreProperties": [
@@ -12156,7 +12159,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 92
+            "totalPropertyCount": 93
           },
           "ioInfo": {
             "nodeType": "PDFco Api",
@@ -22036,186 +22039,94 @@
     },
     "@searchapi/n8n-nodes-searchapi": {
       "packageName": "@searchapi/n8n-nodes-searchapi",
-      "packageVersion": "2.0.4",
+      "packageVersion": "2.1.0",
       "nodes": [
         {
           "nodeType": "@searchapi/n8n-nodes-searchapi.searchApi",
           "displayName": "SearchApi",
-          "description": "Access real-time search results from Google, Google Images, Google Maps, Google Shopping and more. Use this when you need current, up-to-date information, product searches, location data, or visual content that may not be available in your training data.",
+          "description": "Access real-time search results from Google, Google Images, Google Maps, Google Shopping and more, plus AI answers with cited sources from Google AI Mode, ChatGPT, Gemini and Bing Copilot. Use this when you need current, up-to-date information, product searches, location data, or visual content that may not be available in your training data.",
           "version": "1",
           "properties": {
             "coreProperties": [
               {
-                "name": "q",
-                "displayName": "Query",
+                "name": "url",
+                "displayName": "URL",
                 "type": "string",
-                "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google search. e.g. inurl:, site:, intitle:, and more.",
+                "description": "Direct link to the image you want Yandex to analyze. Ensure the URL points to a valid image format (e.g., .jpg, .png, .webp) and is accessible publicly.",
                 "required": true,
-                "default": "",
-                "options": []
-              },
-              {
-                "name": "q",
-                "displayName": "Query",
-                "type": "string",
-                "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google search. e.g. inurl:, site:, intitle:. We also support advanced search query parameters such as as_dt and as_eq.",
-                "required": true,
-                "default": "",
-                "options": []
+                "default": ""
               },
               {
                 "name": "q",
-                "displayName": "Query",
+                "displayName": "Search Query",
                 "type": "string",
-                "description": "Parameter defines the query you want to search. You can use anything that you would use in a regular Google Maps search.",
+                "description": "Terms you want to search on Google Images. Queries can include operators and advanced filters like \"cute cats\", site:, inurl:, intitle:, as_dt, or as_eq.",
                 "required": true,
-                "default": "",
-                "options": []
+                "default": ""
               },
               {
                 "name": "q",
-                "displayName": "Query",
+                "displayName": "Search Query",
                 "type": "string",
-                "description": "Specifies the search query, similar to performing a regular Google search. Filters embedded in the q parameter act as hints rather than strict filters. If there are too few matching items, results outside the filters may appear. Examples of usage: Search by price: tshirt under $30, skinny fit kids jeans between $15 and $30, charizard over $300. Search by size: mens size 8.5 nike air. Search by color: Playstation white. Search nearby stores: Apparel nearby. Search by condition: iphone used, macbook new. Search by brand: prada dress, gucci shoes. Search discounted products: laptop on sale, headphones on sale.",
+                "description": "Terms you want to search on Google Maps. Queries can include terms like \"restaurants near me\" or \"Starbucks New York\".",
                 "required": true,
-                "default": "",
-                "options": []
+                "default": ""
               },
               {
-                "name": "resource",
-                "displayName": "Resource",
-                "type": "options",
-                "description": "The search engine to use",
-                "required": false,
-                "default": "google",
-                "options": [
-                  {
-                    "name": "Google Search",
-                    "value": "google"
-                  },
-                  {
-                    "name": "Google Images",
-                    "value": "google_images"
-                  },
-                  {
-                    "name": "Google Maps",
-                    "value": "google_maps"
-                  },
-                  {
-                    "name": "Google Shopping",
-                    "value": "google_shopping"
-                  }
-                ]
+                "name": "q",
+                "displayName": "Search Query",
+                "type": "string",
+                "description": "Specifies the search query. Filters embedded in the query act as hints rather than strict filters — if there are too few matching items, results outside the filters may appear.",
+                "required": true,
+                "default": ""
               },
               {
-                "name": "operation",
-                "displayName": "Operation Name",
-                "type": "options",
-                "required": false,
-                "default": "search",
-                "options": [
-                  {
-                    "name": "Search",
-                    "value": "search",
-                    "description": "Search using the engine specified in the resource"
-                  }
-                ]
+                "name": "q",
+                "displayName": "Search Query",
+                "type": "string",
+                "description": "Search terms to query on Baidu — supports operators and advanced filters like \"machine learning models\", site:, intitle:, or filetype:",
+                "required": true,
+                "default": ""
               },
               {
-                "name": "locationSettings",
-                "displayName": "Location Settings",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "gl",
-                    "description": "The default parameter us defines the country of the search. Check the full list of supported Google gl countries."
-                  },
-                  {
-                    "name": "cr",
-                    "description": "The cr parameter restricts search results to documents originating in a particular country. Google determines the country of a document by the top-level domain (TLD) of the document's URL or by Web server's IP address geographic location. Check the full list of supported Google cr countries."
-                  },
-                  {
-                    "name": "uule",
-                    "description": "Parameter is the Google encoded location you want to use for the search. SearchApi automatically generated the uule parameter when you use the location parameter but we allow you to overwrite it directly. uule and location parameters can't be used together."
-                  },
-                  {
-                    "name": "location",
-                    "description": "Parameter defines from where you want the search to originate. If several locations match the location requested, we'll pick the most popular one. Head to the Locations API if you need more precise control."
-                  },
-                  {
-                    "name": "google_domain",
-                    "description": "The default parameter google.com defines the Google domain of the search. Check the full list of supported Google google_domain domains."
-                  }
-                ]
+                "name": "q",
+                "displayName": "Search Query",
+                "type": "string",
+                "description": "Terms you want to search on Google and track ranking positions",
+                "required": true,
+                "default": ""
               },
               {
-                "name": "languageSettings",
-                "displayName": "Language Settings",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "hl",
-                    "description": "The default parameter en defines the interface language of the search. Check the full list of supported Google hl languages."
-                  },
-                  {
-                    "name": "lr",
-                    "description": "The lr parameter restricts search results to documents written in a particular language or a set of languages. You can select multiple languages to include documents written in any of those languages."
-                  }
-                ]
+                "name": "q",
+                "displayName": "Search Query",
+                "type": "string",
+                "description": "Search terms to query on Bing — supports operators and advanced filters like \"machine learning models\", site:, feed:, AND, or OR",
+                "required": true,
+                "default": ""
               },
               {
-                "name": "searchOptions",
-                "displayName": "Search Options",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "filter",
-                    "description": "This parameter controls whether the 'Duplicate Content' and 'Host Crowding' filters are enabled. Set the value to 1 to enable these filters, which is the default setting. To disable these filters, set the value to 0."
-                  },
-                  {
-                    "name": "device",
-                    "description": "The default parameter desktop defines the search on a desktop device. The mobile parameter defines the search on a mobile device. The tablet parameter defines the search on a tablet device."
-                  },
-                  {
-                    "name": "nfpr",
-                    "description": "This parameter controls whether results from queries that have been auto-corrected for spelling errors are included. To exclude these auto-corrected results, set the value to 1. By default, the value is 0, meaning auto-corrected results are included."
-                  },
-                  {
-                    "name": "optimization_strategy",
-                    "description": "Controls how the search request is optimized. Available options: performance (Default), ads - optimizes for higher ad collection success rate, which may result in longer request processing times."
-                  },
-                  {
-                    "name": "safe",
-                    "description": "This parameter toggles the SafeSearch feature for the results. SafeSearch operates by filtering out adult content from your search results. Google's filters use proprietary technology to check keywords, phrases and URLs. While no filters are 100 percent accurate, SafeSearch will remove the overwhelming majority of adult content from your search results. Set the value to active to enable SafeSearch. To disable it, set the value to off. By default, SafeSearch is disabled."
-                  }
-                ]
+                "name": "from",
+                "displayName": "From",
+                "type": "string",
+                "description": "Origin of the route. Can be a plain address, data ID, or coordinates (lat,long).",
+                "required": true,
+                "default": ""
               },
               {
-                "name": "timeFilters",
-                "displayName": "Time Filters",
-                "type": "collection",
-                "required": false,
-                "default": {},
-                "options": [
-                  {
-                    "name": "time_period",
-                    "description": "This parameter restricts results to URLs based on date. Supported values are: last_hour - data from the past hour. last_day - data from the past 24 hours. last_week - data from the past week. last_month - data from the past month. last_year - data from the past year. Using time_period_min or time_period_max parameters, you can specify a custom time period. Note, that the time_period_min and time_period_max parameters could be used separately as well."
-                  },
-                  {
-                    "name": "time_period_min",
-                    "description": "This parameter specifies the start of the time period. It could be used in combination with the time_period_max parameter. The value should be in the format MM/DD/YYYY."
-                  },
-                  {
-                    "name": "time_period_max",
-                    "description": "This parameter specifies the end of the time period. It could be used in combination with the time_period_min parameter. The value should be in the format MM/DD/YYYY."
-                  }
-                ]
+                "name": "to",
+                "displayName": "To",
+                "type": "string",
+                "description": "Destination of the route. Can be a plain address, data ID, or coordinates (lat,long).",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "q",
+                "displayName": "Search Query",
+                "type": "string",
+                "description": "Specifies the keyword to search for advertisers or domains",
+                "required": true,
+                "default": ""
               }
             ],
             "operations": [
@@ -22226,7 +22137,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 23
+            "totalPropertyCount": 303
           },
           "ioInfo": {
             "nodeType": "searchApi",
@@ -22258,7 +22169,7 @@
     },
     "n8n-nodes-templated": {
       "packageName": "n8n-nodes-templated",
-      "packageVersion": "0.4.5",
+      "packageVersion": "0.4.6",
       "nodes": [
         {
           "nodeType": "n8n-nodes-templated.templated",
@@ -22454,7 +22365,7 @@
     },
     "@pdfgeneratorapi/n8n-nodes-pdf-generator-api": {
       "packageName": "@pdfgeneratorapi/n8n-nodes-pdf-generator-api",
-      "packageVersion": "0.4.0",
+      "packageVersion": "0.5.1",
       "nodes": [
         {
           "nodeType": "@pdfgeneratorapi/n8n-nodes-pdf-generator-api.pdfGeneratorApi",
@@ -22566,7 +22477,7 @@
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 50
+            "totalPropertyCount": 59
           },
           "ioInfo": {
             "nodeType": "pdfGeneratorApi",
@@ -22598,12 +22509,12 @@
     },
     "n8n-nodes-pdf4me": {
       "packageName": "n8n-nodes-pdf4me",
-      "packageVersion": "2.3.1",
+      "packageVersion": "2.4.6",
       "nodes": [
         {
-          "nodeType": "n8n-nodes-pdf4me.PDF4me",
+          "nodeType": "n8n-nodes-pdf4me.pdf4me",
           "displayName": "PDF4me",
-          "description": "Comprehensive PDF and document processing: generate barcodes, convert files, extract data, manipulate images, and automate workflows with the PDF4ME API",
+          "description": "PDF4me for n8n automates document workflows: AI-powered parsing, classification, and data extraction, plus PDF conversion, generation, merge/split, editing, forms, stamps, signatures, OCR, barcodes and Swiss QR, invoices, image processing, security, and Word tools.",
           "version": "1",
           "properties": {
             "coreProperties": [
@@ -22641,14 +22552,14 @@
                 "default": "binaryData",
                 "options": [
                   {
-                    "name": "Binary Data",
-                    "value": "binaryData",
-                    "description": "Use PDF file from previous node"
-                  },
-                  {
                     "name": "Base64 String",
                     "value": "base64",
                     "description": "Provide PDF content as base64 encoded string"
+                  },
+                  {
+                    "name": "Binary Data",
+                    "value": "binaryData",
+                    "description": "Use PDF file from previous node"
                   },
                   {
                     "name": "URL",
@@ -22666,80 +22577,152 @@
                 "default": "qrCode",
                 "options": [
                   {
-                    "name": "QR Code",
-                    "value": "qrCode"
+                    "name": "Australian Post Custom",
+                    "value": "australianPostCustom"
                   },
                   {
-                    "name": "Code 128",
-                    "value": "code128"
+                    "name": "Australian Post Custom 2",
+                    "value": "australianPostCustom2"
                   },
                   {
-                    "name": "Data Matrix",
-                    "value": "dataMatrix"
+                    "name": "Australian Post Custom 3",
+                    "value": "australianPostCustom3"
+                  },
+                  {
+                    "name": "Australian Post Redirection",
+                    "value": "australianPostRedirection"
+                  },
+                  {
+                    "name": "Australian Post Reply Paid",
+                    "value": "australianPostReplyPaid"
+                  },
+                  {
+                    "name": "Australian Post Routing",
+                    "value": "australianPostRouting"
                   },
                   {
                     "name": "Aztec",
                     "value": "aztec"
                   },
                   {
-                    "name": "Han Xin",
-                    "value": "hanXin"
-                  },
-                  {
-                    "name": "PDF417",
-                    "value": "pdf417"
-                  },
-                  {
-                    "name": "EAN-13",
-                    "value": "ean13"
-                  },
-                  {
-                    "name": "UPC-A",
-                    "value": "upcA"
-                  },
-                  {
-                    "name": "Code 39",
-                    "value": "code39"
-                  },
-                  {
-                    "name": "Code 93",
-                    "value": "code93"
+                    "name": "CEP Net",
+                    "value": "cepNet"
                   },
                   {
                     "name": "Codabar",
                     "value": "codabar"
                   },
                   {
-                    "name": "Interleaved 2 of 5",
-                    "value": "code2Of5Interleaved"
+                    "name": "Codabar 18",
+                    "value": "codabar18"
+                  },
+                  {
+                    "name": "Codabar 2",
+                    "value": "codabar2"
+                  },
+                  {
+                    "name": "Codablock F",
+                    "value": "codablockF"
                   },
                   {
                     "name": "Code 11",
                     "value": "code11"
                   },
                   {
-                    "name": "Code 2 of 5 Standard",
-                    "value": "code2Of5Standard"
+                    "name": "Code 128",
+                    "value": "code128"
                   },
                   {
-                    "name": "Code 2 of 5 IATA",
-                    "value": "code2Of5Iata"
+                    "name": "Code 128 Subset A",
+                    "value": "code128SubsetA"
                   },
                   {
-                    "name": "Code 2 of 5 Matrix",
-                    "value": "code2Of5Matrix"
+                    "name": "Code 128 Subset B",
+                    "value": "code128SubsetB"
+                  },
+                  {
+                    "name": "Code 128 Subset C",
+                    "value": "code128SubsetC"
                   },
                   {
                     "name": "Code 2 of 5 Data Logic",
                     "value": "code2Of5DataLogic"
                   },
                   {
+                    "name": "Code 2 of 5 IATA",
+                    "value": "code2Of5Iata"
+                  },
+                  {
                     "name": "Code 2 of 5 Industry",
                     "value": "code2Of5Industry"
                   },
                   {
+                    "name": "Code 2 of 5 Matrix",
+                    "value": "code2Of5Matrix"
+                  },
+                  {
+                    "name": "Code 2 of 5 Standard",
+                    "value": "code2Of5Standard"
+                  },
+                  {
+                    "name": "Code 32",
+                    "value": "code32"
+                  },
+                  {
+                    "name": "Code 39",
+                    "value": "code39"
+                  },
+                  {
                     "name": "Code 39 Extended",
                     "value": "code39Extended"
+                  },
+                  {
+                    "name": "Code 93",
+                    "value": "code93"
+                  },
+                  {
+                    "name": "Code 93 Extended",
+                    "value": "code93Extended"
+                  },
+                  {
+                    "name": "Data Matrix",
+                    "value": "dataMatrix"
+                  },
+                  {
+                    "name": "Deutsche Post Identcode",
+                    "value": "deutschePostIdentcode"
+                  },
+                  {
+                    "name": "Deutsche Post Leitcode",
+                    "value": "deutschePostLeitcode"
+                  },
+                  {
+                    "name": "Dot Code",
+                    "value": "dotCode"
+                  },
+                  {
+                    "name": "DPD",
+                    "value": "dpd"
+                  },
+                  {
+                    "name": "EAN UCC 128",
+                    "value": "eanUcc128"
+                  },
+                  {
+                    "name": "EAN-13",
+                    "value": "ean13"
+                  },
+                  {
+                    "name": "EAN-13 with 2 Addon",
+                    "value": "ean13With2Addon"
+                  },
+                  {
+                    "name": "EAN-13 with 5 Addon",
+                    "value": "ean13With5Addon"
+                  },
+                  {
+                    "name": "EAN-14",
+                    "value": "ean14"
                   },
                   {
                     "name": "EAN-8",
@@ -22754,36 +22737,120 @@
                     "value": "ean8With5Addon"
                   },
                   {
-                    "name": "EAN-13 with 2 Addon",
-                    "value": "ean13With2Addon"
+                    "name": "FIM",
+                    "value": "fim"
                   },
                   {
-                    "name": "EAN-13 with 5 Addon",
-                    "value": "ean13With5Addon"
+                    "name": "Flattermarken",
+                    "value": "flattermarken"
                   },
                   {
-                    "name": "EAN UCC 128",
-                    "value": "eanUcc128"
+                    "name": "GS1 DataBar",
+                    "value": "gs1DataBar"
                   },
                   {
-                    "name": "UPC-12",
-                    "value": "upc12"
+                    "name": "GS1 DataBar Expanded",
+                    "value": "gs1DataBarExpanded"
                   },
                   {
-                    "name": "Codabar 2",
-                    "value": "codabar2"
+                    "name": "GS1 DataBar Expanded Stacked",
+                    "value": "gs1DataBarExpandedStacked"
                   },
                   {
-                    "name": "Codabar 18",
-                    "value": "codabar18"
+                    "name": "GS1 DataBar Limited",
+                    "value": "gs1DataBarLimited"
                   },
                   {
-                    "name": "Deutsche Post Leitcode",
-                    "value": "deutschePostLeitcode"
+                    "name": "GS1 DataBar Stacked",
+                    "value": "gs1DataBarStacked"
                   },
                   {
-                    "name": "Deutsche Post Identcode",
-                    "value": "deutschePostIdentcode"
+                    "name": "GS1 DataBar Stacked Omnidirectional",
+                    "value": "gs1DataBarStackedOmnidirectional"
+                  },
+                  {
+                    "name": "GS1 DataBar Truncated",
+                    "value": "gs1DataBarTruncated"
+                  },
+                  {
+                    "name": "GS1-128",
+                    "value": "gs1_128"
+                  },
+                  {
+                    "name": "Han Xin",
+                    "value": "hanXin"
+                  },
+                  {
+                    "name": "HIBC LIC 128",
+                    "value": "hibcLic128"
+                  },
+                  {
+                    "name": "HIBC LIC 3OF9",
+                    "value": "hibcLic3OF9"
+                  },
+                  {
+                    "name": "HIBC LIC Aztec",
+                    "value": "hibcLicAztec"
+                  },
+                  {
+                    "name": "HIBC LIC CODABLOCK_F",
+                    "value": "hibcLicCODABLOCK_F"
+                  },
+                  {
+                    "name": "HIBC LIC Data Matrix",
+                    "value": "hibcLicDataMatrix"
+                  },
+                  {
+                    "name": "HIBC LIC MPDF417",
+                    "value": "hibcLicMPDF417"
+                  },
+                  {
+                    "name": "HIBC LIC PDF417",
+                    "value": "hibcLicPDF417"
+                  },
+                  {
+                    "name": "HIBC LIC QR Code",
+                    "value": "hibcLicQRCode"
+                  },
+                  {
+                    "name": "HIBC PAS 128",
+                    "value": "hibcPas128"
+                  },
+                  {
+                    "name": "HIBC PAS 3OF9",
+                    "value": "hibcPas3OF9"
+                  },
+                  {
+                    "name": "HIBC PAS Aztec",
+                    "value": "hibcPasAztec"
+                  },
+                  {
+                    "name": "HIBC PAS CODABLOCK_F",
+                    "value": "hibcPasCODABLOCK_F"
+                  },
+                  {
+                    "name": "HIBC PAS Data Matrix",
+                    "value": "hibcPasDataMatrix"
+                  },
+                  {
+                    "name": "HIBC PAS MPDF417",
+                    "value": "hibcPasMPDF417"
+                  },
+                  {
+                    "name": "HIBC PAS PDF417",
+                    "value": "hibcPasPDF417"
+                  },
+                  {
+                    "name": "HIBC PAS QR Code",
+                    "value": "hibcPasQRCode"
+                  },
+                  {
+                    "name": "Interleaved 2 of 5",
+                    "value": "code2Of5Interleaved"
+                  },
+                  {
+                    "name": "ISBN-13",
+                    "value": "isbn13"
                   },
                   {
                     "name": "ISBN-13 with 5 Addon",
@@ -22802,20 +22869,136 @@
                     "value": "issnWith2Addon"
                   },
                   {
-                    "name": "Flattermarken",
-                    "value": "flattermarken"
+                    "name": "Italian Postal 2 of 5",
+                    "value": "italianPostal2Of5"
                   },
                   {
-                    "name": "GS1 DataBar",
-                    "value": "gs1DataBar"
+                    "name": "Italian Postal 3 of 9",
+                    "value": "italianPostal3Of9"
                   },
                   {
-                    "name": "GS1 DataBar Limited",
-                    "value": "gs1DataBarLimited"
+                    "name": "ITF-14",
+                    "value": "itf14"
                   },
                   {
-                    "name": "GS1 DataBar Expanded",
-                    "value": "gs1DataBarExpanded"
+                    "name": "Japanese Postal",
+                    "value": "japanesePostal"
+                  },
+                  {
+                    "name": "KIX",
+                    "value": "kix"
+                  },
+                  {
+                    "name": "Korean Postal Authority",
+                    "value": "koreanPostalAuthority"
+                  },
+                  {
+                    "name": "LOGMARS",
+                    "value": "logmars"
+                  },
+                  {
+                    "name": "Mailmark 2D",
+                    "value": "mailmark_2D"
+                  },
+                  {
+                    "name": "Mailmark 4state",
+                    "value": "mailmark_4state"
+                  },
+                  {
+                    "name": "Maxicode",
+                    "value": "maxicode"
+                  },
+                  {
+                    "name": "Micro PDF417",
+                    "value": "microPdf417"
+                  },
+                  {
+                    "name": "Micro QR Code",
+                    "value": "microQRCode"
+                  },
+                  {
+                    "name": "MSI",
+                    "value": "msi"
+                  },
+                  {
+                    "name": "NTIN",
+                    "value": "ntin"
+                  },
+                  {
+                    "name": "NVE-18",
+                    "value": "nve18"
+                  },
+                  {
+                    "name": "PDF417",
+                    "value": "pdf417"
+                  },
+                  {
+                    "name": "PDF417 Truncated",
+                    "value": "pdf417Truncated"
+                  },
+                  {
+                    "name": "Pharmacode One Track",
+                    "value": "pharmacodeOneTrack"
+                  },
+                  {
+                    "name": "Pharmacode Two Track",
+                    "value": "pharmacodeTwoTrack"
+                  },
+                  {
+                    "name": "Planet 12",
+                    "value": "planet12"
+                  },
+                  {
+                    "name": "Planet 14",
+                    "value": "planet14"
+                  },
+                  {
+                    "name": "Plessey",
+                    "value": "plessey"
+                  },
+                  {
+                    "name": "Plessey Bidirectional",
+                    "value": "plesseyBidirectional"
+                  },
+                  {
+                    "name": "PPN",
+                    "value": "ppn"
+                  },
+                  {
+                    "name": "PZN-7",
+                    "value": "pzn7"
+                  },
+                  {
+                    "name": "PZN-8",
+                    "value": "pzn8"
+                  },
+                  {
+                    "name": "QR Code",
+                    "value": "qrCode"
+                  },
+                  {
+                    "name": "QR Code 2005",
+                    "value": "qrcode2005"
+                  },
+                  {
+                    "name": "RM4SCC",
+                    "value": "rm4Scc"
+                  },
+                  {
+                    "name": "SSCC-18",
+                    "value": "sscc18"
+                  },
+                  {
+                    "name": "Swedish Postal Shipment ID",
+                    "value": "swedishPostalShipmentId"
+                  },
+                  {
+                    "name": "Swiss QR Code",
+                    "value": "swissQrCode"
+                  },
+                  {
+                    "name": "Telepen",
+                    "value": "telepen"
                   },
                   {
                     "name": "Telepen Alpha",
@@ -22824,6 +23007,14 @@
                   {
                     "name": "UCC-128",
                     "value": "ucc128"
+                  },
+                  {
+                    "name": "UPC-12",
+                    "value": "upc12"
+                  },
+                  {
+                    "name": "UPC-A",
+                    "value": "upcA"
                   },
                   {
                     "name": "UPC-A with 2 Addon",
@@ -22846,16 +23037,16 @@
                     "value": "upcEWith5Addon"
                   },
                   {
-                    "name": "USPS Postnet 5",
-                    "value": "uspsPostnet5"
+                    "name": "UPU S10",
+                    "value": "upuS10"
                   },
                   {
-                    "name": "USPS Postnet 6",
-                    "value": "uspsPostnet6"
+                    "name": "USPS IM Package",
+                    "value": "uSPSIMPackage"
                   },
                   {
-                    "name": "USPS Postnet 9",
-                    "value": "uspsPostnet9"
+                    "name": "USPS Intelligent Mail",
+                    "value": "uspsIntelligentMail"
                   },
                   {
                     "name": "USPS Postnet 10",
@@ -22870,300 +23061,20 @@
                     "value": "uspsPostnet12"
                   },
                   {
-                    "name": "Plessey",
-                    "value": "plessey"
+                    "name": "USPS Postnet 5",
+                    "value": "uspsPostnet5"
                   },
                   {
-                    "name": "MSI",
-                    "value": "msi"
+                    "name": "USPS Postnet 6",
+                    "value": "uspsPostnet6"
                   },
                   {
-                    "name": "SSCC-18",
-                    "value": "sscc18"
-                  },
-                  {
-                    "name": "FIM",
-                    "value": "fim"
-                  },
-                  {
-                    "name": "LOGMARS",
-                    "value": "logmars"
-                  },
-                  {
-                    "name": "Pharmacode One Track",
-                    "value": "pharmacodeOneTrack"
-                  },
-                  {
-                    "name": "PZN-7",
-                    "value": "pzn7"
-                  },
-                  {
-                    "name": "Pharmacode Two Track",
-                    "value": "pharmacodeTwoTrack"
-                  },
-                  {
-                    "name": "CEP Net",
-                    "value": "cepNet"
-                  },
-                  {
-                    "name": "PDF417 Truncated",
-                    "value": "pdf417Truncated"
-                  },
-                  {
-                    "name": "Maxicode",
-                    "value": "maxicode"
-                  },
-                  {
-                    "name": "Code 128 Subset A",
-                    "value": "code128SubsetA"
-                  },
-                  {
-                    "name": "Code 128 Subset B",
-                    "value": "code128SubsetB"
-                  },
-                  {
-                    "name": "Code 128 Subset C",
-                    "value": "code128SubsetC"
-                  },
-                  {
-                    "name": "Code 93 Extended",
-                    "value": "code93Extended"
-                  },
-                  {
-                    "name": "Australian Post Custom",
-                    "value": "australianPostCustom"
-                  },
-                  {
-                    "name": "Australian Post Custom 2",
-                    "value": "australianPostCustom2"
-                  },
-                  {
-                    "name": "Australian Post Custom 3",
-                    "value": "australianPostCustom3"
-                  },
-                  {
-                    "name": "Australian Post Reply Paid",
-                    "value": "australianPostReplyPaid"
-                  },
-                  {
-                    "name": "Australian Post Routing",
-                    "value": "australianPostRouting"
-                  },
-                  {
-                    "name": "Australian Post Redirection",
-                    "value": "australianPostRedirection"
-                  },
-                  {
-                    "name": "ISBN-13",
-                    "value": "isbn13"
-                  },
-                  {
-                    "name": "RM4SCC",
-                    "value": "rm4Scc"
-                  },
-                  {
-                    "name": "EAN-14",
-                    "value": "ean14"
+                    "name": "USPS Postnet 9",
+                    "value": "uspsPostnet9"
                   },
                   {
                     "name": "VIN",
                     "value": "vin"
-                  },
-                  {
-                    "name": "Codablock F",
-                    "value": "codablockF"
-                  },
-                  {
-                    "name": "NVE-18",
-                    "value": "nve18"
-                  },
-                  {
-                    "name": "Japanese Postal",
-                    "value": "japanesePostal"
-                  },
-                  {
-                    "name": "Korean Postal Authority",
-                    "value": "koreanPostalAuthority"
-                  },
-                  {
-                    "name": "GS1 DataBar Truncated",
-                    "value": "gs1DataBarTruncated"
-                  },
-                  {
-                    "name": "GS1 DataBar Stacked",
-                    "value": "gs1DataBarStacked"
-                  },
-                  {
-                    "name": "GS1 DataBar Stacked Omnidirectional",
-                    "value": "gs1DataBarStackedOmnidirectional"
-                  },
-                  {
-                    "name": "GS1 DataBar Expanded Stacked",
-                    "value": "gs1DataBarExpandedStacked"
-                  },
-                  {
-                    "name": "Planet 12",
-                    "value": "planet12"
-                  },
-                  {
-                    "name": "Planet 14",
-                    "value": "planet14"
-                  },
-                  {
-                    "name": "Micro PDF417",
-                    "value": "microPdf417"
-                  },
-                  {
-                    "name": "USPS Intelligent Mail",
-                    "value": "uspsIntelligentMail"
-                  },
-                  {
-                    "name": "Plessey Bidirectional",
-                    "value": "plesseyBidirectional"
-                  },
-                  {
-                    "name": "Telepen",
-                    "value": "telepen"
-                  },
-                  {
-                    "name": "GS1-128",
-                    "value": "gs1_128"
-                  },
-                  {
-                    "name": "ITF-14",
-                    "value": "itf14"
-                  },
-                  {
-                    "name": "KIX",
-                    "value": "kix"
-                  },
-                  {
-                    "name": "Code 32",
-                    "value": "code32"
-                  },
-                  {
-                    "name": "Italian Postal 2 of 5",
-                    "value": "italianPostal2Of5"
-                  },
-                  {
-                    "name": "Italian Postal 3 of 9",
-                    "value": "italianPostal3Of9"
-                  },
-                  {
-                    "name": "DPD",
-                    "value": "dpd"
-                  },
-                  {
-                    "name": "Micro QR Code",
-                    "value": "microQRCode"
-                  },
-                  {
-                    "name": "HIBC LIC 128",
-                    "value": "hibcLic128"
-                  },
-                  {
-                    "name": "HIBC LIC 3OF9",
-                    "value": "hibcLic3OF9"
-                  },
-                  {
-                    "name": "HIBC PAS 128",
-                    "value": "hibcPas128"
-                  },
-                  {
-                    "name": "HIBC PAS 3OF9",
-                    "value": "hibcPas3OF9"
-                  },
-                  {
-                    "name": "HIBC LIC Data Matrix",
-                    "value": "hibcLicDataMatrix"
-                  },
-                  {
-                    "name": "HIBC PAS Data Matrix",
-                    "value": "hibcPasDataMatrix"
-                  },
-                  {
-                    "name": "HIBC LIC QR Code",
-                    "value": "hibcLicQRCode"
-                  },
-                  {
-                    "name": "HIBC PAS QR Code",
-                    "value": "hibcPasQRCode"
-                  },
-                  {
-                    "name": "HIBC LIC PDF417",
-                    "value": "hibcLicPDF417"
-                  },
-                  {
-                    "name": "HIBC PAS PDF417",
-                    "value": "hibcPasPDF417"
-                  },
-                  {
-                    "name": "HIBC LIC MPDF417",
-                    "value": "hibcLicMPDF417"
-                  },
-                  {
-                    "name": "HIBC PAS MPDF417",
-                    "value": "hibcPasMPDF417"
-                  },
-                  {
-                    "name": "HIBC LIC CODABLOCK_F",
-                    "value": "hibcLicCODABLOCK_F"
-                  },
-                  {
-                    "name": "HIBC PAS CODABLOCK_F",
-                    "value": "hibcPasCODABLOCK_F"
-                  },
-                  {
-                    "name": "QR Code 2005",
-                    "value": "qrcode2005"
-                  },
-                  {
-                    "name": "PZN-8",
-                    "value": "pzn8"
-                  },
-                  {
-                    "name": "Dot Code",
-                    "value": "dotCode"
-                  },
-                  {
-                    "name": "USPS IM Package",
-                    "value": "uSPSIMPackage"
-                  },
-                  {
-                    "name": "Swedish Postal Shipment ID",
-                    "value": "swedishPostalShipmentId"
-                  },
-                  {
-                    "name": "Mailmark 2D",
-                    "value": "mailmark_2D"
-                  },
-                  {
-                    "name": "UPU S10",
-                    "value": "upuS10"
-                  },
-                  {
-                    "name": "Mailmark 4state",
-                    "value": "mailmark_4state"
-                  },
-                  {
-                    "name": "HIBC LIC Aztec",
-                    "value": "hibcLicAztec"
-                  },
-                  {
-                    "name": "HIBC PAS Aztec",
-                    "value": "hibcPasAztec"
-                  },
-                  {
-                    "name": "PPN",
-                    "value": "ppn"
-                  },
-                  {
-                    "name": "NTIN",
-                    "value": "ntin"
-                  },
-                  {
-                    "name": "Swiss QR Code",
-                    "value": "swissQrCode"
                   }
                 ]
               },
@@ -23176,12 +23087,12 @@
                 "default": "Right",
                 "options": [
                   {
-                    "name": "Left",
-                    "value": "Left"
-                  },
-                  {
                     "name": "Center",
                     "value": "Center"
+                  },
+                  {
+                    "name": "Left",
+                    "value": "Left"
                   },
                   {
                     "name": "Right",
@@ -23198,16 +23109,16 @@
                 "default": "Bottom",
                 "options": [
                   {
-                    "name": "Top",
-                    "value": "Top"
+                    "name": "Bottom",
+                    "value": "Bottom"
                   },
                   {
                     "name": "Middle",
                     "value": "Middle"
                   },
                   {
-                    "name": "Bottom",
-                    "value": "Bottom"
+                    "name": "Top",
+                    "value": "Top"
                   }
                 ]
               },
@@ -23334,6 +23245,16 @@
             ],
             "operations": [
               {
+                "name": "AI - Universal Document Data Extraction",
+                "value": "Process Universal Document",
+                "description": "Extract specified fields from documents using universal document processing"
+              },
+              {
+                "name": "AI Auto Crop Document",
+                "value": "AI Auto Crop Document",
+                "description": "Automatically crop a document using AI to remove borders and unwanted areas"
+              },
+              {
                 "name": "AI-Invoice Parser",
                 "value": "AI-Invoice Parser",
                 "description": "Extract structured data from invoices using AI/ML technology for automated data entry"
@@ -23344,14 +23265,19 @@
                 "description": "Extract structured data from bank cheques using AI/ML technology for payment processing"
               },
               {
-                "name": "AI-Process Credit Card",
-                "value": "AI-Process Credit Card",
-                "description": "Extract structured data from credit cards using AI/ML technology for payment processing"
+                "name": "AI-Process Bank Statement",
+                "value": "Process Bank Statement",
+                "description": "Process bank statement documents to extract transactions, analyze patterns, and custom fields"
               },
               {
                 "name": "AI-Process Contract",
                 "value": "AI-Process Contract",
                 "description": "Extract structured data from contracts using AI/ML technology for legal document analysis"
+              },
+              {
+                "name": "AI-Process Credit Card",
+                "value": "AI-Process Credit Card",
+                "description": "Extract structured data from credit cards using AI/ML technology for payment processing"
               },
               {
                 "name": "AI-Process HealthCard",
@@ -23369,29 +23295,14 @@
                 "description": "Extract structured data from mortgage documents using AI/ML technology for loan processing"
               },
               {
-                "name": "AI-Process Pay Stub",
-                "value": "AI-Process Pay Stub",
-                "description": "Extract structured data from pay stubs using AI/ML technology for payroll processing"
-              },
-              {
-                "name": "AI Auto Crop Document",
-                "value": "AI Auto Crop Document",
-                "description": "Automatically crop a document using AI to remove borders and unwanted areas"
-              },
-              {
-                "name": "AI - Universal Document Data Extraction",
-                "value": "Process Universal Document",
-                "description": "Extract specified fields from documents using universal document processing"
-              },
-              {
-                "name": "AI-Process Shipping Label",
-                "value": "Process Shipping Label",
-                "description": "Process shipping labels to extract and analyze shipping information"
-              },
-              {
                 "name": "AI-Process Order",
                 "value": "Process Order",
                 "description": "Process order documents to extract and analyze order information"
+              },
+              {
+                "name": "AI-Process Pay Stub",
+                "value": "AI-Process Pay Stub",
+                "description": "Extract structured data from pay stubs using AI/ML technology for payroll processing"
               },
               {
                 "name": "AI-Process Receipt",
@@ -23399,21 +23310,21 @@
                 "description": "Process receipt documents to extract items, merchant info, totals, and custom fields"
               },
               {
+                "name": "AI-Process Shipping Label",
+                "value": "Process Shipping Label",
+                "description": "Process shipping labels to extract and analyze shipping information"
+              },
+              {
                 "name": "AI-Process Tax Document",
                 "value": "Process Tax Document",
                 "description": "Process tax documents (W2, 1099, 1040, etc.) to extract tax information and custom fields"
-              },
-              {
-                "name": "AI-Process Bank Statement",
-                "value": "Process Bank Statement",
-                "description": "Process bank statement documents to extract transactions, analyze patterns, and custom fields"
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 1059
+            "totalPropertyCount": 1079
           },
           "ioInfo": {
-            "nodeType": "PDF4me",
+            "nodeType": "pdf4me",
             "version": "1",
             "inputs": [
               "main"
@@ -23608,7 +23519,7 @@
     },
     "n8n-nodes-upload-post": {
       "packageName": "n8n-nodes-upload-post",
-      "packageVersion": "0.1.48",
+      "packageVersion": "0.5.1",
       "nodes": [
         {
           "nodeType": "n8n-nodes-upload-post.uploadPost",
@@ -23617,6 +23528,250 @@
           "version": "1",
           "properties": {
             "coreProperties": [
+              {
+                "name": "commentActionPlatform",
+                "displayName": "Platform",
+                "type": "options",
+                "description": "Network the comment lives on. TikTok is the network that answers this question today; any other one replies with platform_not_supported and the list of the ones that can. On TikTok the profile needs the \"comments\" capability (see the capabilities array returned by List Users); an account connected before that capability existed has to reconnect TikTok.",
+                "required": true,
+                "default": "tiktok",
+                "options": [
+                  {
+                    "name": "TikTok",
+                    "value": "tiktok"
+                  }
+                ]
+              },
+              {
+                "name": "commentModerationAction",
+                "displayName": "Action",
+                "type": "options",
+                "description": "What to do with the comment. Each action carries its own inverse, so there is no separate toggle: hide/unhide change its visibility, like/unlike react to it as the account, pin/unpin move it to the top of the thread.",
+                "required": true,
+                "default": "hide",
+                "options": [
+                  {
+                    "name": "Hide",
+                    "value": "hide"
+                  },
+                  {
+                    "name": "Like",
+                    "value": "like"
+                  },
+                  {
+                    "name": "Pin",
+                    "value": "pin"
+                  },
+                  {
+                    "name": "Unhide",
+                    "value": "unhide"
+                  },
+                  {
+                    "name": "Unlike",
+                    "value": "unlike"
+                  },
+                  {
+                    "name": "Unpin",
+                    "value": "unpin"
+                  }
+                ]
+              },
+              {
+                "name": "postActionPlatform",
+                "displayName": "Platform",
+                "type": "options",
+                "description": "Network to act on. Unpublish is not available for Instagram, TikTok or Threads.",
+                "required": true,
+                "default": "facebook",
+                "options": [
+                  {
+                    "name": "Bluesky",
+                    "value": "bluesky"
+                  },
+                  {
+                    "name": "Discord",
+                    "value": "discord"
+                  },
+                  {
+                    "name": "Facebook",
+                    "value": "facebook"
+                  },
+                  {
+                    "name": "Google Business",
+                    "value": "google_business"
+                  },
+                  {
+                    "name": "LinkedIn",
+                    "value": "linkedin"
+                  },
+                  {
+                    "name": "Mastodon",
+                    "value": "mastodon"
+                  },
+                  {
+                    "name": "Pinterest",
+                    "value": "pinterest"
+                  },
+                  {
+                    "name": "Telegram",
+                    "value": "telegram"
+                  },
+                  {
+                    "name": "WordPress",
+                    "value": "wordpress"
+                  },
+                  {
+                    "name": "X (Twitter)",
+                    "value": "x"
+                  },
+                  {
+                    "name": "YouTube",
+                    "value": "youtube"
+                  }
+                ]
+              },
+              {
+                "name": "repostPlatform",
+                "displayName": "Platform",
+                "type": "options",
+                "description": "Network to repost on",
+                "required": true,
+                "default": "linkedin",
+                "options": [
+                  {
+                    "name": "LinkedIn",
+                    "value": "linkedin"
+                  },
+                  {
+                    "name": "X (Twitter)",
+                    "value": "x"
+                  }
+                ]
+              },
+              {
+                "name": "insightsPlatform",
+                "displayName": "Platform",
+                "type": "options",
+                "description": "Network that answers the question. TikTok is the network that answers this question today; any other one replies with platform_not_supported and the list of the ones that can. On TikTok the profile needs the \"profile_analytics\" capability (see the capabilities array returned by List Users).",
+                "required": true,
+                "default": "tiktok",
+                "options": [
+                  {
+                    "name": "TikTok",
+                    "value": "tiktok"
+                  }
+                ]
+              },
+              {
+                "name": "suggestionsType",
+                "displayName": "Type",
+                "type": "options",
+                "description": "Which suggestions you want. Hashtags answers with a list of name and view_count; keywords answers with the searches people run around the word.",
+                "required": true,
+                "default": "hashtags",
+                "options": [
+                  {
+                    "name": "Hashtags",
+                    "value": "hashtags"
+                  },
+                  {
+                    "name": "Keywords",
+                    "value": "keywords"
+                  }
+                ]
+              },
+              {
+                "name": "analyticsPlatforms",
+                "displayName": "Platforms",
+                "type": "multiOptions",
+                "description": "Platforms to fetch analytics for. Analytics are not available for Bluesky, Discord, Google Business or Telegram.",
+                "required": true,
+                "default": [],
+                "options": [
+                  {
+                    "name": "Facebook",
+                    "value": "facebook"
+                  },
+                  {
+                    "name": "Instagram",
+                    "value": "instagram"
+                  },
+                  {
+                    "name": "LinkedIn",
+                    "value": "linkedin"
+                  },
+                  {
+                    "name": "Pinterest",
+                    "value": "pinterest"
+                  },
+                  {
+                    "name": "Reddit",
+                    "value": "reddit"
+                  },
+                  {
+                    "name": "Threads",
+                    "value": "threads"
+                  },
+                  {
+                    "name": "TikTok",
+                    "value": "tiktok"
+                  },
+                  {
+                    "name": "X (Twitter)",
+                    "value": "x"
+                  },
+                  {
+                    "name": "YouTube",
+                    "value": "youtube"
+                  }
+                ]
+              },
+              {
+                "name": "nativePostPlatform",
+                "displayName": "Platform",
+                "type": "options",
+                "description": "Platform the post lives on",
+                "required": true,
+                "default": "instagram",
+                "options": [
+                  {
+                    "name": "Facebook",
+                    "value": "facebook"
+                  },
+                  {
+                    "name": "Instagram",
+                    "value": "instagram"
+                  },
+                  {
+                    "name": "LinkedIn",
+                    "value": "linkedin"
+                  },
+                  {
+                    "name": "Pinterest",
+                    "value": "pinterest"
+                  },
+                  {
+                    "name": "Reddit",
+                    "value": "reddit"
+                  },
+                  {
+                    "name": "Threads",
+                    "value": "threads"
+                  },
+                  {
+                    "name": "TikTok",
+                    "value": "tiktok"
+                  },
+                  {
+                    "name": "X (Twitter)",
+                    "value": "x"
+                  },
+                  {
+                    "name": "YouTube",
+                    "value": "youtube"
+                  }
+                ]
+              },
               {
                 "name": "instagramUser",
                 "displayName": "User Identifier Name or ID",
@@ -23629,71 +23784,7 @@
                 "name": "instagramPostId",
                 "displayName": "Post ID or URL",
                 "type": "string",
-                "description": "Numeric media ID or full Instagram post URL (e.g., https://www.instagram.com/p/ABC123/)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "instagramCommentId",
-                "displayName": "Comment ID",
-                "type": "string",
-                "description": "The ID of the comment to reply to (from Get Post Comments)",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "instagramReplyMessage",
-                "displayName": "Message",
-                "type": "string",
-                "description": "The reply message text",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "user",
-                "displayName": "User Identifier Name or ID",
-                "type": "options",
-                "description": "Choose from your created profiles, or specify a profile name using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "userManual",
-                "displayName": "User Identifier (Manual Entry)",
-                "type": "string",
-                "description": "Provide a profile name or ID when it does not appear in the list",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "platform",
-                "displayName": "Platform Names or IDs",
-                "type": "multiOptions",
-                "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-                "required": true,
-                "default": []
-              },
-              {
-                "name": "photos",
-                "displayName": "Photos (Files or URLs)",
-                "type": "string",
-                "description": "Provide photo files or URLs as a comma-separated list (e.g., data,https://example.com/image.jpg,otherImage). For files, enter the binary property name (e.g., data, myImage). For URLs, provide direct HTTP/HTTPS URLs.",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "video",
-                "displayName": "Video (File or URL)",
-                "type": "string",
-                "description": "The video file to upload or a video URL. For files, enter the binary property name (e.g., data).",
-                "required": true,
-                "default": ""
-              },
-              {
-                "name": "document",
-                "displayName": "Document (File or URL)",
-                "type": "string",
-                "description": "The document file (PDF, PPT, PPTX, DOC, DOCX) to upload or a document URL. For files, enter the binary property name (e.g., data). Max 100MB, 300 pages.",
+                "description": "Post identifier. Instagram and Facebook accept the numeric media ID or the post URL, YouTube the video ID, LinkedIn the post URN, TikTok the video ID (TikTok has no URL lookup).",
                 "required": true,
                 "default": ""
               }
@@ -23707,21 +23798,21 @@
               {
                 "name": "Upload Photo(s)",
                 "value": "uploadPhotos",
-                "description": "Upload one or more photos (Supports: TikTok, Instagram, LinkedIn, Facebook, X, Threads)"
+                "description": "Upload one or more photos (Supports: Bluesky, Discord, Facebook, Google Business, Instagram, Lemmy, LinkedIn, Mastodon, Pinterest, Reddit, Telegram, Threads, TikTok, WordPress, X)"
               },
               {
                 "name": "Upload Text",
                 "value": "uploadText",
-                "description": "Upload a text-based post (Supports: X, LinkedIn, Facebook, Threads)"
+                "description": "Upload a text-based post (Supports: Bluesky, Dev.to, Discord, Facebook, Google Business, Hashnode, Lemmy, LinkedIn, Listmonk, Mastodon, Nostr, Reddit, Slack, Telegram, Threads, Whop, WordPress, X)"
               },
               {
                 "name": "Upload Video",
                 "value": "uploadVideo",
-                "description": "Upload a single video (Supports: TikTok, Instagram, LinkedIn, YouTube, Facebook, X, Threads)"
+                "description": "Upload a single video (Supports: Bluesky, Discord, Facebook, Google Business, Instagram, LinkedIn, Mastodon, Pinterest, Reddit, Telegram, Threads, TikTok, WordPress, X, YouTube)"
               }
             ],
             "hasCredentials": true,
-            "totalPropertyCount": 164
+            "totalPropertyCount": 356
           },
           "ioInfo": {
             "nodeType": "uploadPost",
@@ -24815,6 +24906,470 @@
             "outputNames": [
               "main"
             ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "n8n-nodes-webpage-content-extractor": {
+      "packageName": "n8n-nodes-webpage-content-extractor",
+      "packageVersion": "0.1.3",
+      "nodes": [
+        {
+          "nodeType": "n8n-nodes-webpage-content-extractor.webpageContentExtractor",
+          "displayName": "Webpage Content Extractor",
+          "description": "Extracts the content from a given URL. Similar to the \"Reader\" mode in your browser, it ignores headers, footers, banners, etc.",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "html",
+                "displayName": "HTML Code",
+                "type": "string",
+                "description": "Use the \"HTTP Request\" node to fetch the HTML code of a website and pass it here",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [],
+            "hasCredentials": false,
+            "totalPropertyCount": 1
+          },
+          "ioInfo": {
+            "nodeType": "webpageContentExtractor",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        }
+      ]
+    },
+    "@traien/n8n-nodes-espocrm": {
+      "packageName": "@traien/n8n-nodes-espocrm",
+      "packageVersion": "1.4.0",
+      "nodes": [
+        {
+          "nodeType": "@traien/n8n-nodes-espocrm.espoCrm",
+          "displayName": "EspoCRM",
+          "description": "Interact with EspoCRM API",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "status",
+                "displayName": "Status",
+                "type": "options",
+                "description": "Status of the lead",
+                "required": true,
+                "default": "New",
+                "options": [
+                  {
+                    "name": "Assigned",
+                    "value": "Assigned"
+                  },
+                  {
+                    "name": "Converted",
+                    "value": "Converted"
+                  },
+                  {
+                    "name": "Dead",
+                    "value": "Dead"
+                  },
+                  {
+                    "name": "In Process",
+                    "value": "In Process"
+                  },
+                  {
+                    "name": "New",
+                    "value": "New"
+                  },
+                  {
+                    "name": "Recycled",
+                    "value": "Recycled"
+                  }
+                ]
+              },
+              {
+                "name": "fieldsUi",
+                "displayName": "Fields",
+                "type": "fixedCollection",
+                "required": true,
+                "default": {
+                  "fieldValues": [
+                    {
+                      "fieldName": "",
+                      "fieldValue": ""
+                    }
+                  ]
+                },
+                "options": [
+                  {
+                    "name": "fieldValues"
+                  }
+                ]
+              },
+              {
+                "name": "fieldsUi",
+                "displayName": "Fields",
+                "type": "fixedCollection",
+                "required": true,
+                "default": {
+                  "fieldValues": [
+                    {
+                      "fieldName": "",
+                      "fieldValue": ""
+                    }
+                  ]
+                },
+                "options": [
+                  {
+                    "name": "fieldValues"
+                  }
+                ]
+              },
+              {
+                "name": "entityType",
+                "displayName": "Entity Type Name or ID",
+                "type": "options",
+                "description": "Type of entity to interact with (e.g., Opportunity, Case, Product). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "name",
+                "displayName": "Name",
+                "type": "string",
+                "description": "Name of the account",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "accountId",
+                "displayName": "Account ID",
+                "type": "string",
+                "description": "ID of the account",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "lastName",
+                "displayName": "Last Name",
+                "type": "string",
+                "description": "Last name of the contact",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "contactId",
+                "displayName": "Contact ID",
+                "type": "string",
+                "description": "ID of the contact",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "lastName",
+                "displayName": "Last Name",
+                "type": "string",
+                "description": "Last name of the lead",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "leadId",
+                "displayName": "Lead ID",
+                "type": "string",
+                "description": "ID of the lead",
+                "required": true,
+                "default": ""
+              }
+            ],
+            "operations": [
+              {
+                "name": "Create",
+                "value": "create",
+                "description": "Create a new record"
+              },
+              {
+                "name": "Get",
+                "value": "get",
+                "description": "Get a single record"
+              },
+              {
+                "name": "Get Many",
+                "value": "getAll",
+                "description": "Get many records"
+              },
+              {
+                "name": "Update",
+                "value": "update",
+                "description": "Update a record"
+              },
+              {
+                "name": "Delete",
+                "value": "delete",
+                "description": "Delete a record"
+              }
+            ],
+            "hasCredentials": true,
+            "totalPropertyCount": 111
+          },
+          "ioInfo": {
+            "nodeType": "espoCrm",
+            "version": "1",
+            "inputs": [
+              "main"
+            ],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "@traien/n8n-nodes-espocrm.espoCrmTrigger",
+          "displayName": "EspoCRM Trigger",
+          "description": "Handle EspoCRM Webhooks",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "eventType",
+                "displayName": "Event Type",
+                "type": "options",
+                "description": "Type of event to listen for",
+                "required": true,
+                "default": "create",
+                "options": [
+                  {
+                    "name": "Record Created",
+                    "value": "create",
+                    "description": "Triggered when a record is created"
+                  },
+                  {
+                    "name": "Record Updated",
+                    "value": "update",
+                    "description": "Triggered when a record is updated"
+                  },
+                  {
+                    "name": "Record Deleted",
+                    "value": "delete",
+                    "description": "Triggered when a record is deleted"
+                  },
+                  {
+                    "name": "Field Updated",
+                    "value": "fieldUpdate",
+                    "description": "Triggered when a specific field is updated"
+                  }
+                ]
+              },
+              {
+                "name": "entityType",
+                "displayName": "Entity Type",
+                "type": "string",
+                "description": "Type of entity to monitor (e.g., Contact, Account, Lead)",
+                "required": true,
+                "default": ""
+              },
+              {
+                "name": "fieldName",
+                "displayName": "Field Name",
+                "type": "string",
+                "description": "Name of the field to monitor for updates",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "verification",
+                "displayName": "Verification",
+                "type": "boolean",
+                "description": "Whether to verify the webhook signature to ensure it comes from EspoCRM",
+                "required": false,
+                "default": true
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 4
+          },
+          "ioInfo": {
+            "nodeType": "espoCrmTrigger",
+            "version": "1",
+            "inputs": [],
+            "outputs": [
+              "main"
+            ],
+            "inputTypes": [],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [
+              "main"
+            ],
+            "isDynamicOutput": false
+          }
+        },
+        {
+          "nodeType": "@traien/n8n-nodes-espocrm.espoCrmTool",
+          "displayName": "EspoCRM Tool",
+          "description": "Create, read, update, delete, and COUNT records in EspoCRM. Supports natural language commands like \"Find all accounts\" or \"Create a new case\". Note: You can only interact with ONE entity type per tool call. To interact with multiple entities, make multiple tool calls.",
+          "version": "1",
+          "properties": {
+            "coreProperties": [
+              {
+                "name": "operations",
+                "displayName": "Operations",
+                "type": "multiOptions",
+                "description": "The action to perform. Use \"Get Schema\" to discover available entity types and their fields. \"List/Search Records\" returns the TOTAL count of records matching the filter, so use it for counting tasks.",
+                "required": false,
+                "default": [
+                  "get"
+                ],
+                "options": [
+                  {
+                    "name": "Get Record",
+                    "value": "get"
+                  },
+                  {
+                    "name": "List/Search Records",
+                    "value": "getAll"
+                  },
+                  {
+                    "name": "Create Record",
+                    "value": "create"
+                  },
+                  {
+                    "name": "Update Record",
+                    "value": "update"
+                  },
+                  {
+                    "name": "Delete Record",
+                    "value": "delete"
+                  },
+                  {
+                    "name": "Get Schema/Metadata",
+                    "value": "getSchema"
+                  }
+                ]
+              },
+              {
+                "name": "entityType",
+                "displayName": "Entity Type",
+                "type": "string",
+                "description": "The EspoCRM entity type (e.g., Account, Contact, Lead). Required for all operations except \"Get Schema\".",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "recordId",
+                "displayName": "Record ID",
+                "type": "string",
+                "description": "The ID of the record to get, update, or delete",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "data",
+                "displayName": "Data",
+                "type": "json",
+                "description": "The data object with fields to create or update. \n\n**CRITICAL**: When creating a Case, Account, Contact, or Task, you **MUST** include a \"name\" field. \n\nExample: { \"name\": \"Review Tasks\", \"status\": \"New\" }",
+                "required": false,
+                "default": "{}"
+              },
+              {
+                "name": "filters",
+                "displayName": "Filters",
+                "type": "json",
+                "description": "Filters to apply to the search (EspoCRM where clause). E.g. { \"status\": \"Completed\" } or { \"name\": \"Acme%\" }.",
+                "required": false,
+                "default": "{}"
+              },
+              {
+                "name": "returnAll",
+                "displayName": "Return All",
+                "type": "boolean",
+                "description": "Whether to return all results or use pagination",
+                "required": false,
+                "default": false
+              },
+              {
+                "name": "limit",
+                "displayName": "Limit",
+                "type": "number",
+                "description": "Maximum number of records to return",
+                "required": false,
+                "default": 50
+              }
+            ],
+            "operations": [],
+            "hasCredentials": true,
+            "totalPropertyCount": 7
+          },
+          "ioInfo": {
+            "nodeType": "espoCrmTool",
+            "version": "1",
+            "inputs": [
+              {
+                "type": "main",
+                "required": true
+              }
+            ],
+            "outputs": [
+              {
+                "type": "main",
+                "required": true
+              }
+            ],
+            "inputTypes": [
+              "main"
+            ],
+            "outputTypes": [
+              "main"
+            ],
+            "isMultiInput": false,
+            "isMultiOutput": false,
+            "requiresSpecialInputs": false,
+            "hasErrorOutput": false,
+            "outputCount": 1,
+            "outputNames": [],
             "isDynamicOutput": false
           }
         }
